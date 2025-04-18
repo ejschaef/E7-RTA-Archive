@@ -1,13 +1,14 @@
 from flask import current_app, session
-from apps.e7_utils import hero_manager, user_manager, battle_manager
+from apps.e7_utils import hero_manager, user_manager, battle_manager, season_details
 from apps.references import cached_var_keys as KEYS
 import jsonpickle
-from typing import Type
+import pandas as pd
 
 
 CONTENT_TYPE_MAP = {
     KEYS.USER_MANAGER : user_manager.UserManager,
-    KEYS.HERO_MANAGER : hero_manager.HeroManager
+    KEYS.HERO_MANAGER : hero_manager.HeroManager,
+    KEYS.SEASON_DETAILS : season_details.get_rta_seasons_df,
 }
 
 class ContentManager:
@@ -25,9 +26,14 @@ class ContentManager:
         key = KEYS.USER_MANAGER
         return self.__set_and_retrieve(key, deserialize=True)
     
+    @property
+    def SeasonDetails(self) -> pd.DataFrame:
+        key = KEYS.SEASON_DETAILS
+        return self.__set_and_retrieve(key, deserialize=True)
+    
     def delete(self, key):
         if key in session:
-            session.pop(key)
+            del session[key]
 
     def delete_all(self):
         for key in self.content:

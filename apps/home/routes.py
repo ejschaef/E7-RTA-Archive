@@ -183,11 +183,15 @@ def hero_stats(task_id=None):
     if task_id is None:
         print("No task passed")
         return redirect(url_for("home_blueprint.error_117"))
+    
+    MNGR = get_mngr()
+
+    season_df = MNGR.SeasonDetails
 
     task = AsyncResult(task_id, app=celery_app)
     data = task.result if task.successful() else 'Error occurred'
 
-    context = {'segment' : 'hero_stats', 'task_id' : task.id}
+    context = {'segment' : 'hero_stats', 'task_id' : task.id, 'season_details' : MNGR.SeasonDetails.to_dict(orient='records')}
     context.update(data)
 
     return render_template('pages/hero_stats.html', **context)

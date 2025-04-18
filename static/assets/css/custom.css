@@ -117,6 +117,12 @@ input.filled, .form-control {
   }
 
   .fixed-height-table-header {
-    height: 115px;       /* or any px, %, vh, etc. */
+    height: 95px;       /* or any px, %, vh, etc. */
     overflow: hidden;      /* optional: allows scrolling if content overflows */
+    padding: 5%;
+  }
+
+  .scrollable-200 {
+    overflow-y: auto;
+    max-height: 200px;
   }

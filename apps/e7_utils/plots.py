@@ -22,8 +22,8 @@ def make_rank_plot(battles: BattleManager, user: User):
         line=dict(color='#4f9293', width=2),
         customdata=np.stack((battles_df['time'].str[:10], battles_df['grades_1']), axis=-1),
         marker=dict(
-            symbol='line-ns',
-            size=6,
+            symbol='circle',
+            size=3,
             color='#0df8fd',
             line=dict(width=0.75, color='#0df8fd')
         ),
@@ -35,7 +35,7 @@ def make_rank_plot(battles: BattleManager, user: User):
     # Update layout for dark mode
     fig.update_layout(
         autosize=True,
-        font_family="Open Sans",
+        font_family="Roboto, Open Sans",
         title=dict(
             text=f"{user.name}'s RTA Point Plot",
             font=dict(size=24, color='#dddddd'), # Adjust title color

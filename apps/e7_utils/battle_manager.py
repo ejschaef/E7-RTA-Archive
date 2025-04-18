@@ -133,7 +133,7 @@ def to_pretty_dataframe(df: pd.DataFrame, HM: HeroManager):
     df = df.replace(HM.str_name_map)
     df = df.rename(columns={v: k for k, v in PRETTY_COLUMN_DICT.items()})
 
-    df = df.drop(df.columns.difference([col for col in PRETTY_COLUMN_DICT]), axis=1)
+    df = df[[col for col in PRETTY_COLUMN_DICT]].copy()
     
     col_replace_dict = {
             "Win" : {1:"W", 2:"L"},

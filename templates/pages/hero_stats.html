@@ -34,6 +34,47 @@
         <!-- [ breadcrumb ] end -->
         <!-- [ Main Content ] start -->
         <div class="row">
+
+            <!-- [ season details table ] start -->
+            <div class="col-sm-6">
+                <div class="card razz-kpi">
+                    <div class="card-header kpi-header">
+                        <h5 class="text-white">Season Details</h5>
+                    </div>
+                    <div class="card-body kpi-body">
+                        <div>
+                            <table id="SeasonDetailsHead" class="clean-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col" style="transform: translateX(5%);">Season</th>
+                                        <th scope="col" style="transform: translateX(24%);">Start</th>
+                                        <th scope="col" style="transform: translateX(18%);">End</th>
+                                        <th scope="col" style="transform: translateX(20%);">Status</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="scrollable-200">
+                                <table id="SeasonDetailsBody" class="clean-table interior-border-tbl" style="width:100%;">
+                                    <tbody>
+                                        {% for item in season_details %}
+                                        <tr>
+                                            <td>{{ item['Season Number'] }}</td>
+                                            <td>{{ item['Season'] }}</td>
+                                            <td>{{ item['Start'] }}</td>
+                                            <td>{{ item['End'] }}</td>
+                                            <td>{{ item['Status'] }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ season details table ] end -->
+
             <!-- [ plot section ] start -->
             <div class="col-sm-12" id="rank-plot" style="width:100%">
                 <div class="card" style="width:100%">
@@ -53,7 +94,7 @@
                 // });
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
-                }, 30);
+                }, 10);
             </script>
             <!-- [ plot section ] end -->
 
@@ -67,7 +108,7 @@
                         <h6 style="font-size: 0.7em;">Displays statistics for heroes when they appear on the user's team
                         </h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body kpi-body">
                         <table id="PlayerTable" class="display compact cell-border" style="width:100%">
                             <thead>
                                 <tr>
@@ -106,7 +147,7 @@
                         <h6 style="font-size: 0.7em;">Displays statistics for heroes when they appear on the enemy team. The win rate and +/- is relative to the player not the opponent.
                         </h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body kpi-body">
                         <table id="OpponentTable" class="display compact cell-border" style="width:100%">
                             <thead>
                                 <tr>
@@ -139,13 +180,13 @@
             <!-- [ battles df section ] start -->
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header text-center">
+                    <div class="card-header text-center kpi-header">
                         <h5>Player Battles</h5>
                         <h6 style="font-size: 0.7em;">
                             Displays information on the player's battles; Two star heroes will show as their internal code not their name
                         </h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body kpi-body">
                         <table id="BattlesTable" class="display compact cell-border" style="width:100%">
                             <thead>
                                 <tr>

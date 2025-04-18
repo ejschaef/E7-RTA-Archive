@@ -1,0 +1,54 @@
+:root {
+    --kpi-border-color: #ffffff4d;
+    --padding-header: 3%;
+    --padding-body-top: 2%;
+    --padding-body-side: 5%;
+}
+
+.clean-table {
+    border-collapse: collapse;
+    color: #e2e2e2; /* font color */
+    font-family: "Open Sans", sans-serif;
+    margin-bottom: 10px;
+    width:100%;
+  }
+  
+  .clean-table th,
+  .clean-table td {
+    padding: 6px 6px;
+    background-color: #2a2a2a00;
+    color: #f1f1f1; /* font color */
+    font-family: "Open Sans", sans-serif;
+  }
+
+  .clean-table th {
+    font-size: 0.9em;
+  }
+
+  .clean-table td {
+    font-size: 0.7em;
+  }
+
+  /* Add bottom border to all rows except the last one */
+  .interior-border-tbl tbody tr:not(:last-child) td {
+    border-bottom-color: var(--kpi-border-color) !important; /* adjust color to fit your theme */
+    border-bottom-width: 1px !important;
+  }
+
+  .razz-kpi {
+    --bs-bg-opacity: 1;
+    background-color: #a33867 !important;
+  }
+
+  .kpi-header {
+    padding: var(--padding-header) !important;
+    border-bottom: 1px solid var(--kpi-border-color) !important;
+  }
+
+  .kpi-body {
+    padding-left: var(--padding-body-side) !important;
+    padding-top: var(--padding-body-top) !important;
+    padding-right: var(--padding-body-side) !important;
+    padding-bottom: var(--padding-body-top) !important;
+  }
+  
