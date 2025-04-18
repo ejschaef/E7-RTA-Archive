@@ -1,0 +1,37 @@
+{% extends "layouts/base-loader.html" %}
+
+{% block title %}Loader{% endblock title %}
+
+{% block extrastyle %}
+
+{% endblock extrastyle %}
+
+{% block content %}
+
+<div class="loader-overlay">
+  <div class="loader-content">
+    <h2>Content Loading</h2>
+    <div class="loader"></div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+
+<script>
+  function checkStatus() {
+    fetch("/user_data_status/{{ task_id }}")
+      .then(res => res.json())
+      .then(data => {
+        if (data.ready) {
+          window.location.href = data.redirect_url;
+        } else {
+          setTimeout(checkStatus, 1000);
+        }
+      });
+  }
+  checkStatus();
+</script>
+
+{% endblock extra_js %}

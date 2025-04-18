@@ -1,0 +1,74 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Icon Feather{% endblock title %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container" data-bs-theme="dark">
+      <div class="pc-content" data-bs-theme="dark">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+          <div class="page-block">
+            <div class="row align-items-center">
+              <div class="col-md-12">
+                <div class="page-header-title">
+                  <h5 class="mb-0">Enter user details to query latest data</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+
+        <!-- [ Main Content ] start -->
+        <div class="row justify-content-center">
+          <!-- [ feather-icon ] start -->
+          <div class="col-sm-10">
+            <div class="card">
+              <div class="card-header text-center">
+                <h5>User Details</h5>
+              </div>
+              <div class="card-body text-center">
+                <div class="row justify-content-center">
+                    <form method="post" class="card-body">
+                        {{ form.hidden_tag() }}
+                        <div class="text-center">
+                          <a href="{{ url_for('home_blueprint.index') }}">
+                            <div>
+                              <img src="{{ url_for('static', filename='assets/images/logo-dark.svg') }}" alt="img">
+                            </div>
+                          </a>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center gap-2">
+                        </div>
+                        <h4 class="text-center f-w-500 mt-4 mb-3">User Details</h4>
+
+                        {% if msg %}
+                            <span class="d-block text-danger mb-3">{{ msg | safe }}</span>
+                        {% endif %}
+                        <div class="form-group mb-3">
+                          {{ form.username(placeholder="E7 Username", class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                          {{ form.server(placeholder="Server", class="form-control") }}
+                        </div>
+                        <div class="text-center mt-4">
+                          <button type="submit" name="user_query" class="btn btn-primary shadow px-sm-4">Query User</button>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- [ feather-icon ] end -->
+        </div>
+        <!-- [ Main Content ] end -->
+      </div>
+    </div>
+
+{% endblock content %}
+
+{% block extra_js %}
+
+{% endblock extra_js %}

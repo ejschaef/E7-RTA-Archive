@@ -1,0 +1,11 @@
+docker run -p 6379:6379 redis
+docker start redis-server
+
+Set-ExecutionPolicy -ExecutionPolicy  Unrestricted -Scope Process
+celery -A apps.tasks worker --pool=solo
+
+KILL CELERY: 
+ps -ef | grep 'celery' | grep -v grep | awk '{print $2}' | xargs -r kill -9
+
+CELERY STATUS:
+ps aux | grep 'celery'

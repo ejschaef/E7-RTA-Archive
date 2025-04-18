@@ -1,0 +1,64 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Icon Feather{% endblock title %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container" data-bs-theme="dark">
+      <div class="pc-content" data-bs-theme="dark">
+        <!-- [ breadcrumb ] start -->
+
+        <!-- [ breadcrumb ] end -->
+
+        <!-- [ Main Content ] start -->
+        <div class="row justify-content-center">
+          <!-- [ feather-icon ] start -->
+          <div class="col-sm-8">
+            <div class="card">
+              <div class="card-header text-center">
+                <h3>Upload User Battles From Local File</h3>
+                <h5>CSV Only; files must follow exact structure as battle data files downloaded from this site and only contain battles from one user as Player 1.</h5>
+              </div>
+              <div class="card-body text-center">
+                <div class="row justify-content-center">
+                    <form method="post" class="card-body" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <div class="text-center">
+                          <a href="{{ url_for('home_blueprint.index') }}">
+                            <div>
+                              <img src="{{ url_for('static', filename='assets/images/logo-white.svg') }}" alt="img">
+                            </div>
+                          </a>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center gap-2">
+                        </div>
+                        <h4 class="text-center f-w-500 mt-4 mb-3">Upload CSV</h4>
+                        {% if msg and not form.file.errors %}
+                            <span class="d-block text-danger mb-3">{{ msg | safe }}</span>
+                        {% endif %}
+                        {% for error in form.file.errors %}
+                            <span class="d-block text-danger mb-3">{{ error }}</span>
+                        {% endfor %}
+                        <div class="form-group mb-3">
+                          {{ form.file(class="form-control") }}
+                        </div>
+                        <div class="text-center mt-4">
+                          <button type="submit" name="battle_data" class="btn btn-primary shadow px-sm-4">Submit File</button>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- [ feather-icon ] end -->
+        </div>
+        <!-- [ Main Content ] end -->
+      </div>
+    </div>
+
+{% endblock content %}
+
+{% block extra_js %}
+
+{% endblock extra_js %}

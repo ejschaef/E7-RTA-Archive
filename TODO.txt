@@ -1,0 +1,14 @@
+TODO:
+
+logout button --
+upload files --
+data table for battles --
+KPIs for loss and win streaks
+filtering battles
+loading screen --
+make variables like hero manager retrievable with redis --
+
+
+BUGS:
+
+plotly line doubles when undocking window and making smaller -> switch to chartsJS

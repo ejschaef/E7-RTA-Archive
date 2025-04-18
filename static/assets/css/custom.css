@@ -1,0 +1,122 @@
+table.dataTable td {
+    font-size: 0.8em;
+}
+
+table.dataTable th {
+    font-size: .9em;
+}
+
+div.dt-container {
+    font-size: 0.7em;
+}
+
+/* .dataTables_scroll {
+    overflow:auto;
+    display:inline-block
+} */
+
+/* Apply to the DataTable container */
+table.dataTable {
+    background-color: #121212;
+    color: rgba(255, 255, 255, 0.87);
+    font-family: 'Open Sans';
+}
+
+/* Header */
+table.dataTable thead {
+    background-color: #1E1E1E;
+    color: rgba(255, 255, 255, 0.87);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Header cells */
+table.dataTable thead th {
+    border-color: rgba(255, 255, 255, 0.12);
+    font-weight: 500;
+}
+
+/* Body rows */
+table.dataTable tbody tr {
+    background-color: #232323;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+table.dataTable tbody tr:hover {
+    background-color: #1f1f1f;
+}
+
+/* Body cells */
+table.dataTable tbody td {
+    color: rgba(255, 255, 255, 0.87);
+    white-space: normal !important;
+    word-wrap: break-word;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+}
+
+.btn {
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: #1e222d;
+    --bs-btn-border-color: #0b0c0d;
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: #14171e;
+    --bs-btn-hover-border-color: #090a0a;
+    --bs-btn-focus-shadow-rgb: 42, 182, 247;
+    --bs-btn-active-color: #9b9b9b;
+    --bs-btn-active-bg: #000000;
+    --bs-btn-active-border-color: #050505;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #ffffff;
+    --bs-btn-disabled-bg: #888888;
+    --bs-btn-disabled-border-color: #424242;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #e2e2e2;
+}
+
+input,
+textarea {
+    background-color: #f6f6f6;
+    /* Dark background */
+    color: #464646;
+    /* Light text color */
+    border: 1px solid #161616;
+    /* Border color */
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Background color when the input is valid (i.e., has some value) */
+input:valid,
+textarea:valid {
+    background-color: #f6f6f6;
+    color: #464646;
+    border-color: #0df8fd;
+}
+
+input.filled, .form-control {
+    background-color: #f6f6f6 !important; /* light background */
+    color: #464646 !important;    
+    border-color: #0df8fd !important;  
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #f6f6f6 inset !important;
+    -webkit-text-fill-color: #464646 !important;
+  }
+
+  .fixed-height-table-header {
+    height: 115px;       /* or any px, %, vh, etc. */
+    overflow: hidden;      /* optional: allows scrolling if content overflows */
+  }

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme-mode="dark">
+  <head>
+    <title>{% block title %}{% endblock title %} | Datta able Dashboard Template</title>
+    {% include "includes/head.html" %}
+    {% block extrastyle %}{% endblock extrastyle %}
+  </head>
+
+  <body id="loader_body">
+    {% block content %}{% endblock content %}
+    {% include "includes/scripts.html" %}
+    {% block extra_js %}{% endblock extra_js %}
+  </body>
+</html>
