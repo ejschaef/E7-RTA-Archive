@@ -8,6 +8,7 @@ import os
 import secrets
 from pathlib import Path
 from datetime import timedelta
+from apps.redis_manager import CELERY_BROKER_DB, CELERY_BACKEND_DB, SESSION_DB
 import redis
 
 class Config(object):
@@ -17,9 +18,6 @@ class Config(object):
     USERS_ROLES  = { 'ADMIN'  :1 , 'USER'      : 2 }
     USERS_STATUS = { 'ACTIVE' :1 , 'SUSPENDED' : 2 }
 
-    # upload folder
-    UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
-
     # max upload file size
     MAX_CONTENT_LENGTH = 32 * 1024 * 1024  # 32 MB
 
@@ -27,17 +25,17 @@ class Config(object):
     WTF_CSRF_ENABLED = True
     
     # celery 
-    CELERY_BROKER_URL     = "redis://localhost:6379//1"
-    CELERY_RESULT_BACKEND = "redis://localhost:6379//2"
+    CELERY_BROKER_URL     = CELERY_BROKER_DB.str
+    CELERY_RESULT_BACKEND = CELERY_BACKEND_DB.str
     CELERY_HOSTMACHINE    = "celery@app-generator"
-    RESULT_EXPIRES = timedelta(hours=1) 
+    RESULT_EXPIRES = timedelta(hours=3) 
 
     # redis
     SESSION_TYPE = 'redis'
     SESSION_PERMANENT = True
     SESSION_USE_SIGNER = True  # Enable session signing
     SESSION_KEY_PREFIX = 'flask_session:'  # Prefix for session keys in Redis
-    SESSION_REDIS = redis.StrictRedis(host='localhost', port=6379, db=3)
+    SESSION_REDIS = redis.from_url(SESSION_DB.str)
     PERMANENT_SESSION_LIFETIME = timedelta(days=5)
 
     # Set up the App SECRET_KEY

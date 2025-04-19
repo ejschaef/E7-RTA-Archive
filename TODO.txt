@@ -8,7 +8,9 @@ filtering battles
 loading screen --
 make variables like hero manager retrievable with redis --
 
+switch reference session variables (heroes, users, and seasons, etc) to chron job
+
 
 BUGS:
 
-plotly line doubles when undocking window and making smaller -> switch to chartsJS
+plotly line doubles when undocking window and making smaller -> switch to chartsJS -- (not switching, but fixed issue)

@@ -1,14 +1,7 @@
-from flask import current_app, session
-from apps.e7_utils import hero_manager, user_manager, battle_manager, season_details
-from apps.references import cached_var_keys as KEYS
-import jsonpickle
-import pandas as pd
-
-
 CONTENT_TYPE_MAP = {
-    KEYS.USER_MANAGER : user_manager.UserManager,
-    KEYS.HERO_MANAGER : hero_manager.HeroManager,
-    KEYS.SEASON_DETAILS : season_details.get_rta_seasons_df,
+    KEYS.USER_MANAGER : UserManager,
+    KEYS.HERO_MANAGER : HeroManager,
+    KEYS.SEASON_DETAILS : get_rta_seasons_df,
 }
 
 class ContentManager:
@@ -17,12 +10,12 @@ class ContentManager:
         self.content = set()
 
     @property
-    def HeroManager(self) -> hero_manager.HeroManager:
+    def HeroManager(self) -> HeroManager:
         key = KEYS.HERO_MANAGER
         return self.__set_and_retrieve(key, deserialize=True)
     
     @property
-    def UserManager(self) -> user_manager.UserManager:
+    def UserManager(self) -> UserManager:
         key = KEYS.USER_MANAGER
         return self.__set_and_retrieve(key, deserialize=True)
     
@@ -32,8 +25,8 @@ class ContentManager:
         return self.__set_and_retrieve(key, deserialize=True)
     
     def delete(self, key):
-        if key in session:
-            del session[key]
+        if key in SESSION_CLIENT:
+            SESSION_CLIENT.delete(key)
 
     def delete_all(self):
         for key in self.content:
@@ -42,7 +35,7 @@ class ContentManager:
     def pop(self, key, deserialize=True):
         content = self.__retrieve(key, deserialize)
         self.content.remove(key)
-        session.pop(key)
+        SESSION_CLIENT.delete(key)
         return content
     
     def __set_and_retrieve(self, key, deserialize=True):
@@ -53,21 +46,13 @@ class ContentManager:
             self.content.add(key)
             obj = CONTENT_TYPE_MAP[key]()
             if deserialize:
-                session[key] = jsonpickle.encode(obj)
+                SESSION_CLIENT.set(key, jsonpickle.encode(obj))
             else:
-                session[key] = obj
+                SESSION_CLIENT.set(key, obj)
             return obj
 
     def __retrieve(self, key, deserialize=True):
         if deserialize:
-            return jsonpickle.decode(session[key])
+            return jsonpickle.decode(SESSION_CLIENT.get(key))
         else:
-            return session[key]
-
-        
-    
-        
-            
-
-    
-        
+            return SESSION_CLIENT.get(key)

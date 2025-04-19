@@ -3,6 +3,9 @@ docker start redis-server
 
 Set-ExecutionPolicy -ExecutionPolicy  Unrestricted -Scope Process
 celery -A apps.tasks worker --pool=solo
+celery -A apps.tasks beat
+
+celery -A apps.tasks worker --pool=solo\ncelery -A apps.tasks beat
 
 KILL CELERY: 
 ps -ef | grep 'celery' | grep -v grep | awk '{print $2}' | xargs -r kill -9

@@ -30,7 +30,6 @@ except KeyError:
     exit('Error: Invalid <config_mode>. Expected values [Debug, Production] ')
 
 app = create_app(app_config)
-os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 Session(app)
 

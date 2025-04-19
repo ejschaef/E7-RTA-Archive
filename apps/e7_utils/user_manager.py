@@ -46,8 +46,10 @@ def get_lvl_70_users(world_code, load=False):
 
 class UserManager:
     
-    def __init__(self):
+    def __init__(self, load_all=False):
         self.world_code_dict = {}
+        if load_all:
+            self.load_all()
         
     def __iter__(self):
         for user_list in self.world_code_dict.values():
@@ -62,7 +64,7 @@ class UserManager:
         
     def load_all(self, skip_dupicates=False):
         for world_code in refs.WORLD_CODES:
-            if world_code in self.world_code_dict and skip_dupicates is True:
+            if skip_dupicates is True and world_code in self.world_code_dict:
                 continue
             self.load_server_users(world_code)
     

@@ -21,7 +21,7 @@ from flask_wtf import FlaskForm
 from werkzeug.exceptions import RequestEntityTooLarge
 from apps.home.forms import UserQueryForm, FileUploadForm
 from apps.e7_utils.user_manager import User
-from apps.e7_utils.content_manager import ContentManager
+from apps.content_manager import ContentManager
 from apps.exceptions.exception import DataValidationException
 from apps.references import cached_var_keys as KEYS
 from apps.home.read_data import read_battle_csv
@@ -33,31 +33,15 @@ from celery.result import AsyncResult
 # START HELPERS
 ########################################################################################################
 
+GLOBAL_CLIENT = redis.Redis(host="localhost", port=6379, db=4)
+
+def get_mngr() -> ContentManager:
+    return ContentManager.decode(GLOBAL_CLIENT.get(KEYS.CONTENT_MNGR_KEY))
+
 def generate_short_id():
     uid = uuid.uuid4()
     short = base64.urlsafe_b64encode(uid.bytes).rstrip(b'=').decode('utf-8')
     return short
-
-def get_mngr() -> ContentManager:
-    """
-    Returns content manager for managing session variables containing E7 user and hero reference data
-    """
-    key = KEYS.CONTENT_MNGR
-    if key in session:
-        return jsonpickle.decode(session[key])
-    else:
-        CM = ContentManager()
-        session[key] = jsonpickle.encode(CM)
-    return CM
-
-def delete_mngr():
-    """
-    deletes manager and all reference content
-    """
-    mngr = get_mngr()
-    mngr.delete_all()
-    session.pop(KEYS.CONTENT_MNGR)
-
 
 def session_remove_user():
     assert "user" in session, "Tried to remove user when none is stored in session"
@@ -73,6 +57,7 @@ def session_add_user(user: User):
     session['user']     = jsonpickle.encode(user)
     session['username'] = user.name
     session['server']   = user.world_code
+
 
 ########################################################################################################
 # END HELPERS
@@ -133,17 +118,11 @@ def user_query():
                                         form=login_form)
 
         session_add_user(user)
+        task = load_user_data.apply_async(args=[jsonpickle.encode(user), jsonpickle.encode(MNGR.HeroManager)], task_id=username+"_"+server)
+        session['user_data_task_id'] = task.id
+        return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
 
-    if session.get("user", None) is None:
-        return render_template('pages/user_query.html',
-                               form=login_form)
-    
-    task = load_user_data.apply_async(args=[jsonpickle.encode(user), jsonpickle.encode(MNGR.HeroManager)], task_id=username+"_"+generate_short_id())
-
-    session['user_data_task_id'] = task.id
-
-    return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
-
+    return render_template('pages/user_query.html', form=login_form)
 
 
 @blueprint.route('/loading_user_data/<task_id>')

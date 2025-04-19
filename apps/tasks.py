@@ -3,20 +3,26 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-import json, time, jsonpickle
+import json, time, jsonpickle, pickle
 import pandas as pd
 from datetime import datetime
 from io import StringIO
+
 
 from apps.config import *
 
 from celery import Celery
 from celery.utils.log import get_task_logger
 from celery.schedules import crontab
+from celery.signals import worker_ready
 
 from apps.e7_utils.battle_manager import BattleManager, to_raw_dataframe, RAW_TYPE_DICT
 from apps.e7_utils.query_user_battles import get_battles, build_hero_stats
 from apps.e7_utils.plots import make_rank_plot
+from apps.content_manager import ContentManager
+from apps.references.cached_var_keys import CONTENT_MNGR_KEY
+
+GLOBAL_CLIENT = redis.Redis(host="localhost", port=6379, db=4)
 
 logger = get_task_logger(__name__)
 
@@ -26,14 +32,24 @@ celery_app = Celery(Config.CELERY_HOSTMACHINE,
                     )
 
 celery_app.conf.beat_schedule = {
-    'run_celery_beat_test_every_minute': {
-        'task': 'celery_beat_test',
-        'schedule': crontab(minute='*/1'),  # Runs every 1 minute
-        'args': (json.dumps({'test': 'data'}),)
+    # 'run_celery_beat_test_every_minute': {
+    #     'task': 'celery_beat_test',
+    #     'schedule': crontab(minute='*/1'),  # Runs every 1 minute
+    #     'args': (json.dumps({'test': 'data'}),)
+    # },
+    'load_reference_content' : {
+        'task': 'load_reference_content',
+        'schedule': crontab(minute='*/1'),  # Runs every 5 minutes
+        'args': ()
     },
 }
 celery_app.conf.timezone = 'UTC'
 
+# periodic task set up
+@worker_ready.connect
+def run_start_up_tasks(sender, **kwargs):
+    # Run the task immediately
+    load_reference_content.delay()
 
 # task used for tests
 @celery_app.task(name="celery_test", bind=True)
@@ -105,7 +121,17 @@ def celery_test( self, task_input ):
 @celery_app.task(name="celery_beat_test", bind=True)
 def celery_beat_test( self, task_input ):
     task_json = {'info': 'Beat is running'}
+    print("/n-----------------BEAT IS RUNNING-------------------/n")
     return task_json
+
+@celery_app.task(name="load_reference_content", bind=True)
+def load_reference_content( self):
+    print("Updating E7 reference content")
+    key = CONTENT_MNGR_KEY
+    serialized_data = (ContentManager().encode())
+    GLOBAL_CLIENT.set(key, serialized_data)
+    print("E7 reference content Updated")
+    return None
 
 @celery_app.task(name="load_user_data", bind=True)
 def load_user_data( self, user, HM, uploaded_battles=None):
