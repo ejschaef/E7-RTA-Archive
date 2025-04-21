@@ -8,8 +8,8 @@ filtering battles
 loading screen --
 make variables like hero manager retrievable with redis --
 
-switch reference session variables (heroes, users, and seasons, etc) to chron job
-
+switch reference session variables (heroes, users, and seasons, etc) to chron job -- (finished for Heroes and Season details)
+switch user manager to DB backend
 
 BUGS:
 

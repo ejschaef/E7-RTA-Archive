@@ -1,0 +1,50 @@
+SYNTAX:
+
+All filters must be separated by ';'
+All clause functions must resolve to their own filter; i.e. "and(...); or(...);" is allowed, but "and(...) or(...);" is not allowed
+All functions must be called using '()' (example: and(True, True))
+
+ALL syntax is case insensitive (will be converted to lowercase in backend)
+
+OPERATORS:
+
+in   -> check set membership
+=    -> check equality
+>    -> greater than
+<    -> less than
+>=   -> greater or equal
+<=   ->  less or equal
+
+DECLARABLE DATA TYPES:
+
+Int    : any positive integer        -> declaration example: Int(47)
+Date   : date in format "YYYY-MM-DD" -> declaration example: Date(2025-03-12)
+String : used to filter heroes; must be wrapped in ""; example: "Navy Captain Landy"
+
+FUNCTIONS:
+
+oldest(n)       -> filter for most recent n battles, arg n: int -> NOT IMPLEMENTED
+earliest(n)    -> filter for oldest n battles, arg n: int -> NOT IMPLEMENTED
+and(a, b, ...) -> returns true if all input clauses are true, false else; clause syntax trees must terminate as filters
+or(a, b, ...)  -> returns true if any input clause is true, false else; clause syntax trees must terminate as filters
+xor(a, b)      -> returns true if one input clause is true but not the other, false else; clause syntax trees must terminate as filters
+
+FIELDS:
+
+battle-date    -> date of battle (must use format YYYY-MM-DD)
+p1             -> access user attributes
+p2             -> access opponent attributes
+firstpick      -> True if p1 has firstpick, False else
+win            -> True if p1 won the game, False else
+victory-points -> integer number representing the victory points of the player when the battle occurred
+
+USER / OPPONENT ATTRIBUTES (access with p1.[attribute] or p2.[attribute]):
+
+picks   -> list of player picks
+pick[n] -> pick n of player; replace "[n]" with number 1 - 5
+league  -> league of player when battle occurred (master, champion, legend, etc.)
+prebans -> list of heroes prebanned by player
+
+
+
+

@@ -51,4 +51,12 @@
     padding-right: var(--padding-body-side) !important;
     padding-bottom: var(--padding-body-top) !important;
   }
+
+  .tight-fit {
+    padding: 1% !important;
+  }
+
+  .small-text {
+    font-size: 0.8em;
+  }
   

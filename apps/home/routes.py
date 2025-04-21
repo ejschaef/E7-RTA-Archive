@@ -19,8 +19,9 @@ from apps.tasks import *
 from apps.authentication.models import Users
 from flask_wtf import FlaskForm
 from werkzeug.exceptions import RequestEntityTooLarge
-from apps.home.forms import UserQueryForm, FileUploadForm
+from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm
 from apps.e7_utils.user_manager import User
+from apps.e7_utils.filter_syntax import FilterSyntaxResolver
 from apps.content_manager import ContentManager
 from apps.exceptions.exception import DataValidationException
 from apps.references import cached_var_keys as KEYS
@@ -228,6 +229,31 @@ def upload_battle_data():
 
     print("RENDERING NO MESSAGE")
     return render_template('pages/upload_battle_data.html', form=upload_form)
+
+
+########################################################################################################
+# START UPLOAD BATTLE DATA SECTION
+########################################################################################################
+
+@blueprint.route('/apply_filters', methods=['GET', 'POST'])
+def apply_filters():
+    form = CodeForm()
+    code = request.form.get('code')
+    MNGR = get_mngr()
+    if request.method == "POST" and code is not None:
+        try:
+            # Replace this with your custom parser
+            resolver = FilterSyntaxResolver(code, MNGR.HeroManager)
+            print(resolver.as_str())
+            if "check-syntax" in request.form:
+                return render_template('pages/apply_filters.html', code=code, form=form, validation_msg="Syntax validation passed.")
+            else:
+                return render_template('pages/apply_filters.html', code=code, form=form)
+        except Exception as e:
+            return render_template('pages/apply_filters.html', code=code, error=str(e), form=form)
+
+    else:
+        return render_template('pages/apply_filters.html', code='', form=form)
     
 
 def getField(column): 

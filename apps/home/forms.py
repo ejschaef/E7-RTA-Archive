@@ -5,7 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileRequired, FileField
-from wtforms import StringField, SelectField, SubmitField
+from wtforms import StringField, SelectField, TextAreaField
 from wtforms.validators import DataRequired
 
 # login and registration
@@ -33,4 +33,6 @@ class FileUploadForm(FlaskForm):
                                      ]
         )
 
+class CodeForm(FlaskForm):
+    code = TextAreaField("Code", validators=[DataRequired()])
 

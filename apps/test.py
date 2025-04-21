@@ -1,6 +1,14 @@
-import redis
-from references.cached_var_keys import CONTENT_MNGR_KEY
+import sqlite3
 
-GLOBAL_CLIENT = redis.Redis(host="localhost", port=6379, db=4)
+conn = sqlite3.connect("your_database.db")
+cursor = conn.cursor()
 
-print(GLOBAL_CLIENT.get("TESTKEY"))
+cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+tables = cursor.fetchall()
+
+print(tables)
+
+for table in tables:
+    print(table[0])
+
+conn.close()
