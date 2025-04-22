@@ -108,6 +108,11 @@ input.filled, .form-control {
     border-color: #0df8fd !important;  
   }
 
+  .custom-input::placeholder {
+    color: #6e6e6e; /* your desired color */
+    opacity: 1;     /* remove default opacity if needed */
+  }
+
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
@@ -151,15 +156,24 @@ input.filled, .form-control {
     color: #7b3eff
   }
 
+  .codemirror-hidden {
+    visibility: hidden;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
   /* Change selection color (the background when selecting text) */
-    .cm-selection-background {
-        background-color: #739aad;  /* Custom selection color */
+    .CodeMirror-selected {
+        background-color: rgba(105, 135, 191, 0.3) !important; /* custom color */
     }
 
     .cm-keyword { color: #ff2ea8 !important; }
     .cm-string  { color: #40d793 !important; }
     .cm-set    {color: #40d793 !important}
     .cm-date  { color: #40d793 !important; }
+    .cm-bool { color: #3e64d4 !important; }
     .cm-comment { color: #6272a4; font-style: italic; }
     .cm-number  { color: #40d793 !important; }
     .cm-field  { color: #ffa25b !important; }

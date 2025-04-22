@@ -102,7 +102,12 @@ class Battle:
         return hash(self.key)
     
     def __eq__(self, battle):
-        return self.key == battle.key
+        if isinstance(battle, Battle):
+            return self.key == battle.key
+        elif isinstance(battle, int):
+            return self.key == battle
+        else:
+            raise RuntimeError("Attempted to check equality of Battle with something other than int or Battle")
     
     def to_dict(self):
         return {field : getattr(self, field) for field in self.__slots__}    
@@ -195,10 +200,12 @@ class BattleManager:
     @property
     def raw_battle_dict(self):
         return {seq_num : battle.to_dict() for seq_num, battle in self.battles.items()}
-            
-    def extreme_dates(self):
-        min_dt = None
-        max_dt = None
+    
+    def __contains__(self, battle: Battle):
+        return battle in self.battles
+    
+    def __iter__(self):
+        yield from self.battles
 
     def filter_battles(self, conditions) -> Self:
         filtered = []

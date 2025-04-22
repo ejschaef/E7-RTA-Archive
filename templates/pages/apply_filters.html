@@ -29,7 +29,7 @@
                     {% endif %}
                     <form method="post" class="card-body">
                         {{ form.hidden_tag() }}
-                        <textarea id="codeArea" name="code">{{ code or '' }}</textarea>
+                        <textarea id="codeArea" name="code" class="codemirror-hidden">{{ code or '' }}</textarea>
                         <div class="d-flex justify-content-center gap-3 mt-4">
                             <button type="submit" name="check-syntax" class="btn btn-primary shadow px-sm-4">Check Syntax</button>
                             <button type="submit" name="apply-filter" class="btn btn-primary shadow px-sm-4">Apply Filter</button>
@@ -71,10 +71,13 @@
             if (stream.match(/\s+(?:<>|<|>|=|>=|<=|in|<>in)(?=\s+)/i)) {
                 return "operator"; // match a number
             }
-            if (stream.match(/(?:^|\s+)(?:battle-date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?:(?=\,)|(?=\s+)|$|(?=\;))/i)) {
+            if (stream.match(/(?:^|\s+)(?:true|false)(?:(?=\,)|(?=\))|(?=\s+)|$|(?=\;))/i)) {
+                return "bool"; // match a field
+            }
+            if (stream.match(/(?:^|\s+)(?:battle-date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?:(?=\,)|(?=\))|(?=\s+)|$|(?=\;))/i)) {
                 return "field"; // match a field
             }
-            if (stream.match(/[\(\)\{\}\;]/)) {
+            if (stream.match(/[\(\)\{\}\;\,]/)) {
                 return "bracket"; // match a quoted string
             }
             stream.next();
@@ -83,7 +86,8 @@
       };
     });
 
-    const editor = CodeMirror.fromTextArea(document.getElementById("codeArea"), {
+    const textarea = document.getElementById("codeArea");
+    const editor = CodeMirror.fromTextArea(textarea, {
       mode: "myMode",
       lineNumbers: true,
       theme: "default"
@@ -93,6 +97,15 @@
     document.querySelector("form").addEventListener("submit", function() {
       document.getElementById("codeArea").value = editor.getValue();
     });
+
+        // Optional: sync changes back to textarea if needed
+    editor.on("change", () => {
+        editor.save(); // Updates the hidden textarea for form submit
+    });
+
+    // Show the editor after it's initialized
+    textarea.classList.remove('codemirror-hidden');
+
   </script>
 
 {% endblock extra_js %}

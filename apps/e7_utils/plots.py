@@ -4,14 +4,22 @@ from apps.e7_utils.battle_manager import BattleManager
 from apps.e7_utils.user_manager import User
 import numpy as np
 
-def make_rank_plot(battles: BattleManager, user: User):
+def make_rank_plot(battles: BattleManager, user: User, filtered_battles=None):
     battles_df = battles.to_dataframe()
     battles_df = battles_df.sort_values(by="time").reset_index(drop=True)
+
+    marker_default_color = '#0df8fd'
+    marker_filtered_color = '#ff9900'
+
+    marker_mask = [marker_default_color for _ in range(len(battles_df))]
+    if filtered_battles is not None:
+        marker_mask = [marker_default_color if seq not in filtered_battles else marker_filtered_color for seq in battles_df['seq_num'].values ]
     
     x = list(battles_df.index.values)
     y = list(battles_df['scores_1'])
 
     fig = go.Figure()
+
 
 
     # Create the plot
@@ -23,9 +31,9 @@ def make_rank_plot(battles: BattleManager, user: User):
         customdata=np.stack((battles_df['time'].str[:10], battles_df['grades_1']), axis=-1),
         marker=dict(
             symbol='circle',
-            size=3,
-            color='#0df8fd',
-            line=dict(width=0.75, color='#0df8fd')
+            size=4,
+            color=marker_mask,
+            # line=dict(width=0.75, color='#0df8fd')
         ),
         hovertemplate='Points: %{y}<br>' \
                       'Date: %{customdata[0]}<br>' \

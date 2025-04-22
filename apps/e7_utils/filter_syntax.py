@@ -69,6 +69,8 @@ class Field:
             return getattr(battle, self.field)
         else:
             field, index = self.field
+            if index >= len(getattr(battle, field)):
+                return None
             return getattr(battle, field)[index]
         
     def as_str(self):
@@ -94,6 +96,14 @@ class DataType:
 VALID_INT_CHARS = "1234567890"
 
 class Int(DataType):
+    """
+    Ints are also used as bools: 1 = True ; 2 = False
+    """
+
+    def __init__(self, data, bool_flag=False):
+        self.bool_flag = bool_flag
+        self.validate(data)
+        self.data = self.convert_data(data)
     
     def validate(self, data):
         if not all(c in VALID_INT_CHARS for c in data):
@@ -101,6 +111,16 @@ class Int(DataType):
             
     def convert_data(self, data):
         return int(data)
+    
+    def as_str(self):
+        if self.bool_flag is True:
+            if self.data == 1:
+                return "True"
+            elif self.data == 2:
+                return "False"
+            else:
+                raise RuntimeError(f"Bool flag was set to true, but the value was {self.data} ; can only be 1 or 2")
+        return str(self.data)
         
             
 VALID_STRING_CHARS = {' '} | set(string.ascii_letters)
@@ -168,8 +188,12 @@ class Set(DataType):
 
             
 def convert_to_datatype(string, HM):
-    if not any(T in string for T in ['int(', 'date(', 'set(', 'str(']):
+    if not any(T in string for T in ['int(', 'date(', 'set(', 'str(', 'true', 'false']):
         raise futils.SyntaxException(f"Could not recognize any valid data type declaration ; got : '{string}'")
+    if string == 'true':
+        return Int('1', bool_flag=True)
+    if string == 'false':
+        return Int('2', bool_flag=True)
     try:
         data = futils.retrieve_enclosure(string)
     except futils.SyntaxException as E:
@@ -228,11 +252,10 @@ class BaseFilter:
     def __init__(self, left: DataType | Field, operator, right: DataType | Field, split):
         self.left = left
         self.op_str = operator
-        self.operator = OPERATOR_MAP[operator]
         self.right = right
         self.split = split
         self.validate()
-        
+
         
     def validate(self):
         if self.op_str == "in" or self.op_str == "<>in":
@@ -241,9 +264,9 @@ class BaseFilter:
     
     def __call__(self, battle: Battle) -> bool:
         if isinstance(self.left, DataType):
-            return self.operator(self.left.data, self.right.get_field(battle))
+            return OPERATOR_MAP[self.op_str](self.left.data, self.right.get_field(battle))
         else:
-            return self.operator(self.left.get_field(battle), self.right.data)
+            return OPERATOR_MAP[self.op_str](self.left.get_field(battle), self.right.data)
         
     def as_str(self, prefix=""):
         left = self.left.as_str() if not isinstance(self.left, str) else self.left

@@ -4,9 +4,14 @@ logout button --
 upload files --
 data table for battles --
 KPIs for loss and win streaks
-filtering battles
+filtering battles -- (finished initial implementation of defining filters)
+apply filters
 loading screen --
 make variables like hero manager retrievable with redis --
+season kpi --
+compression for csv files
+
+content manager is inefficient; each variable should be stored separately rather than as one object so that they don't need to be deserialized to be accessed
 
 switch reference session variables (heroes, users, and seasons, etc) to chron job -- (finished for Heroes and Season details)
 switch user manager to DB backend

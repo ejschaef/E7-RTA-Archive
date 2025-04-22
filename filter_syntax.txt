@@ -20,6 +20,7 @@ DECLARABLE DATA TYPES:
 Int    : any positive integer        -> declaration example: Int(47)
 Date   : date in format "YYYY-MM-DD" -> declaration example: Date(2025-03-12)
 String : used to filter heroes; must be wrapped in ""; example: "Navy Captain Landy"
+Bool   : only use keywords: 'true' or 'false' -> equivalent to Int(1) and Int(2) with a bool flag set
 
 FUNCTIONS:
 

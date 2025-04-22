@@ -1,14 +1,7 @@
-import sqlite3
+from e7_utils.filter_syntax import FilterSyntaxResolver
 
-conn = sqlite3.connect("your_database.db")
-cursor = conn.cursor()
+string = "firstpick = true;"
 
-cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-tables = cursor.fetchall()
+r = FilterSyntaxResolver(string)
 
-print(tables)
-
-for table in tables:
-    print(table[0])
-
-conn.close()
+print(r.as_string())

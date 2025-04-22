@@ -72,9 +72,6 @@ def get_battles(user: User) -> BattleManager:
 
 
 def build_hero_stats(battles: BattleManager, HM: HeroManager):
-    filtered_battles = battles.filter_battles([
-        # lambda b: b.time > "2025-03-27", 
-        ])
     
     #get stats dataframe for user game statistics when hero is on user's team
     player_hero_stats = []
@@ -85,7 +82,7 @@ def build_hero_stats(battles: BattleManager, HM: HeroManager):
             lambda battle: hero.str_id in battle.p1_picks
             ]
         
-        stats = filtered_battles.query_stats(conditions)
+        stats = battles.query_stats(conditions)
         stats['hero'] = hero.name
         if stats['appearance_rate'] == 0:
             continue
@@ -101,14 +98,14 @@ def build_hero_stats(battles: BattleManager, HM: HeroManager):
             lambda battle: hero.str_id in battle.p2_picks
             ]
         
-        stats = filtered_battles.query_stats(conditions)
+        stats = battles.query_stats(conditions)
         stats['hero'] = hero.name
         if stats['appearance_rate'] == 0:
             continue
         enemy_hero_stats.append(stats)
     
     
-    return player_hero_stats, enemy_hero_stats, battles
+    return player_hero_stats, enemy_hero_stats
 
 def get_hero_stats(user: User, HM: HeroManager):
     battles = get_battles(user)

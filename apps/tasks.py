@@ -20,7 +20,7 @@ from apps.e7_utils.battle_manager import BattleManager, to_raw_dataframe, RAW_TY
 from apps.e7_utils.query_user_battles import get_battles, build_hero_stats
 from apps.e7_utils.plots import make_rank_plot
 from apps.content_manager import ContentManager
-from apps.references.cached_var_keys import CONTENT_MNGR_KEY
+import apps.references.cached_var_keys as KEYS
 
 GLOBAL_CLIENT = redis.Redis(host="localhost", port=6379, db=4)
 
@@ -127,14 +127,14 @@ def celery_beat_test( self, task_input ):
 @celery_app.task(name="load_reference_content", bind=True)
 def load_reference_content( self):
     print("Updating E7 reference content")
-    key = CONTENT_MNGR_KEY
+    key = KEYS.CONTENT_MNGR_KEY
     serialized_data = (ContentManager().encode())
     GLOBAL_CLIENT.set(key, serialized_data)
     print("E7 reference content Updated")
     return None
 
 @celery_app.task(name="load_user_data", bind=True)
-def load_user_data( self, user, HM, uploaded_battles=None):
+def load_user_data( self, user, HM, uploaded_battles=None, resolver=None):
     print("TASK STARTED")
     self.update_state(state='STARTED')
     user = jsonpickle.decode(user)
@@ -150,21 +150,36 @@ def load_user_data( self, user, HM, uploaded_battles=None):
         BM = BattleManager.from_df(battles_df)
         battles.merge(BM)
 
+    to_plot = battles
+    filtered_battles = None
+    filter_str = None
 
-    player_hero_stats, enemy_hero_stats, battles = build_hero_stats(battles, HM)
+    print("ORIG LEN", len(battles.battles))
+    
+    if resolver is not None:
+        resolver = jsonpickle.decode(resolver)
+        filter_str = resolver.as_str()
+        filters = resolver.filters
+        filtered_battles = battles.filter_battles(filters)
+        player_hero_stats, enemy_hero_stats = build_hero_stats(filtered_battles, HM)
+    else:
+        player_hero_stats, enemy_hero_stats = build_hero_stats(battles, HM)
+
+    print("NEW LEN", len(battles.battles))
 
     player_hero_stats = [elt for elt in player_hero_stats if elt['games_appeared'] > 0]
     enemy_hero_stats = [elt for elt in enemy_hero_stats if elt['games_appeared'] > 0]
 
     pretty_df = battles.to_pretty_dataframe(HM)
 
-    plot_html = make_rank_plot(battles, user)
+    plot_html = make_rank_plot(battles, user, filtered_battles=filtered_battles)
 
     task_json = {
         'player_hero_stats' : player_hero_stats,
         'enemy_hero_stats'  : enemy_hero_stats,
         'rank_plot'         : plot_html,
         'battles_data'      : pretty_df.to_dict(orient='records'),
+        'applied_filters'   : filter_str,
     }
     self.update_state(state='FINISHED')
     return task_json

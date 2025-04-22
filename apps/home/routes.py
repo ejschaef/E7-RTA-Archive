@@ -49,10 +49,11 @@ def session_remove_user():
     session.pop('server')
     session.pop('username')
     session.pop('user')
-    if 'user_data_task_id' in session:
-        task = AsyncResult(session['user_data_task_id'], app=celery_app)
+    session.pop(KEYS.UPLOADED_BATTLES_DF, None)
+    if KEYS.USER_DATA_TASK_ID_KEY in session:
+        task = AsyncResult(session[KEYS.USER_DATA_TASK_ID_KEY], app=celery_app)
         task.forget()
-        session.pop('user_data_task_id')
+        session.pop(KEYS.USER_DATA_TASK_ID_KEY)
 
 def session_add_user(user: User):
     session['user']     = jsonpickle.encode(user)
@@ -120,7 +121,7 @@ def user_query():
 
         session_add_user(user)
         task = load_user_data.apply_async(args=[jsonpickle.encode(user), jsonpickle.encode(MNGR.HeroManager)], task_id=username+"_"+server)
-        session['user_data_task_id'] = task.id
+        session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
         return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
 
     return render_template('pages/user_query.html', form=login_form)
@@ -128,7 +129,7 @@ def user_query():
 
 @blueprint.route('/loading_user_data/<task_id>')
 def loading_user_data(task_id):
-    if "user_data_task_id" not in session:
+    if KEYS.USER_DATA_TASK_ID_KEY not in session:
         print("NO TASK STARTED")
         return redirect(url_for("home_blueprint.error_117"))
     return render_template("loading/loading_user_data.html", task_id=task_id)
@@ -139,13 +140,12 @@ def user_data_status(task_id):
     task = AsyncResult(task_id, app=celery_app)
     print(f"TASK STATE: {task.state}")
     if task.state == "FAILURE":
-        print(task.result)
-        task = load_user_data.apply_async(args=[session["user"]], task_id=task.id)
-        return {'ready': False}
+        print("TASK FAILED: task result ->", task.result)
+        return {'ready': False, 'failure' : True, 'redirect_url': url_for('home_blueprint.error_117')}
     elif task.ready():
         return {'ready': True, 'redirect_url': url_for('home_blueprint.hero_stats', task_id=task.id)}
     else:
-        return {'ready': False}
+        return {'ready': False, 'failure' : False}
     
 ########################################################################################################
 # START HERO STATS SECTION
@@ -213,11 +213,13 @@ def upload_battle_data():
         
         session_add_user(user)
 
+        session[KEYS.UPLOADED_BATTLES_DF] = df.to_json()
+
         task = load_user_data.apply_async(args=[jsonpickle.encode(user), jsonpickle.encode(MNGR.HeroManager)],
                                           kwargs={'uploaded_battles' : df.to_json()}, 
                                           task_id=user.name+"_"+generate_short_id())
         
-        session['user_data_task_id'] = task.id
+        session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
 
         return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
     
@@ -244,16 +246,23 @@ def apply_filters():
         try:
             # Replace this with your custom parser
             resolver = FilterSyntaxResolver(code, MNGR.HeroManager)
-            print(resolver.as_str())
+            print(f"Received filters:\n\n{resolver.as_str()}\n")
             if "check-syntax" in request.form:
                 return render_template('pages/apply_filters.html', code=code, form=form, validation_msg="Syntax validation passed.")
             else:
-                return render_template('pages/apply_filters.html', code=code, form=form)
+                df_json = session.get(KEYS.UPLOADED_BATTLES_DF)
+                task = load_user_data.apply_async(args=[session['user'], jsonpickle.encode(MNGR.HeroManager)],
+                                          kwargs={'uploaded_battles' : df_json, 'resolver' : jsonpickle.encode(resolver)}, 
+                                          task_id=session["username"]+"_"+generate_short_id())
+                session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
+                session[KEYS.FILTER_CODE] = code
+
+                return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
         except Exception as e:
             return render_template('pages/apply_filters.html', code=code, error=str(e), form=form)
-
     else:
-        return render_template('pages/apply_filters.html', code='', form=form)
+        code = session.get(KEYS.FILTER_CODE, "")
+        return render_template('pages/apply_filters.html', code=code, form=form)
     
 
 def getField(column): 
