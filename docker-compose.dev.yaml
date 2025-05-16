@@ -1,0 +1,35 @@
+services:
+  
+  redis:
+    image: redis:7-alpine
+    container_name: e7-redis-server
+    ports:
+      - "6379:6379"
+
+  flask-app:
+    build: ./
+    container_name: e7-flask-app
+    image: ejschaef/e7-flask-app:latest
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    # environment:
+    #   - CELERY_BROKER_URL=redis://redis:6379/0         # Celery broker
+    #   - CELERY_RESULT_BACKEND=redis://redis:6379/1     # Celery result
+    #   - SESSION_REDIS=redis://redis:6379/2             # Flask session storage
+    depends_on:
+      - redis
+
+  celery-worker:
+    build: ./
+    container_name: e7-celery-worker
+    image: ejschaef/e7-celery-worker:latest
+    command: celery -A apps.tasks worker --loglevel=info --pool=solo
+    volumes:
+      - .:/code
+    # environment:
+    #   - CELERY_BROKER_URL=redis://redis:6379/0
+    #   - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    depends_on:
+      - redis

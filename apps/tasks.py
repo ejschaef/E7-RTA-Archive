@@ -21,8 +21,9 @@ from apps.e7_utils.query_user_battles import get_battles, build_hero_stats
 from apps.e7_utils.plots import make_rank_plot
 from apps.content_manager import ContentManager
 import apps.references.cached_var_keys as KEYS
+from apps.redis_manager import GLOBAL_DB
 
-GLOBAL_CLIENT = redis.Redis(host="localhost", port=6379, db=4)
+GLOBAL_CLIENT = GLOBAL_DB.get_client()
 
 logger = get_task_logger(__name__)
 

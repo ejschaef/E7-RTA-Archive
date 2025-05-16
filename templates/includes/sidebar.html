@@ -87,7 +87,7 @@
             <span class="pc-mtext">Upload Battle Data</span>
           </a>
         </li>
-        {% if "username" in session and "server" in session %}
+        {% if "username" in session and "server" in session or True %}
         <li class="pc-item">
           <a href="{{ url_for('home_blueprint.apply_filters') }}" class="pc-link">
             <span class="pc-micon"><i data-feather="filter"></i></span>

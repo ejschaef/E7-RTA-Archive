@@ -26,6 +26,7 @@ from apps.content_manager import ContentManager
 from apps.exceptions.exception import DataValidationException
 from apps.references import cached_var_keys as KEYS
 from apps.home.read_data import read_battle_csv
+from apps.redis_manager import GLOBAL_DB
 
 from apps.tasks import celery_app, load_user_data
 from celery.result import AsyncResult
@@ -34,7 +35,7 @@ from celery.result import AsyncResult
 # START HELPERS
 ########################################################################################################
 
-GLOBAL_CLIENT = redis.Redis(host="localhost", port=6379, db=4)
+GLOBAL_CLIENT = GLOBAL_DB.get_client()
 
 def get_mngr() -> ContentManager:
     return ContentManager.decode(GLOBAL_CLIENT.get(KEYS.CONTENT_MNGR_KEY))

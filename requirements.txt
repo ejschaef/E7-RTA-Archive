@@ -8,7 +8,6 @@ pandas==2.2.3
 
 # Session
 flask_session==0.8.0
-redis==5.0.1
 
 # DB
 flask_migrate==4.1.0
@@ -26,6 +25,12 @@ marshmallow-sqlalchemy==1.4.1
 colorama==0.4.6
 PyJWT~=2.10.1
 WTForms-Alchemy==0.19.0
+jsonpickle==4.0.5
+
+#e7 content tools
+sympy==1.14.0
+requests==2.32.3
+plotly==6.1.0
 
 # utils
 email_validator==2.2.0

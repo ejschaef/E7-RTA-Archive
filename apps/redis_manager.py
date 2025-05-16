@@ -15,10 +15,10 @@ class Redis_DB:
         return redis.Redis(host=self.host, port=self.port, db=self.db)
 
 # redis dbs
-CELERY_BROKER_DB = Redis_DB("localhost", 6379, 1)
-CELERY_BACKEND_DB = Redis_DB("localhost", 6379, 2)
-SESSION_DB = Redis_DB("localhost", 6379, 3)
-GLOBAL_DB = Redis_DB("localhost", 6379, 4)
+CELERY_BROKER_DB = Redis_DB("e7-redis-server", 6379, 1)
+CELERY_BACKEND_DB = Redis_DB("e7-redis-server", 6379, 2)
+SESSION_DB = Redis_DB("e7-redis-server", 6379, 3)
+GLOBAL_DB = Redis_DB("e7-redis-server", 6379, 4)
 
 class RedisManager:
 

@@ -122,7 +122,6 @@ class Int(DataType):
                 raise RuntimeError(f"Bool flag was set to true, but the value was {self.data} ; can only be 1 or 2")
         return str(self.data)
         
-            
 VALID_STRING_CHARS = {' '} | set(string.ascii_letters)
 
 class String(DataType):
@@ -296,7 +295,7 @@ class FilterSyntaxResolver:
         output = ''
         for f in self.filters:
             s = f.as_str(prefix=PRINT_PREFIX)
-            output += f"{s},\n"
+            output += f"{s};\n"
         output = f"[\n{output}]"
         
         for str_id, name in self.HM.str_name_map.items():
@@ -442,7 +441,7 @@ class FilterSyntaxResolver:
         
 if __name__ == "__main__":
     syntax_str = '''
-            Int(2365) > victory-points;
+            Int(2365) < victory-points;
             Date(2024-04-12) >= p1.picks;
             Str(Zio) <>in p1.picks;
             OR( DATE(2022-04-12) < battle-date, p1.league = Str(champion))

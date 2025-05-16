@@ -12,3 +12,10 @@ ps -ef | grep 'celery' | grep -v grep | awk '{print $2}' | xargs -r kill -9
 
 CELERY STATUS:
 ps aux | grep 'celery'
+
+Docker
+docker-compose -f docker-compose.prod.yaml build
+docker-compose -f docker-compose.dev.yaml build
+
+docker-compose -f docker-compose.prod.yaml up
+docker-compose -f docker-compose.dev.yaml up

@@ -1,0 +1,10 @@
+*.pyc
+__pycache__/
+.env
+node_modules/
+.git
+.gitignore
+
+apps/static/assets/node_modules
+apps/static/assets/yarn.lock
+apps/static/assets/.temp
