@@ -37,12 +37,12 @@
 
             <!-- [ season details table ] start -->
             <div class="col-sm-6">
-                <div class="card razz-kpi">
+                <div class="card razz-kpi height-400">
                     <div class="card-header kpi-header">
                         <h5 class="text-white">Season Details</h5>
                     </div>
-                    <div class="card-body kpi-body">
-                        <div>
+                    <div class="card-body kpi-body rel-height-80">
+                        <div class="rel-height-100">
                             <table id="SeasonDetailsHead" class="clean-table">
                                 <thead>
                                     <tr>
@@ -54,7 +54,7 @@
                                     </tr>
                                 </thead>
                             </table>
-                            <div class="scrollable-200">
+                            <div class="scrollable rel-height-80">
                                 <table id="SeasonDetailsBody" class="clean-table interior-border-tbl" style="width:100%;">
                                     <tbody>
                                         {% for item in season_details %}
@@ -69,6 +69,33 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ season details table ] end -->
+
+            <!-- [ season details table ] start -->
+            <div class="col-sm-6">
+                <div class="card height-400">
+                    <div class="card-header kpi-header">
+                        <h5>Filter battles for calculations</h5>
+                    </div>
+                    <div class="card-body text-center tight-fit rel-height-100">
+                        <div class="row justify-content-center">
+                            {% if error %}
+                                    <span class="d-block text-danger mb-1 rel-width-80 scrollable-60px">{{ error | safe }}</span>
+                            {% elif validation_msg %}
+                                    <span class="d-block text-safe mb-1 rel-width-80 scrollable-60px">{{ validation_msg| safe }}</span>
+                            {% endif %}
+                            <form method="post" class="card-body">
+                                {{ form.hidden_tag() }}
+                                <textarea id="codeArea" name="code" class="codemirror-hidden">{{ code or '' }}</textarea>
+                                <div class="d-flex justify-content-center gap-3 mt-4">
+                                    <button type="submit" name="check-syntax" class="btn shadow px-sm-1">Check Syntax</button>
+                                    <button type="submit" name="apply-filter" class="btn shadow px-sm-1">Apply Filter</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -371,6 +398,66 @@
         }
         );
 
+    </script>
+
+    <script>
+        CodeMirror.defineMode("myMode", function() {
+        return {
+            token: function(stream) {
+                if (stream.match(/int\(\d+\)/i)) {
+                    return "number"; // match a number
+                }
+                if (stream.match(/date\(\d\d\d\d-\d\d-\d\d\)/i)) {
+                    return "date"; // match a number
+                }
+                if (stream.match(/str\([A-Za-z ]+\)/i)) {
+                    return "string"; // match a number
+                }
+                if (stream.match(/set\([A-Za-z ,]+\)/i)) {
+                    return "set"; // match a number
+                }
+                if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|STR(?=\()|INT(?=\()|DATE(?=\()|SET(?=\()/i)) {
+                return "keyword";
+                }
+                if (stream.match(/\s+(?:<>|<|>|=|>=|<=|in|<>in)(?=\s+)/i)) {
+                    return "operator"; // match a number
+                }
+                if (stream.match(/(?:^|\s+)(?:true|false)(?:(?=\,)|(?=\))|(?=\s+)|$|(?=\;))/i)) {
+                    return "bool"; // match a field
+                }
+                if (stream.match(/(?:^|\s+)(?:battle-date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?:(?=\,)|(?=\))|(?=\s+)|$|(?=\;))/i)) {
+                    return "field"; // match a field
+                }
+                if (stream.match(/[\(\)\{\}\;\,]/)) {
+                    return "bracket"; // match a quoted string
+                }
+                stream.next();
+                return null;
+            }
+        };
+        });
+
+        const textarea = document.getElementById("codeArea");
+        var editor = CodeMirror.fromTextArea(textarea, {
+        mode: "myMode",
+        lineNumbers: true,
+        theme: "default"
+        });
+
+        editor.setSize(null, 185);
+
+        // Ensure value is synced back to textarea before submit
+        document.querySelector("form").addEventListener("submit", function() {
+        document.getElementById("codeArea").value = editor.getValue();
+        });
+
+            // Optional: sync changes back to textarea if needed
+        editor.on("change", () => {
+            editor.save(); // Updates the hidden textarea for form submit
+        });
+
+        // Show the editor after it's initialized
+        textarea.classList.remove('codemirror-hidden');
     </script>
 
     {% endblock extra_js %}

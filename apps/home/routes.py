@@ -154,9 +154,34 @@ def user_data_status(task_id):
 
 @blueprint.route('/hero_stats/<task_id>', methods=['GET', 'POST'])
 def hero_stats(task_id=None):
+    form = CodeForm()
+    code = request.form.get('code')
+
     if 'switch_user' in request.form:
         session_remove_user()
         return redirect(url_for("home_blueprint.user_query"))
+    
+    filter_error = None
+    filter_validation_msg = None
+    
+    if request.method == "POST" and code is not None:
+        session[KEYS.FILTER_CODE] = code
+        try:
+            MNGR = get_mngr()
+            resolver = FilterSyntaxResolver(code, MNGR.HeroManager)
+            print(f"Received filters:\n\n{resolver.as_str()}\n")
+            if "check-syntax" in request.form:
+                filter_validation_msg="Syntax validation passed."
+            else:
+                df_json = session.get(KEYS.UPLOADED_BATTLES_DF)
+                task = load_user_data.apply_async(args=[session['user'], jsonpickle.encode(MNGR.HeroManager)],
+                                          kwargs={'uploaded_battles' : df_json, 'resolver' : jsonpickle.encode(resolver)}, 
+                                          task_id=session["username"]+"_"+generate_short_id())
+                session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
+                return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
+        except Exception as e:
+            filter_error = e
+            pass
 
     if session.get("user", None) is None:
         print("No user passed")
@@ -167,12 +192,18 @@ def hero_stats(task_id=None):
     
     MNGR = get_mngr()
 
-    season_df = MNGR.SeasonDetails
-
     task = AsyncResult(task_id, app=celery_app)
     data = task.result if task.successful() else 'Error occurred'
+    code = session.get(KEYS.FILTER_CODE, "")
 
-    context = {'segment' : 'hero_stats', 'task_id' : task.id, 'season_details' : MNGR.SeasonDetails.to_dict(orient='records')}
+    context = {'segment' : 'hero_stats', 
+               'task_id' : task.id, 
+               'season_details' : MNGR.SeasonDetails.to_dict(orient='records'),
+               'form' : form,
+               'code' : code,
+               'error' : str(filter_error) if filter_error else None,
+               'validation_msg' : filter_validation_msg}
+    
     context.update(data)
 
     return render_template('pages/hero_stats.html', **context)
@@ -245,7 +276,6 @@ def apply_filters():
     MNGR = get_mngr()
     if request.method == "POST" and code is not None:
         try:
-            # Replace this with your custom parser
             resolver = FilterSyntaxResolver(code, MNGR.HeroManager)
             print(f"Received filters:\n\n{resolver.as_str()}\n")
             if "check-syntax" in request.form:

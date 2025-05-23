@@ -9,6 +9,11 @@ class SyntaxException(Exception):
     
     def __init__(self, message):
         super().__init__(message)
+
+class TypeException(Exception):
+    
+    def __init__(self, message):
+        super().__init__(message)
         
 class ValidationError(Exception):
     

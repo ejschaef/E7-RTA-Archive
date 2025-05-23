@@ -152,11 +152,11 @@ class Date(DataType):
         if not all(c in VALID_DATE_CHARS for c in data):
             raise futils.ValidationError(f"Invalid chars passed for Date type: {data}")
         counts = dict(Counter(data))
-        if not counts["-"] == 2:
-            raise futils.ValidationError(f"All dates must have two hyphens; got data: {data}")
+        if not counts.get("-", 0) == 2:
+            raise futils.ValidationError(f"All dates must have two hyphens and be of the form YYYY-MM-DD; got: {data}")
         d = data.split("-")
         if len(d) != 3 or len(data) != 10 or len(d[0]) != 4 or len(d[1]) != 2:
-            raise futils.ValidationError(f"All dates must be of the form YYYY-MM-DD; got data: {data}")
+            raise futils.ValidationError(f"All dates must be of the form YYYY-MM-DD; got: {data}")
             
 VALID_SET_CHARS = {','} | VALID_STRING_CHARS
             
@@ -277,7 +277,7 @@ class BaseFilter:
 def get_underscore_substitute_str(string, pattern):
     old = re.search(pattern, string).group()
     new = old.replace(" ", "_")
-    print(old, new)
+    print(f"Substituted spaces with underscores: {old}, {new}")
     return old, new
 
 
@@ -314,6 +314,13 @@ class FilterSyntaxResolver:
         """
         parse a string with no clause functions or sub filters
         """
+        print(f"Parsing pure filter: {string}")
+        counts = dict(Counter(string))
+        if counts.get("(", 0) > 1 or counts.get(")", 0) > 1:
+            raise futils.SyntaxException(f"Pure filters cannot have more than one declared data type; found multiple sets of parentheses; got: {string}")
+        elif counts.get("(") != counts.get(")"):
+            raise futils.SyntaxException(f"Imbalanced parentheses in pure filter; got: {string}")
+
         string_flag = False
         set_flag = False
         if 'str(' in string:
@@ -335,6 +342,7 @@ class FilterSyntaxResolver:
             split = [elt.replace(underscores_set, spaces_set) for elt in split]
 
         left, op, right = split
+        left_str, right_str = left, right
         if not op in OPERATOR_MAP:
             raise futils.SyntaxException(f"Operator: {op} is not valid; Pure filters must be of the form: X oper Y ;  got: {string}")
         if left in Field.FIELD_MAP:
@@ -362,7 +370,21 @@ class FilterSyntaxResolver:
         except futils.SyntaxException as E:
             raise futils.SyntaxException(f"Either the left or right hand side of the operator must be a valid declared DataType ; {E}")
             
-        
+        if isinstance(left, Set):
+            raise futils.SyntaxException(f"Left side of an operator cannot be a Set; got '{left_str}'")
+        elif isinstance(right, Set):
+            if 'league' in left.string:
+                for s in right.data:
+                    if s not in LEAGUES:
+                        s = self.HM.str_name_map.get(s, s)
+                        raise futils.TypeException(f"The field interacting with the set is an RTA league, but the set contains non RTA league values; '{s}' is not an RTA league")
+            elif ".pick" in left.string:
+                for s in right.data:
+                    if s not in self.HM.str_name_map:
+                        raise futils.TypeException(f"The field interacting with the set is a hero, but the set contains non hero values; '{s}' is not a valid hero")
+            else:
+                raise futils.TypeException(f"Only league or player pick fields can interact with sets; got field: '{left.string}'")
+
         if isinstance(left, Date):
             if not right.field == 'time':
                 raise futils.SyntaxException(f"Date type can only be compared against battle-date field ; got field: '{right.string}' from '{string}'")
