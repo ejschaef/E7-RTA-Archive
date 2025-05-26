@@ -75,7 +75,7 @@
             </div>
             <!-- [ season details table ] end -->
 
-            <!-- [ season details table ] start -->
+            <!-- [ filter code mirror ] start -->
             <div class="col-sm-6">
                 <div class="card height-400">
                     <div class="card-header kpi-header">
@@ -100,7 +100,67 @@
                     </div>
                 </div>
             </div>
-            <!-- [ season details table ] end -->
+            <!-- [ filter code mirror ] end -->
+
+
+            <!-- [ fp/sp counts section ] start -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-9">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Total Battles:</h5>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["total_battles"] | safe }}</h5>
+                            </div>
+                            <div class="col-9">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">First Pick Games:</h5>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["firstpick_count"] | safe }}</h5>
+                            </div>
+                            <div class="col-9">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Second Pick Games:</h5>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["secondpick_count"] | safe }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ fp/sp counts section ] end -->
+
+            <!-- [ fp/sp winrates section ] start -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-9">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Total Winrate:</h5>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["total_winrate"] | safe }}</h5>
+                            </div>
+                            <div class="col-9">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">First Pick Winrate:</h5>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["firstpick_winrate"] | safe }}</h5>
+                            </div>
+                            <div class="col-9">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Second Pick Winrate:</h5>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["secondpick_winrate"] | safe }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ fp/sp winrates section ] end -->
+
 
             <!-- [ plot section ] start -->
             <div class="col-sm-12" id="rank-plot" style="width:100%">

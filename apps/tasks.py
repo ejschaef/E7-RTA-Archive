@@ -178,9 +178,11 @@ def load_user_data( self, user, HM, uploaded_battles=None, resolver=None, cached
         filter_str = resolver.as_str()
         filters = resolver.filters
         filtered_battles = battles.filter_battles(filters)
-        player_hero_stats, enemy_hero_stats = build_hero_stats(filtered_battles, HM)
+        player_hero_stats, enemy_hero_stats, general_stats = build_hero_stats(filtered_battles, HM)
     else:
-        player_hero_stats, enemy_hero_stats = build_hero_stats(battles, HM)
+        player_hero_stats, enemy_hero_stats, general_stats = build_hero_stats(battles, HM)
+
+    general_stats["unfiltered_games"] = len(battles.battles)
 
     print("NEW LEN", len(battles.battles))
 
@@ -193,10 +195,11 @@ def load_user_data( self, user, HM, uploaded_battles=None, resolver=None, cached
     task_json = {
         'player_hero_stats' : player_hero_stats,
         'enemy_hero_stats'  : enemy_hero_stats,
+        'general_stats'     : general_stats,
         'rank_plot'         : plot_html,
         'battles_data'      : pretty_df.to_dict(orient='records'),
         'applied_filters'   : filter_str,
         'cached_battles'    : cached_battles,
     }
-    
+
     return task_json

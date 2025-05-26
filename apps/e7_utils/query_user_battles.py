@@ -97,8 +97,12 @@ def build_hero_stats(battles: BattleManager, HM: HeroManager):
         if stats['appearance_rate'] == 0:
             continue
         enemy_hero_stats.append(stats)
+
+
+    #get general stats
+    general_stats = battles.get_general_stats(HM)
     
-    return player_hero_stats, enemy_hero_stats
+    return player_hero_stats, enemy_hero_stats, general_stats
 
 def get_hero_stats(user: User, HM: HeroManager):
     battles = get_battles(user)

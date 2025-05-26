@@ -107,7 +107,7 @@ class HeroManager:
     def get_from_prime(self, prime: int) -> Hero:
         return self.prime_dict[str(prime)]
     
-    def get_from_name(self, name: int) -> Hero:
+    def get_from_name(self, name: str) -> Hero:
         return self.name_dict[name.lower()]
     
     def get_from_index(self, index: int) -> Hero:

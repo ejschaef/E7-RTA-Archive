@@ -322,7 +322,7 @@ class FilterSyntaxResolver:
         if counts.get("(", 0) > 1 or counts.get(")", 0) > 1:
             raise futils.SyntaxException(f"Pure filters cannot have more than one declared data type; found multiple sets of parentheses; got: {string}")
         elif counts.get("(") != counts.get(")"):
-            raise futils.SyntaxException(f"Imbalanced parentheses in pure filter; got: {string}")
+            raise futils.SyntaxException(f"Imbalanced parentheses in pure filter; got: {string}")        
 
         string_flag = False
         set_flag = False

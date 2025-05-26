@@ -9,13 +9,15 @@ apply filters
 loading screen --
 make variables like hero manager retrievable with redis --
 season kpi --
-compression for csv files
+compression for csv files (no longer uploading files)
 
 content manager is inefficient; each variable should be stored separately rather than as one object so that they don't need to be deserialized to be accessed
 
 switch reference session variables (heroes, users, and seasons, etc) to chron job -- (finished for Heroes and Season details)
-switch user manager to DB backend
+switch user manager to DB backend --
 
 BUGS:
 
 plotly line doubles when undocking window and making smaller -> switch to chartsJS -- (not switching, but fixed issue)
+
+app does not handle case when user filters battles and none remain

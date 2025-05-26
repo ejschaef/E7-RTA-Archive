@@ -241,9 +241,15 @@ class BattleManager:
             return self.performant_df
 
         df = self.to_dataframe().copy()
+        EMPTY = HM.get_from_name("Empty")
+
+        def to_prime(hero_str_id):
+            if not hero_str_id or hero_str_id == "None":
+                return EMPTY.prime
+            return HM.get_from_str_id(hero_str_id).prime
 
         for col in HERO_COLS:
-            df[col] = df[col].apply(lambda hero_str_id: HM.get_from_str_id(hero_str_id).prime if hero_str_id != "" else 1)
+            df[col] = df[col].apply(to_prime)
 
         
         for consolidation_col in ["p1_picks", "p2_picks", "p1_prebans", "p2_prebans"]:
@@ -262,6 +268,40 @@ class BattleManager:
         df = df.astype(PERFORMANT_TYPE_DICT)
         self.performant_df = df
         return df
+    
+    def get_general_stats(self, HM: HeroManager) -> dict[str, object]:
+        pfdf = self.to_performant_df(HM)
+        total_battles = len(pfdf)
+
+        fp_df = pfdf[pfdf['firstpick']==1]
+        sp_df = pfdf[pfdf['firstpick']!=1]
+
+        firstpick_count = len(fp_df)
+        secondpick_count = len(sp_df)
+
+        fp_wins = (fp_df['winner'] == 1).sum()
+        sp_wins = (sp_df['winner'] == 1).sum()
+
+        fp_r = firstpick_count / total_battles if total_battles > 0 else 0
+        sp_r = secondpick_count / total_battles if total_battles > 0 else 0
+
+        fp_wr = fp_wins / firstpick_count if firstpick_count > 0 else 0
+        sp_wr = sp_wins / secondpick_count if secondpick_count > 0 else 0
+
+        winrate = (pfdf["winner"] == 1).sum() / total_battles if total_battles > 0 else 0
+
+        NA = "N/A"
+
+        return {
+            "firstpick_count"   : firstpick_count,
+            "secondpick_count"  : secondpick_count,
+            "firstpick_rate"    : to_percent(fp_r) if firstpick_count > 0 else NA,
+            "secondpick_rate"   : to_percent(sp_r) if secondpick_count > 0 else NA,
+            "firstpick_winrate" : to_percent(fp_wr) if firstpick_count > 0 else NA,
+            "secondpick_winrate": to_percent(sp_wr) if secondpick_count > 0 else NA,
+            "total_winrate"     : to_percent(winrate) if total_battles > 0 else NA,
+            'total_battles'     : total_battles,
+        }
 
         
     def merge(self, BM: Self):
