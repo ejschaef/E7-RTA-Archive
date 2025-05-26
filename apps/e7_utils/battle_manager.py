@@ -4,83 +4,23 @@ Created on Sun Mar 30 15:50:47 2025
 
 @author: Grant
 """
+from io import StringIO
 from typing import Self, Iterable
 import apps.e7_utils.utils as utils
 from apps.e7_utils.hero_manager import HeroManager
+from apps.e7_utils.references import LEAGUES, PERFORMANT_TYPE_DICT, PRETTY_COLUMN_DICT, RAW_TYPE_DICT, COL_CONSOLIDATION_MAP, HERO_COLS
 import pandas as pd
 import re
 import os
+import numpy as np
+import itertools
+import jsonpickle
 
 to_percent = lambda flt: str(round(flt * 100, 1)) + "%"
 
-PRETTY_COLUMN_DICT = {
-    "Date/Time" : "time",
-    "Seq Num" : "seq_num",
-    "P1 ID" : "p1_id",
-    "P2 ID" : "p2_id",
-    "P1 League" : "grades_1",
-    "P2 League" : "grades_2",
-    "P1 Points" : "scores_1",
-    "Win" : "winner",
-    "Firstpick" : "firstpick",
-    "P1 Preban 1" : "p1_preban_1",
-    "P1 Preban 2" : "p1_preban_2",
-    "P2 Preban 1" : "p2_preban_1",
-    "P2 Preban 2" : "p2_preban_2",
-    "P1 Pick 1" : "p1_picks_1",
-    "P1 Pick 2" : "p1_picks_2",
-    "P1 Pick 3" : "p1_picks_3",
-    "P1 Pick 4" : "p1_picks_4",
-    "P1 Pick 5" : "p1_picks_5",
-    "P2 Pick 1" : "p2_picks_1",
-    "P2 Pick 2" : "p2_picks_2",
-    "P2 Pick 3" : "p2_picks_3",
-    "P2 Pick 4" : "p2_picks_4",
-    "P2 Pick 5" : "p2_picks_5",
-    "P1 Postban" : "postbans_1",
-    "P2 Postban" : "postbans_2",
-    }
-
-RAW_TYPE_DICT = {
-    "time" : str,
-    "seq_num" : str,
-    "p1_id" : int,
-    "p2_id" : int,
-    "grades_1" : str,
-    "grades_2" : str,
-    "scores_1" : int,
-    "scores_2" : int,
-    "winner" : int,
-    "firstpick" : int,
-    "p1_preban_1" : str,
-    "p1_preban_2" : str,
-    "p2_preban_1" : str,
-    "p2_preban_2" : str,
-    "p1_picks_1" : str,
-    "p1_picks_2" : str,
-    "p1_picks_3" : str,
-    "p1_picks_4" : str,
-    "p1_picks_5" : str,
-    "p2_picks_1" : str,
-    "p2_picks_2" : str,
-    "p2_picks_3" : str,
-    "p2_picks_4" : str,
-    "p2_picks_5" : str,
-    "postbans_1" : str,
-    "postbans_2" : str,
-    }
 
 RAW_COL_ORDER = [col for col in RAW_TYPE_DICT]
 
-COL_CONSOLIDATION_MAP = {
-    'p1_preban' : ('p1_preban_1', 'p1_preban_2'),
-    'p2_preban' : ( 'p2_preban_1', 'p2_preban_2'),
-    'p1_picks'  : ('p1_picks_1', 'p1_picks_2', 'p1_picks_3', 'p1_picks_4', 'p1_picks_5',),
-    'p2_picks'  : ('p2_picks_1', 'p2_picks_2', 'p2_picks_3', 'p2_picks_4', 'p2_picks_5',),
-    'postbans'  : ('postbans_1', 'postbans_2'),
-    'scores'    : ('scores_1', 'scores_2'),
-    'grades'    : ('grades_1', 'grades_2')
-}
 
 
 class Battle:
@@ -89,7 +29,7 @@ class Battle:
                 'p1_picks', 'p2_picks', 'winner',    \
                 'grades', 'scores', 'p1_preban',     \
                 'p2_preban', 'postbans', 'firstpick'
-                
+    
     @property
     def key(self):
         return self.seq_num
@@ -140,34 +80,53 @@ def to_pretty_dataframe(df: pd.DataFrame, HM: HeroManager):
 
     df = df[[col for col in PRETTY_COLUMN_DICT]].copy()
     
-    col_replace_dict = {
-            "Win" : {1:"W", 2:"L"},
-            "Firstpick" : {1:True, 2:False},
-        }
-    
-    df = df.replace(col_replace_dict)
+    df["Win"] = df["Win"].map({1: "W", 2: "L"}).astype(str)
+    df["Firstpick"] = df["Firstpick"].map({1: True, 2: False}).astype(bool)
     return df
 
 def to_raw_dataframe(df: pd.DataFrame, HM: HeroManager):
     col_replace_dict = {
             "Win" : {"W":1, "L":2},
-            "Firstpick" : {True:1, False:2, "True":1, "False":1},
+            "Firstpick" : {True:1, False:2, "True":1, "False":2},
         }
     
-    df = df.replace(HM.name_str_map)
-    df = df.replace(col_replace_dict)
+    df = df.replace(HM.name_str_map).infer_objects(copy=False)
+    df = df.replace(col_replace_dict).infer_objects(copy=False)
     df["scores_2"] = -1
     
     df = df.rename(columns=PRETTY_COLUMN_DICT)
     df = df[RAW_COL_ORDER]
     return df
-    
+
+
+def filter_battles(battles: dict[str, Battle], conditions: list[callable]) -> list[Battle]:
+    return {b.key : b for b in battles.values() if all(condition(b) for condition in conditions)}
+
+def query_stats(battles: pd.DataFrame, total_battles: int) -> dict[str, float]:
+        games_won = (battles['winner'] == 1).sum()
+        games_appeared = len(battles)
+        appearance_rate = games_appeared / total_battles if total_battles != 0 else 0
+        winrate = games_won / games_appeared if games_appeared != 0 else 0
+        return {
+            'games_won'       : int(games_won),
+            'games_appeared'  : int(games_appeared),
+            'total_games'     : total_battles,
+            'appearance_rate' : to_percent(appearance_rate),
+            'win_rate'        : to_percent(winrate),
+            '+/-'             : int(2 * games_won - games_appeared)
+            }
     
 class BattleManager:
     
-    def __init__(self, battles=None):
+    def __init__(self, battles=None, filters=None):
         self.df = None
-        self.pretty_replace_hero_dict = None
+        self.performant_df = None
+
+        #will be sets of hero primes
+        self.player_heroes = None
+        self.enemy_heroes = None
+        
+        #Set battles with dict if it is passed as dict, otherwise process the list into a dict
         if battles is not None:
             if not isinstance(battles, dict):
                 battles_dict = {}
@@ -178,6 +137,11 @@ class BattleManager:
             self.battles = battles
         else:
             self.battles = {}
+
+        #apply filters if passed
+        if filters is not None:
+            self.battles = filter_battles(self.battles, conditions=filters)
+
     
     @classmethod
     def from_raw_battles_list(cls, battles: list[dict]) -> Self:
@@ -186,6 +150,7 @@ class BattleManager:
         """
         battles = [Battle(battle) for battle in battles]
         return cls(battles)
+    
     
     @classmethod
     def from_df(cls, df: pd.DataFrame) -> Self:
@@ -197,6 +162,31 @@ class BattleManager:
         df = pd.read_parquet(file)
         return cls.from_df(df)
     
+    @classmethod
+    def decode(cls, serialized_content) -> Self:
+        decoded = jsonpickle.decode(serialized_content)
+        if decoded.df is not None:
+            decoded.df = pd.read_json(StringIO(decoded.df))
+            decoded.df = decoded.df.astype(RAW_TYPE_DICT)
+        if decoded.performant_df is not None:
+            decoded.performant_df = pd.read_json(StringIO(decoded.performant_df))
+            decoded.performant_df = decoded.performant_df.astype(PERFORMANT_TYPE_DICT)
+            decoded.make_hero_sets()
+        return decoded
+
+    def encode(self):
+        print("ENCODING BATTLES")
+        if self.performant_df is not None:
+            self.enemy_heroes = None
+            self.player_heroes = None
+            self.player_hero_pairs = None
+            self.enemy_hero_pairs = None
+            self.performant_df = self.performant_df.to_json()
+        if self.df is not None:
+            self.df = self.df.to_json()
+        encoded = jsonpickle.encode(self)
+        return encoded
+    
     @property
     def raw_battle_dict(self):
         return {seq_num : battle.to_dict() for seq_num, battle in self.battles.items()}
@@ -207,14 +197,28 @@ class BattleManager:
     def __iter__(self):
         yield from self.battles
 
+    def make_hero_sets(self):
+        assert self.performant_df is not None
+        self.player_heroes = dict()
+        self.enemy_heroes = dict()
+        for col in COL_CONSOLIDATION_MAP['p1_picks']:
+            self.performant_df[col].apply(lambda prime: self.player_heroes.setdefault(prime, None))
+        for col in COL_CONSOLIDATION_MAP['p2_picks']:
+            self.performant_df[col].apply(lambda prime: self.enemy_heroes.setdefault(prime, None))
+
+        #make pairs of heroes based on the battles
+        self.player_hero_pairs = {p1 * p2: (p1, p2) for p1, p2 in itertools.combinations(self.player_heroes.keys(), 2)}
+        self.enemy_hero_pairs = {p1 * p2: (p1, p2) for p1, p2 in itertools.combinations(self.enemy_heroes.keys(), 2)}
+
+        #assign each hero the corresponding subset of battles
+        for prime in self.player_heroes:
+            self.player_heroes[prime] = self.performant_df[self.performant_df['p1_picks'] % prime == 0]
+        for prime in self.enemy_heroes:
+            self.enemy_heroes[prime] = self.performant_df[self.performant_df['p2_picks'] % prime == 0]
+
     def filter_battles(self, conditions) -> Self:
-        filtered = []
-        for battle in self.battles.values():
-            if not all(condition(battle) for condition in conditions):
-                continue
-            else:
-                filtered.append(battle)
-        return BattleManager(filtered)
+        filtered_battles = BattleManager(battles=self.battles, filters=conditions)
+        return filtered_battles
     
     def add_battles(self, battles: Iterable[Battle]):
         for battle in battles:
@@ -228,9 +232,37 @@ class BattleManager:
         df = df.astype(RAW_TYPE_DICT)
         self.df = df
         return self.df
-    
+
     def to_pretty_dataframe(self, HM: HeroManager):
         return to_pretty_dataframe(self.to_dataframe(), HM)
+    
+    def to_performant_df(self, HM: HeroManager) -> pd.DataFrame:
+        if self.performant_df is not None:
+            return self.performant_df
+
+        df = self.to_dataframe().copy()
+
+        for col in HERO_COLS:
+            df[col] = df[col].apply(lambda hero_str_id: HM.get_from_str_id(hero_str_id).prime if hero_str_id != "" else 1)
+
+        
+        for consolidation_col in ["p1_picks", "p2_picks", "p1_prebans", "p2_prebans"]:
+
+            def consolidate_col(row):
+                val = 1
+                for col in COL_CONSOLIDATION_MAP[consolidation_col]:
+                    val *= row[col]
+                return val
+        
+            df[consolidation_col] = df.apply(consolidate_col, axis=1)
+
+        df["grades_1"] = df["grades_1"].apply(lambda league: LEAGUES[league])
+        df["grades_2"] = df["grades_2"].apply(lambda league: LEAGUES[league])
+        
+        df = df.astype(PERFORMANT_TYPE_DICT)
+        self.performant_df = df
+        return df
+
         
     def merge(self, BM: Self):
         self.add_battles(BM.battles.values())
@@ -251,30 +283,6 @@ class BattleManager:
             df.to_parquet(file, index=False)
             print(f"Adding to existing battle data in {file}")
             
-    def query_stats(self, conditions: list[callable]) -> float:
-        if len(self.battles) == 0:
-            return None
-        filtered = []
-        for battle in self.battles.values():
-            if not all(condition(battle) for condition in conditions):
-                continue
-            else:
-                filtered.append(battle)
-                
-        games_won = sum(b.winner == 1 for b in filtered)
-        games_appeared = len(filtered)
-        appearance_rate = len(filtered) / len(self.battles)
-        winrate = games_won / len(filtered) if len(filtered) != 0 else 0
-
-        
-        return {
-            'games_won'       : games_won,
-            'games_appeared'  : games_appeared,
-            'total_games'     : len(self.battles),
-            'appearance_rate' : to_percent(appearance_rate),
-            'win_rate'        : to_percent(winrate),
-            '+/-'             : 2 * games_won - games_appeared
-            }
                         
 
         

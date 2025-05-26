@@ -6,7 +6,7 @@ Created on Sat Apr 12 18:17:13 2025
 """
 
 from apps.e7_utils.user_manager import User
-from apps.e7_utils.battle_manager import BattleManager
+from apps.e7_utils.battle_manager import BattleManager, query_stats
 from apps.e7_utils.hero_manager import HeroManager
 import requests
 import ast
@@ -72,18 +72,17 @@ def get_battles(user: User) -> BattleManager:
 
 
 def build_hero_stats(battles: BattleManager, HM: HeroManager):
-    
+
+    battles.to_performant_df(HM)
+    battles.make_hero_sets()
+    total_battles = len(battles.battles)
+
     #get stats dataframe for user game statistics when hero is on user's team
     player_hero_stats = []
-    
-    for hero in HM.heroes:
-        
-        conditions = [
-            lambda battle: hero.str_id in battle.p1_picks
-            ]
-        
-        stats = battles.query_stats(conditions)
-        stats['hero'] = hero.name
+
+    for prime, df in battles.player_heroes.items():
+        stats = query_stats(df, total_battles)
+        stats['hero'] = HM.get_from_prime(prime).name
         if stats['appearance_rate'] == 0:
             continue
         player_hero_stats.append(stats)
@@ -92,18 +91,12 @@ def build_hero_stats(battles: BattleManager, HM: HeroManager):
     #get stats dataframe for user game statistics when hero is on opponents team
     enemy_hero_stats = []
     
-    for hero in HM.heroes:
-        
-        conditions = [
-            lambda battle: hero.str_id in battle.p2_picks
-            ]
-        
-        stats = battles.query_stats(conditions)
-        stats['hero'] = hero.name
+    for prime, df in battles.enemy_heroes.items():
+        stats = query_stats(df, total_battles)
+        stats['hero'] = HM.get_from_prime(prime).name
         if stats['appearance_rate'] == 0:
             continue
         enemy_hero_stats.append(stats)
-    
     
     return player_hero_stats, enemy_hero_stats
 

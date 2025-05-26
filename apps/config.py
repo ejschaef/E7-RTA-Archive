@@ -28,6 +28,7 @@ class Config(object):
     CELERY_BROKER_URL     = CELERY_BROKER_DB.str
     CELERY_RESULT_BACKEND = CELERY_BACKEND_DB.str
     CELERY_HOSTMACHINE    = "celery@app-generator"
+    CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP=True
     RESULT_EXPIRES = timedelta(hours=3) 
 
     # redis

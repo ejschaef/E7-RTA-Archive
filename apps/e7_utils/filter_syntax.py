@@ -8,13 +8,12 @@ import apps.e7_utils.filter_utils as futils
 import string
 from apps.e7_utils.hero_manager import HeroManager
 from apps.e7_utils.battle_manager import Battle
+from apps.e7_utils.references import LEAGUES
 from collections import Counter
 import re
 
 
 ACCEPTED_CHARS = set('(),-.=; <>1234567890') | set(string.ascii_letters)
-
-LEAGUES = {'master', 'champion', 'bronze', 'gold', 'silver', 'challenger', 'warlord', 'emperor', 'legend'}
 
 PRINT_PREFIX = "   "
 
@@ -126,9 +125,10 @@ VALID_STRING_CHARS = {' '} | set(string.ascii_letters)
 
 class String(DataType):
     
-    def __init__(self, data, HM: HeroManager):
+    def __init__(self, data: str, HM: HeroManager):
         self.validate(data, HM)
         self.data = self.convert_data(data, HM)
+        self.str = data.title()
     
     def validate(self, data, HM: HeroManager):
         if data == "":
@@ -142,7 +142,10 @@ class String(DataType):
         if data in LEAGUES:
             return data
         else:
-            return HM.name_str_map[data.title()]
+            return HM.get_from_name(data).str_id
+        
+    def as_str(self):
+        return self.str
     
 VALID_DATE_CHARS = "1234567890-"
             
@@ -325,11 +328,11 @@ class FilterSyntaxResolver:
         set_flag = False
         if 'str(' in string:
             string_flag = True
-            spaces_str, underscores_str = get_underscore_substitute_str(string, 'str\(.*?\)')
+            spaces_str, underscores_str = get_underscore_substitute_str(string, r'str\(.*?\)')
             string = string.replace(spaces_str, underscores_str)
         if 'set(' in string:
             set_flag = True
-            spaces_set, underscores_set = get_underscore_substitute_str(string, 'set\(.*?\)')
+            spaces_set, underscores_set = get_underscore_substitute_str(string, r'set\(.*?\)')
             string = string.replace(spaces_set, underscores_set)
             
         split = string.split()
@@ -391,8 +394,6 @@ class FilterSyntaxResolver:
         elif isinstance(right, Date):
             if not left.field == 'time':
                 raise futils.SyntaxException(f"Date type can only be compared against battle-date field ; got field: '{left.string}' from '{string}'")
-        
-            
             
         return [BaseFilter(left, op, right, split)]
         

@@ -29,7 +29,8 @@ logger = get_task_logger(__name__)
 
 celery_app = Celery(Config.CELERY_HOSTMACHINE, 
                     backend=Config.CELERY_RESULT_BACKEND, 
-                    broker=Config.CELERY_BROKER_URL
+                    broker=Config.CELERY_BROKER_URL,
+                    broker_connection_retry_on_startup=Config.CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP
                     )
 
 celery_app.conf.beat_schedule = {
@@ -49,8 +50,18 @@ celery_app.conf.timezone = 'UTC'
 # periodic task set up
 @worker_ready.connect
 def run_start_up_tasks(sender, **kwargs):
+    backend = celery_app.backend
+    if hasattr(backend, 'client'):  # Redis backend
+        redis_client = backend.client
+        keys = redis_client.keys("celery-task-meta-*")
+        if keys:
+            print("Clearing Keys")
+            redis_client.delete(*keys)
+
     # Run the task immediately
     load_reference_content.delay()
+
+    
 
 # task used for tests
 @celery_app.task(name="celery_test", bind=True)
@@ -135,23 +146,28 @@ def load_reference_content( self):
     return None
 
 @celery_app.task(name="load_user_data", bind=True)
-def load_user_data( self, user, HM, uploaded_battles=None, resolver=None):
+def load_user_data( self, user, HM, uploaded_battles=None, resolver=None, cached_battles=None):
     print("TASK STARTED")
     self.update_state(state='STARTED')
     user = jsonpickle.decode(user)
     HM = jsonpickle.decode(HM)
 
-    battles = get_battles(user)
+    if cached_battles is None:
+        #query the battles from epic 7 api
+        battles = get_battles(user)
 
-    # merge user uploaded battles with queried battles
-    if uploaded_battles is not None:
-        battles_df = pd.read_json(StringIO(uploaded_battles))
-        battles_df = to_raw_dataframe(battles_df, HM)
-        battles_df = battles_df.astype(RAW_TYPE_DICT)
-        BM = BattleManager.from_df(battles_df)
-        battles.merge(BM)
+        # merge user uploaded battles with queried battles
+        if uploaded_battles is not None:
+            battles_df = pd.read_json(StringIO(uploaded_battles))
+            battles_df = to_raw_dataframe(battles_df, HM)
+            battles_df = battles_df.astype(RAW_TYPE_DICT)
+            BM = BattleManager.from_df(battles_df)
+            battles.merge(BM)
+    else:
+        #otherwise just use the cached battles (already queried); this should be used when the user applies filters, since the source battles do not change
+        print("DECODING CACHED BATTLES")        
+        battles = BattleManager.decode(cached_battles)
 
-    to_plot = battles
     filtered_battles = None
     filter_str = None
 
@@ -168,12 +184,11 @@ def load_user_data( self, user, HM, uploaded_battles=None, resolver=None):
 
     print("NEW LEN", len(battles.battles))
 
-    player_hero_stats = [elt for elt in player_hero_stats if elt['games_appeared'] > 0]
-    enemy_hero_stats = [elt for elt in enemy_hero_stats if elt['games_appeared'] > 0]
-
     pretty_df = battles.to_pretty_dataframe(HM)
 
     plot_html = make_rank_plot(battles, user, filtered_battles=filtered_battles)
+
+    cached_battles = battles.encode()
 
     task_json = {
         'player_hero_stats' : player_hero_stats,
@@ -181,6 +196,7 @@ def load_user_data( self, user, HM, uploaded_battles=None, resolver=None):
         'rank_plot'         : plot_html,
         'battles_data'      : pretty_df.to_dict(orient='records'),
         'applied_filters'   : filter_str,
+        'cached_battles'    : cached_battles,
     }
-    self.update_state(state='FINISHED')
+    
     return task_json

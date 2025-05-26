@@ -1,7 +1,6 @@
 import redis
 from apps.references.cached_var_keys import CONTENT_MNGR_KEY
 from apps.content_manager import ContentManager
-from celery.result import AsyncResult
 
 class Redis_DB:
 

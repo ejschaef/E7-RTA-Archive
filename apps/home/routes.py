@@ -51,6 +51,7 @@ def session_remove_user():
     session.pop('username')
     session.pop('user')
     session.pop(KEYS.UPLOADED_BATTLES_DF, None)
+    session.pop(KEYS.CACHED_BATTLE_MANAGER, None)
     if KEYS.USER_DATA_TASK_ID_KEY in session:
         task = AsyncResult(session[KEYS.USER_DATA_TASK_ID_KEY], app=celery_app)
         task.forget()
@@ -121,7 +122,7 @@ def user_query():
                                         form=login_form)
 
         session_add_user(user)
-        task = load_user_data.apply_async(args=[jsonpickle.encode(user), jsonpickle.encode(MNGR.HeroManager)], task_id=username+"_"+server)
+        task = load_user_data.apply_async(args=[jsonpickle.encode(user), jsonpickle.encode(MNGR.HeroManager)], task_id=username+"_"+generate_short_id())
         session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
         return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
 
@@ -173,10 +174,15 @@ def hero_stats(task_id=None):
             if "check-syntax" in request.form:
                 filter_validation_msg="Syntax validation passed."
             else:
-                df_json = session.get(KEYS.UPLOADED_BATTLES_DF)
-                task = load_user_data.apply_async(args=[session['user'], jsonpickle.encode(MNGR.HeroManager)],
-                                          kwargs={'uploaded_battles' : df_json, 'resolver' : jsonpickle.encode(resolver)}, 
-                                          task_id=session["username"]+"_"+generate_short_id())
+                task = load_user_data.apply_async(
+                        args=[session['user'], jsonpickle.encode(MNGR.HeroManager)],
+
+                        kwargs={'uploaded_battles' : session.get(KEYS.UPLOADED_BATTLES_DF), 
+                                'resolver'         : jsonpickle.encode(resolver),
+                                'cached_battles'   : session.get(KEYS.CACHED_BATTLE_MANAGER)}, 
+                                
+                        task_id=session["username"]+"_"+generate_short_id()
+                )
                 session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
                 return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
         except Exception as e:
@@ -194,6 +200,7 @@ def hero_stats(task_id=None):
 
     task = AsyncResult(task_id, app=celery_app)
     data = task.result if task.successful() else 'Error occurred'
+
     code = session.get(KEYS.FILTER_CODE, "")
 
     context = {'segment' : 'hero_stats', 
@@ -204,7 +211,12 @@ def hero_stats(task_id=None):
                'error' : str(filter_error) if filter_error else None,
                'validation_msg' : filter_validation_msg}
     
+    cached_battles = data.pop('cached_battles')
+    session[KEYS.CACHED_BATTLE_MANAGER] = cached_battles
+    
     context.update(data)
+
+    print("RENDERING STATS")
 
     return render_template('pages/hero_stats.html', **context)
 

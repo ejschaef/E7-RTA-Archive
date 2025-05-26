@@ -27,7 +27,9 @@ def get_hero_data(lang="en"):
 def get_int_to_hero_dict(lang="en"):
     heroes = get_hero_data(lang=lang)
     int_to_hero = {int(hero['code'][1:]) : hero['name'] for hero in heroes}
-    int_to_hero[77777] = "other"
+    int_to_hero[777777] = "other"
+    int_to_hero[7777770] = "Empty"
+    int_to_hero[7777771] = "Fodder"
     return int_to_hero
 
 class Hero:
@@ -50,6 +52,7 @@ class Hero:
     
     def __hash__(self):
         return hash(self.prime)
+    
 
 class HeroManager:
     
@@ -62,6 +65,14 @@ class HeroManager:
         self.make_dicts()
         
         self.num_heroes = len(self.heroes)
+
+    
+    def check_key_type(self):
+        for key in self.sg_id_dict:
+            break
+        if not isinstance(key, int):
+            raise RuntimeError(f"Expected <Int>, got <{type(key)}>")
+        print("KEY CHECK PASSED")
         
         
     def make_dicts(self):
@@ -69,15 +80,18 @@ class HeroManager:
         self.prime_dict = {}
         self.name_dict = {}
         self.index_dict = {}
+        self.str_id_dict = {}
         self.str_name_map = {}
         self.name_str_map = {}
         for h in self.heroes:
-            self.sg_id_dict[h.sg_id] = h 
-            self.prime_dict[h.prime] = h
+            self.sg_id_dict[str(h.sg_id)] = h 
+            self.prime_dict[str(h.prime)] = h
             self.name_dict[h.name.lower()] = h
-            self.index_dict[h.index] = h
+            self.index_dict[str(h.index)] = h
+            self.str_id_dict[h.str_id] = h
             self.str_name_map[h.str_id] = h.name
             self.name_str_map[h.name] = h.str_id
+       
         
     @property
     def hero_names(self):
@@ -88,22 +102,30 @@ class HeroManager:
         """
         The sg_id is the numerical id associated with the hero
         """
-        return self.sg_id_dict[sg_id]
+        return self.sg_id_dict[str(sg_id)]
         
     def get_from_prime(self, prime: int) -> Hero:
-        return self.prime_dict[prime]
+        return self.prime_dict[str(prime)]
     
     def get_from_name(self, name: int) -> Hero:
         return self.name_dict[name.lower()]
     
     def get_from_index(self, index: int) -> Hero:
-        return self.index_dict[index]
+        return self.index_dict[str(index)]
     
     def get_from_str_id(self, string_id: str) -> Hero:
         """
         the string id is just the sg_id but prefixed with 'c'
         """
-        return self.get_from_id(int(string_id[1:]))
+        try:
+            return self.str_id_dict[string_id]
+        except KeyError:
+            if "m" in string_id:
+                return self.get_from_name("Fodder")
+            elif string_id == "":
+                return self.get_from_name("Empty")
+            else:
+                raise RuntimeError(f"Unrecognized string_id passed to HeroManager: {string_id}")
         
     
 
