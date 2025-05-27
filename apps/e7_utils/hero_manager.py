@@ -93,14 +93,16 @@ class HeroManager:
             self.str_name_map[h.str_id] = h.name
             self.name_str_map[h.name] = h.str_id
 
-        # Make hero pair map; maps primes to hero names (the prime is the product of the two hero primes)
-        self.hero_pair_map = {}
+        # Make hero pair map; maps primes to hero names (the prime is the product of the two hero primes); also maps single heroes
+        self.prime_pair_name_map = {}
         for hero1, hero2 in itertools.combinations(self.heroes, 2):
             prime = hero1.prime * hero2.prime
-            if prime in self.hero_pair_map:
+            if prime in self.prime_pair_name_map:
                 continue
             string = ", ".join(sorted([hero1.name, hero2.name]))
-            self.hero_pair_map[prime] = string
+            self.prime_pair_name_map[str(prime)] = string
+        for prime, hero in self.prime_dict.items():
+            self.prime_pair_name_map[str(prime)] = hero.name
         
     @property
     def hero_names(self):
@@ -121,6 +123,9 @@ class HeroManager:
     
     def get_from_index(self, index: int) -> Hero:
         return self.index_dict[str(index)]
+    
+    def get_pair_name_from_prime(self, prime: int) -> str:
+        return self.prime_pair_name_map[str(prime)]
     
     def get_from_str_id(self, string_id: str) -> Hero:
         """

@@ -116,7 +116,10 @@ def query_stats(battles: pd.DataFrame, total_battles: int) -> dict[str, float]:
             '+/-'             : int(2 * games_won - games_appeared)
             }
 
-def get_firstpick_stats(fp_battles: pd.DataFrame, HM: HeroManager) -> dict[str, float]:
+def get_firstpick_stats(fp_battles: pd.DataFrame, HM: HeroManager) -> dict[str]:
+    """
+    Adds to general stats; covers stats for heroes that were picked first in first pick games
+    """
     total_battles = len(fp_battles)
     fp_battles = fp_battles.copy()
     fp_battles["wins"] = fp_battles["winner"].apply(lambda v: v == 1)
@@ -135,6 +138,40 @@ def get_firstpick_stats(fp_battles: pd.DataFrame, HM: HeroManager) -> dict[str, 
     result_df = result_df.sort_values(by="appearances", ascending=False)
 
     return result_df.to_dict(orient="records")
+
+def get_preban_stats(battles: pd.DataFrame, HM: HeroManager) -> dict[str]:
+    empty_prime = HM.get_from_name('empty').prime
+    preban1 = set(prime for prime in battles["p1_preban_1"].unique() if prime and not prime == int(empty_prime))
+    preban2 = set(prime for prime in battles["p1_preban_2"].unique() if prime and not prime == int(empty_prime))
+    preban_set = preban1 | preban2
+    prebans = []
+    for r in [1, 2]:
+        prebans.extend(itertools.combinations(preban_set, r=r))
+    
+    prebans = [t[0] * t[1] if len(t) == 2 else t[0] for t in prebans]
+
+    total_battles = len(battles)
+
+    output = []
+    for preban in prebans:
+        filtered = battles[battles["p1_prebans"] % preban == 0]
+        if len(filtered) == 0:
+            continue
+        wins = (filtered["winner"] == 1).sum()
+        appearances = len(filtered)
+        appearance_rate = appearances / total_battles if total_battles > 0 else 0
+        win_rate = wins / appearances if appearances > 0 else 0
+        plus_minus = 2 * wins - appearances
+        output.append({
+            'preban' : HM.prime_pair_name_map[str(preban)],
+            'wins' : int(wins),
+            'appearances' : int(appearances),
+            'appearance_rate' : to_percent(appearance_rate),
+            'win_rate' : to_percent(win_rate),
+            '+/-' : int(plus_minus)
+        })
+    output = sorted(output, key=lambda d: d['appearances'], reverse=True)
+    return output
 
 
     
@@ -322,8 +359,9 @@ class BattleManager:
             "firstpick_winrate" : to_percent(fp_wr) if firstpick_count > 0 else NA,
             "secondpick_winrate": to_percent(sp_wr) if secondpick_count > 0 else NA,
             "total_winrate"     : to_percent(winrate) if total_battles > 0 else NA,
-            "total_battles"    : total_battles,
-            "firstpick_stats"   : get_firstpick_stats(fp_df, HM)
+            "total_battles"     : total_battles,
+            "firstpick_stats"   : get_firstpick_stats(fp_df, HM),
+            'preban_stats'      : get_preban_stats(pfdf, HM)
         }
         
     def merge(self, BM: Self):

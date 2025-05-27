@@ -43,32 +43,28 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="SeasonDetailsHead" class="clean-table">
+                            <table id="SeasonDetailsHead" class="scrollables scrollables-razz interior-border-tbl clean-table align-center-except-second col2-150">
                                 <thead>
                                     <tr>
                                         <th scope="col"></th>
-                                        <th scope="col" style="transform: translateX(5%);">Season</th>
-                                        <th scope="col" style="transform: translateX(24%);">Start</th>
-                                        <th scope="col" style="transform: translateX(18%);">End</th>
-                                        <th scope="col" style="transform: translateX(20%);">Status</th>
+                                        <th scope="col">Season</th>
+                                        <th scope="col">Start</th>
+                                        <th scope="col">End</th>
+                                        <th scope="col">Status</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    {% for item in season_details %}
+                                    <tr>
+                                        <td>{{ item['Season Number'] }}</td>
+                                        <td>{{ item['Season'] }}</td>
+                                        <td>{{ item['Start'] }}</td>
+                                        <td>{{ item['End'] }}</td>
+                                        <td>{{ item['Status'] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
                             </table>
-                            <div class="scrollable rel-height-80">
-                                <table id="SeasonDetailsBody" class="clean-table interior-border-tbl" style="width:100%;">
-                                    <tbody>
-                                        {% for item in season_details %}
-                                        <tr>
-                                            <td>{{ item['Season Number'] }}</td>
-                                            <td>{{ item['Season'] }}</td>
-                                            <td>{{ item['Start'] }}</td>
-                                            <td>{{ item['End'] }}</td>
-                                            <td>{{ item['Status'] }}</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -164,7 +160,7 @@
             </div>
             <!-- [ fp/sp winrates section ] end -->
 
-            <!-- [ season details table ] start -->
+            <!-- [ first pick stats table ] start -->
             <div class="col-sm-6">
                 <div class="card aqua-kpi height-300">
                     <div class="card-header kpi-header">
@@ -172,37 +168,70 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="FirstpickStatsHead" class="clean-table">
+                            <table id="FirstpickStats" class="scrollables scrollables-aqua interior-border-tbl clean-table align-center-except-first col1-150">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="transform: translateX(-1%);">Hero</th>
-                                        <th scope="col" style="transform: translateX(94%);">Battles</th>
-                                        <th scope="col" style="transform: translateX(45%);">Pick Rate</th>
-                                        <th scope="col" style="transform: translateX(15%);">Winrate</th>
-                                        <th scope="col" style="transform: translateX(-25%);">+/-</th>
+                                        <th scope="col">Hero</th>
+                                        <th scope="col">Battles</th>
+                                        <th scope="col">Pick Rate</th>
+                                        <th scope="col">Win Rate</th>
+                                        <th scope="col">+/-</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    {% for item in general_stats["firstpick_stats"] %}
+                                    <tr>
+                                        <td>{{ item['hero'] }}</td>
+                                        <td>{{ item['appearances'] }}</td>
+                                        <td>{{ item['appearance_rate'] }}</td>
+                                        <td>{{ item['win_rate'] }}</td>
+                                        <td>{{ item['+/-'] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
                             </table>
-                            <div class="scrollable rel-height-80">
-                                <table id="FirstPickStatsBody" class="clean-table interior-border-tbl" style="width:100%;">
-                                    <tbody>
-                                        {% for item in general_stats["firstpick_stats"] %}
-                                        <tr>
-                                            <td>{{ item['hero'] }}</td>
-                                            <td>{{ item['appearances'] }}</td>
-                                            <td>{{ item['appearance_rate'] }}</td>
-                                            <td>{{ item['win_rate'] }}</td>
-                                            <td>{{ item['+/-'] }}</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- [ season details table ] end -->
+            <!-- [ first pick stats table ] end -->
+
+
+            <!-- [ preban stats table ] start -->
+            <div class="col-sm-6">
+                <div class="card aqua-kpi height-300">
+                    <div class="card-header kpi-header">
+                        <h5 class="text-white">Preban Stats</h5>
+                    </div>
+                    <div class="card-body kpi-body rel-height-80">
+                        <div class="rel-height-100">
+                            <table id="PrebanStats" class="scrollables scrollables-aqua interior-border-tbl clean-table align-center-except-first col1-150">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Preban</th>
+                                        <th scope="col">Battles</th>
+                                        <th scope="col">Ban Rate</th>
+                                        <th scope="col">Win Rate</th>
+                                        <th scope="col">+/-</th>
+                                    </tr>
+                                </thead>
+                                <tbody >
+                                    {% for item in general_stats["preban_stats"] %}
+                                    <tr>
+                                        <td>{{ item['preban'] }}</td>
+                                        <td>{{ item['appearances'] }}</td>
+                                        <td>{{ item['appearance_rate'] }}</td>
+                                        <td>{{ item['win_rate'] }}</td>
+                                        <td>{{ item['+/-'] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ preban stats table ] end -->
 
 
             <!-- [ plot section ] start -->
