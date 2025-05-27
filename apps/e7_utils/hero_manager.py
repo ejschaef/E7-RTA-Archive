@@ -7,6 +7,7 @@ Created on Fri Mar 14 17:33:01 2025
 
 import apps.e7_utils.utils as utils
 import sympy
+import itertools
 
 
 HERO_JSON_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json"
@@ -91,7 +92,15 @@ class HeroManager:
             self.str_id_dict[h.str_id] = h
             self.str_name_map[h.str_id] = h.name
             self.name_str_map[h.name] = h.str_id
-       
+
+        # Make hero pair map; maps primes to hero names (the prime is the product of the two hero primes)
+        self.hero_pair_map = {}
+        for hero1, hero2 in itertools.combinations(self.heroes, 2):
+            prime = hero1.prime * hero2.prime
+            if prime in self.hero_pair_map:
+                continue
+            string = ", ".join(sorted([hero1.name, hero2.name]))
+            self.hero_pair_map[prime] = string
         
     @property
     def hero_names(self):

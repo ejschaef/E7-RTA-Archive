@@ -71,13 +71,17 @@ def get_battles(user: User) -> BattleManager:
     return BattleManager.from_raw_battles_list(battles)
 
 
+class StatsHolder:
+    pass
+
+
 def build_hero_stats(battles: BattleManager, HM: HeroManager):
 
     battles.to_performant_df(HM)
     battles.make_hero_sets()
     total_battles = len(battles.battles)
 
-    #get stats dataframe for user game statistics when hero is on user's team
+    # Get stats dataframe for user game statistics when hero is on user's team
     player_hero_stats = []
 
     for prime, df in battles.player_heroes.items():
@@ -88,7 +92,7 @@ def build_hero_stats(battles: BattleManager, HM: HeroManager):
         player_hero_stats.append(stats)
     
     
-    #get stats dataframe for user game statistics when hero is on opponents team
+    # Get stats dataframe for user game statistics when hero is on opponents team
     enemy_hero_stats = []
     
     for prime, df in battles.enemy_heroes.items():
@@ -98,11 +102,17 @@ def build_hero_stats(battles: BattleManager, HM: HeroManager):
             continue
         enemy_hero_stats.append(stats)
 
-
-    #get general stats
+    # Get general stats
     general_stats = battles.get_general_stats(HM)
+
+    # Final return object
+    stats = StatsHolder()
+
+    stats.player_hero_stats = player_hero_stats
+    stats.enemy_hero_stats = enemy_hero_stats
+    stats.general_stats = general_stats
     
-    return player_hero_stats, enemy_hero_stats, general_stats
+    return stats
 
 def get_hero_stats(user: User, HM: HeroManager):
     battles = get_battles(user)

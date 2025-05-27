@@ -94,6 +94,7 @@
                                 <div class="d-flex justify-content-center gap-3 mt-4">
                                     <button type="submit" name="check-syntax" class="btn shadow px-sm-1">Check Syntax</button>
                                     <button type="submit" name="apply-filter" class="btn shadow px-sm-1">Apply Filter</button>
+                                    <button type="submit" name="clear-filter" class="btn shadow px-sm-1">Clear Filter</button>
                                 </div>
                             </form>
                         </div>
@@ -108,23 +109,25 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row d-flex align-items-center">
-                            <div class="col-9">
+                            <div class="col-7">
                                 <h5 class="f-w-200 d-flex align-items-center m-b-0">Total Battles:</h5>
                             </div>
-                            <div class="col-3">
-                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["total_battles"] | safe }}</h5>
+                            <div class="col-5 text-align-left">
+                                <h5 class="f-w-200 d-inline m-b-0">{{ general_stats["total_battles"] | safe }}</h5>
                             </div>
-                            <div class="col-9">
-                                <h5 class="f-w-200 d-flex align-items-center m-b-0">First Pick Games:</h5>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">1st Pick Games:</h5>
                             </div>
-                            <div class="col-3">
-                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["firstpick_count"] | safe }}</h5>
+                            <div class="col-5 text-align-left">
+                                <h5 class="f-w-200 d-inline m-b-0">{{ general_stats["firstpick_count"] | safe }} </h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0">({{ general_stats["firstpick_rate"] | safe }})</p>
                             </div>
-                            <div class="col-9">
-                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Second Pick Games:</h5>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">2nd Pick Games:</h5>
                             </div>
-                            <div class="col-3">
-                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["secondpick_count"] | safe }}</h5>
+                            <div class="col-5 text-align-left">
+                                <h5 class="f-w-200 d-inline  m-b-0">{{ general_stats["secondpick_count"] | safe }} </h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0">({{ general_stats["secondpick_rate"] | safe }})</p>
                             </div>
                         </div>
                     </div>
@@ -137,29 +140,69 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row d-flex align-items-center">
-                            <div class="col-9">
-                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Total Winrate:</h5>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Total Winrate:</h5>
                             </div>
-                            <div class="col-3">
-                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["total_winrate"] | safe }}</h5>
+                            <div class="col-5">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0">{{ general_stats["total_winrate"] | safe }}</h5>
                             </div>
-                            <div class="col-9">
-                                <h5 class="f-w-200 d-flex align-items-center m-b-0">First Pick Winrate:</h5>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">1st Pick Winrate:</h5>
                             </div>
-                            <div class="col-3">
-                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["firstpick_winrate"] | safe }}</h5>
+                            <div class="col-5">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0">{{ general_stats["firstpick_winrate"] | safe }}</h5>
                             </div>
-                            <div class="col-9">
-                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Second Pick Winrate:</h5>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">2nd Pick Winrate:</h5>
                             </div>
-                            <div class="col-3">
-                                <h5 class="f-w-200 d-flex text-end m-b-0">{{ general_stats["secondpick_winrate"] | safe }}</h5>
+                            <div class="col-5">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0">{{ general_stats["secondpick_winrate"] | safe }}</h5>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- [ fp/sp winrates section ] end -->
+
+            <!-- [ season details table ] start -->
+            <div class="col-sm-6">
+                <div class="card aqua-kpi height-300">
+                    <div class="card-header kpi-header">
+                        <h5 class="text-white">Firstpick Hero Stats</h5>
+                    </div>
+                    <div class="card-body kpi-body rel-height-80">
+                        <div class="rel-height-100">
+                            <table id="FirstpickStatsHead" class="clean-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="transform: translateX(-1%);">Hero</th>
+                                        <th scope="col" style="transform: translateX(94%);">Battles</th>
+                                        <th scope="col" style="transform: translateX(45%);">Pick Rate</th>
+                                        <th scope="col" style="transform: translateX(15%);">Winrate</th>
+                                        <th scope="col" style="transform: translateX(-25%);">+/-</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="scrollable rel-height-80">
+                                <table id="FirstPickStatsBody" class="clean-table interior-border-tbl" style="width:100%;">
+                                    <tbody>
+                                        {% for item in general_stats["firstpick_stats"] %}
+                                        <tr>
+                                            <td>{{ item['hero'] }}</td>
+                                            <td>{{ item['appearances'] }}</td>
+                                            <td>{{ item['appearance_rate'] }}</td>
+                                            <td>{{ item['win_rate'] }}</td>
+                                            <td>{{ item['+/-'] }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ season details table ] end -->
 
 
             <!-- [ plot section ] start -->
@@ -170,21 +213,11 @@
             </div>
 
             <script>
-                // window.addEventListener('load', function () {
-                //     // Look for all plotly charts if multiple exist
-                //     const plotDivs = document.querySelectorAll('.js-plotly-plot');
-                //     plotDivs.forEach(div => {
-                //         setTimeout(() => {
-                //             Plotly.Plots.resize(div);
-                //         }, 20);
-                //     });
-                // });
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
                 }, 10);
             </script>
             <!-- [ plot section ] end -->
-
 
             <!-- [ player hero stats section ] start -->
             <div class="col-sm-6">
@@ -201,8 +234,8 @@
                                 <tr>
                                     <th scope="col">Hero Name</th>
                                     <th scope="col">Wins</th>
-                                    <th scope="col">Appearances</th>
-                                    <th scope="col">Appear Rate</th>
+                                    <th scope="col">Battles</th>
+                                    <th scope="col">Pick Rate</th>
                                     <th scope="col">Win rate</th>
                                     <th scope="col">+/-</th>
                                 </tr>
@@ -240,8 +273,8 @@
                                 <tr>
                                     <th scope="col">Hero Name</th>
                                     <th scope="col">Wins</th>
-                                    <th scope="col">Appearances</th>
-                                    <th scope="col">Appear Rate</th>
+                                    <th scope="col">Battles</th>
+                                    <th scope="col">Pick Rate</th>
                                     <th scope="col">Win rate</th>
                                     <th scope="col">+/-</th>
                                 </tr>
@@ -270,7 +303,7 @@
                     <div class="card-header text-center kpi-header">
                         <h5>Player Battles</h5>
                         <h6 style="font-size: 0.7em;">
-                            Displays information on the player's battles; Two star heroes will show as their internal code not their name
+                            Displays information on the player's battles; Two star heroes will show as 'Fodder'; Filters are not applied to this table.
                         </h6>
                     </div>
                     <div class="card-body kpi-body">

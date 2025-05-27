@@ -115,6 +115,28 @@ def query_stats(battles: pd.DataFrame, total_battles: int) -> dict[str, float]:
             'win_rate'        : to_percent(winrate),
             '+/-'             : int(2 * games_won - games_appeared)
             }
+
+def get_firstpick_stats(fp_battles: pd.DataFrame, HM: HeroManager) -> dict[str, float]:
+    total_battles = len(fp_battles)
+    fp_battles = fp_battles.copy()
+    fp_battles["wins"] = fp_battles["winner"].apply(lambda v: v == 1)
+    result_df = fp_battles.groupby("p1_picks_1", as_index=False).agg(
+        wins=("wins", "sum"),
+        appearances=("seq_num", "count")
+    )
+
+    result_df = result_df.rename({"p1_picks_1" : "hero"}, axis='columns')
+    result_df["hero"] = result_df["hero"].apply(lambda prime: HM.get_from_prime(prime).name)
+
+    result_df["win_rate"] = (result_df["wins"] / result_df["appearances"]).apply(to_percent)
+    result_df["appearance_rate"] = (result_df["appearances"] / total_battles).apply(to_percent)
+    result_df["+/-"] = 2 * result_df["wins"] - result_df["appearances"]
+
+    result_df = result_df.sort_values(by="appearances", ascending=False)
+
+    return result_df.to_dict(orient="records")
+
+
     
 class BattleManager:
     
@@ -300,9 +322,9 @@ class BattleManager:
             "firstpick_winrate" : to_percent(fp_wr) if firstpick_count > 0 else NA,
             "secondpick_winrate": to_percent(sp_wr) if secondpick_count > 0 else NA,
             "total_winrate"     : to_percent(winrate) if total_battles > 0 else NA,
-            'total_battles'     : total_battles,
+            "total_battles"    : total_battles,
+            "firstpick_stats"   : get_firstpick_stats(fp_df, HM)
         }
-
         
     def merge(self, BM: Self):
         self.add_battles(BM.battles.values())

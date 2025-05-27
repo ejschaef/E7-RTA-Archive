@@ -37,6 +37,7 @@ from celery.result import AsyncResult
 
 GLOBAL_CLIENT = GLOBAL_DB.get_client()
 
+
 def get_mngr() -> ContentManager:
     return ContentManager.decode(GLOBAL_CLIENT.get(KEYS.CONTENT_MNGR_KEY))
 
@@ -52,6 +53,7 @@ def session_remove_user():
     session.pop('user')
     session.pop(KEYS.UPLOADED_BATTLES_DF, None)
     session.pop(KEYS.CACHED_BATTLE_MANAGER, None)
+    session.pop("KEY_DICT", None)
     if KEYS.USER_DATA_TASK_ID_KEY in session:
         task = AsyncResult(session[KEYS.USER_DATA_TASK_ID_KEY], app=celery_app)
         task.forget()
@@ -61,6 +63,7 @@ def session_add_user(user: User):
     session['user']     = jsonpickle.encode(user)
     session['username'] = user.name
     session['server']   = user.world_code
+    session["KEY_DICT"] = KEYS.KEY_DICT
 
 
 ########################################################################################################
@@ -153,6 +156,21 @@ def user_data_status(task_id):
 # START HERO STATS SECTION
 ########################################################################################################
 
+def start_task(resolver: FilterSyntaxResolver=None):
+    MNGR = get_mngr()
+    resolver = jsonpickle.encode(resolver) if resolver is not None else resolver
+    task = load_user_data.apply_async(
+            args=[session['user'], jsonpickle.encode(MNGR.HeroManager)],
+
+            kwargs={'uploaded_battles' : session.get(KEYS.UPLOADED_BATTLES_DF), 
+                    'resolver'         : resolver,
+                    'cached_battles'   : session.get(KEYS.CACHED_BATTLE_MANAGER)}, 
+                    
+            task_id=session["username"]+"_"+generate_short_id()
+    )
+    session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
+    return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
+
 @blueprint.route('/hero_stats/<task_id>', methods=['GET', 'POST'])
 def hero_stats(task_id=None):
     form = CodeForm()
@@ -165,29 +183,29 @@ def hero_stats(task_id=None):
     filter_error = None
     filter_validation_msg = None
     
+    # Handle code mirror filter
     if request.method == "POST" and code is not None:
-        session[KEYS.FILTER_CODE] = code
-        try:
-            MNGR = get_mngr()
-            resolver = FilterSyntaxResolver(code, MNGR.HeroManager)
-            print(f"Received filters:\n\n{resolver.as_str()}\n")
-            if "check-syntax" in request.form:
-                filter_validation_msg="Syntax validation passed."
+        if 'clear-filter' in request.form:
+            code = session.get(KEYS.FILTER_CODE)
+            if code:
+                print("Cleared Filters")
+                session[KEYS.FILTER_CODE] = None
+                return start_task()
             else:
-                task = load_user_data.apply_async(
-                        args=[session['user'], jsonpickle.encode(MNGR.HeroManager)],
-
-                        kwargs={'uploaded_battles' : session.get(KEYS.UPLOADED_BATTLES_DF), 
-                                'resolver'         : jsonpickle.encode(resolver),
-                                'cached_battles'   : session.get(KEYS.CACHED_BATTLE_MANAGER)}, 
-                                
-                        task_id=session["username"]+"_"+generate_short_id()
-                )
-                session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
-                return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
-        except Exception as e:
-            filter_error = e
-            pass
+                print("No Filters to Clear")
+        else:
+            session[KEYS.FILTER_CODE] = code
+            try:
+                MNGR = get_mngr()
+                resolver = FilterSyntaxResolver(code, MNGR.HeroManager)
+                print(f"Received filters:\n\n{resolver.as_str()}\n")
+                if "check-syntax" in request.form:
+                    filter_validation_msg="Syntax validation passed."
+                else:
+                    return start_task(resolver=resolver)
+            except Exception as e:
+                filter_error = e
+                pass
 
     if session.get("user", None) is None:
         print("No user passed")

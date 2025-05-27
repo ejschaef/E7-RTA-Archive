@@ -40,6 +40,12 @@
     background-color: #a33867 !important;
   }
 
+
+  .aqua-kpi {
+    --bs-bg-opacity: 1;
+    background-color: #4f9293!important;
+  }
+
   .kpi-header {
     padding: var(--padding-header) !important;
     border-bottom: 1px solid var(--kpi-border-color) !important;

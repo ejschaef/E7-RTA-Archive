@@ -75,7 +75,7 @@
         </li>
         {% else %}
         <li class="pc-item">
-          <a href="{{ url_for('home_blueprint.hero_stats', task_id=session['user_data_task_id']) }}" class="pc-link">
+          <a href="{{ url_for('home_blueprint.hero_stats', task_id=session[session['KEY_DICT']['USER_DATA_TASK_ID_KEY']]) }}" class="pc-link">
             <span class="pc-micon"><i data-feather="bar-chart-2"></i></span>
             <span class="pc-mtext">Hero Stats</span>
           </a>
