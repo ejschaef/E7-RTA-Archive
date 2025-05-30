@@ -146,27 +146,22 @@ def load_reference_content( self):
     return None
 
 @celery_app.task(name="load_user_data", bind=True)
-def load_user_data( self, user, HM, uploaded_battles=None, resolver=None, cached_battles=None):
+def load_user_data( self, user, HM, uploaded_battles=None, resolver=None):
     print("TASK STARTED")
     self.update_state(state='STARTED')
     user = jsonpickle.decode(user)
     HM = jsonpickle.decode(HM)
 
-    if cached_battles is None:
-        #query the battles from epic 7 api
-        battles = get_battles(user)
+    #query the battles from epic 7 api
+    battles = get_battles(user)
 
-        # merge user uploaded battles with queried battles
-        if uploaded_battles is not None:
-            battles_df = pd.read_json(StringIO(uploaded_battles))
-            battles_df = to_raw_dataframe(battles_df, HM)
-            battles_df = battles_df.astype(RAW_TYPE_DICT)
-            BM = BattleManager.from_df(battles_df)
-            battles.merge(BM)
-    else:
-        #otherwise just use the cached battles (already queried); this should be used when the user applies filters, since the source battles do not change
-        print("DECODING CACHED BATTLES")        
-        battles = BattleManager.decode(cached_battles)
+    # merge user uploaded battles with queried battles
+    if uploaded_battles is not None:
+        battles_df = pd.read_json(StringIO(uploaded_battles))
+        battles_df = to_raw_dataframe(battles_df, HM)
+        battles_df = battles_df.astype(RAW_TYPE_DICT)
+        BM = BattleManager.from_df(battles_df)
+        battles.merge(BM)
 
     filtered_battles = None
     filter_str = None
@@ -190,7 +185,6 @@ def load_user_data( self, user, HM, uploaded_battles=None, resolver=None, cached
 
     plot_html = make_rank_plot(battles, user, filtered_battles=filtered_battles)
 
-    cached_battles = battles.encode()
 
     task_json = {
         'player_hero_stats' : stats.player_hero_stats,
@@ -199,7 +193,6 @@ def load_user_data( self, user, HM, uploaded_battles=None, resolver=None, cached
         'rank_plot'         : plot_html,
         'battles_data'      : pretty_df.to_dict(orient='records'),
         'applied_filters'   : filter_str,
-        'cached_battles'    : cached_battles,
     }
 
     return task_json

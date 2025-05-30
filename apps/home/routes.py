@@ -9,7 +9,7 @@ import jsonpickle
 
 
 from apps.home import blueprint
-from flask import render_template, request, redirect, url_for, session, current_app
+from flask import render_template, request, redirect, url_for, session, current_app, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 from flask_login import login_required, current_user
@@ -46,25 +46,28 @@ def generate_short_id():
     short = base64.urlsafe_b64encode(uid.bytes).rstrip(b'=').decode('utf-8')
     return short
 
+def forget_user_task_data():
+    task = AsyncResult(session[KEYS.USER_DATA_TASK_ID_KEY], app=celery_app)
+    task.forget()
+    session.pop(KEYS.USER_DATA_TASK_ID_KEY)
+
 def session_remove_user():
     assert "user" in session, "Tried to remove user when none is stored in session"
     session.pop('server')
     session.pop('username')
     session.pop('user')
     session.pop(KEYS.UPLOADED_BATTLES_DF, None)
-    session.pop(KEYS.CACHED_BATTLE_MANAGER, None)
     session.pop("KEY_DICT", None)
+    session.pop(KEYS.CACHED_DATA_FLAG, None)
     if KEYS.USER_DATA_TASK_ID_KEY in session:
-        task = AsyncResult(session[KEYS.USER_DATA_TASK_ID_KEY], app=celery_app)
-        task.forget()
-        session.pop(KEYS.USER_DATA_TASK_ID_KEY)
+        forget_user_task_data()
 
 def session_add_user(user: User):
     session['user']     = jsonpickle.encode(user)
     session['username'] = user.name
     session['server']   = user.world_code
     session["KEY_DICT"] = KEYS.KEY_DICT
-
+    
 
 ########################################################################################################
 # END HELPERS
@@ -97,6 +100,26 @@ def sample_page():
 def typography():
     return render_template('pages/typography.html', segment='typography')
 
+########################################################################################################
+# START JS CACHE USER DATA SECTION: used for getting data from python to then cache client side
+########################################################################################################
+
+@blueprint.route('/api/fetch_user_data')
+def fetch_user_data():
+    cache_flag = session.get(KEYS.CACHED_DATA_FLAG, False)
+    if cache_flag:
+        # Tell client to use its cache
+        return jsonify({'use_cache' : True})
+    else:
+        # Return fresh data
+        json = jsonify(get_task_data())
+        return json
+
+@blueprint.route('api/notify_cache_success')
+def notify_cache_success():
+    forget_user_task_data()
+    session[KEYS.CACHED_DATA_FLAG] = True
+    return '', 204
 
 ########################################################################################################
 # START USER QUERY SECTION
@@ -142,13 +165,16 @@ def loading_user_data(task_id):
 
 @blueprint.route('/user_data_status/<task_id>')
 def user_data_status(task_id):
+    """
+    Called within loading_user_data.html to poll status of task and redirect when done
+    """
     task = AsyncResult(task_id, app=celery_app)
     print(f"TASK STATE: {task.state}")
     if task.state == "FAILURE":
         print("TASK FAILED: task result ->", task.result)
         return {'ready': False, 'failure' : True, 'redirect_url': url_for('home_blueprint.error_117')}
     elif task.ready():
-        return {'ready': True, 'redirect_url': url_for('home_blueprint.hero_stats', task_id=task.id)}
+        return {'ready': True, 'redirect_url': url_for('home_blueprint.hero_stats', user=session['username'])}
     else:
         return {'ready': False, 'failure' : False}
     
@@ -164,17 +190,30 @@ def start_task(resolver: FilterSyntaxResolver=None):
 
             kwargs={'uploaded_battles' : session.get(KEYS.UPLOADED_BATTLES_DF), 
                     'resolver'         : resolver,
-                    'cached_battles'   : session.get(KEYS.CACHED_BATTLE_MANAGER)}, 
+                }, 
                     
             task_id=session["username"]+"_"+generate_short_id()
     )
     session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
+    session.pop(KEYS.CACHED_DATA_FLAG, None)
     return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
 
-@blueprint.route('/hero_stats/<task_id>', methods=['GET', 'POST'])
-def hero_stats(task_id=None):
+def get_task_data() -> dict[str, object]:
+    assert KEYS.USER_DATA_TASK_ID_KEY in session, "Could not find task id key in session; Can't call get_task_data unless task id is still in session."
+    task_id = session.get(KEYS.USER_DATA_TASK_ID_KEY)
+    task = AsyncResult(task_id, app=celery_app)
+    assert task.successful(), "Cannot call get_task_data unless the task has already been verified as successful; task.successful() did not return True"
+    data = task.result
+    return data
+
+@blueprint.route('/hero_stats/<user>', methods=['GET', 'POST'])
+def hero_stats(user=None):
     form = CodeForm()
     code = request.form.get('code')
+
+    if session.get("user", None) is None:
+        print("No user in session")
+        return redirect(url_for("home_blueprint.user_query"))
 
     if 'switch_user' in request.form:
         session_remove_user()
@@ -206,33 +245,17 @@ def hero_stats(task_id=None):
             except Exception as e:
                 filter_error = e
                 pass
-
-    if session.get("user", None) is None:
-        print("No user passed")
-        return redirect(url_for("home_blueprint.error_117"))
-    if task_id is None:
-        print("No task passed")
-        return redirect(url_for("home_blueprint.error_117"))
     
     MNGR = get_mngr()
-
-    task = AsyncResult(task_id, app=celery_app)
-    data = task.result if task.successful() else 'Error occurred'
 
     code = session.get(KEYS.FILTER_CODE, "")
 
     context = {'segment' : 'hero_stats', 
-               'task_id' : task.id, 
                'season_details' : MNGR.SeasonDetails.to_dict(orient='records'),
                'form' : form,
                'code' : code,
                'error' : str(filter_error) if filter_error else None,
                'validation_msg' : filter_validation_msg}
-    
-    cached_battles = data.pop('cached_battles')
-    session[KEYS.CACHED_BATTLE_MANAGER] = cached_battles
-    
-    context.update(data)
 
     print("RENDERING STATS")
 

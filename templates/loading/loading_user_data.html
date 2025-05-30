@@ -29,7 +29,7 @@
         } else if (data.failure) {
           window.location.href = data.redirect_url;
         } else {
-          setTimeout(checkStatus, 1000);
+          setTimeout(checkStatus, 500);
         }
       });
   }

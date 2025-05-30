@@ -36,14 +36,14 @@
         <div class="row">
 
             <!-- [ season details table ] start -->
-            <div class="col-sm-6">
+            <div class="col-sm-6 min-width-450">
                 <div class="card razz-kpi height-400">
                     <div class="card-header kpi-header">
                         <h5 class="text-white">Season Details</h5>
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="SeasonDetailsHead" class="scrollables scrollables-razz interior-border-tbl clean-table align-center-except-second col2-150">
+                            <table id="SeasonDetails" class="scrollables scrollables-razz interior-border-tbl clean-table align-center-except-second col2-150">
                                 <thead>
                                     <tr>
                                         <th scope="col"></th>
@@ -72,7 +72,7 @@
             <!-- [ season details table ] end -->
 
             <!-- [ filter code mirror ] start -->
-            <div class="col-sm-6">
+            <div class="col-sm-6 min-width-450">
                 <div class="card height-400">
                     <div class="card-header kpi-header">
                         <h5>Filter battles for calculations</h5>
@@ -109,21 +109,21 @@
                                 <h5 class="f-w-200 d-flex align-items-center m-b-0">Total Battles:</h5>
                             </div>
                             <div class="col-5 text-align-left">
-                                <h5 class="f-w-200 d-inline m-b-0">{{ general_stats["total_battles"] | safe }}</h5>
+                                <h5 class="f-w-200 d-inline m-b-0" id="total-battles">&nbsp;</h5>
                             </div>
                             <div class="col-7">
                                 <h5 class="f-w-200 d-flex align-items-center m-b-0">1st Pick Games:</h5>
                             </div>
                             <div class="col-5 text-align-left">
-                                <h5 class="f-w-200 d-inline m-b-0">{{ general_stats["firstpick_count"] | safe }} </h5>
-                                <p class="d-inline f-w-100 f-8 m-b-0">({{ general_stats["firstpick_rate"] | safe }})</p>
+                                <h5 class="f-w-200 d-inline m-b-0" id="firstpick-count">&nbsp;</h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0" id="firstpick-rate">&nbsp;</p>
                             </div>
                             <div class="col-7">
                                 <h5 class="f-w-200 d-flex align-items-center m-b-0">2nd Pick Games:</h5>
                             </div>
                             <div class="col-5 text-align-left">
-                                <h5 class="f-w-200 d-inline  m-b-0">{{ general_stats["secondpick_count"] | safe }} </h5>
-                                <p class="d-inline f-w-100 f-8 m-b-0">({{ general_stats["secondpick_rate"] | safe }})</p>
+                                <h5 class="f-w-200 d-inline  m-b-0" id="secondpick-count">&nbsp;</h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0" id="secondpick-rate">&nbsp;</p>
                             </div>
                         </div>
                     </div>
@@ -140,19 +140,19 @@
                                 <h5 class="f-w-200 d-inline align-items-center m-b-0">Total Win Rate:</h5>
                             </div>
                             <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0">{{ general_stats["total_winrate"] | safe }}</h5>
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="total-winrate">&nbsp;</h5>
                             </div>
                             <div class="col-8">
                                 <h5 class="f-w-200 d-inline align-items-center m-b-0">1st Pick Win Rate:</h5>
                             </div>
                             <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0">{{ general_stats["firstpick_winrate"] | safe }}</h5>
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="firstpick-winrate">&nbsp;</h5>
                             </div>
                             <div class="col-8">
                                 <h5 class="f-w-200 d-inline align-items-center m-b-0">2nd Pick Win Rate:</h5>
                             </div>
                             <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0">{{ general_stats["secondpick_winrate"] | safe }}</h5>
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="secondpick-winrate">&nbsp;</h5>
                             </div>
                         </div>
                     </div>
@@ -161,7 +161,7 @@
             <!-- [ fp/sp winrates section ] end -->
 
             <!-- [ first pick stats table ] start -->
-            <div class="col-sm-6">
+            <div class="col-sm-6 min-width-450">
                 <div class="card aqua-kpi height-300">
                     <div class="card-header kpi-header">
                         <h5 class="text-white">Firstpick Hero Stats</h5>
@@ -178,16 +178,7 @@
                                         <th scope="col">+/-</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {% for item in general_stats["firstpick_stats"] %}
-                                    <tr>
-                                        <td>{{ item['hero'] }}</td>
-                                        <td>{{ item['appearances'] }}</td>
-                                        <td>{{ item['appearance_rate'] }}</td>
-                                        <td>{{ item['win_rate'] }}</td>
-                                        <td>{{ item['+/-'] }}</td>
-                                    </tr>
-                                    {% endfor %}
+                                <tbody id="FirstpickStatsBody">
                                 </tbody>
                             </table>
                         </div>
@@ -198,7 +189,7 @@
 
 
             <!-- [ preban stats table ] start -->
-            <div class="col-sm-6">
+            <div class="col-sm-6 min-width-450">
                 <div class="card aqua-kpi height-300">
                     <div class="card-header kpi-header">
                         <h5 class="text-white">Preban Stats</h5>
@@ -215,16 +206,7 @@
                                         <th scope="col">+/-</th>
                                     </tr>
                                 </thead>
-                                <tbody >
-                                    {% for item in general_stats["preban_stats"] %}
-                                    <tr>
-                                        <td>{{ item['preban'] }}</td>
-                                        <td>{{ item['appearances'] }}</td>
-                                        <td>{{ item['appearance_rate'] }}</td>
-                                        <td>{{ item['win_rate'] }}</td>
-                                        <td>{{ item['+/-'] }}</td>
-                                    </tr>
-                                    {% endfor %}
+                                <tbody id="PrebanStatsBody">
                                 </tbody>
                             </table>
                         </div>
@@ -235,9 +217,9 @@
 
 
             <!-- [ plot section ] start -->
-            <div class="col-sm-12" id="rank-plot" style="width:100%">
+            <div class="col-sm-12" id="rank-plot-col" style="width:100%">
                 <div class="card" style="width:100%">
-                    {{ rank_plot|safe }}
+                    <div id="rank-plot-container"></div>
                 </div>
             </div>
 
@@ -269,17 +251,7 @@
                                     <th scope="col">+/-</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for item in player_hero_stats %}
-                                <tr>
-                                    <td>{{ item['hero'] }}</td>
-                                    <td>{{ item['games_won'] }}</td>
-                                    <td>{{ item['games_appeared'] }}</td>
-                                    <td>{{ item['appearance_rate'] }}</td>
-                                    <td>{{ item['win_rate'] }}</td>
-                                    <td>{{ item['+/-'] }}</td>
-                                </tr>
-                                {% endfor %}
+                            <tbody id="PlayerTableBody">
                             </tbody>
                         </table>
                     </div>
@@ -308,17 +280,7 @@
                                     <th scope="col">+/-</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for item in enemy_hero_stats %}
-                                <tr>
-                                    <td>{{ item['hero'] }}</td>
-                                    <td>{{ item['games_won'] }}</td>
-                                    <td>{{ item['games_appeared'] }}</td>
-                                    <td>{{ item['appearance_rate'] }}</td>
-                                    <td>{{ item['win_rate'] }}</td>
-                                    <td>{{ item['+/-'] }}</td>
-                                </tr>
-                                {% endfor %}
+                            <tbody id="OpponentTableBody">
                             </tbody>
                         </table>
                     </div>
@@ -366,36 +328,7 @@
                                     <th scope="col">P2 Postban</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for item in battles_data %}
-                                <tr>
-                                    <td>{{ item['Date/Time'] }}</td>
-                                    <td>{{ item['Seq Num'] }}</td>
-                                    <td>{{ item['P1 ID'] }}</td>
-                                    <td>{{ item['P2 ID'] }}</td>
-                                    <td>{{ item['P1 League'] }}</td>
-                                    <td>{{ item['P2 League'] }}</td>
-                                    <td>{{ item['P1 Points'] }}</td>
-                                    <td>{{ item['Win'] }}</td>
-                                    <td>{{ item['Firstpick'] }}</td>
-                                    <td>{{ item['P1 Preban 1'] }}</td>
-                                    <td>{{ item['P1 Preban 2'] }}</td>
-                                    <td>{{ item['P2 Preban 1'] }}</td>
-                                    <td>{{ item['P2 Preban 2'] }}</td>
-                                    <td>{{ item['P1 Pick 1'] }}</td>
-                                    <td>{{ item['P1 Pick 2'] }}</td>
-                                    <td>{{ item['P1 Pick 3'] }}</td>
-                                    <td>{{ item['P1 Pick 4'] }}</td>
-                                    <td>{{ item['P1 Pick 5'] }}</td>
-                                    <td>{{ item['P2 Pick 1'] }}</td>
-                                    <td>{{ item['P2 Pick 2'] }}</td>
-                                    <td>{{ item['P2 Pick 3'] }}</td>
-                                    <td>{{ item['P2 Pick 4'] }}</td>
-                                    <td>{{ item['P2 Pick 5'] }}</td>
-                                    <td>{{ item['P1 Postban'] }}</td>
-                                    <td>{{ item['P2 Postban'] }}</td>
-                                </tr>
-                                {% endfor %}
+                            <tbody id="BattlesTableBody">
                             </tbody>
                         </table>
                     </div>
@@ -414,112 +347,25 @@
     <script src="{{ url_for('static', filename='assets/js/plugins/world.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/pages/dashboard-default.js') }}"></script>
 
-    <script>
-        $(document).ready(function () {
-            var table = $('#PlayerTable').DataTable({
-                layout: {
-                    topStart: 'buttons'
-                },
-                language: {
-                    info: 'Total rows: _TOTAL_'
-                },
-                buttons: {
-                    name: 'primary',
-                    buttons: ['copy',
-                        {
-                            extend: 'csv',
-                            text: 'CSV',
-                            filename: "Player Hero Stats",
-                        },
-                        {
-                            extend: 'excel',
-                            text: 'Excel',
-                            filename: "Player Hero Stats",
-                        }
-                    ]
-                },
-                pageLength: 50,
-                scrollY: '300px',
-                deferRender: true,
-                scroller: true,
-                scrollCollapse: false,
-            }
-            )
+    <script> 
+    document.addEventListener("DOMContentLoaded", async () => {
+        console.log("POPULATING DATA");
+        try {
+            const data = await PYAPI.functions.fetchAndCache();
+            Tables.functions.populateHeroStatsTable('PlayerTable', data.player_hero_stats);
+            Tables.functions.populateHeroStatsTable('OpponentTable', data.enemy_hero_stats);
+            Tables.functions.populatePlayerFirstpickTable('FirstpickStats', data.general_stats.firstpick_stats);
+            Tables.functions.populatePlayerPrebansTable('PrebanStats', data.general_stats.preban_stats);
+            Tables.functions.populateFullBattlesTable('BattlesTable', data.battles_data);
+            CardContent.functions.populateBattleCounts(data.general_stats);
+            CardContent.functions.populateBattlePercents(data.general_stats);
+            CardContent.functions.populateRankPlot(data.rank_plot);
+            console.log("FINISHED POPULATING");
+
+        } catch (err) {
+            console.error("Error loading data:", err);
         }
-        );
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('#OpponentTable').DataTable({
-                layout: {
-                    //top2Start: 'pageLength',
-                    topStart: 'buttons'
-                },
-                language: {
-                    info: 'Total rows: _TOTAL_'
-                },
-                buttons: {
-                    name: 'primary',
-                    buttons: ['copy',
-                        {
-                            extend: 'csv',
-                            text: 'CSV',
-                            filename: "Opponent Hero Stats",
-                        },
-                        {
-                            extend: 'excel',
-                            text: 'Excel',
-                            filename: "Opponent Hero Stats",
-                        }
-                    ]
-                },
-                pageLength: 50,
-                scrollY: '300px',
-                deferRender: true,
-                scroller: true,
-                scrollCollapse: false,
-                // lengthMenu: 
-                //     [
-                //     [100, 250, 500, -1],
-                //     ['100 rows', '250 rows', '500 rows', 'Show all']
-                // ],
-            });
-        });
-
-        $(document).ready(function () {
-            var table = $('#BattlesTable').DataTable({
-                layout: {
-                    topStart: 'buttons'
-                },
-                language: {
-                    info: 'Total rows: _TOTAL_'
-                },
-                buttons: {
-                    name: 'primary',
-                    buttons: ['copy', 
-                        {
-                            extend: 'csv',
-                            text: 'CSV',
-                            filename: "Battle Data",
-                        },
-                        {
-                            extend: 'excel',
-                            text: 'Excel',
-                            filename: "Battle Data",
-                        }
-                    ]
-                },
-                pageLength: 50,
-                scrollY: '300px',
-                deferRender: true,
-                scroller: true,
-                scrollCollapse: false,
-            }
-            )
-        }
-        );
-
+    });
     </script>
 
     <script>

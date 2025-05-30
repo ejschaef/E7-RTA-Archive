@@ -397,3 +397,17 @@ table.scrollables-razz thead:after
 .toggle-switch input[type="checkbox"]:checked + .toggle-switch-background .toggle-switch-handle {
   transform: translateX(21px);
 }
+
+.toggle-container {
+  display: flex;
+  align-items: center;  /* Ensures vertical alignment */
+  gap: 10px;
+}
+
+.toggle-container h6 {
+  margin: 0;             /* Remove default margin */
+  line-height: 1;        /* Tighter line spacing */
+  padding: 0;            /* Ensure no extra space */
+  display: flex;
+  align-items: center;   /* Vertically center text within its own box */
+}

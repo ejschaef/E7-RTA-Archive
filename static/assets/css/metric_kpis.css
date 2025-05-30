@@ -69,3 +69,7 @@
   .small-text-05 {
     font-size: 0.5em;
   }
+
+  .min-width-450 {
+    min-width: 450px;
+  }
