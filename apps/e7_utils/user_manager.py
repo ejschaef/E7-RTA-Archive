@@ -28,26 +28,22 @@ class User:
         self.name = user_json_instance["nick_nm"]
         self.level = int(user_json_instance['rank'])
         self.world_code = world_code
-        
-def get_lvl_70_users(world_code, load=False):
-    for code in refs.WORLD_CODES:
-        if world_code in code:
-            world_code = code
-            break
-    file = refs.USER_FILES[world_code]
-    if os.path.exists(file) and utils.is_created_today(file) and load:
-        return utils.load_pickle(file)
-    else:
-        users =  get_all_user_data(world_code)
-    users = [User(user, world_code) for user in users]
-    utils.save_pickle(users, file)
-    return [u for u in users if u.level == 70]
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "level": self.level,
+            "world_code": self.world_code
+        }
 
 class UserManager:
     
     def __init__(self, load_all=False):
         self.world_code_dict = {}
+        self.id_dict = {}
+        self.name_server_dict = {}
+        self.name_duplicates = 0
         if load_all:
             self.load_all()
         
@@ -58,43 +54,45 @@ class UserManager:
         
     def load_server_users(self, world_code):
         user_data = get_all_user_data(world_code)
-        users = [User(user, world_code) for user in user_data]
-        self.world_code_dict[world_code] = users
-        return users
+        id_dict = {}
+        name_server_dict = {}
+        user_objs = []
+        for user in user_data:
+            user_obj = User(user, world_code)
+            user_objs.append(user_obj)
+            id_dict[user_obj.id] = user_obj
+            name_server_dict[(user_obj.name.lower(), world_code)] = user_obj
+            # assert user_obj.id not in self.id_dict, f"Duplicate user id: {user_obj.id}"
+            if (user_obj.name.lower(), world_code) in self.name_server_dict:
+                self.name_duplicates += 1
+                print(f"\tDuplicate name: {user_obj.name} on server {world_code}")
+        self.id_dict.update(id_dict)
+        self.name_server_dict.update(name_server_dict)
+        self.world_code_dict[world_code] = user_objs
+        return user_objs
         
     def load_all(self, skip_dupicates=False):
         for world_code in refs.WORLD_CODES:
             if skip_dupicates is True and world_code in self.world_code_dict:
                 continue
+            print(f"Loading user from server: {world_code}...")
             self.load_server_users(world_code)
+            print(f"   Loaded {len(self.world_code_dict[world_code])} users from server: {world_code}")
     
     def get_user_from_name(self, user_name, world_code=None, all_servers=True) -> User | None:
         if world_code is None:
             if all_servers is True:
                 self.load_all(skip_dupicates=True)
-            for user in self:
-                if user.name.lower() == user_name.lower():
-                    return user
+            for world_code in self.world_code_dict.keys():
+                if (user_name.lower(), world_code) in self.name_server_dict:
+                    return self.name_server_dict[(user_name.lower(), world_code)]
         else:
             if world_code not in self.world_code_dict:
                 self.load_server_users(world_code)
-            for user in self.world_code_dict[world_code]:
-                if user.name.lower() == user_name.lower():
-                    return user
+            return self.name_server_dict.get((user_name.lower(), world_code))
                 
     def get_user_from_id(self, id, world_code=None, all_servers=True) -> User | None:
-        if world_code is None:
-            if all_servers is True:
-                self.load_all(skip_dupicates=True)
-        if world_code is None:
-            for user in self:
-                if user.id == id:
-                    return user
-        else:
-            if world_code not in self.world_code_dict:
-                self.load_server_users(world_code)
-            for user in self.world_code_dict[world_code]:
-                if user.id == id:
-                    return user
+        self.load_all(skip_dupicates=True)
+        return self.id_dict.get(id)
     
 

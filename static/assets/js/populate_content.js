@@ -230,3 +230,5 @@ CardContent.functions = {
     },
 
 }
+
+export { Tables, CardContent };

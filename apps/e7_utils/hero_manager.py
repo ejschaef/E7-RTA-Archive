@@ -25,8 +25,11 @@ def get_hero_data(lang="en"):
     else:
         return file[lang]
     
-def get_int_to_hero_dict(lang="en"):
-    heroes = get_hero_data(lang=lang)
+def get_int_to_hero_dict(lang="en", json=None):
+    if json:
+        heroes = json[lang]
+    else:
+        heroes = get_hero_data(lang=lang)
     int_to_hero = {int(hero['code'][1:]) : hero['name'] for hero in heroes}
     int_to_hero[777777] = "other"
     int_to_hero[7777770] = "Empty"
@@ -58,8 +61,9 @@ class Hero:
 class HeroManager:
     
     def __init__(self):
+        self.json = get_hero_data(lang=None)
         
-        self.int_to_hero_dict = get_int_to_hero_dict()
+        self.int_to_hero_dict = get_int_to_hero_dict(json=self.json)
         
         self.heroes = [Hero(*key_item_pair, i) for i, key_item_pair in enumerate(self.int_to_hero_dict.items())]
 

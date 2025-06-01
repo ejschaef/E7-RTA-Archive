@@ -2,26 +2,54 @@ from typing import Self
 from apps.e7_utils.hero_manager import HeroManager
 from apps.e7_utils.user_manager import UserManager
 from apps.e7_utils.season_details import get_rta_seasons_df
-import jsonpickle
+from apps.references.cached_var_keys import CONTENT_MNGR_KEY
+import pickle
 import pandas as pd
-        
+from apps.redis_manager import GLOBAL_DB
+
+GLOBAL_CLIENT = GLOBAL_DB.get_client()
+
+# reference_cache.py
+_reference_obj = None
+_reference_loaded_at = 0
 
 class ContentManager:
 
     def __init__(self):
+        print("Initializing ContentManager")
         self.HeroManager     : HeroManager  = HeroManager()
-        self.UserManager    : UserManager  = UserManager()
+        print("Hero Manager Loaded")
+        self.UserManager    : UserManager  = UserManager(load_all=True)
+        print("User Manager Loaded")
         self.SeasonDetails  : pd.DataFrame = get_rta_seasons_df()
+        print("Season Details Loaded")
 
     @classmethod
     def decode(cls, str) -> Self:
-        obj = jsonpickle.decode(str)
+        obj = pickle.loads(str)
         assert isinstance(obj, ContentManager), "Json did not decode to a ContentManager"
         return obj
 
     def encode(self) -> str:
-        return jsonpickle.encode(self)
+        return pickle.dumps(self)
     
+def get_mngr_from_redis() -> object:
+    return GLOBAL_CLIENT.get(CONTENT_MNGR_KEY)
+
+def get_mngr() -> ContentManager:
+    global _reference_obj, _reference_loaded_at
+
+    import time
+    now = time.time()
+    # Refresh every 2 hours and 1 minute (3600s), or if not loaded yet
+    if _reference_obj is None or now - _reference_loaded_at > 3600 * 2 + 60:
+        print("Refreshing ContentManager global from Redis")
+        raw = get_mngr_from_redis()
+        if raw:
+            _reference_obj = pickle.loads(raw)
+            _reference_loaded_at = now
+            print("   ContentManager refreshed from Redis")
+    return _reference_obj
 
         
     

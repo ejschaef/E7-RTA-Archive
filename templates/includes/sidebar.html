@@ -66,6 +66,18 @@
           <label>User Hero Stats</label>
           <i data-feather="monitor"></i>
         </li>
+        <li class="pc-item">
+          <a href="{{ url_for('home_blueprint.test') }}" class="pc-link">
+            <span class="pc-micon"><i data-feather="download"></i></span>
+            <span class="pc-mtext">Test</span>
+          </a>
+        </li>
+        <li class="pc-item">
+          <a href="{{ url_for('home_blueprint.test_upload') }}" class="pc-link">
+            <span class="pc-micon"><i data-feather="download"></i></span>
+            <span class="pc-mtext">Test Upload</span>
+          </a>
+        </li>
         {% if not "username" in session or not "server" in session %}
         <li class="pc-item">
           <a href="{{ url_for('home_blueprint.user_query') }}" class="pc-link">

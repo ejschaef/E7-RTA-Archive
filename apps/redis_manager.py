@@ -1,6 +1,4 @@
 import redis
-from apps.references.cached_var_keys import CONTENT_MNGR_KEY
-from apps.content_manager import ContentManager
 
 class Redis_DB:
 
@@ -32,15 +30,5 @@ class RedisManager:
 
     def delete(self, key):
         self.client.delete(key)
-
-
-class GlobalRedisManager(RedisManager):
-
-    def __init__(self):
-        self.client = GLOBAL_DB.get_client()
-
-    @property
-    def ContentManager(self) -> ContentManager:
-        return ContentManager.decode(self.get(CONTENT_MNGR_KEY))
 
     

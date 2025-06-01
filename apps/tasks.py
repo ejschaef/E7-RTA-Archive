@@ -34,14 +34,14 @@ celery_app = Celery(Config.CELERY_HOSTMACHINE,
                     )
 
 celery_app.conf.beat_schedule = {
-    # 'run_celery_beat_test_every_minute': {
-    #     'task': 'celery_beat_test',
-    #     'schedule': crontab(minute='*/1'),  # Runs every 1 minute
-    #     'args': (json.dumps({'test': 'data'}),)
-    # },
+    'run_celery_beat_test_every_minute': {
+        'task': 'celery_beat_test',
+        'schedule': crontab(minute='*/1'),  # Runs every 1 minute
+        'args': (json.dumps({'test': 'data'}),)
+    },
     'load_reference_content' : {
         'task': 'load_reference_content',
-        'schedule': crontab(minute='*/1'),  # Runs every 5 minutes
+        'schedule': crontab(minute=0, hour='*/2'),  # Runs at minute 0 of every 2 hours
         'args': ()
     },
 }
@@ -54,12 +54,26 @@ def run_start_up_tasks(sender, **kwargs):
     if hasattr(backend, 'client'):  # Redis backend
         redis_client = backend.client
         keys = redis_client.keys("celery-task-meta-*")
-        if keys:
-            print("Clearing Keys")
-            redis_client.delete(*keys)
 
-    # Run the task immediately
-    load_reference_content.delay()
+        lock_acquired = redis_client.set("startup_lock", os.getpid(), nx=True, ex=60)
+
+        if lock_acquired:
+            print("Main process; running startup tasks.")
+
+            # Clear old celery task keys
+            keys = backend.client.keys("celery-task-meta-*")
+            if keys:
+                print("Clearing Keys")
+                backend.client.delete(*keys)
+
+            # Run reference data load task
+            sender.app.send_task("load_reference_content")
+        else:
+            print("Another worker has already handled startup tasks.")
+            if keys:
+                print("Clearing Keys")
+                redis_client.delete(*keys)
+
 
     
 

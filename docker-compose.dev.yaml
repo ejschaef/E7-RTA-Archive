@@ -34,3 +34,14 @@ services:
     #   - CELERY_RESULT_BACKEND=redis://redis:6379/1
     depends_on:
       - redis
+
+  celery_beat:
+    build: ./
+    container_name: e7-celery-beat
+    image: ejschaef/e7-celery-beat:latest
+    command: celery -A apps.tasks beat --loglevel=info
+    volumes:
+      - .:/code
+    depends_on:
+      - celery-worker
+      - redis

@@ -21,12 +21,12 @@ from flask_wtf import FlaskForm
 from werkzeug.exceptions import RequestEntityTooLarge
 from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm
 from apps.e7_utils.user_manager import User
+from apps.e7_utils.query_user_battles import get_transformed_battles
 from apps.e7_utils.filter_syntax import FilterSyntaxResolver
-from apps.content_manager import ContentManager
+from apps.content_manager import ContentManager, get_mngr
 from apps.exceptions.exception import DataValidationException
 from apps.references import cached_var_keys as KEYS
 from apps.home.read_data import read_battle_csv
-from apps.redis_manager import GLOBAL_DB
 
 from apps.tasks import celery_app, load_user_data
 from celery.result import AsyncResult
@@ -34,12 +34,6 @@ from celery.result import AsyncResult
 ########################################################################################################
 # START HELPERS
 ########################################################################################################
-
-GLOBAL_CLIENT = GLOBAL_DB.get_client()
-
-
-def get_mngr() -> ContentManager:
-    return ContentManager.decode(GLOBAL_CLIENT.get(KEYS.CONTENT_MNGR_KEY))
 
 def generate_short_id():
     uid = uuid.uuid4()
@@ -96,6 +90,16 @@ def color():
 def sample_page():
     return render_template('pages/sample-page.html', segment='sample_page')
 
+
+@blueprint.route('/test')
+def test():
+    return render_template('pages/test.html', segment='test', overwrite=True)
+
+@blueprint.route('/test_upload')
+def test_upload():
+    form = FileUploadForm()
+    return render_template('pages/upload_battle_data_js_test.html', form=form, segment='test_upload')
+
 @blueprint.route('/typography')
 def typography():
     return render_template('pages/typography.html', segment='typography')
@@ -120,6 +124,42 @@ def notify_cache_success():
     forget_user_task_data()
     session[KEYS.CACHED_DATA_FLAG] = True
     return '', 204
+
+@blueprint.route('api/get_battle_data')
+def get_battle_data():
+    # user = jsonpickle.decode(session.get('user'))
+    user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
+    print(f"SERVER QUERYING: <name={user.name}, server={user.world_code}>, id={user.id}")
+    battle_data = get_transformed_battles(user)
+    return jsonify({ 'battles' : battle_data })
+
+@blueprint.route('api/get_hero_data')
+def get_hero_data():
+    MNGR = get_mngr()
+    print("SERVER RETURNING: ", MNGR.HeroManager.json)
+    return jsonify(MNGR.HeroManager.json)
+
+@blueprint.route('api/get_user_data')
+def get_user_data():
+    # user = jsonpickle.decode(session.get('user'))
+    user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
+    print(f"SERVER RETURNING: <name={user.name}, server={user.world_code}>, id={user.id}")
+    return jsonify(user.to_dict())
+
+
+@blueprint.route('api/receive_upload_details', methods=['GET', 'POST'])
+def receive_upload_details():
+    MNGR = get_mngr()
+    data = request.get_json()
+    print(f"SERVER RECEIVED UPLOAD DETAILS: {data}")
+    user_id = int(data['id'])
+    user = MNGR.UserManager.get_user_from_id(user_id)
+    print(f"SERVER RECEIVED FOLLOWING USER FROM UPLOADED FORM: <name={user.name}, server={user.world_code}>, id={user.id}")
+    battles = []
+    if data.get('query_flag') == 'true':
+        battles = get_transformed_battles(user)
+    return jsonify({ 'user' : user.to_dict(), 'battles' : battles })
+
 
 ########################################################################################################
 # START USER QUERY SECTION

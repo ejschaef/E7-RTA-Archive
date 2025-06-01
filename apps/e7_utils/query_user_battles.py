@@ -61,15 +61,17 @@ def transform_battle_data(raw_battle_data):
     
     return output
 
+
+def get_transformed_battles(user: User) -> list[dict]:
+    return [transform_battle_data(battle) for battle in get_battle_data_for_user(user)['result_body']['battle_list']]
+    
 def get_battles(user: User) -> BattleManager:
     """
     Queries last 100 battles for user, then returns the result as transformed usable data
     as list
     """
-    data = get_battle_data_for_user(user)['result_body']
-    battles = [transform_battle_data(battle) for battle in data["battle_list"]]
+    battles = get_transformed_battles(user)
     return BattleManager.from_raw_battles_list(battles)
-
 
 class StatsHolder:
     pass

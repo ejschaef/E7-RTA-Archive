@@ -46,3 +46,37 @@
 
 {% endblock content %}
 
+{% block extra_js %}
+
+{% if overwrite %}
+<script type="module">
+    import { ClientCache} from "{{ url_for('static', filename='assets/js/exports.js') }}";
+    document.addEventListener("DOMContentLoaded", async () => {
+        await ClientCache.clearUserData();
+    });
+</script>
+{% endif%}
+
+<script type="module">
+    import { PYAPI, UserManager, ClientCache } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+    document.addEventListener("DOMContentLoaded", async () => {
+        //ClientCache.deleteDB();
+
+        const battles = await PYAPI.fetchBattleData();
+        console.log(`GOT: ${JSON.stringify(battles)}`);
+        //const heroes = await PYAPI.fetchHeroData();
+        //console.log(`GOT: ${JSON.stringify(heroes)}`);
+
+
+        var user = await UserManager.getUser();
+        console.log(`User: ${JSON.stringify(user)}`);
+        user = await UserManager.getUser();
+        console.log(`User: ${JSON.stringify(user)}`);
+
+    });
+
+</script>
+
+{% endblock extra_js%}
+
+
