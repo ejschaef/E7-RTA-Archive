@@ -38,34 +38,35 @@ function battleListToDict(battleList) {
 
 // takes the raw battles recieved from flask-server and converts to clean format we will serve in battles table user can download from
 function formatBattleClean(raw, HM) {
-  const getChampName = code => HM.code_lookup[code].name ?? code;
-  return {
-    "Date/Time": raw.time,
-    "Seq Num": raw.seq_num,
-    "P1 ID": raw.p1_id.toString(),
-    "P2 ID": raw.p2_id.toString(),
-    "P1 League": raw.grades[0] ?? "",
-    "P2 League": raw.grades[1] ?? "",
-    "P1 Points": raw.scores[0] ?? null,
-    "Win": raw.winner === 1 ? "W" : "L",
-    "Firstpick": raw.firstpick === 1 ? "True" : "False",
-    "P1 Preban 1": getChampName(raw.p1_preban[0]),
-    "P1 Preban 2": getChampName(raw.p1_preban[1]),
-    "P2 Preban 1": getChampName(raw.p2_preban[0]),
-    "P2 Preban 2": getChampName(raw.p2_preban[1]),
-    "P1 Pick 1": getChampName(raw.p1_picks[0]),
-    "P1 Pick 2": getChampName(raw.p1_picks[1]),
-    "P1 Pick 3": getChampName(raw.p1_picks[2]),
-    "P1 Pick 4": getChampName(raw.p1_picks[3]),
-    "P1 Pick 5": getChampName(raw.p1_picks[4]),
-    "P2 Pick 1": getChampName(raw.p2_picks[0]),
-    "P2 Pick 2": getChampName(raw.p2_picks[1]),
-    "P2 Pick 3": getChampName(raw.p2_picks[2]),
-    "P2 Pick 4": getChampName(raw.p2_picks[3]),
-    "P2 Pick 5": getChampName(raw.p2_picks[4]),
-    "P1 Postban": getChampName(raw.postbans[1]),
-    "P2 Postban": getChampName(raw.postbans[0]),
-  };
+    //console.log(`Formatting battle: ${JSON.stringify(raw)}`);
+    const getChampName = code => HeroManager.getHeroByCode(code, HM).name;
+    return {
+        "Date/Time": raw.time,
+        "Seq Num": raw.seq_num,
+        "P1 ID": raw.p1_id.toString(),
+        "P2 ID": raw.p2_id.toString(),
+        "P1 League": raw.grades[0] ?? "",
+        "P2 League": raw.grades[1] ?? "",
+        "P1 Points": raw.scores[0] ?? null,
+        "Win": raw.winner === 1 ? "W" : "L",
+        "Firstpick": raw.firstpick === 1 ? "True" : "False",
+        "P1 Preban 1": getChampName(raw.p1_preban[0]),
+        "P1 Preban 2": getChampName(raw.p1_preban[1]),
+        "P2 Preban 1": getChampName(raw.p2_preban[0]),
+        "P2 Preban 2": getChampName(raw.p2_preban[1]),
+        "P1 Pick 1": getChampName(raw.p1_picks[0]),
+        "P1 Pick 2": getChampName(raw.p1_picks[1]),
+        "P1 Pick 3": getChampName(raw.p1_picks[2]),
+        "P1 Pick 4": getChampName(raw.p1_picks[3]),
+        "P1 Pick 5": getChampName(raw.p1_picks[4]),
+        "P2 Pick 1": getChampName(raw.p2_picks[0]),
+        "P2 Pick 2": getChampName(raw.p2_picks[1]),
+        "P2 Pick 3": getChampName(raw.p2_picks[2]),
+        "P2 Pick 4": getChampName(raw.p2_picks[3]),
+        "P2 Pick 5": getChampName(raw.p2_picks[4]),
+        "P1 Postban": getChampName(raw.postbans[1]),
+        "P2 Postban": getChampName(raw.postbans[0]),
+    };
 }
 
 function cleanUploadedBattle(battle) {
@@ -77,7 +78,8 @@ function cleanUploadedBattle(battle) {
 }
 
 function formatBattleNumerical(cleanBattle, HM) {
-    const getChampPrime = name => HM.name_lookup[name].prime ?? code;
+    console.log(`Formatting battle: ${JSON.stringify(cleanBattle)}`);
+    const getChampPrime = name => HeroManager.getHeroByName(name, HM).prime;
     return {
         "Date/Time": cleanBattle["Date/Time"],
         "Seq Num": cleanBattle["Seq Num"],
@@ -88,7 +90,7 @@ function formatBattleNumerical(cleanBattle, HM) {
         "P1 Points": cleanBattle["P1 Points"],
         "Win": cleanBattle.Win = "W" ? 1 : 0,
         "Firstpick": cleanBattle.Firstpick === "True" ? 1 : 0,
-        "P1 Preban 1": getChampPrime(cleanBattle["P1 Preban"]),
+        "P1 Preban 1": getChampPrime(cleanBattle["P1 Preban 1"]),
         "P1 Preban 2": getChampPrime(cleanBattle["P1 Preban 2"]),
         "P2 Preban 1": getChampPrime(cleanBattle["P2 Preban 1"]),
         "P2 Preban 2": getChampPrime(cleanBattle["P2 Preban 2"]),
@@ -146,7 +148,7 @@ let BattleManager = {
   },
 
   removeFilteredBattles: async function() {
-    await ClientCache.deleteJSON(ClientCache.KEYS.FILTERED_BATTLES);
+    await ClientCache.deleteJSON(ClientCache.Keys.FILTERED_BATTLES);
     console.log("Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']");
   },
 
@@ -156,20 +158,24 @@ let BattleManager = {
     filterList = filterList || [];
     let battles = await this.getBattles();
     for (let filter of filterList) {
-        battles = battles.filter(battle => filter(battle));
+        battles = Object.fromEntries(
+            Object.entries(battles).filter(([key, battle]) => filter(battle))
+        )
     }
-    await ClientCache.setJSON(ClientCache.KEYS.FILTERED_BATTLES, battles);
+    console.log(`Caching filtered battles: ${battles}`);
+    await ClientCache.setJSON(ClientCache.Keys.FILTERED_BATTLES, battles);
     console.log(`Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <${filterList.length}> filters`);
     return battles;
   },
 
   // should be called to compute metrics
   getNumericalFilteredBattles: async function(filterList, HM) {
-    HM = HM || await HeroManager.getHeroManager();
     const battles = await this.applyFilter(filterList);
-    const mapFn = battle => formatBattleNumerical(battle, HM);
-    const numericalBattles = battles.map(mapFn);
-    console.log("Converted filtered battles from cache to numerical format; returning");
+    const mapFn = (key, battle) => [key, formatBattleNumerical(battle, HM)];
+    const numericalBattles = Object.fromEntries(
+            Object.entries(battles).map(([key, battle]) => mapFn(key, battle))
+        )
+    console.log("Converted filtered battles from cache to numerical format; returning:" + JSON.stringify(numericalBattles) + " battles"  );
     return numericalBattles;
   },
 
@@ -188,10 +194,9 @@ let BattleManager = {
         console.log("No query battles provided to cacheQuery");
         return [];
     }
-    HM = HM || await HeroManager.getHeroManager();
     const mapFn = battle => formatBattleClean(battle, HM);
     const cleanBattles = battleList.map(mapFn);
-    await ClientCache.setJSON(ClientCache.KEYS.QUERIED_BATTLES, cleanBattles);
+    await ClientCache.setJSON(ClientCache.Keys.BATTLES, cleanBattles);
     const battles = await this.extendBattles(cleanBattles);
     console.log("Cached queried battles in cache; modified [BATTLES]");
     return battles;

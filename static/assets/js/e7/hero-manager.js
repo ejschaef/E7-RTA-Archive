@@ -102,11 +102,13 @@ let HeroManager = {
     if (!name) {
         return HM.Empty;
     }
+    HM = HM || this.getHeroManager();
     const normalizedName = name.toLowerCase().replace(/\s+/g, '');
     return HM.name_lookup[normalizedName] ?? HM.Fodder;
   },
 
   getHeroByPrime: function(prime, HM) {
+    HM = HM || this.getHeroManager();
     return HM.prime_lookup[toString(prime)];
   },
 
@@ -114,10 +116,12 @@ let HeroManager = {
     if (!code) {
         return HM.Empty;
     }
+    HM = HM || this.getHeroManager();
     return HM.code_lookup[code] ?? HM.Fodder;
   },
 
   getPairNamesByProduct: function(product, HM) {
+    HM = HM || this.getHeroManager();
     return HM.prime_pair_lookup[toString(product)];
   },
 }

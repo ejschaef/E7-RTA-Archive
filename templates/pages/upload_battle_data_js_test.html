@@ -24,7 +24,7 @@
                 <div class="row justify-content-center">
                     <form id="uploadForm" class="card-body">
                         {{ form.hidden_tag() }}
-                        <h4 class="text-center f-w-500 mt-4 mb-3">Upload CSV</h4>
+                        <h4 class="text-center f-w-500 mb-3">Upload CSV</h4>
                         <span id="uploadMSG" class="d-block text-safe mb-3"></span>
                         <span id="uploadError"class="d-block text-danger mb-3"></span>
                         <div class="form-group mb-3">
@@ -62,6 +62,7 @@
   let selectedFile = null;
   // await HeroManager.deleteHeroManager();
   const HM = await HeroManager.getHeroManager();
+  console.log("Got HeroManager: " + JSON.stringify(HM.name_lookup))
 
   // Capture file when selected
   document.getElementById('csvFile').addEventListener('change', function(event) {
@@ -93,9 +94,8 @@
           await PYAPI.serverProcessUpload(battleArr, autoQueryFlag)
           .then(response => response.json())
           .then(async data => {
-            console.log(`GOT DATA FROM PYTHON LOOKUP: ${JSON.stringify(data)}`);
             if (data.success) {
-              console.log("Server communication successful; recieved response data for file upload")
+              console.log("Server communication successful; received response data for file upload")
               document.getElementById("uploadMSG").textContent = "CSV uploaded successfully";
               document.getElementById("csvFile").value = "";
               await BattleManager.cacheQuery(data.battles, HM);
