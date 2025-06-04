@@ -149,16 +149,21 @@ def get_user_data():
 
 @blueprint.route('api/receive_upload_details', methods=['GET', 'POST'])
 def receive_upload_details():
-    MNGR = get_mngr()
-    data = request.get_json()
-    print(f"SERVER RECEIVED UPLOAD DETAILS: {data}")
-    user_id = int(data['id'])
-    user = MNGR.UserManager.get_user_from_id(user_id)
-    print(f"SERVER RECEIVED FOLLOWING USER FROM UPLOADED FORM: <name={user.name}, server={user.world_code}>, id={user.id}")
-    battles = []
-    if data.get('query_flag') == 'true':
-        battles = get_transformed_battles(user)
-    return jsonify({ 'user' : user.to_dict(), 'battles' : battles })
+    try:
+        MNGR = get_mngr()
+        data = request.get_json()
+        print(f"SERVER RECEIVED UPLOAD DETAILS: {data}")
+        user_id = int(data['id'])
+        user = MNGR.UserManager.get_user_from_id(user_id)
+        session_add_user(user)
+        print(f"SERVER RECEIVED AND SET FOLLOWING USER FROM UPLOADED FORM: <name={user.name}, server={user.world_code}>, id={user.id}")
+        battles = []
+        if data.get('queryFlag') is True:
+            battles = get_transformed_battles(user)
+        return jsonify({ 'user' : user.to_dict(), 'battles' : battles , 'success' : True, 'error' : "No Error" })
+    except Exception as e:
+        print(f"SERVER ERROR WHEN PROCESSING UPLOAD DETAILS: {str(e)}")
+        return jsonify({ 'error' : str(e), 'success' : False })
 
 
 ########################################################################################################

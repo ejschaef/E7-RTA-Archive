@@ -16,6 +16,7 @@ let ClientCache = {
     HERO_MANAGER: "hero-manager",
     BATTLES: "battles",
     UPLOADED_BATTLES: "uploaded-battles",
+    FILTERED_BATTLES: "filtered-battles",
   },
 
   MetaKeys: {
@@ -47,7 +48,11 @@ let ClientCache = {
     await this.checkCacheTimeout(id);
     const db = await this.openDB();
     const result = await db.get(this.consts.STORE_NAME, id);
-    console.log(`Getting ${id} from cache: ${result}`);
+    if (result) {
+      console.log(`Returning ${id} from cache: ${result}`);
+    } else {
+      console.log(`${id} not found in cache; returning null`);
+    }
     return result ?? null;
   },
 
@@ -60,6 +65,7 @@ let ClientCache = {
   deleteJSON: async function(id) {
     const db = await this.openDB();
     await db.delete(this.consts.STORE_NAME, id);
+    await this.deleteTimestamp(id);
   },
 
   deleteDB: async function() {
@@ -82,6 +88,13 @@ let ClientCache = {
     console.log(`Timestamp set: ${val}`);
   },
 
+  deleteTimestamp: async function(id) {
+    const db = await this.openDB();
+    const key = `${id+this.MetaKeys.TIMESTAMP}`;
+    await db.delete(this.consts.META_STORE_NAME, key);
+    console.log(`Timestamp deleted for <${id}>`);
+  },
+
   clearData: async function() {
     const db = await this.openDB();
     const tx = db.transaction(this.consts.STORE_NAME, 'readwrite');
@@ -92,7 +105,7 @@ let ClientCache = {
   },
 
   clearUserData: async function() {
-    [this.Keys.USER, this.Keys.BATTLES, this.Keys.UPLOADED_BATTLES].forEach(async key => {
+    [this.Keys.USER, this.Keys.BATTLES, this.Keys.UPLOADED_BATTLES, this.Keys.FILTERED_BATTLES].forEach(async key => {
       await this.deleteJSON(key);
     });
     console.log("User data cleared from data cache");
@@ -103,7 +116,7 @@ let ClientCache = {
     const currentTime = Date.now();
     console.log(`Checking Timeout for <${id}> | Current time: ${currentTime}, cache timestamp: ${timestamp}, difference: ${currentTime - timestamp} ms`);
     if (!timestamp || (currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
-      console.log(`Cache timeout reached, clearing data from ${id}`);
+      console.log(`Cache timeout reached, clearing data from <${id}>`);
       await this.deleteJSON(id);
     }
   },

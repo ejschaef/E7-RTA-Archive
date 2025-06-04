@@ -64,9 +64,9 @@
 
         const battles = await PYAPI.fetchBattleData();
         console.log(`GOT: ${JSON.stringify(battles)}`);
-        //const heroes = await PYAPI.fetchHeroData();
-        //console.log(`GOT: ${JSON.stringify(heroes)}`);
 
+        const heroes = await PYAPI.fetchHeroData();
+        console.log(`GOT: ${JSON.stringify(heroes)}`);
 
         var user = await UserManager.getUser();
         console.log(`User: ${JSON.stringify(user)}`);

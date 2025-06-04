@@ -13,6 +13,7 @@ let CSVParse = {
               const values = line.split(',').map(v => v.trim());
               return Object.fromEntries(headers.map((h, i) => [h, values[i]]));
           });
+          console.log("Parsed CSV:", battleArr);
           return battleArr;
           // You can now store the data, process it, or update your app state
         } catch (err) {

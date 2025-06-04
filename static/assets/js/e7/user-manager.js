@@ -4,8 +4,6 @@ import PYAPI from '../pyAPI.js'
 
 let UserManager = {
 
-  loaded_servers: new Set(),
-
   getUser: async function() {
     return (await ClientCache.getJSON(ClientCache.Keys.USER)) ?? this.fetchAndCacheUser();
   },

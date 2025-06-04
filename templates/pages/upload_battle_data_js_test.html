@@ -25,7 +25,7 @@
                     <form id="uploadForm" class="card-body">
                         {{ form.hidden_tag() }}
                         <h4 class="text-center f-w-500 mt-4 mb-3">Upload CSV</h4>
-                        <span id="uploadMSG" class="d-block text-danger mb-3"></span>
+                        <span id="uploadMSG" class="d-block text-safe mb-3"></span>
                         <span id="uploadError"class="d-block text-danger mb-3"></span>
                         <div class="form-group mb-3">
                           {{ form.file(class="form-control", id="csvFile") }}
@@ -57,9 +57,11 @@
 {% block extra_js %}
 
 <script type="module">
-  import { CSVParse, PYAPI } from "{{ url_for('static', filename='assets/js/exports.js') }}"
+  import { CSVParse, PYAPI, BattleManager, HeroManager, ClientCache } from "{{ url_for('static', filename='assets/js/exports.js') }}"
 
   let selectedFile = null;
+  // await HeroManager.deleteHeroManager();
+  const HM = await HeroManager.getHeroManager();
 
   // Capture file when selected
   document.getElementById('csvFile').addEventListener('change', function(event) {
@@ -68,6 +70,8 @@
 
   // Intercept form submission
   document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+      console.log("Processing Submission")
+
       event.preventDefault(); // Prevent actual form submission to server
 
       if (!selectedFile) {
@@ -81,23 +85,30 @@
 
       try {
           const battleArr = await CSVParse.parseUpload(selectedFile);
-          // Display the parsed JSON
-          console.log(JSON.stringify(battleArr, null, 2));
+
+          await ClientCache.clearUserData();
+
+          await BattleManager.cacheUpload(battleArr);
 
           await PYAPI.serverProcessUpload(battleArr, autoQueryFlag)
           .then(response => response.json())
-          .then(data => {
+          .then(async data => {
             console.log(`GOT DATA FROM PYTHON LOOKUP: ${JSON.stringify(data)}`);
             if (data.success) {
-              document.getElementById("uploadMSG").textContent = "CSV uploaded successfully!";
+              console.log("Server communication successful; recieved response data for file upload")
+              document.getElementById("uploadMSG").textContent = "CSV uploaded successfully";
               document.getElementById("csvFile").value = "";
+              await BattleManager.cacheQuery(data.battles, HM);
+              const filteredBattles = BattleManager.getNumericalFilteredBattles([], HM);
             } else {
+              console.log("Server communication unsuccessful")
               document.getElementById("uploadError").textContent = data.error;
             }
           });
           // You can now store the data, process it, or update your app state
       } catch (err) {
-          document.getElementById("uploadError").textcontent = err.message;
+        console.error("Caught Error:", err);
+        document.getElementById("uploadError").textcontent = err.message;
       }
   });
 </script>
