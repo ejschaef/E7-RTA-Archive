@@ -45,7 +45,7 @@ def retrieve_enclosure(string, open_char='(', close_char=')'):
     if count > 0:
         raise SyntaxException(f"Enclosure could not be resolved; too many '{open_char}'; balance = +{count}; input string {string}")
     if count < 0:
-        raise SyntaxException(f"Enclosure could not be resolved; too many '{close_char}'; balance = {count}; input string {string}")
+        raise SyntaxException(f"Enclosure could not be resolved; too many '{close_char}'; balance = -{count}; input string {string}")
     
 def retrieve_args(string):
     open_parenthese_count = 0

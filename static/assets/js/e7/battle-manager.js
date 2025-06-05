@@ -2,6 +2,7 @@ import ClientCache from "../cache-manager.js";
 import { printObjStruct } from './e7-utils.js';
 import PYAPI from '../pyAPI.js'
 import HeroManager from "./hero-manager.js";
+import { LEAGUE_MAP } from "./references.js";
 
 const COLUMNS = [
     "Date/Time", "Seq Num", "P1 ID", "P2 ID", 
@@ -12,19 +13,6 @@ const COLUMNS = [
     "P1 Postban", "P2 Postban"];
 
 const HERO_COLUMNS = COLUMNS.filter(col => col.includes(" Pick ") || col.includes("ban "));
-
-const LEAGUE_MAP = {
-    "bronze" : 0,
-    "silver" : 1,
-    "gold" : 2,
-    "master" : 3,
-    "challenger" : 4,
-    "champion" : 5,
-    "warlord" : 6,
-    "emperor" : 7,
-    "legend" : 8
-}
-
 
 function battleListToDict(battleList) {
     let battle_dict = {};
@@ -39,8 +27,8 @@ function battleListToDict(battleList) {
 // takes the raw battles recieved from flask-server and converts to clean format we will serve in battles table user can download from
 function formatBattleClean(raw, HM) {
     //console.log(`Formatting battle: ${JSON.stringify(raw)}`);
-    const getChampName = code => HeroManager.getHeroByCode(code, HM).name;
-    return {
+    const getChampName = code => HeroManager.getHeroByCode(code, HM, fallbackTOFodder = true).name;
+    const battle = {
         "Date/Time": raw.time,
         "Seq Num": raw.seq_num,
         "P1 ID": raw.p1_id.toString(),
@@ -67,6 +55,11 @@ function formatBattleClean(raw, HM) {
         "P1 Postban": getChampName(raw.postbans[1]),
         "P2 Postban": getChampName(raw.postbans[0]),
     };
+    battle["P1 Picks"] = [battle["P1 Pick 1"], battle["P1 Pick 2"], battle["P1 Pick 3"], battle["P1 Pick 4"], battle["P1 Pick 5"]];
+    battle["P2 Picks"] = [battle["P2 Pick 1"], battle["P2 Pick 2"], battle["P2 Pick 3"], battle["P2 Pick 4"], battle["P2 Pick 5"]];
+    battle["P1 Prebans"] = [battle["P1 Preban 1"], battle["P1 Preban 2"]];
+    battle["P2 Prebans"] = [battle["P2 Preban 1"], battle["P2 Preban 2"]];
+    return battle;
 }
 
 function cleanUploadedBattle(battle) {
@@ -74,12 +67,16 @@ function cleanUploadedBattle(battle) {
         battle[col] = battle[col] ? battle[col] : "Empty"
     }
     battle["P1 Points"] = Number(battle["P1 Points"]) || battle["P1 Points"];
+    battle["P1 Picks"] = [battle["P1 Pick 1"], battle["P1 Pick 2"], battle["P1 Pick 3"], battle["P1 Pick 4"], battle["P1 Pick 5"]];
+    battle["P2 Picks"] = [battle["P2 Pick 1"], battle["P2 Pick 2"], battle["P2 Pick 3"], battle["P2 Pick 4"], battle["P2 Pick 5"]];
+    battle["P1 Prebans"] = [battle["P1 Preban 1"], battle["P1 Preban 2"]];
+    battle["P2 Prebans"] = [battle["P2 Preban 1"], battle["P2 Preban 2"]];
     return battle;
 }
 
 function formatBattleNumerical(cleanBattle, HM) {
     console.log(`Formatting battle: ${JSON.stringify(cleanBattle)}`);
-    const getChampPrime = name => HeroManager.getHeroByName(name, HM).prime;
+    const getChampPrime = name => HeroManager.getHeroByName(name, HM, fallbackTOFodder = false).prime;
     return {
         "Date/Time": cleanBattle["Date/Time"],
         "Seq Num": cleanBattle["Seq Num"],
@@ -106,6 +103,10 @@ function formatBattleNumerical(cleanBattle, HM) {
         "P2 Pick 5": getChampPrime(cleanBattle["P2 Pick 5"]),
         "P1 Postban": getChampPrime(cleanBattle["P1 Postban"]),
         "P2 Postban": getChampPrime(cleanBattle["P2 Postban"]),
+        "P1 Picks": cleanBattle["P1 Picks"].map(getChampPrime).reduce((acc, val) => acc * val, 1), //take prime product to get sets
+        "P2 Picks": cleanBattle["P2 Picks"].map(getChampPrime).reduce((acc, val) => acc * val, 1),
+        "P1 Prebans": cleanBattle["P1 Prebans"].map(getChampPrime).reduce((acc, val) => acc * val, 1),
+        "P2 Prebans": cleanBattle["P2 Prebans"].map(getChampPrime).reduce((acc, val) => acc * val, 1),
     };
 }
 

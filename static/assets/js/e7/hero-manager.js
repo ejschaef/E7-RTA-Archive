@@ -3,11 +3,14 @@ import { printObjStruct } from './e7-utils.js';
 import { PRIMES } from "./references.js";
 import PYAPI from '../pyAPI.js'
 
+const FODDER_NAME = "Fodder";
+const EMPTY_NAME = "Empty";
+
 // This function adds two heroes to the Hero Manager to account for fodder champions and empty picks/prebans
 function addNonHeroes (HM) {
     const next_index = HM.heroes.length;
-    const Empty = {attribute_cd: "N/A", code: "N/A", grade: "N/A", job_cd: "N/A", name: "Empty", prime: 1};
-    const Fodder = {attribute_cd: "N/A", code: "N/A", grade: "2/3", job_cd: "N/A", name: "Fodder", prime: PRIMES[next_index]};
+    const Empty = {attribute_cd: "N/A", code: "N/A", grade: "N/A", job_cd: "N/A", name: EMPTY_NAME, prime: 1};
+    const Fodder = {attribute_cd: "N/A", code: "N/A", grade: "2/3", job_cd: "N/A", name: FODDER_NAME, prime: PRIMES[next_index]};
     HM.heroes.push(Empty);
     HM.heroes.push(Fodder);
     HM.Fodder = Fodder;
@@ -98,13 +101,18 @@ let HeroManager = {
     console.log("Removed hero manager from cache");
   },
 
-  getHeroByName: function(name, HM) {
+
+  getHeroByName: function(name, HM, fallbackTOFodder = false) {
     if (!name) {
         return HM.Empty;
     }
     HM = HM || this.getHeroManager();
     const normalizedName = name.toLowerCase().replace(/\s+/g, '');
-    return HM.name_lookup[normalizedName] ?? HM.Fodder;
+    if (fallbackTOFodder) {
+        return HM.name_lookup[normalizedName] ?? HM.Fodder;
+    } else {
+        return HM.name_lookup[normalizedName] ?? null;
+    }
   },
 
   getHeroByPrime: function(prime, HM) {
@@ -112,12 +120,16 @@ let HeroManager = {
     return HM.prime_lookup[toString(prime)];
   },
 
-  getHeroByCode: function(code, HM) {
+  getHeroByCode: function(code, HM, fallbackTOFodder = false) {
     if (!code) {
         return HM.Empty;
     }
     HM = HM || this.getHeroManager();
-    return HM.code_lookup[code] ?? HM.Fodder;
+    if (fallbackTOFodder) {
+        return HM.code_lookup[code]?? HM.Fodder;
+    } else {
+        return HM.code_lookup[code]?? null;
+    }
   },
 
   getPairNamesByProduct: function(product, HM) {

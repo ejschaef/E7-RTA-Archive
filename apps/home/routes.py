@@ -141,10 +141,15 @@ def get_hero_data():
 
 @blueprint.route('api/get_user_data')
 def get_user_data():
-    # user = jsonpickle.decode(session.get('user'))
-    user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
-    print(f"SERVER RETURNING: <name={user.name}, server={user.world_code}>, id={user.id}")
-    return jsonify(user.to_dict())
+    try:
+        # user = jsonpickle.decode(session.get('user'))
+        user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
+        print(f"SERVER RETURNING: <name={user.name}, server={user.world_code}>, id={user.id}")
+        return_dict = {"user" : user.to_dict(), "success" : True }
+        return jsonify(user.to_dict() ) , 200 #Http status code Ok
+    except Exception as e:
+        print(f"SERVER ERROR WHEN RETURNING USER DATA: {str(e)}")
+        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 
 @blueprint.route('api/receive_upload_details', methods=['GET', 'POST'])
@@ -160,10 +165,10 @@ def receive_upload_details():
         battles = []
         if data.get('queryFlag') is True:
             battles = get_transformed_battles(user)
-        return jsonify({ 'user' : user.to_dict(), 'battles' : battles , 'success' : True, 'error' : "No Error" })
+        return jsonify({ 'user' : user.to_dict(), 'battles' : battles , 'success' : True }), 200 #Http status code Ok
     except Exception as e:
         print(f"SERVER ERROR WHEN PROCESSING UPLOAD DETAILS: {str(e)}")
-        return jsonify({ 'error' : str(e), 'success' : False })
+        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 
 ########################################################################################################

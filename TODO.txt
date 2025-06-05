@@ -11,10 +11,20 @@ make variables like hero manager retrievable with redis --
 season kpi --
 compression for csv files (no longer uploading files)
 
-content manager is inefficient; each variable should be stored separately rather than as one object so that they don't need to be deserialized to be accessed
+content manager is inefficient; each variable should be stored separately rather than as...
+one object so that they don't need to be deserialized to be accessed -- now stored as global reference, only reset and deserialized after a couple hours to align with chron job
 
-switch reference session variables (heroes, users, and seasons, etc) to chron job -- (finished for Heroes and Season details)
+switch reference variables (heroes, users, and seasons, etc) to chron job + initial load with global lookup variable --
 switch user manager to DB backend --
+
+
+# JS Overhaul
+switch table and KPI card population to JS --
+switch battle-manager, hero-manager, and logic to client side JS using index DB - in progress
+switch calculation of metrics to client-side JS
+switch filter syntax to client-side JS
+swith plotly to client side JS
+make server stateless so no need to keep track of session variables or celery task ids (handle everything in client with JS)
 
 BUGS:
 
