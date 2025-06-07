@@ -23,6 +23,9 @@ from apps.content_manager import ContentManager
 import apps.references.cached_var_keys as KEYS
 from apps.redis_manager import GLOBAL_DB
 
+import uuid
+import time
+
 GLOBAL_CLIENT = GLOBAL_DB.get_client()
 
 logger = get_task_logger(__name__)
@@ -55,19 +58,22 @@ def run_start_up_tasks(sender, **kwargs):
         redis_client = backend.client
         keys = redis_client.keys("celery-task-meta-*")
 
-        lock_acquired = redis_client.set("startup_lock", os.getpid(), nx=True, ex=60)
+        lock_key = "startup_lock"
+        lock_ttl = 1  # seconds
+        lock_value = str(uuid.uuid4()) 
+
+        lock_acquired = redis_client.set(lock_key, lock_value, nx=True, ex=lock_ttl)
 
         if lock_acquired:
-            print("Main process; running startup tasks.")
+            try:
+                print("Main process; running startup tasks.")
 
-            # Clear old celery task keys
-            keys = backend.client.keys("celery-task-meta-*")
-            if keys:
-                print("Clearing Keys")
-                backend.client.delete(*keys)
-
-            # Run reference data load task
-            sender.app.send_task("load_reference_content")
+                # Run reference data load task
+                sender.app.send_task("load_reference_content")
+            finally:
+                time.sleep(lock_ttl)  # wait for lock to expire
+                if redis_client.get(lock_key) == lock_value:
+                    redis_client.delete(lock_key)
         else:
             print("Another worker has already handled startup tasks.")
             if keys:

@@ -102,17 +102,13 @@ let HeroManager = {
   },
 
 
-  getHeroByName: function(name, HM, fallbackTOFodder = false) {
+  getHeroByName: function(name, HM) {
     if (!name) {
         return HM.Empty;
     }
     HM = HM || this.getHeroManager();
     const normalizedName = name.toLowerCase().replace(/\s+/g, '');
-    if (fallbackTOFodder) {
-        return HM.name_lookup[normalizedName] ?? HM.Fodder;
-    } else {
-        return HM.name_lookup[normalizedName] ?? null;
-    }
+    return HM.name_lookup[normalizedName] ?? null;
   },
 
   getHeroByPrime: function(prime, HM) {
@@ -120,16 +116,12 @@ let HeroManager = {
     return HM.prime_lookup[toString(prime)];
   },
 
-  getHeroByCode: function(code, HM, fallbackTOFodder = false) {
+  getHeroByCode: function(code, HM) {
     if (!code) {
         return HM.Empty;
     }
     HM = HM || this.getHeroManager();
-    if (fallbackTOFodder) {
-        return HM.code_lookup[code]?? HM.Fodder;
-    } else {
-        return HM.code_lookup[code]?? null;
-    }
+    return HM.code_lookup[code]?? null;
   },
 
   getPairNamesByProduct: function(product, HM) {

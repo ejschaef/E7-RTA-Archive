@@ -27,7 +27,7 @@ function battleListToDict(battleList) {
 // takes the raw battles recieved from flask-server and converts to clean format we will serve in battles table user can download from
 function formatBattleClean(raw, HM) {
     //console.log(`Formatting battle: ${JSON.stringify(raw)}`);
-    const getChampName = code => HeroManager.getHeroByCode(code, HM, fallbackTOFodder = true).name;
+    const getChampName = code => HeroManager.getHeroByCode(code, HM)?.name ?? HM.Fodder.name;
     const battle = {
         "Date/Time": raw.time,
         "Seq Num": raw.seq_num,
@@ -76,7 +76,7 @@ function cleanUploadedBattle(battle) {
 
 function formatBattleNumerical(cleanBattle, HM) {
     console.log(`Formatting battle: ${JSON.stringify(cleanBattle)}`);
-    const getChampPrime = name => HeroManager.getHeroByName(name, HM, fallbackTOFodder = false).prime;
+    const getChampPrime = name => HeroManager.getHeroByName(name, HM).prime;
     return {
         "Date/Time": cleanBattle["Date/Time"],
         "Seq Num": cleanBattle["Seq Num"],

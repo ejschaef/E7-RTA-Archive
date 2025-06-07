@@ -5,5 +5,6 @@ import UserManager from "./e7/user-manager.js";
 import CSVParse from "./csv-parse.js";
 import BattleManager from "./e7/battle-manager.js";
 import HeroManager from "./e7/hero-manager.js";
+import FilterSyntaxParser from "./e7/filter-syntax.js";
 
-export { ClientCache, PYAPI, Tables, CardContent, UserManager, CSVParse, BattleManager, HeroManager };
+export { ClientCache, PYAPI, Tables, CardContent, UserManager, CSVParse, BattleManager, HeroManager, FilterSyntaxParser };

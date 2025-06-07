@@ -57,7 +57,7 @@ function retrieveEnclosure(string, open_char='(', close_char=')') {
 
 
 // retrieves comma separated arguments from a string; used for clause operators; input should be of the form 'fn(arg1, arg2,...)' where fn is a clause fn
-function retrieve_args(string) {
+function retrieveArgs(string) {
     let open_parenthese_count = 0;
     const args = [];
     let arg = "";
@@ -84,6 +84,15 @@ function retrieve_args(string) {
     return args;
 }
 
+const ENCLOSURE_MAP = {
+    '(': ')',
+    '{': '}',
+    '"': '"',
+    "'": "'",
+}
+
+const REVERSE_ENCLOSURE_MAP = Object.fromEntries(Object.entries(ENCLOSURE_MAP).map(([k, v]) => [v, k]));
+
 function tokenizeWithNestedEnclosures(input) {
   const tokens = [];
   let current = '';
@@ -100,10 +109,14 @@ function tokenizeWithNestedEnclosures(input) {
     } else {
       current += char;
 
-      if (char === '(' || char === '{') {
-        stack.push(char);
-      } else if (char === ')' || char === '}') {
-        const expected = char === ')' ? '(' : '{';
+      if (ENCLOSURE_MAP[char]) {
+        if (stack[stack.length - 1] === ENCLOSURE_MAP[char] && char === ENCLOSURE_MAP[char]) {
+          stack.pop();
+        } else {
+          stack.push(char);
+        }
+      } else if (REVERSE_ENCLOSURE_MAP[char]) {
+        const expected = REVERSE_ENCLOSURE_MAP[char];
         if (stack[stack.length - 1] === expected) {
           stack.pop();
         } else {

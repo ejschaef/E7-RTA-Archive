@@ -33,6 +33,9 @@ class ContentManager:
     def encode(self) -> str:
         return pickle.dumps(self)
     
+    def get_season_details_json(self) -> str:
+        return self.SeasonDetails.to_json(orient='records')
+    
 def get_mngr_from_redis() -> object:
     return GLOBAL_CLIENT.get(CONTENT_MNGR_KEY)
 

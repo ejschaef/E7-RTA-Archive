@@ -93,7 +93,8 @@ def sample_page():
 
 @blueprint.route('/test')
 def test():
-    return render_template('pages/test.html', segment='test', overwrite=True)
+    season_details = get_mngr().get_season_details_json()
+    return render_template('pages/test.html', segment='test', season_details=season_details)
 
 @blueprint.route('/test_upload')
 def test_upload():
@@ -123,21 +124,45 @@ def fetch_user_data():
 def notify_cache_success():
     forget_user_task_data()
     session[KEYS.CACHED_DATA_FLAG] = True
-    return '', 204
+    return '', 200 #Http status code Ok
 
 @blueprint.route('api/get_battle_data')
 def get_battle_data():
     # user = jsonpickle.decode(session.get('user'))
-    user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
-    print(f"SERVER QUERYING: <name={user.name}, server={user.world_code}>, id={user.id}")
-    battle_data = get_transformed_battles(user)
-    return jsonify({ 'battles' : battle_data })
+    try:
+        user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
+        print(f"SERVER QUERYING: <name={user.name}, server={user.world_code}>, id={user.id}")
+        battle_data = get_transformed_battles(user)
+        return jsonify({ 'battles' : battle_data }), 200 #Http status code Ok
+    except Exception as e:
+        print(f"SERVER ERROR WHEN RETURNING BATTLE DATA: {str(e)}")
+        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
+    
+
+@blueprint.route('api/get_season_details')
+def get_season_details():
+    try:
+        MNGR = get_mngr()
+        print("SERVER RETURNING SEASON DETAILS")
+        return jsonify({
+                    "seasonDetails" : MNGR.SeasonDetails.to_json(orient="records"),
+                    'success'       : True 
+                }
+            ), 200 #Http status code Ok
+    except Exception as e:
+        print(f"SERVER ERROR WHEN RETURNING SEASON DETAILS: {str(e)}")
+        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 @blueprint.route('api/get_hero_data')
 def get_hero_data():
-    MNGR = get_mngr()
-    print("SERVER RETURNING: ", MNGR.HeroManager.json)
-    return jsonify(MNGR.HeroManager.json)
+    try:
+        MNGR = get_mngr()
+        print("SERVER RETURNING HERO DATA")
+        return jsonify(MNGR.HeroManager.json), 200 #Http status code Ok
+    except Exception as e:
+        print(f"SERVER ERROR WHEN RETURNING HERO DATA: {str(e)}")
+        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
+
 
 @blueprint.route('api/get_user_data')
 def get_user_data():
@@ -146,7 +171,7 @@ def get_user_data():
         user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
         print(f"SERVER RETURNING: <name={user.name}, server={user.world_code}>, id={user.id}")
         return_dict = {"user" : user.to_dict(), "success" : True }
-        return jsonify(user.to_dict() ) , 200 #Http status code Ok
+        return jsonify(user.to_dict() ), 200 #Http status code Ok
     except Exception as e:
         print(f"SERVER ERROR WHEN RETURNING USER DATA: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error

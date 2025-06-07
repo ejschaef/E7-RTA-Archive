@@ -48,30 +48,26 @@
 
 {% block extra_js %}
 
-{% if overwrite %}
 <script type="module">
-    import { ClientCache} from "{{ url_for('static', filename='assets/js/exports.js') }}";
-    document.addEventListener("DOMContentLoaded", async () => {
-        await ClientCache.clearUserData();
-    });
-</script>
-{% endif%}
-
-<script type="module">
-    import { PYAPI, UserManager, ClientCache } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+    import { PYAPI, UserManager, ClientCache, FilterSyntaxParser, HeroManager } from "{{ url_for('static', filename='assets/js/exports.js') }}";
     document.addEventListener("DOMContentLoaded", async () => {
         //ClientCache.deleteDB();
 
-        const battles = await PYAPI.fetchBattleData();
-        console.log(`GOT: ${JSON.stringify(battles)}`);
+        const seasonDetails = JSON.parse({{ season_details | tojson }});
 
-        const heroes = await PYAPI.fetchHeroData();
-        console.log(`GOT: ${JSON.stringify(heroes)}`);
+        console.log(`Season Details: ${JSON.stringify(seasonDetails)}`);
 
-        var user = await UserManager.getUser();
-        console.log(`User: ${JSON.stringify(user)}`);
-        user = await UserManager.getUser();
-        console.log(`User: ${JSON.stringify(user)}`);
+        let syntax_str = `
+            2365 < victory-points;
+            2024-04-12 >= p1.picks;
+            'Zio' <>in p1.picks;
+            OR( 2022-04-12 < battle-date, p1.league = "champion")
+        `;
+        const HM = await HeroManager.getHeroManager();
+        let parser = await FilterSyntaxParser.createAndParse(syntax_str, HM);
+
+        console.log(`Filter Syntax: ${parser.toString()}`);
+      
 
     });
 
