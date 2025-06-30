@@ -1,6 +1,12 @@
-function generateRankPlot(battles, user, filteredBattles = null) {
+export function generateRankPlot(battles, user, filteredBattles = null) {
     // Sort battles chronologically by time
-    battles.sort((a, b) => a["Date/Time"].slice(0,10) - b["Date/Time"].slice(0,10));
+    //console.log("Creating plot HTML for:", JSON.stringify(battles));
+    battles.sort((a, b) => a["Date/Time"].slice(0,10).localeCompare(b["Date/Time"].slice(0,10)));
+
+    // if the user is not passed, default the username to the ID of the player
+    if (!user) {
+        user = {name: `UID: ${battles[0]["P1 ID"]}`}
+    }
 
     const markerDefaultColor = '#0df8fd';
     const markerFilteredColor = '#ff9900';
@@ -9,7 +15,7 @@ function generateRankPlot(battles, user, filteredBattles = null) {
     const y = battles.map(b => b["P1 Points"]);
 
     const markerMask = battles.map(b =>
-        filteredBattles && filteredBattles.includes(b["Seq Num"])
+        filteredBattles && b["Seq Num"] in filteredBattles
             ? markerFilteredColor
             : markerDefaultColor
     );

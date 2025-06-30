@@ -103,30 +103,36 @@ let HeroManager = {
 
 
   getHeroByName: function(name, HM) {
-    if (!name) {
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    } else if (!name) {
         return HM.Empty;
     }
-    HM = HM || this.getHeroManager();
     const normalizedName = name.toLowerCase().replace(/\s+/g, '');
     return HM.name_lookup[normalizedName] ?? null;
   },
 
   getHeroByPrime: function(prime, HM) {
-    HM = HM || this.getHeroManager();
-    return HM.prime_lookup[toString(prime)];
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    }
+    return HM.prime_lookup[prime];
   },
 
   getHeroByCode: function(code, HM) {
-    if (!code) {
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    } else if (!code) {
         return HM.Empty;
     }
-    HM = HM || this.getHeroManager();
     return HM.code_lookup[code]?? null;
   },
 
   getPairNamesByProduct: function(product, HM) {
-    HM = HM || this.getHeroManager();
-    return HM.prime_pair_lookup[toString(product)];
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    }
+    return HM.prime_pair_lookup[product];
   },
 }
 

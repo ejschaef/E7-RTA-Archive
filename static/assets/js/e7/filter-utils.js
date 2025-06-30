@@ -93,7 +93,7 @@ const ENCLOSURE_MAP = {
 
 const REVERSE_ENCLOSURE_MAP = Object.fromEntries(Object.entries(ENCLOSURE_MAP).map(([k, v]) => [v, k]));
 
-function tokenizeWithNestedEnclosures(input) {
+function tokenizeWithNestedEnclosures(input, splitChars=" ") {
   const tokens = [];
   let current = '';
   let stack = [];
@@ -101,7 +101,7 @@ function tokenizeWithNestedEnclosures(input) {
   for (let i = 0; i < input.length; i++) {
     const char = input[i];
 
-    if (char === ' ' && stack.length === 0) {
+    if (splitChars.includes(char) && stack.length === 0) {
       if (current) {
         tokens.push(current);
         current = '';
@@ -127,7 +127,7 @@ function tokenizeWithNestedEnclosures(input) {
   }
 
   if (stack.length > 0) {
-    throw new Error("Unbalanced brackets in input string");
+    throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: ", stack);
   }
 
   if (current) {

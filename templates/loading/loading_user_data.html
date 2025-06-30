@@ -19,21 +19,28 @@
 
 {% block extra_js %}
 
-<script>
-  function checkStatus() {
-    fetch("/user_data_status/{{ task_id }}")
-      .then(res => res.json())
-      .then(data => {
-        if (data.ready) {
-          window.location.href = data.redirect_url;
-        } else if (data.failure) {
-          window.location.href = data.redirect_url;
-        } else {
-          setTimeout(checkStatus, 500);
-        }
-      });
-  }
-  checkStatus();
+<script type="module">
+
+  import { PYAPI, BattleManager, HeroManager, ClientCache, PageUtils } from "{{ url_for('static', filename='assets/js/exports.js') }}"
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const params = new URLSearchParams(window.location.search);
+
+    const paramObj = Object.fromEntries(params.entries());
+    console.log("GOT PARAMS:", paramObj);
+    
+    const HM = await HeroManager.getHeroManager();
+    const user = await ClientCache.getUser();
+    if (params.get("query")) {
+      console.log("querying and caching user battles for user: ", JSON.stringify(user));
+      await PageUtils.queryAndCacheBattles(user, params, HM);
+    }
+    const battles = await BattleManager.getBattles(HM);
+    const filters = await ClientCache.getFilters(HM);
+    const stats = await BattleManager.getStats(battles, user, filters, HM);
+    await ClientCache.setJSON(ClientCache.Keys.STATS, stats);
+    window.location.replace(URLS.heroStatsURL); 
+  });
 </script>
 
 {% endblock extra_js %}

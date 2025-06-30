@@ -23,6 +23,7 @@ class ContentManager:
         print("User Manager Loaded")
         self.SeasonDetails  : pd.DataFrame = get_rta_seasons_df()
         print("Season Details Loaded")
+        self.SeasonDetailsJSON = self.get_season_details_json()
 
     @classmethod
     def decode(cls, str) -> Self:

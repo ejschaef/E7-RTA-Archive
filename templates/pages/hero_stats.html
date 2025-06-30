@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base-herostats.html" %}
 
 {% block title %}Home{% endblock title %}
 
@@ -11,22 +11,10 @@
                 <div class="row align-items-center">
                     <div class="col-md-12">
                         <div class="page-header-title">
-                            <h5 class="mb-0">RTA Unit Data</h5>
+                            <h3 class="mb-0">RTA Unit Data</h3>
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <ul class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{{ url_for('home_blueprint.index') }}">Home</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0)">Dashboard</a></li>
-                            <li class="breadcrumb-item" aria-current="page">Home</li>
-                        </ul>
-                        {% if "username" in session %}
-                        <form method="post" action="#">
-                            <button name="switch_user" class="btn btn-primary mb-4" type="submit" id="switch_user_btn">
-                                Switch User
-                            </button>
-                        </form>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -53,16 +41,7 @@
                                         <th scope="col">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {% for item in season_details %}
-                                    <tr>
-                                        <td>{{ item['Season Number'] }}</td>
-                                        <td>{{ item['Season'] }}</td>
-                                        <td>{{ item['Start'] }}</td>
-                                        <td>{{ item['End'] }}</td>
-                                        <td>{{ item['Status'] }}</td>
-                                    </tr>
-                                    {% endfor %}
+                                <tbody id="season-body">
                                 </tbody>
                             </table>
                         </div>
@@ -79,18 +58,14 @@
                     </div>
                     <div class="card-body text-center tight-fit rel-height-100">
                         <div class="row justify-content-center">
-                            {% if error %}
-                                    <span class="d-block text-danger mb-1 rel-width-80 scrollable-60px">{{ error | safe }}</span>
-                            {% elif validation_msg %}
-                                    <span class="d-block text-safe mb-1 rel-width-80 scrollable-60px">{{ validation_msg| safe }}</span>
-                            {% endif %}
-                            <form method="post" class="card-body">
+                            <span class="d-block mb-1 rel-width-80 scrollable-60px" id="filterMSG">&nbsp;</span>
+                            <form method="post" id="filterForm" class="card-body">
                                 {{ form.hidden_tag() }}
                                 <textarea id="codeArea" name="code" class="codemirror-hidden">{{ code or '' }}</textarea>
                                 <div class="d-flex justify-content-center gap-3 mt-4">
-                                    <button type="submit" name="check-syntax" class="btn shadow px-sm-1">Check Syntax</button>
-                                    <button type="submit" name="apply-filter" class="btn shadow px-sm-1">Apply Filter</button>
-                                    <button type="submit" name="clear-filter" class="btn shadow px-sm-1">Clear Filter</button>
+                                    <button type="submit" name="check-syntax" value="check" class="btn shadow px-sm-1">Check Syntax</button>
+                                    <button type="submit" name="apply-filter" value="apply" class="btn shadow px-sm-1">Apply Filter</button>
+                                    <button type="submit" name="clear-filter" value="clear" class="btn shadow px-sm-1">Clear Filter</button>
                                 </div>
                             </form>
                         </div>
@@ -342,60 +317,118 @@
 
     {% block extra_js %}
 
-    <script type="module"> 
-    import { BattleManager } from "{{ url_for('static', filename='assets/js/exports.js') }}";
-    document.addEventListener("DOMContentLoaded", async () => {
-        console.log("POPULATING DATA");
-        try {
-            const data = await PYAPI.fetchAndCache();
-            Tables.functions.populateHeroStatsTable('PlayerTable', data.player_hero_stats);
-            Tables.functions.populateHeroStatsTable('OpponentTable', data.enemy_hero_stats);
-            Tables.functions.populatePlayerFirstpickTable('FirstpickStats', data.general_stats.firstpick_stats);
-            Tables.functions.populatePlayerPrebansTable('PrebanStats', data.general_stats.preban_stats);
-            Tables.functions.populateFullBattlesTable('BattlesTable', data.battles_data);
-            CardContent.functions.populateBattleCounts(data.general_stats);
-            CardContent.functions.populateBattlePercents(data.general_stats);
-            CardContent.functions.populateRankPlot(data.rank_plot);
-            console.log("FINISHED POPULATING");
+    <script type="application/json" id="season-details-json">
+        {{ season_details | safe }}
+    </script>
 
+    <script type="module"> 
+    import { BattleManager, HeroManager, ClientCache, Tables, CardContent } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+
+    const user = await ClientCache.getUser();
+
+    if (!user) {
+        window.location.href = URLS.addStrParam(URLS.userQueryURL, "errorMSG", "Type1: no user"); //URLS.userQueryURL;
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+
+        document.getElementById("switch-user-btn").addEventListener("click", async () => {
+            console.log("Clearing User Data");
+            await ClientCache.clearUserData();
+            window.location.href = URLS.userQueryURL;
+        });
+
+        console.log("POPULATING DATA");
+        const seasonDetails = JSON.parse(document.getElementById("season-details-json").textContent);
+
+        //console.log("Got season details:", seasonDetails, typeof(seasonDetails), document.getElementById("season-details-json").textContent);
+
+        const tbody = document.getElementById("season-body");
+
+        seasonDetails.forEach(item => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${item["Season Number"]}</td>
+                <td>${item["Season"]}</td>
+                <td>${item["Start"]}</td>
+                <td>${item["End"]}</td>
+                <td>${item["Status"]}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        try {
+            const stats = await ClientCache.getJSON(ClientCache.Keys.STATS);
+            //console.log("GOT STATS: ", JSON.stringify(stats));
+            Tables.functions.populateHeroStatsTable('PlayerTable', stats.playerHeroStats);
+            Tables.functions.populateHeroStatsTable('OpponentTable', stats.enemyHeroStats);
+            Tables.functions.populatePlayerFirstpickTable('FirstpickStats', stats.firstpickStats);
+            Tables.functions.populatePlayerPrebansTable('PrebanStats', stats.prebanStats);
+            Tables.functions.populateFullBattlesTable('BattlesTable', stats.battles, user);
+            CardContent.functions.populateBattleCounts(stats.generalStats);
+            CardContent.functions.populateBattlePercents(stats.generalStats);
+            CardContent.functions.populateRankPlot(stats.plotContent);
+            console.log("FINISHED POPULATING");
         } catch (err) {
             console.error("Error loading data:", err);
         }
     });
     </script>
 
-    <script>
+    <script type="module">
+
+        import { ClientCache, PageUtils, HeroManager, RegExps } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+
         CodeMirror.defineMode("myMode", function() {
         return {
             token: function(stream) {
-                if (stream.match(/int\(\d+\)/i)) {
-                    return "number"; // match a number
-                }
-                if (stream.match(/date\(\d\d\d\d-\d\d-\d\d\)/i)) {
-                    return "date"; // match a number
-                }
-                if (stream.match(/str\([A-Za-z ]+\)/i)) {
-                    return "string"; // match a number
-                }
-                if (stream.match(/set\([A-Za-z ,]+\)/i)) {
-                    return "set"; // match a number
-                }
+                let match;
                 if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|STR(?=\()|INT(?=\()|DATE(?=\()|SET(?=\()/i)) {
-                return "keyword";
+                    console.log("Matched stream as clause:", stream);
+                    return "keyword";
                 }
                 if (stream.match(/\s+(?:<>|<|>|=|>=|<=|in|<>in)(?=\s+)/i)) {
+                    console.log("Matched stream as operator:", stream);
                     return "operator"; // match a number
                 }
-                if (stream.match(/(?:^|\s+)(?:true|false)(?:(?=\,)|(?=\))|(?=\s+)|$|(?=\;))/i)) {
-                    return "bool"; // match a field
+                if (stream.match(/[a-z0-9.,{})-](?:battle-date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?=[,)\s;]|$)/i)) {
+                    console.log("Matched stream as field with preceding fragment:", stream);
+                    return null; // match a field
                 }
-                if (stream.match(/(?:^|\s+)(?:battle-date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?:(?=\,)|(?=\))|(?=\s+)|$|(?=\;))/i)) {
+                if (stream.match(/(?:^|\s)(?:battle-date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?=[,)\s;]|$)/i)) {
+                    console.log("Matched stream as field:", stream);
                     return "field"; // match a field
                 }
+                if (stream.match(/[a-zA-Z]+\d+/i)) {
+                    console.log("Matched stream as letter-num null")
+                    return null
+                }
+                if (stream.match(/(?:^|\s)\d+(?=[,)\s;]|$)/)) {
+                    console.log("Matched stream as number:", stream);
+                    return "number"
+                }
+                if (stream.match(RegExps.VALID_DATE_LITERAL_RE)) {
+                    console.log("Matched stream as date:", stream);
+                    return "date"; // match a number
+                }
+                if (stream.match(RegExps.VALID_SET_RE)) {
+                    console.log("Matched stream as set:", stream);
+                    return "set"; // match a number
+                }
+                if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
+                    console.log("Matched stream as bool:", stream);
+                    return "bool"; // match a field
+                }
+                if (stream.match(RegExps.VALID_STRING_LITERAL_RE)) {
+                    console.log("Matched stream as string:", stream)
+                    return "string"; // match a number
+                }
                 if (stream.match(/[\(\)\{\}\;\,]/)) {
-                    return "bracket"; // match a quoted string
+                    console.log("Matched stream as bracket:", stream);
+                    return "bracket"; // match a bracket or punctuation syntax
                 }
                 stream.next();
+                console.log("Matched stream as null:", stream);
                 return null;
             }
         };
@@ -403,19 +436,51 @@
 
         const textarea = document.getElementById("codeArea");
         var editor = CodeMirror.fromTextArea(textarea, {
-        mode: "myMode",
-        lineNumbers: true,
-        theme: "default"
+            mode: "myMode",
+            lineNumbers: true,
+            theme: "default"
         });
 
         editor.setSize(null, 185);
 
-        // Ensure value is synced back to textarea before submit
-        document.querySelector("form").addEventListener("submit", function() {
-        document.getElementById("codeArea").value = editor.getValue();
+        const appliedFilter = await ClientCache.getFilterStr();
+        if (appliedFilter) {
+            editor.setValue(appliedFilter);
+        }
+
+        // Intercept form submission
+        const filterForm = document.getElementById("filterForm");
+        filterForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent actual form submission to server
+
+            // Ensure value is synced back to textarea before submit ; not strictly necessary since processed client-side
+            document.getElementById("codeArea").value = editor.getValue();
+
+            console.log("Processing Filter Action");
+            const clickedButton = event.submitter;
+            const action = clickedButton?.value;
+            const syntaxStr = editor.getValue();
+            if (action === "apply") {
+                const validFilter = await PageUtils.validateFilterSyntax(syntaxStr);
+                if (validFilter) {
+                    await ClientCache.setFilterStr(syntaxStr);
+                    window.location.href = URLS.loadDataWithoutQueryURL;
+                }
+            } else if (action === "check") {
+                console.log("Checking Str", syntaxStr);
+                await PageUtils.validateFilterSyntax(syntaxStr);
+            } else if (action === "clear") {
+                editor.setValue("");
+                const currAppliedFilter = await ClientCache.getFilterStr();
+                if (currAppliedFilter) {
+                    console.log("Found filter str", currAppliedFilter);
+                    await ClientCache.setFilterStr("");
+                    window.location.href = URLS.loadDataWithoutQueryURL;
+                }
+            }
         });
 
-            // Optional: sync changes back to textarea if needed
+        // Optional: sync changes back to textarea if needed
         editor.on("change", () => {
             editor.save(); // Updates the hidden textarea for form submit
         });

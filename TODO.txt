@@ -26,6 +26,11 @@ switch filter syntax to client-side JS
 swith plotly to client side JS
 make server stateless so no need to keep track of session variables or celery task ids (handle everything in client with JS)
 
+
+# Would be nice
+Use same API function to query battles for both upload and user query (would need to search either by ID or name/server)
+
+
 BUGS:
 
 plotly line doubles when undocking window and making smaller -> switch to chartsJS -- (not switching, but fixed issue)

@@ -3,6 +3,7 @@ import { printObjStruct } from './e7-utils.js';
 import PYAPI from '../pyAPI.js'
 import HeroManager from "./hero-manager.js";
 import { LEAGUE_MAP } from "./references.js";
+import { generateRankPlot } from "./plots.js";
 
 const COLUMNS = [
     "Date/Time", "Seq Num", "P1 ID", "P2 ID", 
@@ -75,7 +76,7 @@ function cleanUploadedBattle(battle) {
 }
 
 function formatBattleNumerical(cleanBattle, HM) {
-    console.log(`Formatting battle: ${JSON.stringify(cleanBattle)}`);
+    // console.log(`Formatting battle: ${JSON.stringify(cleanBattle)}`);
     const getChampPrime = name => HeroManager.getHeroByName(name, HM).prime;
     return {
         "Date/Time": cleanBattle["Date/Time"],
@@ -85,7 +86,7 @@ function formatBattleNumerical(cleanBattle, HM) {
         "P1 League": LEAGUE_MAP[cleanBattle["P1 League"]] ?? "",
         "P2 League": LEAGUE_MAP[cleanBattle["P2 League"]] ?? "",
         "P1 Points": cleanBattle["P1 Points"],
-        "Win": cleanBattle.Win = "W" ? 1 : 0,
+        "Win": cleanBattle.Win === "W" ? 1 : 0,
         "Firstpick": cleanBattle.Firstpick === "True" ? 1 : 0,
         "P1 Preban 1": getChampPrime(cleanBattle["P1 Preban 1"]),
         "P1 Preban 2": getChampPrime(cleanBattle["P1 Preban 2"]),
@@ -110,28 +111,187 @@ function formatBattleNumerical(cleanBattle, HM) {
     };
 }
 
+function toPercent(value) {
+    return (value * 100).toFixed(2) + '%';
+}
+
+function queryStats(battleList, totalBattles) {
+  const gamesWon = battleList.filter(b => b.Win).length;
+  const gamesAppeared = battleList.length;
+  const appearanceRate = totalBattles !== 0 ? gamesAppeared / totalBattles : 0;
+  const winRate = gamesAppeared !== 0 ? gamesWon / gamesAppeared : 0;
+
+  return {
+      games_won: gamesWon,
+      games_appeared: gamesAppeared,
+      total_games: totalBattles,
+      appearance_rate: toPercent(appearanceRate),
+      win_rate: toPercent(winRate),
+      '+/-': 2 * gamesWon - gamesAppeared
+  };
+}
+
+function getHeroStats(battles, HM) {
+  const heroes = HM.heroes;
+  const battleList = Object.values(battles);
+  if (battleList.length === 0) {
+      return {playerHeroStats: [], enemyHeroStats: []};
+  }
+  const totalBattles = battleList.length;
+  const playerHeroStats = [];
+  const enemyHeroStats = [];
+  for (const hero of heroes) {
+    if (hero.name === HM.Empty.name) {
+      continue;
+    }
+    const prime = hero.prime;
+    const playerSubset = battleList.filter( b => b["P1 Picks"] % prime === 0 );
+    const enemySubset = battleList.filter( b => b["P2 Picks"] % prime === 0);
+    if (playerSubset.length > 0) {
+      playerHeroStats.push({...queryStats(playerSubset, totalBattles), hero: hero.name});
+    }
+    if (enemySubset.length > 0) {
+      enemyHeroStats.push({...queryStats(enemySubset, totalBattles), hero: hero.name});
+    }
+  }
+  return {
+    playerHeroStats: playerHeroStats.sort((b1, b2) => b1.hero.localeCompare(b2.hero)), 
+    enemyHeroStats: enemyHeroStats.sort((b1, b2) => b1.hero.localeCompare(b2.hero))
+  }
+}
+
+function getFirstPickStats(battles, HM) {
+    const battleList = Object.values(battles).filter(b => b["Firstpick"]);
+
+    if (battleList.length === 0) {
+      return [];
+    }
+
+    const totalBattles = battleList.length;
+
+    const grouped = {};
+    for (const b of battleList) {
+        const hero = b["P1 Pick 1"];
+        if (!(hero in grouped)) grouped[hero] = { wins: 0, appearances: 0 };
+        grouped[hero].wins += b["Win"] ? 1 : 0;
+        grouped[hero].appearances += 1;
+    }
+
+    const result = Object.entries(grouped).map(([prime, stats]) => {
+        const name = HeroManager.getHeroByPrime(prime, HM).name;
+        return {
+            hero: name,
+            wins: stats.wins,
+            appearances: stats.appearances,
+            win_rate: toPercent(stats.wins / stats.appearances),
+            appearance_rate: toPercent(stats.appearances / totalBattles),
+            '+/-': 2 * stats.wins - stats.appearances
+        };
+    });
+
+    result.sort((a, b) => b.appearances - a.appearances);
+    return result;
+}
+
+function getPrebanStats(battles, HM) {
+    //console.log(`Got HM: ${HM}`);
+    const emptyPrime = HeroManager.getHeroByName('Empty', HM).prime;
+
+    const battleList = Object.values(battles);
+
+    if (battleList.length === 0) {
+      return [];
+    }
+
+    const getValidPrimes = (col) =>
+        [...new Set(battleList)].map(b => b[col]).filter(p => p && p !== emptyPrime);
+
+    const preban1 = getValidPrimes('P1 Preban 1');
+    const preban2 = getValidPrimes('P1 Preban 2');
+    const prebanSet = new Set([...preban1, ...preban2]);
+
+    let prebans = [];
+    for (const prime of prebanSet) {
+        prebans.push(prime);
+    }
+    for (const a of prebanSet) {
+        for (const b of prebanSet) {
+            if (a < b) prebans.push(a * b);
+        }
+    }
+    //console.log("Prebans:", prebans);
+
+    const totalBattles = battleList.length;
+    const output = [];
+
+    for (const preban of prebans) {
+        const filtered = battleList.filter(b => b["P1 Prebans"] % preban === 0);
+        const appearances = filtered.length;
+        if (appearances < 1) {
+          continue;
+        }
+        const wins = filtered.reduce((acc, b) => acc + b.Win, 0);
+        
+        const appearanceRate = totalBattles > 0 ? appearances / totalBattles : 0;
+        const winRate = appearances > 0 ? wins / appearances : 0;
+        const plusMinus = 2 * wins - appearances;
+
+        output.push({
+            preban: HM.prime_pair_lookup[preban],
+            wins: wins,
+            appearances: appearances,
+            appearance_rate: toPercent(appearanceRate),
+            win_rate: toPercent(winRate),
+            '+/-': plusMinus
+        });
+    }
+
+    output.sort((a, b) => b.appearances - a.appearances);
+    return output;
+}
+
+function getGeneralStats(battles, HM) {
+        const totalBattles = Object.values(battles).length;
+
+        const fpBattles = Object.values(battles).filter(b => b["Firstpick"] === 1);
+        const spBattles = Object.values(battles).filter(b => b["Firstpick"] !== 1);
+
+        const fpCount = fpBattles.length;
+        const spCount = spBattles.length;
+
+        const fpWins = fpBattles.reduce((acc, b) => acc + b.Win, 0);
+        const spWins = spBattles.reduce((acc, b) => acc + b.Win, 0);
+
+        const fpR = totalBattles? fpCount / totalBattles : 0;
+        const spR = totalBattles? spCount / totalBattles : 0;
+
+        const fpWR = fpCount? fpWins / fpCount : 0;
+        const spWR = spCount? spWins / spCount : 0;
+
+        const winRate = totalBattles? (fpWins + spWins) / totalBattles : 0;
+
+        const NA = "N/A";
+
+        return {
+            "firstpick_count"   : fpCount,
+            "secondpick_count"  : spCount,
+            "firstpick_rate"    : fpCount? toPercent(fpR) : NA,
+            "secondpick_rate"   : spCount? toPercent(spR) : NA,
+            "firstpick_winrate" : fpCount? toPercent(fpWR) : NA,
+            "secondpick_winrate": spCount? toPercent(spWR) : NA,
+            "total_winrate"     : totalBattles? toPercent(winRate) : NA,
+            "total_battles"     : totalBattles,
+        }
+}
+
 let BattleManager = {
 
   loaded_servers: new Set(),
 
   // gets battles (upload and/or queried) and returns as list in clean format; used directly to populate battles table
-  getBattles: async function(HM) {
+  getBattles: async function() {
     console.log("Getting battles");
-    return (await ClientCache.getJSON(ClientCache.Keys.BATTLES)) ?? this.fetchAndCacheBattles(HM);
-  },
-
-  fetchAndCacheBattles: async function(HM) {
-    console.log(`Battles not found in cache, fetching and caching...;`);
-    const queriedBattleList = await this.fetchBattlesList();
-    const battles = await this.cacheQuery(queriedBattleList, HM);
-    console.log("Fetched new battles from E7 API");
-    return battles;
-  },
-
-  // Will fetch the last 100 battles from E7 API from flask server based on the current user stored in session
-  fetchBattlesList: async function() {
-    const battlesList = await PYAPI.fetchBattleData();
-    return battlesList;
+    return (await ClientCache.getJSON(ClientCache.Keys.BATTLES)) ?? null;
   },
 
   fetchUploadedBattles: async function() {
@@ -160,7 +320,7 @@ let BattleManager = {
     let battles = await this.getBattles();
     for (let filter of filterList) {
         battles = Object.fromEntries(
-            Object.entries(battles).filter(([key, battle]) => filter(battle))
+            Object.entries(battles).filter(([key, battle]) => filter.call(battle))
         )
     }
     console.log(`Caching filtered battles: ${battles}`);
@@ -176,7 +336,7 @@ let BattleManager = {
     const numericalBattles = Object.fromEntries(
             Object.entries(battles).map(([key, battle]) => mapFn(key, battle))
         )
-    console.log("Converted filtered battles from cache to numerical format; returning:" + JSON.stringify(numericalBattles) + " battles"  );
+    //console.log("Converted filtered battles from cache to numerical format; returning:" + JSON.stringify(numericalBattles) + " battles"  );
     return numericalBattles;
   },
 
@@ -195,9 +355,9 @@ let BattleManager = {
         console.log("No query battles provided to cacheQuery");
         return [];
     }
+    console.log(`Caching queried battles: ${battleList} battles; modified [BATTLES]`);
     const mapFn = battle => formatBattleClean(battle, HM);
     const cleanBattles = battleList.map(mapFn);
-    await ClientCache.setJSON(ClientCache.Keys.BATTLES, cleanBattles);
     const battles = await this.extendBattles(cleanBattles);
     console.log("Cached queried battles in cache; modified [BATTLES]");
     return battles;
@@ -216,6 +376,30 @@ let BattleManager = {
     return battles;
   },
 
+
+  getStats: async function(battles, user, filters, HM) {
+    const filteredBattles = await this.getNumericalFilteredBattles(filters, HM);
+    const plotContent = generateRankPlot(Object.values(battles), user, filters.length >= 1 ? filteredBattles : null);
+    const prebanStats = await this.getPrebanStats(filteredBattles, HM);
+    const firstpickStats = await this.getFirstPickStats(filteredBattles, HM);
+    const generalStats = await this.getGeneralStats(filteredBattles, HM);
+    const heroStats = await this.getHeroStats(filteredBattles, HM);
+
+    return {
+      battles : Object.values(battles),
+      plotContent : plotContent,
+      prebanStats: prebanStats,
+      generalStats: generalStats,
+      firstpickStats: firstpickStats,
+      playerHeroStats: heroStats.playerHeroStats,
+      enemyHeroStats: heroStats.enemyHeroStats
+    }
+  },
+
+  getPrebanStats    : getPrebanStats,
+  getFirstPickStats : getFirstPickStats,
+  getGeneralStats   : getGeneralStats,
+  getHeroStats      : getHeroStats
 }
 
 export default BattleManager;

@@ -27,6 +27,7 @@ from apps.content_manager import ContentManager, get_mngr
 from apps.exceptions.exception import DataValidationException
 from apps.references import cached_var_keys as KEYS
 from apps.home.read_data import read_battle_csv
+import traceback
 
 from apps.tasks import celery_app, load_user_data
 from celery.result import AsyncResult
@@ -126,15 +127,22 @@ def notify_cache_success():
     session[KEYS.CACHED_DATA_FLAG] = True
     return '', 200 #Http status code Ok
 
-@blueprint.route('api/get_battle_data')
+@blueprint.route('api/get_battle_data', methods=["POST"])
 def get_battle_data():
-    # user = jsonpickle.decode(session.get('user'))
     try:
-        user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
+        MNGR = get_mngr()
+        data = request.get_json()
+        print(f"Got: {data}")
+        userjson = data["user"]
+        username = userjson["name"]
+        server = userjson["world_code"]
+        print(f"Got: username: {username}, server: {server}")
+        user = MNGR.UserManager.get_user_from_name(username, server, all_servers=False)
         print(f"SERVER QUERYING: <name={user.name}, server={user.world_code}>, id={user.id}")
         battle_data = get_transformed_battles(user)
-        return jsonify({ 'battles' : battle_data }), 200 #Http status code Ok
+        return jsonify({ 'battles' : battle_data, 'success' : True}), 200 #Http status code Ok
     except Exception as e:
+        traceback.print_exc()
         print(f"SERVER ERROR WHEN RETURNING BATTLE DATA: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
     
@@ -145,7 +153,7 @@ def get_season_details():
         MNGR = get_mngr()
         print("SERVER RETURNING SEASON DETAILS")
         return jsonify({
-                    "seasonDetails" : MNGR.SeasonDetails.to_json(orient="records"),
+                    "seasonDetails" : MNGR.SeasonDetailsJSON,
                     'success'       : True 
                 }
             ), 200 #Http status code Ok
@@ -164,21 +172,35 @@ def get_hero_data():
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 
-@blueprint.route('api/get_user_data')
+@blueprint.route('api/get_user_data', methods=["POST"])
 def get_user_data():
     try:
-        # user = jsonpickle.decode(session.get('user'))
-        user = User({"nick_no":195863691,"code":"c1117","nick_nm":"Octothorpe","rank":70}, 'world_global')
-        print(f"SERVER RETURNING: <name={user.name}, server={user.world_code}>, id={user.id}")
-        return_dict = {"user" : user.to_dict(), "success" : True }
-        return jsonify(user.to_dict() ), 200 #Http status code Ok
+        MNGR = get_mngr()
+        data = request.get_json()
+        user_data = data["userData"]
+
+        #split logic based on what user data is passed
+        if user_data.get("username"):
+            username = user_data["username"]
+            server = user_data["server"]
+            user = MNGR.UserManager.get_user_from_name(username, server, all_servers=False)
+        else:
+            user = MNGR.UserManager.get_user_from_id(int(user_data.get("id")))
+
+        if user:
+            print(f"SERVER RETURNING: <name={user.name}, server={user.world_code}>, id={user.id}")
+            return_dict = {"user" : user.to_dict(), "success" : True, "foundUser" : user is not None }
+        else:
+            print("SERVER: Could not find user")
+            return_dict = {"user" : None, "success" : True, "foundUser" : user is not None }
+        return jsonify(return_dict ), 200 #Http status code Ok
     except Exception as e:
+        traceback.print_exc()
         print(f"SERVER ERROR WHEN RETURNING USER DATA: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
-
-@blueprint.route('api/receive_upload_details', methods=['GET', 'POST'])
-def receive_upload_details():
+@blueprint.route('api/get_battle_data_from_id', methods=["POST"])
+def get_battle_data_from_id():
     try:
         MNGR = get_mngr()
         data = request.get_json()
@@ -187,71 +209,28 @@ def receive_upload_details():
         user = MNGR.UserManager.get_user_from_id(user_id)
         session_add_user(user)
         print(f"SERVER RECEIVED AND SET FOLLOWING USER FROM UPLOADED FORM: <name={user.name}, server={user.world_code}>, id={user.id}")
-        battles = []
-        if data.get('queryFlag') is True:
-            battles = get_transformed_battles(user)
+        battles = get_transformed_battles(user)
         return jsonify({ 'user' : user.to_dict(), 'battles' : battles , 'success' : True }), 200 #Http status code Ok
     except Exception as e:
         print(f"SERVER ERROR WHEN PROCESSING UPLOAD DETAILS: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 
+
 ########################################################################################################
 # START USER QUERY SECTION
 ########################################################################################################
 
-@blueprint.route('/user_query', methods=['GET', 'POST'])
+@blueprint.route('/user_query', methods=['GET'])
 def user_query():
     login_form = UserQueryForm(request.form)
-    if 'user_query' in request.form:
-
-        # read form data
-        username  = request.form['username'] # we can have here username OR email
-        server = request.form['server']
-
-        MNGR = get_mngr()
-
-        UM = MNGR.UserManager
-
-        user = UM.get_user_from_name(username, server)
-
-        # if user not found
-        if user is None:
-
-            return render_template('pages/user_query.html',
-                                        msg=f'User: {username} not found in records for server: {server}',
-                                        form=login_form)
-
-        session_add_user(user)
-        task = load_user_data.apply_async(args=[jsonpickle.encode(user), jsonpickle.encode(MNGR.HeroManager)], task_id=username+"_"+generate_short_id())
-        session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
-        return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
-
     return render_template('pages/user_query.html', form=login_form)
 
 
-@blueprint.route('/loading_user_data/<task_id>')
-def loading_user_data(task_id):
-    if KEYS.USER_DATA_TASK_ID_KEY not in session:
-        print("NO TASK STARTED")
-        return redirect(url_for("home_blueprint.error_117"))
-    return render_template("loading/loading_user_data.html", task_id=task_id)
+@blueprint.route('/loading_user_data')
+def loading_user_data():
+    return render_template("loading/loading_user_data.html")
 
-
-@blueprint.route('/user_data_status/<task_id>')
-def user_data_status(task_id):
-    """
-    Called within loading_user_data.html to poll status of task and redirect when done
-    """
-    task = AsyncResult(task_id, app=celery_app)
-    print(f"TASK STATE: {task.state}")
-    if task.state == "FAILURE":
-        print("TASK FAILED: task result ->", task.result)
-        return {'ready': False, 'failure' : True, 'redirect_url': url_for('home_blueprint.error_117')}
-    elif task.ready():
-        return {'ready': True, 'redirect_url': url_for('home_blueprint.hero_stats', user=session['username'])}
-    else:
-        return {'ready': False, 'failure' : False}
     
 ########################################################################################################
 # START HERO STATS SECTION
@@ -281,56 +260,21 @@ def get_task_data() -> dict[str, object]:
     data = task.result
     return data
 
-@blueprint.route('/hero_stats/<user>', methods=['GET', 'POST'])
-def hero_stats(user=None):
+@blueprint.route('/hero_stats', methods=['GET'])
+def hero_stats():
     form = CodeForm()
     code = request.form.get('code')
 
-    if session.get("user", None) is None:
-        print("No user in session")
-        return redirect(url_for("home_blueprint.user_query"))
-
     if 'switch_user' in request.form:
-        session_remove_user()
         return redirect(url_for("home_blueprint.user_query"))
-    
-    filter_error = None
-    filter_validation_msg = None
-    
-    # Handle code mirror filter
-    if request.method == "POST" and code is not None:
-        if 'clear-filter' in request.form:
-            code = session.get(KEYS.FILTER_CODE)
-            if code:
-                print("Cleared Filters")
-                session[KEYS.FILTER_CODE] = None
-                return start_task()
-            else:
-                print("No Filters to Clear")
-        else:
-            session[KEYS.FILTER_CODE] = code
-            try:
-                MNGR = get_mngr()
-                resolver = FilterSyntaxResolver(code, MNGR.HeroManager)
-                print(f"Received filters:\n\n{resolver.as_str()}\n")
-                if "check-syntax" in request.form:
-                    filter_validation_msg="Syntax validation passed."
-                else:
-                    return start_task(resolver=resolver)
-            except Exception as e:
-                filter_error = e
-                pass
     
     MNGR = get_mngr()
 
-    code = session.get(KEYS.FILTER_CODE, "")
-
     context = {'segment' : 'hero_stats', 
-               'season_details' : MNGR.SeasonDetails.to_dict(orient='records'),
+               'season_details' : MNGR.SeasonDetailsJSON,
                'form' : form,
                'code' : code,
-               'error' : str(filter_error) if filter_error else None,
-               'validation_msg' : filter_validation_msg}
+    }
 
     print("RENDERING STATS")
 

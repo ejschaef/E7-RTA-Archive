@@ -8,7 +8,7 @@
 <script type="module" src="{{ url_for('static', filename='assets/js/exports.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.2.2/b-3.2.2/b-html5-3.2.2/date-1.5.5/r-3.0.4/sc-2.4.3/sb-1.8.2/sp-2.3.3/datatables.min.js" integrity="sha384-mjz5vmi+H5N1dXx40AX3Vpipt9TwbghLGaELOLBnqZJiIuX7sItNHg3CprwcXZzs" crossorigin="anonymous"></script>
-<script src="plotly-3.0.1.min.js" charset="utf-8"></script>
+<script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
 <script>layout_change('light');</script>
 <script>change_box_container('false');</script>
@@ -16,3 +16,25 @@
 <script>layout_rtl_change('false');</script>
 <script>preset_change("preset-1");</script>
 <script>layout_theme_sidebar_change('false');</script>
+
+<!-- URL utilities-->
+<script>
+  const URLS = {
+    loadDataWithQueryURL: "{{ url_for('home_blueprint.loading_user_data', query=True) | safe }}",
+    loadDataWithoutQueryURL: "{{ url_for('home_blueprint.loading_user_data', query=False) | safe }}",
+    heroStatsURL: "{{ url_for('home_blueprint.hero_stats') | safe }}",
+    userQueryURL: "{{ url_for('home_blueprint.user_query') | safe }}",
+
+    addStrParam: function (URL, key, val) {
+      const encodedParam = encodeURIComponent(val);
+      return `${URL}${URL.includes('?') ? '&' : '?'}${key}=${encodedParam}`;
+    },
+
+    addStrParams: function (URL, obj) {
+      for (let key in obj) {
+        URL = this.addStrParam(URL, key, obj[key]);
+      }
+      return URL;
+    }
+  };
+</script>

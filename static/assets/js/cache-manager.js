@@ -1,5 +1,6 @@
 // static/app.js
 import { openDB } from 'https://cdn.jsdelivr.net/npm/idb@8.0.3/+esm';
+import FilterSyntaxParser from './e7/filter-syntax.js'
 
 
 let ClientCache = {
@@ -17,6 +18,9 @@ let ClientCache = {
     BATTLES: "battles",
     UPLOADED_BATTLES: "uploaded-battles",
     FILTERED_BATTLES: "filtered-battles",
+    FILTER_STR: "filter-str",
+    STATS: "stats",
+    SEASON_DETAILS: "season-details",
   },
 
   MetaKeys: {
@@ -45,7 +49,6 @@ let ClientCache = {
   },
 
   getJSON: async function(id) {
-    await this.checkCacheTimeout(id);
     const db = await this.openDB();
     const result = await db.get(this.consts.STORE_NAME, id);
     if (result) {
@@ -53,7 +56,15 @@ let ClientCache = {
     } else {
       console.log(`${id} not found in cache; returning null`);
     }
-    return result ?? null;
+    if (!result) {
+      return null;
+    }
+    const useCache = await this.checkCacheTimeout(id);
+    if (useCache){
+      return result;
+    } else {
+      return null;
+    }
   },
 
   setJSON: async function(id, data) {
@@ -105,9 +116,8 @@ let ClientCache = {
   },
 
   clearUserData: async function() {
-    [this.Keys.USER, this.Keys.BATTLES, this.Keys.UPLOADED_BATTLES, this.Keys.FILTERED_BATTLES].forEach(async key => {
-      await this.deleteJSON(key);
-    });
+    const Keys = [this.Keys.USER, this.Keys.BATTLES, this.Keys.UPLOADED_BATTLES, this.Keys.FILTERED_BATTLES, this.Keys.FILTER_STR, this.Keys.STATS];
+    await Promise.all(Keys.map(key => this.deleteJSON(key)));
     console.log("User data cleared from data cache");
   },
 
@@ -118,8 +128,35 @@ let ClientCache = {
     if (!timestamp || (currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
       console.log(`Cache timeout reached, clearing data from <${id}>`);
       await this.deleteJSON(id);
+      return false;
     }
+    return true;
   },
+
+  getUser: async function() {
+    return await this.getJSON(ClientCache.Keys.USER);
+  },
+
+  setUser: async function(userData) {
+    await this.setJSON(ClientCache.Keys.USER, userData)
+  },
+
+  setFilterStr: async function(filterStr) {
+    await this.setJSON(ClientCache.Keys.FILTER_STR, filterStr);
+  },
+
+  getFilterStr: async function() {
+    return await this.getJSON(ClientCache.Keys.FILTER_STR);
+  },
+
+  getFilters: async function(HM) {
+    const filterStr = await this.getJSON(ClientCache.Keys.FILTER_STR);
+    if (!filterStr) {
+      return [];
+    }
+    const parser = await FilterSyntaxParser.createAndParse(filterStr, HM);
+    return parser.filters;
+  }
 };
 
-export default ClientCache;
+export default ClientCache; 

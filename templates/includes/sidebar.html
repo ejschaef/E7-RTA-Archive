@@ -29,17 +29,6 @@
             </li>
           </ul>
         </li>
-
-        {% if current_user.is_authenticated %}
-        <li class="pc-item">
-          <a href="{{ url_for('home_blueprint.profile') }}" class="pc-link">
-            <span class="pc-micon">
-              <i data-feather="user"></i>
-            </span>
-            <span class="pc-mtext">Profile</span>
-          </a>
-        </li>
-        {% endif %}
         <li class="pc-item pc-caption">
           <label>UI Components</label>
           <i data-feather="feather"></i>
@@ -62,51 +51,38 @@
             <span class="pc-mtext">Icons</span>
           </a>
         </li>
-        <li class="pc-item pc-caption">
+        <li class="pc-item pc-caption" id="HeroSection">
           <label>User Hero Stats</label>
           <i data-feather="monitor"></i>
         </li>
-        <li class="pc-item">
-          <a href="{{ url_for('home_blueprint.test') }}" class="pc-link">
-            <span class="pc-micon"><i data-feather="download"></i></span>
-            <span class="pc-mtext">Test</span>
+        <li class="pc-item" id="heroStatsOrQuery">
+        </li>
+        <li class="pc-item" id="heroStats">
+          <a href="{{ url_for('home_blueprint.hero_stats') }}" class="pc-link">
+            <span class="pc-micon"><i data-feather="bar-chart-2"></i></span>
+            <span class="pc-mtext">Hero Stats</span>
           </a>
         </li>
-        <li class="pc-item">
-          <a href="{{ url_for('home_blueprint.test_upload') }}" class="pc-link">
-            <span class="pc-micon"><i data-feather="download"></i></span>
-            <span class="pc-mtext">Test Upload</span>
-          </a>
-        </li>
-        {% if not "username" in session or not "server" in session %}
-        <li class="pc-item">
+        <li class="pc-item" id="queryUser">
           <a href="{{ url_for('home_blueprint.user_query') }}" class="pc-link">
             <span class="pc-micon"><i data-feather="download"></i></span>
             <span class="pc-mtext">Query User Data</span>
           </a>
         </li>
-        {% else %}
-        <li class="pc-item">
-          <a href="{{ url_for('home_blueprint.hero_stats', user=session['username']) }}" class="pc-link">
-            <span class="pc-micon"><i data-feather="bar-chart-2"></i></span>
-            <span class="pc-mtext">Hero Stats</span>
-          </a>
-        </li>
-        {% endif %}
-        <li class="pc-item">
+        <li class="pc-item" id="uploadBattleData">
           <a href="{{ url_for('home_blueprint.upload_battle_data') }}" class="pc-link">
             <span class="pc-micon"><i data-feather="share"></i></span>
             <span class="pc-mtext">Upload Battle Data</span>
           </a>
         </li>
-        {% if "username" in session and "server" in session or True %}
+        <!-- 
         <li class="pc-item">
-          <a href="{{ url_for('home_blueprint.apply_filters') }}" class="pc-link">
-            <span class="pc-micon"><i data-feather="filter"></i></span>
-            <span class="pc-mtext">Apply Filters</span>
+          <a href="{{ url_for('home_blueprint.test') }}" class="pc-link">
+            <span class="pc-micon"><i data-feather="download"></i></span>
+            <span class="pc-mtext">Test</span>
           </a>
-        </li>
-        {% endif %}
+        </li> 
+        -->
         <li class="pc-item pc-caption">
           <label>Pages</label>
           <i data-feather="monitor"></i>

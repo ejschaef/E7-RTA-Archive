@@ -1,9 +1,14 @@
 import { LEAGUE_MAP } from './references.js';
 import HeroManager from './hero-manager.js';
 import Futils from './filter-utils.js';
+import { RegExps } from './regex.js';
 
 const ACCEPTED_CHARS = new Set(`'"(),-.=; <>1234567890{}` + `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`);
 const PRINT_PREFIX = "   ";
+
+function AnchorExp(regExpStr) {
+    return new RegExp(`^${regExpStr}$`)
+}
 
 const OPERATOR_MAP = {
     '>': (a, b) => a > b,
@@ -85,30 +90,31 @@ class DataType {
     }
 }
 
-const VALID_STRING_RE = /[a-z][a-z0-9\. ]*/;
-const VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
-const EMPTY_SET_RE = /\{\s*\}/;
-const SET_ELEMENT_RE =  new RegExp(`(?:"${VALID_STRING_RE.source}"|'${VALID_STRING_RE.source}'|${VALID_STRING_RE.source}|${VALID_DATE_RE.source})`);
-const VALID_SET_RE = new RegExp(`^\\{\\s*(?:${SET_ELEMENT_RE.source}\\s*,\\s*)+(?:${SET_ELEMENT_RE.source}\\s*,?\\s*)\\}$|^${EMPTY_SET_RE.source}$`);
+const VALID_STRING_RE = RegExps.VALID_STRING_RE;
+const VALID_DATE_RE = RegExps.VALID_DATE_RE ;
+const EMPTY_SET_RE = RegExps.EMPTY_SET_RE ;
+const SET_ELEMENT_RE = RegExps.SET_ELEMENT_RE ;
+const VALID_SET_RE = RegExps.VALID_SET_RE ;
 
-const VALID_STRING_LITERAL_RE = new RegExp(`^"${VALID_STRING_RE.source}"$|^'${VALID_STRING_RE.source}'$`);
-const VALID_DATE_LITERAL_RE = new RegExp(`^${VALID_DATE_RE.source}$`);
-const VALID_INT_LITERAL_RE = /^\d+$/;
-const VALID_BOOL_LITERAL_RE = /^(true|false)$/;
+const VALID_STRING_LITERAL_RE = RegExps.VALID_STRING_LITERAL_RE ;
+const VALID_DATE_LITERAL_RE = RegExps.VALID_DATE_LITERAL_RE ;
+const VALID_INT_LITERAL_RE = RegExps.VALID_INT_LITERAL_RE ;
+const VALID_BOOL_LITERAL_RE = RegExps.VALID_BOOL_LITERAL_RE ;
 
 class StringType extends DataType {
 
     getData(str, HM) {
-        if (!VALID_STRING_LITERAL_RE.test(str)) {
-            throw new Futils.SyntaxException(`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( regex: ${this.PATTERN.source} ); make sure to use '-' instead of spaces; got: '${str}'`);
+        str = str.replace(/'/g, "").replace(/"/g, "");
+        if (!VALID_STRING_RE.test(str)) {
+            throw new Futils.SyntaxException(`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( regex: ${VALID_STRING_LITERAL_RE.source} ); got: '${str}'`);
         } 
         str = str.replace(/"|'/g, "");
-        const heroName = HeroManager.getHeroByName(str, HM);
+        const hero = HeroManager.getHeroByName(str, HM);
         const league = LEAGUE_MAP[str];
-        if (!heroName && !league) {
+        if (!hero && !league) {
             throw new Futils.SyntaxException(`Invalid string; All strings must either be a valid hero or league name; got: '${str}'`);
         } 
-        return heroName ? heroName : league;
+        return hero ? hero.prime : league;
     }
 
     toString() {
@@ -174,11 +180,13 @@ class SetType extends DataType {
                 throw new Futils.SyntaxException(`Invalid set element; must be a string or date; got: '${trimmedElement}'`);
             }
         });
+        console.log("GOT ELEMENTS: ", elements);
         let types = new Set();
         for (const element of elements) {
             types.add(element.constructor.name);
         }
         types = [...types];
+        console.log("GOT TYPES: ", types);
         if (types.size > 1) {
             throw new Futils.SyntaxException(`Invalid set; all set elements must have the same data type; got: types: [${types.join(", ")}]`);
         }
@@ -204,7 +212,7 @@ function parseDataType(str, HM) {
     } else if (VALID_BOOL_LITERAL_RE.test(str)) {
         console.log("Parsing as BoolType");
         return new BoolType(str);
-    } else if (VALID_SET_RE.test(str)) {
+    } else if (/\{.*\}/.test(str)) {
         console.log("Parsing as SetType");
         return new SetType(str, HM);
     } else {
@@ -277,7 +285,7 @@ class BaseFilter {
         this.fn = fn;
     }
     call(battle) {
-        return this.fn.call(battle);
+        return this.fn(battle);
     }
     toString(prefix = "") {
         return `${prefix}${this.str}`;
@@ -310,7 +318,7 @@ class FilterSyntaxParser {
 
     parseClauseFn(clauseFn, str) {
         console.log("Parsing clause fn:", clauseFn, str);
-        const argArr = Futils.retrieveArgs(str);
+        const argArr = Futils.tokenizeWithNestedEnclosures(str, ",");
         const fns = argArr.map(arg => this.parseBaseFilter(arg));
         return [new clauseFn(fns)]
     }
@@ -319,6 +327,8 @@ class FilterSyntaxParser {
         console.log("Parsing base filter:", str);
         const HM = this.HM;
         const tokens = Futils.tokenizeWithNestedEnclosures(str);
+
+        console.log("Got tokens: ", tokens);
 
         // must be of form ['X', operator, 'Y']
         if (!tokens.length === 3) {
@@ -361,12 +371,16 @@ class FilterSyntaxParser {
             }
         }
 
+        if (right instanceof DataType && left instanceof DataType) {
+            throw new Futils.SyntaxException(`Either left or right side of filter must be a data field (a property of a battle); both ${left} and ${right} are user declared data types in filter: "${str}"`);
+        }
+
         // make filter
         let filterFn = null;
         if (left instanceof DataType) {
-            filterFn = (battle) => { return opFn(left.extractData(battle), right); };
+            filterFn = (battle) => { return opFn(left.data, right.extractData(battle)); };
         } else if (right instanceof DataType) {
-            filterFn = (battle) => { return opFn(left, right.extractData(battle)); };
+            filterFn = (battle) => { return opFn(left.extractData(battle), right.data); };
         } else {
             filterFn = (battle) => { return opFn(left.extractData(battle), right.extractData(battle)); };
         }
@@ -376,21 +390,23 @@ class FilterSyntaxParser {
 
     parseFilters(str=null) {
         console.log(`Parsing filter string: "${str || this.preParsedString}"`);
-        if (!str) {
+        if (str === null) {
             str = this.preParsedString;
             let charCounts = Futils.getCharCounts(str);
             if (charCounts["("] !== charCounts[")"]) {
                 throw new Futils.SyntaxException(`Imbalanced parentheses in filter string: "${str}"`);
             }
         }
-        if (!str) {
+        if (str === "") {
+            console.log("Empty filter string; Returning empty array");
             return [];
         }
         str = str.trim();
-        let split = str.split(";");
+        let split = str.split(";").filter(s => s.length > 0);
         if (split.length > 1) {
+            console.log(`Processing <${split.length}> filters; filters: ${split}`);
             return split.reduce((acc, filterStr) => { 
-                console.log(`Parsing nested filter string: "${filterStr}"`);
+                console.log(`Parsing component filter string: "${filterStr}"`);
                 acc.push(...this.parseFilters(filterStr));
                 return acc;
             }, []);
@@ -401,7 +417,7 @@ class FilterSyntaxParser {
         }
         const splitFilterString = filterString.split("(");
         let clauseFn = CLAUSE_FN_MAP[splitFilterString[0]];
-        return clauseFn ? this.parseClauseFn(clauseFn, filterString) : this.parseBaseFilter(filterString);
+        return clauseFn ? this.parseClauseFn(clauseFn, splitFilterString[1].replace(")", "")) : this.parseBaseFilter(filterString);
     }
 }
 

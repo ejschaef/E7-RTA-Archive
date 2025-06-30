@@ -319,11 +319,11 @@ table.scrollables-razz thead:after
 
     .cm-keyword { color: #ff2ea8 !important; }
     .cm-string  { color: #40d793 !important; }
-    .cm-set    {color: #40d793 !important}
-    .cm-date  { color: #40d793 !important; }
+    .cm-set    {color: #4089d7 !important}
+    .cm-date  { color: #d7d440 !important; }
     .cm-bool { color: #3e64d4 !important; }
     .cm-comment { color: #6272a4; font-style: italic; }
-    .cm-number  { color: #40d793 !important; }
+    .cm-number  { color: #d7d440 !important; }
     .cm-field  { color: #ffa25b !important; }
     .cm-def     { color: #8be9fd; }
     .cm-operator { color: #b300ff !important; font-style: italic;}
@@ -410,4 +410,8 @@ table.scrollables-razz thead:after
   padding: 0;            /* Ensure no extra space */
   display: flex;
   align-items: center;   /* Vertically center text within its own box */
+}
+
+.min-height-15 {
+  min-height: 1.5em;
 }

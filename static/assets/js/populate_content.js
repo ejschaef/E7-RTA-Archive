@@ -116,9 +116,16 @@ Tables.functions = {
         });
     },
 
-    populateFullBattlesTable: function(tableid, data) {
+    populateFullBattlesTable: function(tableid, data, user) {
         const tbody = document.getElementById(`${tableid}Body`);
         tbody.innerHTML = '';  // Clear existing rows
+
+        let name;
+        if (user) {
+            name = user.name;
+        } else {
+            name = data.length === 0 ? "Empty" : `UID(${data[0]['P1 ID']})`;
+        }
 
         data.forEach(item => {
             const row = document.createElement('tr');
@@ -155,6 +162,8 @@ Tables.functions = {
             tbody.appendChild(row);
         });
 
+        const fname = `${name} Battle Data`;
+
         var table = $('#BattlesTable').DataTable({
                 layout: {
                     topStart: 'buttons'
@@ -162,18 +171,38 @@ Tables.functions = {
                 language: {
                     info: 'Total rows: _TOTAL_'
                 },
+                columnDefs: [
+                    {
+                        targets: 7, // "Result" column
+                        createdCell: function(td, cellData) {
+                            if (cellData === 'W') {
+                                td.style.color = 'mediumspringgreen';
+                            } else if (cellData === 'L') {
+                                td.style.color = 'red';
+                            }
+                        }
+                    },
+                    {
+                        targets: 8, // "Result" column
+                        createdCell: function(td, cellData) {
+                            if (cellData === 'True') {
+                                td.style.color = 'deepskyblue';
+                            } 
+                        }
+                    }
+                ],
                 buttons: {
                     name: 'primary',
                     buttons: ['copy', 
                         {
                             extend: 'csv',
                             text: 'CSV',
-                            filename: "Battle Data",
+                            filename: fname,
                         },
                         {
                             extend: 'excel',
                             text: 'Excel',
-                            filename: "Battle Data",
+                            filename: fname,
                         }
                     ]
                 },

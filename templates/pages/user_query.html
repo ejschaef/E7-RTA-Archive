@@ -18,11 +18,10 @@
               </div>
               <div class="card-body text-center">
                 <div class="row justify-content-center">
-                    <form method="post" class="card-body">
+                    <form id="userForm", method="post" class="card-body">
                         {{ form.hidden_tag() }}
-                        {% if msg %}
-                            <span class="d-block text-danger mb-3">{{ msg | safe }}</span>
-                        {% endif %}
+                        <span id="safeMSG" class="d-inline-block text-safe mb-3 min-height-15"></span>
+                        <span id="errorMSG"class="d-inline-block text-danger mb-3 min-height-15"></span>
                         <div class="form-group mb-3">
                           {{ form.username(placeholder="E7 Username", class="form-control custom-input") }}
                         </div>
@@ -46,5 +45,53 @@
 {% endblock content %}
 
 {% block extra_js %}
+<script type="module">
+  import { PYAPI, ClientCache, PageUtils } from "{{ url_for('static', filename='assets/js/exports.js') }}"
 
+  document.addEventListener("DOMContentLoaded", async function () {
+
+    await ClientCache.clearUserData();
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("errorMSG")) {
+      let msg = params.get("errorMSG");
+      if (msg === "Type1: no user") {
+        msg = "Must either query a valid user or upload battles to view hero stats; there is no active user";
+      }
+      document.getElementById("errorMSG").textContent = msg;
+    }
+    const form = document.getElementById("userForm");
+
+    // Intercept form submission
+    form.addEventListener('submit', async function(event) {
+        console.log("Processing User Submission")
+
+        event.preventDefault(); // Prevent actual form submission to server
+
+        const data = new FormData(form);
+        
+        const username = data.get("username");
+        const server = data.get("server");
+
+        if (!username) {
+          document.getElementById("errorMSG").textContent = "Must enter username"
+        } else {
+          try {
+            const result = await PYAPI.fetchAndCacheUser({username, server});
+              if (!data.error) {
+                window.location.href = URLS.loadDataWithQueryURL;
+              } else {
+                document.getElementById("errorMSG").textContent = data.error;
+              }
+            }
+            // You can now store the data, process it, or update your app state
+          catch (err) {
+            console.error("Caught Error:", err);
+            document.getElementById("errorMSG").textcontent = err.message;
+          }
+        }
+    });
+  });
+</script>
 {% endblock extra_js %}
