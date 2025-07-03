@@ -48,7 +48,7 @@ let ClientCache = {
     });
   },
 
-  getJSON: async function(id) {
+  get: async function(id) {
     const db = await this.openDB();
     const result = await db.get(this.consts.STORE_NAME, id);
     if (result) {
@@ -67,13 +67,13 @@ let ClientCache = {
     }
   },
 
-  setJSON: async function(id, data) {
+  cache: async function(id, data) {
     const db = await this.openDB();
     await db.put(this.consts.STORE_NAME, data, id);
     await this.setTimestamp(id, Date.now());
   },
 
-  deleteJSON: async function(id) {
+  delete: async function(id) {
     const db = await this.openDB();
     await db.delete(this.consts.STORE_NAME, id);
     await this.deleteTimestamp(id);
@@ -117,7 +117,7 @@ let ClientCache = {
 
   clearUserData: async function() {
     const Keys = [this.Keys.USER, this.Keys.BATTLES, this.Keys.UPLOADED_BATTLES, this.Keys.FILTERED_BATTLES, this.Keys.FILTER_STR, this.Keys.STATS];
-    await Promise.all(Keys.map(key => this.deleteJSON(key)));
+    await Promise.all(Keys.map(key => this.delete(key)));
     console.log("User data cleared from data cache");
   },
 
@@ -127,30 +127,30 @@ let ClientCache = {
     console.log(`Checking Timeout for <${id}> | Current time: ${currentTime}, cache timestamp: ${timestamp}, difference: ${currentTime - timestamp} ms`);
     if (!timestamp || (currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
       console.log(`Cache timeout reached, clearing data from <${id}>`);
-      await this.deleteJSON(id);
+      await this.delete(id);
       return false;
     }
     return true;
   },
 
   getUser: async function() {
-    return await this.getJSON(ClientCache.Keys.USER);
+    return await this.get(ClientCache.Keys.USER);
   },
 
   setUser: async function(userData) {
-    await this.setJSON(ClientCache.Keys.USER, userData)
+    await this.cache(ClientCache.Keys.USER, userData)
   },
 
   setFilterStr: async function(filterStr) {
-    await this.setJSON(ClientCache.Keys.FILTER_STR, filterStr);
+    await this.cache(ClientCache.Keys.FILTER_STR, filterStr);
   },
 
   getFilterStr: async function() {
-    return await this.getJSON(ClientCache.Keys.FILTER_STR);
+    return await this.get(ClientCache.Keys.FILTER_STR);
   },
 
   getFilters: async function(HM) {
-    const filterStr = await this.getJSON(ClientCache.Keys.FILTER_STR);
+    const filterStr = await this.get(ClientCache.Keys.FILTER_STR);
     if (!filterStr) {
       return [];
     }

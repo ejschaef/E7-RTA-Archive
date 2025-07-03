@@ -71,7 +71,6 @@ Tables.functions = {
             <td>${item['End']}</td>
             <td>${item['Status']}</td>
             `;
-
             tbody.appendChild(row);
         });
     },
@@ -129,7 +128,6 @@ Tables.functions = {
 
         data.forEach(item => {
             const row = document.createElement('tr');
-
             // Populate each <td> in order
             row.innerHTML = `
             <td>${item['Date/Time']}</td>
@@ -171,7 +169,11 @@ Tables.functions = {
                 language: {
                     info: 'Total rows: _TOTAL_'
                 },
+                order: [[1, 'desc']], // Sort by Date/Time desc by default
                 columnDefs: [
+                    { 
+                        targets: '_all', className: 'no-wrap' 
+                    },
                     {
                         targets: 7, // "Result" column
                         createdCell: function(td, cellData) {
@@ -189,7 +191,8 @@ Tables.functions = {
                                 td.style.color = 'deepskyblue';
                             } 
                         }
-                    }
+                    },
+                    
                 ],
                 buttons: {
                     name: 'primary',
@@ -251,7 +254,6 @@ CardContent.functions = {
             }
             document.body.appendChild(newScript); // or container.appendChild if it's inline
         });
-
 
         setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));

@@ -25,13 +25,13 @@
 
             <!-- [ season details table ] start -->
             <div class="col-sm-6 min-width-450">
-                <div class="card razz-kpi height-400">
+                <div class="card aqua-kpi height-400">
                     <div class="card-header kpi-header">
                         <h5 class="text-white">Season Details</h5>
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="SeasonDetails" class="scrollables scrollables-razz interior-border-tbl clean-table align-center-except-second col2-150">
+                            <table id="SeasonDetails" class="scrollables scrollables-aqua interior-border-tbl clean-table align-center-except-second col2-150">
                                 <thead>
                                     <tr>
                                         <th scope="col"></th>
@@ -41,7 +41,7 @@
                                         <th scope="col">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody id="season-body">
+                                <tbody id="SeasonDetailsBody">
                                 </tbody>
                             </table>
                         </div>
@@ -317,20 +317,17 @@
 
     {% block extra_js %}
 
-    <script type="application/json" id="season-details-json">
-        {{ season_details | safe }}
-    </script>
-
     <script type="module"> 
-    import { BattleManager, HeroManager, ClientCache, Tables, CardContent } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+    import { BattleManager, HeroManager, ClientCache, Tables, CardContent, SeasonManager } from "{{ url_for('static', filename='assets/js/exports.js') }}";
 
-    const user = await ClientCache.getUser();
-
-    if (!user) {
-        window.location.href = URLS.addStrParam(URLS.userQueryURL, "errorMSG", "Type1: no user"); //URLS.userQueryURL;
-    }
-
+    console.log("Attaching DOMContentLoaded listener");
     document.addEventListener("DOMContentLoaded", async () => {
+
+        const user = await ClientCache.getUser();
+
+        if (!user) {
+            window.location.href = URLS.addStrParam(URLS.userQueryURL, "errorMSG", "Type1: no user"); //URLS.userQueryURL;
+        }
 
         document.getElementById("switch-user-btn").addEventListener("click", async () => {
             console.log("Clearing User Data");
@@ -338,28 +335,25 @@
             window.location.href = URLS.userQueryURL;
         });
 
-        console.log("POPULATING DATA");
-        const seasonDetails = JSON.parse(document.getElementById("season-details-json").textContent);
 
-        //console.log("Got season details:", seasonDetails, typeof(seasonDetails), document.getElementById("season-details-json").textContent);
+        console.log("POPULATING DATA PROCESS INITIATED");
+        
 
+        
         const tbody = document.getElementById("season-body");
 
-        seasonDetails.forEach(item => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${item["Season Number"]}</td>
-                <td>${item["Season"]}</td>
-                <td>${item["Start"]}</td>
-                <td>${item["End"]}</td>
-                <td>${item["Status"]}</td>
-            `;
-            tbody.appendChild(row);
-        });
-
         try {
-            const stats = await ClientCache.getJSON(ClientCache.Keys.STATS);
+            console.log("Getting Season Details");
+            const seasonDetails = await SeasonManager.getSeasonDetails();
+            console.log("Got season details:", seasonDetails, typeof(seasonDetails), document.getElementById("season-details-json").textContent);
+
+            console.log("Getting Stats");
+            const stats = await ClientCache.get(ClientCache.Keys.STATS);
+
             //console.log("GOT STATS: ", JSON.stringify(stats));
+
+            console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS");
+            Tables.functions.populateSeasonDetailsTable('SeasonDetails', seasonDetails);
             Tables.functions.populateHeroStatsTable('PlayerTable', stats.playerHeroStats);
             Tables.functions.populateHeroStatsTable('OpponentTable', stats.enemyHeroStats);
             Tables.functions.populatePlayerFirstpickTable('FirstpickStats', stats.firstpickStats);
@@ -377,55 +371,60 @@
 
     <script type="module">
 
-        import { ClientCache, PageUtils, HeroManager, RegExps } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+        import { ClientCache, PageUtils, HeroManager, RegExps } from "{{ url_for('static', filename='assets/js/exports.js') }}"; 
 
         CodeMirror.defineMode("myMode", function() {
         return {
             token: function(stream) {
                 let match;
-                if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|STR(?=\()|INT(?=\()|DATE(?=\()|SET(?=\()/i)) {
+                if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()/i)) {
                     console.log("Matched stream as clause:", stream);
                     return "keyword";
                 }
-                if (stream.match(/\s+(?:<>|<|>|=|>=|<=|in|<>in)(?=\s+)/i)) {
+                if (stream.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)) {
                     console.log("Matched stream as operator:", stream);
-                    return "operator"; // match a number
+                    return "operator"; 
                 }
-                if (stream.match(/[a-z0-9.,{})-](?:battle-date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?=[,)\s;]|$)/i)) {
+                if (stream.match(/[a-z0-9.,{}=)-](?:date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?=[,)\s;]|$)/i)) {
                     console.log("Matched stream as field with preceding fragment:", stream);
-                    return null; // match a field
+                    return null; 
                 }
-                if (stream.match(/(?:^|\s)(?:battle-date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?=[,)\s;]|$)/i)) {
+                
+                if (stream.match(/(?:^|\s)(?:date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?=[,)\s;]|$)/i)) {
                     console.log("Matched stream as field:", stream);
-                    return "field"; // match a field
+                    return "field"; 
                 }
-                if (stream.match(/[a-zA-Z]+\d+/i)) {
-                    console.log("Matched stream as letter-num null")
+                if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
+                    console.log("Matched stream as non-num null")
                     return null
                 }
-                if (stream.match(/(?:^|\s)\d+(?=[,)\s;]|$)/)) {
+                if (stream.match(RegExps.padRegex(RegExps.VALID_RANGE_RE))) {
+                    console.log("Matched stream as range:", stream);
+                    return "range"; 
+                }
+                if (stream.match(RegExps.padRegex(RegExps.VALID_INT_RE))) {
                     console.log("Matched stream as number:", stream);
-                    return "number"
+                    return "number"; 
                 }
-                if (stream.match(RegExps.VALID_DATE_LITERAL_RE)) {
+                if (stream.match(RegExps.padRegex(RegExps.VALID_DATE_RE))) {
                     console.log("Matched stream as date:", stream);
-                    return "date"; // match a number
+                    return "date"; 
                 }
-                if (stream.match(RegExps.VALID_SET_RE)) {
+                if (stream.match(RegExps.padRegex(RegExps.VALID_SET_RE))) {
                     console.log("Matched stream as set:", stream);
-                    return "set"; // match a number
+                    return "set"; 
                 }
                 if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
                     console.log("Matched stream as bool:", stream);
-                    return "bool"; // match a field
+                    return "bool"; 
                 }
-                if (stream.match(RegExps.VALID_STRING_LITERAL_RE)) {
+                if (stream.match(RegExps.padRegex(RegExps.VALID_STRING_LITERAL_RE))) {
                     console.log("Matched stream as string:", stream)
-                    return "string"; // match a number
+                    return "string"; 
                 }
                 if (stream.match(/[\(\)\{\}\;\,]/)) {
                     console.log("Matched stream as bracket:", stream);
-                    return "bracket"; // match a bracket or punctuation syntax
+                    return "bracket"; 
                 }
                 stream.next();
                 console.log("Matched stream as null:", stream);

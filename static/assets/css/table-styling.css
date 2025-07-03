@@ -1,0 +1,10 @@
+/* Only applies to cells in #SeasonDetails */
+#BattlesTable td.no-wrap, #SeasonDetails th.no-wrap {
+  white-space: nowrap !important;
+}
+
+/* Optional: prevent layout issues on that table only */
+#BattlesTable.dataTable {
+  table-layout: auto !important;
+  width: auto !important;
+}

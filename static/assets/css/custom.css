@@ -43,7 +43,7 @@ table.dataTable tbody tr {
 }
 
 table.dataTable tbody tr:hover {
-    background-color: #1f1f1f;
+    background-color: #595959;
 }
 
 /* Body cells */
@@ -102,13 +102,13 @@ input:valid,
 textarea:valid {
     background-color: #f6f6f6;
     color: #464646;
-    border-color: #0df8fd;
+    border-color: #212529;
 }
 
 input.filled, .form-control {
     background-color: #f6f6f6 !important; /* light background */
     color: #464646 !important;    
-    border-color: #0df8fd !important;  
+    border-color: #212529 !important;  
   }
 
   .custom-input::placeholder {
@@ -180,7 +180,7 @@ table.scrollables-aqua thead:before
 	width: 1.1em;
 	height: 1.2em;
 	content: '';
-  background-color: #4f9293;
+  background-color: #4e7d7e;
   margin-top: 0em;
 }
 table.scrollables-aqua thead:after
@@ -190,8 +190,13 @@ table.scrollables-aqua thead:after
 	width: 1.1em;
 	height: 1.2em;
 	content: '';
-  background-color: #4f9293;
+  background-color: #4e7d7e;
   margin-top: -1.2em;
+}
+
+table.dataTable.w-100 th, 
+table.dataTable.w-100 td {
+  min-width: 100px !important;
 }
 
 table.scrollables-razz thead:before
@@ -328,6 +333,7 @@ table.scrollables-razz thead:after
     .cm-def     { color: #8be9fd; }
     .cm-operator { color: #b300ff !important; font-style: italic;}
     .cm-bracket { color: #d8da7e !important; }  /* if you want neutral parentheses */
+    .cm-range { color: #4089d7 !important; }
   
 
 .toggle-switch {

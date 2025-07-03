@@ -31,14 +31,20 @@
     
     const HM = await HeroManager.getHeroManager();
     const user = await ClientCache.getUser();
+
+    // if new user query or auto query from upload battles we query the users battles from the server else skip
     if (params.get("query")) {
       console.log("querying and caching user battles for user: ", JSON.stringify(user));
       await PageUtils.queryAndCacheBattles(user, params, HM);
     }
+
+    // retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
     const battles = await BattleManager.getBattles(HM);
     const filters = await ClientCache.getFilters(HM);
     const stats = await BattleManager.getStats(battles, user, filters, HM);
-    await ClientCache.setJSON(ClientCache.Keys.STATS, stats);
+    await ClientCache.cache(ClientCache.Keys.STATS, stats);
+
+    // send user from loading page to hero stats page
     window.location.replace(URLS.heroStatsURL); 
   });
 </script>

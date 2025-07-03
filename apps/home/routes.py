@@ -23,7 +23,7 @@ from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm
 from apps.e7_utils.user_manager import User
 from apps.e7_utils.query_user_battles import get_transformed_battles
 from apps.e7_utils.filter_syntax import FilterSyntaxResolver
-from apps.content_manager import ContentManager, get_mngr
+from apps.content_manager import get_mngr
 from apps.exceptions.exception import DataValidationException
 from apps.references import cached_var_keys as KEYS
 from apps.home.read_data import read_battle_csv
@@ -107,25 +107,8 @@ def typography():
     return render_template('pages/typography.html', segment='typography')
 
 ########################################################################################################
-# START JS CACHE USER DATA SECTION: used for getting data from python to then cache client side
+# START JS PYAPI DATA SECTION: used for getting data from E7 server to cache client side ; called from PYAPI.js file
 ########################################################################################################
-
-@blueprint.route('/api/fetch_user_data')
-def fetch_user_data():
-    cache_flag = session.get(KEYS.CACHED_DATA_FLAG, False)
-    if cache_flag:
-        # Tell client to use its cache
-        return jsonify({'use_cache' : True})
-    else:
-        # Return fresh data
-        json = jsonify(get_task_data())
-        return json
-
-@blueprint.route('api/notify_cache_success')
-def notify_cache_success():
-    forget_user_task_data()
-    session[KEYS.CACHED_DATA_FLAG] = True
-    return '', 200 #Http status code Ok
 
 @blueprint.route('api/get_battle_data', methods=["POST"])
 def get_battle_data():
@@ -218,7 +201,7 @@ def get_battle_data_from_id():
 
 
 ########################################################################################################
-# START USER QUERY SECTION
+# START FUNCTIONAL PAGE NAV SECTION
 ########################################################################################################
 
 @blueprint.route('/user_query', methods=['GET'])
@@ -226,39 +209,19 @@ def user_query():
     login_form = UserQueryForm(request.form)
     return render_template('pages/user_query.html', form=login_form)
 
-
 @blueprint.route('/loading_user_data')
 def loading_user_data():
     return render_template("loading/loading_user_data.html")
+
+@blueprint.route('/upload_battle_data', methods=['GET', 'POST'])
+def upload_battle_data():
+    upload_form = FileUploadForm()
+    return render_template('pages/upload_battle_data.html', form=upload_form)
 
     
 ########################################################################################################
 # START HERO STATS SECTION
 ########################################################################################################
-
-def start_task(resolver: FilterSyntaxResolver=None):
-    MNGR = get_mngr()
-    resolver = jsonpickle.encode(resolver) if resolver is not None else resolver
-    task = load_user_data.apply_async(
-            args=[session['user'], jsonpickle.encode(MNGR.HeroManager)],
-
-            kwargs={'uploaded_battles' : session.get(KEYS.UPLOADED_BATTLES_DF), 
-                    'resolver'         : resolver,
-                }, 
-                    
-            task_id=session["username"]+"_"+generate_short_id()
-    )
-    session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
-    session.pop(KEYS.CACHED_DATA_FLAG, None)
-    return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
-
-def get_task_data() -> dict[str, object]:
-    assert KEYS.USER_DATA_TASK_ID_KEY in session, "Could not find task id key in session; Can't call get_task_data unless task id is still in session."
-    task_id = session.get(KEYS.USER_DATA_TASK_ID_KEY)
-    task = AsyncResult(task_id, app=celery_app)
-    assert task.successful(), "Cannot call get_task_data unless the task has already been verified as successful; task.successful() did not return True"
-    data = task.result
-    return data
 
 @blueprint.route('/hero_stats', methods=['GET'])
 def hero_stats():
@@ -267,11 +230,8 @@ def hero_stats():
 
     if 'switch_user' in request.form:
         return redirect(url_for("home_blueprint.user_query"))
-    
-    MNGR = get_mngr()
 
     context = {'segment' : 'hero_stats', 
-               'season_details' : MNGR.SeasonDetailsJSON,
                'form' : form,
                'code' : code,
     }
@@ -285,89 +245,7 @@ def hero_stats():
 # START UPLOAD BATTLE DATA SECTION
 ########################################################################################################
 
-
-@blueprint.route('/upload_battle_data', methods=['GET', 'POST'])
-def upload_battle_data():
-    upload_form = FileUploadForm()
-    MNGR = get_mngr()
-    if 'battle_data' in request.form and upload_form.validate_on_submit():
-        # read form data
-        file = upload_form.file.data
-        try:
-            print("TRYING TO READ FILE")
-            df = read_battle_csv(file, MNGR.UserManager)
-        except DataValidationException as e:
-            return render_template('pages/upload_battle_data.html', form=upload_form, msg=e.message)
-        
-        # upload was successful
-
-        user_id = int(df['P1 ID'][0])
-
-        # validate user
-        MNGR = get_mngr()
-        UM = MNGR.UserManager
-        user = UM.get_user_from_id(user_id)
-
-        # user does not exist
-        if user is None:
-            return render_template('pages/upload_battle_data.html', form=upload_form, msg=f"User with ID: {user_id} does not exist")
-        
-        if "user" in session:
-            session_remove_user()
-        
-        session_add_user(user)
-
-        session[KEYS.UPLOADED_BATTLES_DF] = df.to_json()
-
-        task = load_user_data.apply_async(args=[jsonpickle.encode(user), jsonpickle.encode(MNGR.HeroManager)],
-                                          kwargs={'uploaded_battles' : df.to_json()}, 
-                                          task_id=user.name+"_"+generate_short_id())
-        
-        session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
-
-        return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
     
-    if "FILE_SIZE_ERROR" in session:
-        session.pop("FILE_SIZE_ERROR")
-        max_size = current_app.config["MAX_CONTENT_LENGTH"] / 1024 / 1024
-        msg = f'File is too large. Maximum allowed size is {max_size} MB.'
-        return render_template('pages/upload_battle_data.html', form=upload_form, msg=msg)
-
-    print("RENDERING NO MESSAGE")
-    return render_template('pages/upload_battle_data.html', form=upload_form)
-
-
-########################################################################################################
-# START UPLOAD BATTLE DATA SECTION
-########################################################################################################
-
-@blueprint.route('/apply_filters', methods=['GET', 'POST'])
-def apply_filters():
-    form = CodeForm()
-    code = request.form.get('code')
-    MNGR = get_mngr()
-    if request.method == "POST" and code is not None:
-        try:
-            resolver = FilterSyntaxResolver(code, MNGR.HeroManager)
-            print(f"Received filters:\n\n{resolver.as_str()}\n")
-            if "check-syntax" in request.form:
-                return render_template('pages/apply_filters.html', code=code, form=form, validation_msg="Syntax validation passed.")
-            else:
-                df_json = session.get(KEYS.UPLOADED_BATTLES_DF)
-                task = load_user_data.apply_async(args=[session['user'], jsonpickle.encode(MNGR.HeroManager)],
-                                          kwargs={'uploaded_battles' : df_json, 'resolver' : jsonpickle.encode(resolver)}, 
-                                          task_id=session["username"]+"_"+generate_short_id())
-                session[KEYS.USER_DATA_TASK_ID_KEY] = task.id
-                session[KEYS.FILTER_CODE] = code
-
-                return redirect(url_for('home_blueprint.loading_user_data', task_id=task.id))
-        except Exception as e:
-            return render_template('pages/apply_filters.html', code=code, error=str(e), form=form)
-    else:
-        code = session.get(KEYS.FILTER_CODE, "")
-        return render_template('pages/apply_filters.html', code=code, form=form)
-    
-
 def getField(column): 
     if isinstance(column.type, db.Text):
         return wtforms.TextAreaField(column.name.title())

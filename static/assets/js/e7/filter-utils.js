@@ -1,3 +1,5 @@
+import { RegExps } from "./regex.js";
+
 class SyntaxException extends Error{
     constructor(message) {
         super(message); // Pass message to base Error
@@ -91,9 +93,13 @@ const ENCLOSURE_MAP = {
     "'": "'",
 }
 
-const REVERSE_ENCLOSURE_MAP = Object.fromEntries(Object.entries(ENCLOSURE_MAP).map(([k, v]) => [v, k]));
+const REVERSE_ENCLOSURE_MAP = Object.fromEntries(
+  Object.entries(ENCLOSURE_MAP)
+  .filter(([k, v]) => k !== v)
+  .map(([k, v]) => [v, k])
+);
 
-function tokenizeWithNestedEnclosures(input, splitChars=" ") {
+function tokenizeWithNestedEnclosures(input, splitChars=" ", enclosureLevel=0, trim=true) {
   const tokens = [];
   let current = '';
   let stack = [];
@@ -101,27 +107,36 @@ function tokenizeWithNestedEnclosures(input, splitChars=" ") {
   for (let i = 0; i < input.length; i++) {
     const char = input[i];
 
-    if (splitChars.includes(char) && stack.length === 0) {
+    //console.log(`Processing char ${char} at position ${i}; current string: ${current}; tokens: ${tokens}`);
+
+    if (splitChars.includes(char) && stack.length === enclosureLevel) {
       if (current) {
-        tokens.push(current);
+        tokens.push(trim ? current.trim() : current);
         current = '';
       }
     } else {
-      current += char;
-
-      if (ENCLOSURE_MAP[char]) {
-        if (stack[stack.length - 1] === ENCLOSURE_MAP[char] && char === ENCLOSURE_MAP[char]) {
-          stack.pop();
-        } else {
-          stack.push(char);
-        }
-      } else if (REVERSE_ENCLOSURE_MAP[char]) {
+      
+      if (REVERSE_ENCLOSURE_MAP[char]) {
         const expected = REVERSE_ENCLOSURE_MAP[char];
+        if (stack.length > enclosureLevel) {
+          current += char;
+        }
         if (stack[stack.length - 1] === expected) {
           stack.pop();
         } else {
           throw new Error(`Unbalanced closing bracket at position ${i}`);
         }
+      } else {
+        if (stack.length >= enclosureLevel) {
+          current += char;
+        }
+        if (ENCLOSURE_MAP[char]) {
+          if (stack[stack.length - 1] === ENCLOSURE_MAP[char] && char === ENCLOSURE_MAP[char]) {
+            stack.pop();
+          } else {
+            stack.push(char);
+          }
+        } 
       }
     }
   }
@@ -131,7 +146,7 @@ function tokenizeWithNestedEnclosures(input, splitChars=" ") {
   }
 
   if (current) {
-    tokens.push(current);
+    tokens.push(trim ? current.trim() : current);
   }
 
   return tokens;
@@ -144,6 +159,41 @@ function getCharCounts(str) {
     }
     return counts;
 }
+
+function parseDate(dateStr) {
+    if (!RegExps.VALID_DATE_LITERAL_RE.test(dateStr)) {
+      throw new SyntaxException(`Invalid date; must be in the format: YYYY-MM-DD ( regex: ${RegExps.VALID_DATE_LITERAL_RE.source} ); got: '${dateStr}'`);
+    }
+
+    const isoDateStr = dateStr.split(" ")[0];
+    const date = new Date(`${isoDateStr}T00:00:00`);
+
+    // Check if valid date
+    if (isNaN(date.getTime())) {
+        throw new SyntaxException(`Invalid date; could not be parsed as a valid date; got: '${dateStr}'`);
+    }
+
+    // Check if parsed date matches passed in string
+    const dateString = date.toISOString().split('T')[0];
+    const [year, month, day] = dateString.split('-').map(Number);
+    if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+        throw new SyntaxException(`Invalid date; parsed date: ${date.toISOString()} does not match passed in string: ${isoDateStr}`);
+    }
+
+    console.log(`Parsed date: ${date.toISOString()} ; ${date.constructor.name}`);
+    return date;
+}
+
+function tryConvert(convertFnc, typeName, value, errMSG=null) {
+  if (errMSG === null) {
+    errMSG = `Could not convert ${value} to ${typeName}`;
+  }
+  try {
+    return convertFnc(value);
+  } catch (err) {
+    throw new TypeException(`${errMSG}: ${err.message}`); 
+  }
+}
     
 let Futils = {
     SyntaxException: SyntaxException,
@@ -153,6 +203,8 @@ let Futils = {
     retrieveArgs: retrieveArgs,
     getCharCounts: getCharCounts,
     tokenizeWithNestedEnclosures: tokenizeWithNestedEnclosures,
+    parseDate: parseDate,
+    tryConvert: tryConvert
 }
 
 export default Futils;

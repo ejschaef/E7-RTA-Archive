@@ -2,29 +2,42 @@ import { LEAGUE_MAP } from './references.js';
 import HeroManager from './hero-manager.js';
 import Futils from './filter-utils.js';
 import { RegExps } from './regex.js';
+import SeasonManager from './season-manager.js';
 
-const ACCEPTED_CHARS = new Set(`'"(),-.=; <>1234567890{}` + `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`);
+const ACCEPTED_CHARS = new Set(`'"(),-.=; ><!1234567890{}` + `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`);
 const PRINT_PREFIX = "   ";
 
-function AnchorExp(regExpStr) {
-    return new RegExp(`^${regExpStr}$`)
+// must handle both regular sets and ranges
+function inOperatorFn(a, b) {
+    const bStr = typeof b === "object" ? JSON.stringify(b) : `${b}`;
+    if (b instanceof Set) {
+        return b.has(a);
+    } 
+    // handle ranges
+    else if (typeof b === "object" && b !== null && !Array.isArray(b) && ['start', 'end', 'endInclusive', 'type'].every(key => b.hasOwnProperty(key))) {
+        a = b.type === "Date" ? new Date(`${a}T00:00:00`) : a;
+        return a >= b.start && (b.endInclusive ? a <= b.end : a < b.end);
+    }
+    else {
+        throw new Error(`Invalid match pattern for 'in' operators; got: '${a}' and '${bStr}'`);
+    }
 }
 
 const OPERATOR_MAP = {
     '>': (a, b) => a > b,
     '<': (a, b) => a < b,
     '=': (a, b) => a === b,
-    'in': (a, b) => b.includes(a),
+    'in': (a, b) => inOperatorFn(a, b),
     '>=': (a, b) => a >= b,
     '<=': (a, b) => a <= b,
-    '<>': (a, b) => a !== b,
-    '<>in': (a, b) => !b.includes(a),
+    '!=': (a, b) => a !== b,
+    '!in': (a, b) => !inOperatorFn(a, b),
 };
 
 function validateChars(str, charSet, objName) {
     for (let char of str) {
         if (!charSet.has(char)) {
-            throw new Futils.SyntaxException(`Invalid character within <${objName}>: '${char}' not allowed; got string: '${str}'`);
+            throw new Futils.SyntaxException(`Invalid character within <${objName}> ; ' ${char} ' is not allowed; got string: '${str}'`);
         }
     }
 }
@@ -37,11 +50,13 @@ function preParse(str) {
     return str;
 }
 
+const INT_FIELDS = new Set(["victory-points"]);
+
 class FieldType {
 
     // FNS that take in a clean format battle and return the appropriate data
     static FIELD_EXTRACT_FN_MAP = {
-        'battle-date'    : battle => battle["Date/Time"]?.slice(0, 12) || "N/A",
+        'date'    : battle => battle["Date/Time"]?.slice(0, 10) || "N/A",
         'firstpick'      : battle => battle["Firstpick"] === "True" ? 1 : 0,
         'win'            : battle => battle["Win"] === "W" ? 1 : 0,
         'victory-points' : battle => battle["P1 Points"],
@@ -90,23 +105,15 @@ class DataType {
     }
 }
 
-const VALID_STRING_RE = RegExps.VALID_STRING_RE;
-const VALID_DATE_RE = RegExps.VALID_DATE_RE ;
-const EMPTY_SET_RE = RegExps.EMPTY_SET_RE ;
-const SET_ELEMENT_RE = RegExps.SET_ELEMENT_RE ;
-const VALID_SET_RE = RegExps.VALID_SET_RE ;
 
-const VALID_STRING_LITERAL_RE = RegExps.VALID_STRING_LITERAL_RE ;
-const VALID_DATE_LITERAL_RE = RegExps.VALID_DATE_LITERAL_RE ;
-const VALID_INT_LITERAL_RE = RegExps.VALID_INT_LITERAL_RE ;
-const VALID_BOOL_LITERAL_RE = RegExps.VALID_BOOL_LITERAL_RE ;
 
 class StringType extends DataType {
 
     getData(str, HM) {
         str = str.replace(/'/g, "").replace(/"/g, "");
-        if (!VALID_STRING_RE.test(str)) {
-            throw new Futils.SyntaxException(`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( regex: ${VALID_STRING_LITERAL_RE.source} ); got: '${str}'`);
+        str = str.trim();
+        if (!RegExps.VALID_STRING_RE.test(str)) {
+            throw new Futils.SyntaxException(`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( regex: ${RegExps.VALID_STRING_LITERAL_RE.source} ); got: '${str}'`);
         } 
         str = str.replace(/"|'/g, "");
         const hero = HeroManager.getHeroByName(str, HM);
@@ -124,21 +131,18 @@ class StringType extends DataType {
 
 class DateType extends DataType {
 
-    getData(str, _=null) {
-        if (!VALID_DATE_LITERAL_RE.test(str)) {
-            throw new Futils.SyntaxException(`Invalid date; must be in the format: YYYY-MM-DD ( regex: ${this.PATTERN.source} ); got: '${str}'`);
-        }
-        return str;
+    getData(str, _HM=null) {
+        return Futils.parseDate(str);
     } 
 
     toString() {
-        return `Date(${this.data})`;
+        return `${this.data}`;
     }  
 }
 
 class IntType extends DataType {
 
-    getData(str, _=null) {
+    getData(str, _HM=null) {
         const parsedInt = parseInt(str);
         if (isNaN(parsedInt)) {
             throw new Futils.SyntaxException(`Invalid integer; must be a number; got: '${str}'`);
@@ -146,35 +150,86 @@ class IntType extends DataType {
         return parsedInt;
     }
     toString() {
-        return `Int(${this.data})`;
+        return `${this.data}`;
     }
 }
 
 class BoolType extends DataType {
 
-    getData(str, _=null) {
-        if (!VALID_BOOL_LITERAL_RE.test(str)) {
+    getData(str, _HM=null) {
+        if (!RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
             throw new Futils.SyntaxException(`Invalid boolean; must be 'true' or 'false'; got: '${str}'`);
         }
         return str === "true" ? 1 : 0;
 
     }
     toString() {
-        return `Bool(${this.data})`;
+        return `${this.data}`;
+    }
+}
+
+class RangeType extends DataType {
+
+    getData(str, _HM=null) {
+        let split = str.split("...");
+        if (split.length !== 2) {
+            throw new Futils.SyntaxException(`Invalid range; ranges must be of the format x...y or x...=y ; got more than two values when splitting string: '${str}'`);
+        } 
+        let [start, end] = split;
+        let endInclusive = false;
+        if (end.includes("=")) {
+            end = end.replace("=", "");
+            endInclusive = true;
+        }   
+        let output = {
+            start: null,
+            end: null,
+            endInclusive : endInclusive
+        };
+        if (RegExps.VALID_DATE_LITERAL_RE.test(start)) {
+            output.start = Futils.tryConvert(Futils.parseDate, "Date", start, `Could not convert '${start}' to Date in declared range: '${str}'`);
+            output.end = Futils.tryConvert(Futils.parseDate, "Date", end, `Could not convert '${end}' to Date in declared range: '${str}' ; Ranges must have homogenous types`);
+            if (output.start > output.end) {
+                throw new Futils.SyntaxException(`Invalid range; start date must be on or before end date; ${output.start} > ${output.end}`);
+            }
+            output.type = "Date";
+        } else if (RegExps.VALID_INT_LITERAL_RE.test(start)) {
+            output.start = Futils.tryConvert(i => new IntType(i), "Int", start, `Could not convert '${start}' to Int in declared range: '${str}'`).data;
+            output.end = Futils.tryConvert(i => new IntType(i), "Int", end, `Could not convert '${end}' to Int in declared range: '${str}' ; Ranges must have homogenous types`).data;
+            if (output.start > output.end) {
+                throw new Futils.SyntaxException(`Invalid range; start integer must be equal to or less than end integer; ${output.start} > ${output.end}`);
+            }
+            output.type = "Int";
+        } else {
+            throw new Futils.SyntaxException(`Invalid range; must be of the format x...y or x...=y ; got: '${str}'`);
+        }
+        console.log(`Built Range: ${JSON.stringify(output)}`);
+        return output;
+    }
+    toString() {
+        const rangeSymb = this.data.endInclusive ? "...=" : "...";
+        if (this.data.type === "Date") {
+            return `${this.data.start.toISOString()}${rangeSymb}${this.data.end.toISOString()})`;
+        } else if (this.data.type === "Int") {
+            return `${this.data.start}...${rangeSymb}${this.data.end}`;
+        } else {
+            return `Error Converting Range to String => < ${this.data.start}...${rangeSymb}${this.data.end} >`;
+        }
+        
     }
 }
 
 class SetType extends DataType {
 
     getData(str, HM) {
-        if (!VALID_SET_RE.test(str)) {
-            throw new Futils.SyntaxException(`Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( regex: ${VALID_SET_RE.source} ) (Just chat gpt this one bro); got: '${str}'`);
+        if (!RegExps.VALID_SET_RE.test(str)) {
+            throw new Futils.SyntaxException(`Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( regex: ${RegExps.VALID_SET_RE.source} ) (Just chat gpt this one bro); got: '${str}'`);
         }
         const elements = str.replace(/^\{|\}$/g, "").split(",").map(element => {
             const trimmedElement = element.trim();
-            if (VALID_STRING_RE.test(trimmedElement)) {
+            if (RegExps.VALID_STRING_RE.test(trimmedElement)) {
                 return new StringType(trimmedElement, HM);
-            } else if (VALID_DATE_RE.test(trimmedElement)) {
+            } else if (RegExps.VALID_DATE_LITERAL_RE.test(trimmedElement)) {
                 return new DateType(trimmedElement);
             } else {
                 throw new Futils.SyntaxException(`Invalid set element; must be a string or date; got: '${trimmedElement}'`);
@@ -191,35 +246,58 @@ class SetType extends DataType {
             throw new Futils.SyntaxException(`Invalid set; all set elements must have the same data type; got: types: [${types.join(", ")}]`);
         }
         this.Type = types[0];
-        return elements.map(data => data.data);
+        return new Set(elements.map(data => data.data));
     }
     toString() {
         return `{${this.data.map(data => data.toString()).join(", ")}}`;
     }
 }
 
-function parseDataType(str, HM) {
+function parseKeywordAsDataType(str, sourceData) {
+    if (RegExps.VALID_SEASON_LITERAL_RE.test(str)) {
+        if (sourceData.SeasonDetails.length < 1) {
+            throw new Error(`Did not recieve any season details; failed on: '${str}'`);
+        }
+        else if (str === "current-season") {}
+            const [start, end] = sourceData.SeasonDetails[0].range;
+            return new RangeType(`${start.toISOString()}...=${end.toISOString()}`);
+        } else {
+            const seasonNum = Number(str.split("-")[1]);
+            const [start, end] = sourceData.SeasonDetails.find(season => season["Season Number"] === seasonNum).range;
+            return new RangeType(`${start.toISOString()}...=${end.toISOString()}`);
+        }
+    }
+
+function parseDataType(str, HM, SeasonDetails) {
     console.log(`Trying to Parse DataType: ${str}`);
-    if (VALID_STRING_LITERAL_RE.test(str)) {
+    if (RegExps.VALID_STRING_LITERAL_RE.test(str)) {
         console.log("Parsing as StringType");
         return new StringType(str, HM);
-    } else if (VALID_DATE_LITERAL_RE.test(str)) {
+    } else if (RegExps.VALID_DATE_LITERAL_RE.test(str)) {
         console.log("Parsing as DateType");
         return new DateType(str);
-    } else if (VALID_INT_LITERAL_RE.test(str)) {
+    } else if (RegExps.VALID_INT_LITERAL_RE.test(str)) {
         console.log("Parsing as IntType");
         return new IntType(str);
-    } else if (VALID_BOOL_LITERAL_RE.test(str)) {
+    } else if (RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
         console.log("Parsing as BoolType");
         return new BoolType(str);
     } else if (/\{.*\}/.test(str)) {
         console.log("Parsing as SetType");
         return new SetType(str, HM);
+    } else if (RegExps.VALID_RANGE_LITERAL_RE.test(str)) {
+        console.log("Parsing as RangeType");
+        return new RangeType(str);
+    } else if (RegExps.VALID_DATA_WORD_LITERAL_RE.test(str)) {
+        console.log("Parsing as DataWord");
+        return parseKeywordAsDataType(str, { SeasonDetails });
     } else {
-        if (VALID_STRING_LITERAL_RE.test(`'${str}'`)) {
+        if (RegExps.VALID_STRING_LITERAL_RE.test(`'${str}'`)) {
             throw new Futils.SyntaxException(`Invalid DataType declaration; got: '${str}'; did you forget to wrap string literals in double or single quotes?`);
         } else if (str.includes("'") && str.includes('"')) {
             throw new Futils.SyntaxException(`Invalid DataType declaration; got: '${str}'; did you encase in mismatching quote types?`);
+        } else if (str.includes('.=') || str.includes("..")) {
+            throw new Futils.SyntaxException(`Invalid DataType declaration; got: '${str}'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only b int-int or date-date`);
         }
         throw new Futils.SyntaxException(`Invalid DataType declaration; could not parse to valid Field, set, or primitive type; got: '${str}'`);
     }
@@ -259,7 +337,9 @@ class OR extends ClauseFn {
         this.str = "OR";
     }
     call (battle) {
-        return this.fns.some(fn => fn.call(battle));
+        return this.fns.some(fn =>{
+            return fn.call(battle);
+        });
     }
 }
 
@@ -273,10 +353,24 @@ class XOR extends ClauseFn {
     }
 }
 
+class NOT extends ClauseFn {
+    constructor(fns) {
+        if (!fns.length === 1) {
+            throw new Futils.SyntaxException(`NOT clause must have exactly one argument; got: ${fns.length}`);
+        }
+        super(fns);
+        this.str = "NOT";
+    }
+    call (battle) {
+        return !this.fns[0].call(battle);
+    }
+}
+
 const CLAUSE_FN_MAP = {
     and: AND,
     or: OR,
     xor: XOR,
+    not: NOT,
 }
 
 class BaseFilter {
@@ -302,12 +396,18 @@ class FilterSyntaxParser {
         }
     }
 
-    static async createAndParse(string, HM = null ) {
+    static async createAndParse(string, HM = null, SeasonDetails = null) {
         const parser = new FilterSyntaxParser(FilterSyntaxParser.#INTERNAL_KEY);
         HM = HM || await HeroManager.getHeroManager();
+        SeasonDetails = SeasonDetails || await SeasonManager.getSeasonDetails();
         parser.rawString = string;
         parser.HM = HM;
+        parser.SeasonDetails = SeasonDetails;
         parser.preParsedString = preParse(string);
+        let charCounts = Futils.getCharCounts(parser.preParsedString);
+        if (charCounts["("] !== charCounts[")"]) {
+            throw new Futils.SyntaxException(`Imbalanced parentheses in filter string: "${str}"`);
+        }
         parser.filters = parser.parseFilters(parser.preParsedString);
         return parser;
     }
@@ -317,16 +417,25 @@ class FilterSyntaxParser {
     }
 
     parseClauseFn(clauseFn, str) {
-        console.log("Parsing clause fn:", clauseFn, str);
-        const argArr = Futils.tokenizeWithNestedEnclosures(str, ",");
-        const fns = argArr.map(arg => this.parseBaseFilter(arg));
+        console.log("Parsing clause fn:", clauseFn.name, str);
+        const [delim, enclosureLevel] = [",", 1];
+        const argArr = Futils.tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
+        console.log("Got argArr:", argArr);
+        const fns = argArr.reduce((acc, arg) => {
+            acc.push(...this.parseFilters(arg)); 
+            return acc
+        }, []);
+        if (clauseFn === NOT && fns.length !== 1) {
+            throw new Futils.SyntaxException(`NOT clause must have exactly one argument; got: ${fns.length} from string: "${str}"`);
+        }
         return [new clauseFn(fns)]
     }
 
     parseBaseFilter(str) {
         console.log("Parsing base filter:", str);
         const HM = this.HM;
-        const tokens = Futils.tokenizeWithNestedEnclosures(str);
+        const [delim, enclosureLevel, trim] = [" ", 0, true];
+        const tokens = Futils.tokenizeWithNestedEnclosures(str, delim, enclosureLevel, trim);
 
         console.log("Got tokens: ", tokens);
 
@@ -347,7 +456,7 @@ class FilterSyntaxParser {
             if (left in FieldType.FIELD_EXTRACT_FN_MAP) {
                 left = new FieldType(left);
             } else {
-                left = parseDataType(left, HM);
+                left = parseDataType(left, HM, this.SeasonDetails);
             }
         } catch (e) {
             throw new Futils.SyntaxException(`Could not parse left side of filter; got: "${left}" from filter: "${str}", error: ${e.message}`);
@@ -356,17 +465,29 @@ class FilterSyntaxParser {
             if (right in FieldType.FIELD_EXTRACT_FN_MAP) {
                 right = new FieldType(right);
             } else {
-                right = parseDataType(right, HM);
+                right = parseDataType(right, HM, this.SeasonDetails);
             }
         } catch (e) {
             throw new Futils.SyntaxException(`Could not parse right side of filter; got: "${right}" from filter: "${str}", error: ${e.message}`);
         }
 
         // validate filter
-        if (operator === "in" || operator === "<>in") {
-            if (!right instanceof SetType) {
+        if (operator === "in" || operator === "!in") {
+            if (!(right instanceof SetType || right instanceof RangeType)) {
                 if(!right instanceof FieldType || ! right.str in ["p1.picks", "p2.picks", "p1.prebans", "p2.prebans"]) {
-                    throw new Futils.SyntaxException(`When using any 'in' or '<>in' operator, the right side of the operator must be a Set or a Field composed of a set (p1.picks, p2.prebans, etc.); error found in filter: '${str}'`);
+                    throw new Futils.TypeException(`When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '${str}'`);
+                }
+            }
+        }
+
+        if (right instanceof RangeType) {
+            if (right.data.type === "Date") {
+                if (!(left.str.includes('date'))) {
+                    throw new Futils.TypeException(`When using a Date Range, the left side of the operator must be a date field; ${left.str} is not a date field; error found in filter: '${str}'`);
+                }
+            } else if (right.data.type === "Int") {
+                if (!(INT_FIELDS.has(left.str))) {
+                    throw new Futils.TypeException(`When using an Int Range, the left side of the operator must be an integer field; ${left.str} is not an integer field; error found in filter: '${str}'`);
                 }
             }
         }
@@ -388,15 +509,9 @@ class FilterSyntaxParser {
         return [new BaseFilter(str, filterFn)];
     }
 
-    parseFilters(str=null) {
+    parseFilters(str) {
         console.log(`Parsing filter string: "${str || this.preParsedString}"`);
-        if (str === null) {
-            str = this.preParsedString;
-            let charCounts = Futils.getCharCounts(str);
-            if (charCounts["("] !== charCounts[")"]) {
-                throw new Futils.SyntaxException(`Imbalanced parentheses in filter string: "${str}"`);
-            }
-        }
+
         if (str === "") {
             console.log("Empty filter string; Returning empty array");
             return [];
@@ -417,7 +532,7 @@ class FilterSyntaxParser {
         }
         const splitFilterString = filterString.split("(");
         let clauseFn = CLAUSE_FN_MAP[splitFilterString[0]];
-        return clauseFn ? this.parseClauseFn(clauseFn, splitFilterString[1].replace(")", "")) : this.parseBaseFilter(filterString);
+        return clauseFn ? this.parseClauseFn(clauseFn, filterString) : this.parseBaseFilter(filterString);
     }
 }
 

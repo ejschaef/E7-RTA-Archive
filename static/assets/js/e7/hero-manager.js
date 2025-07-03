@@ -69,7 +69,7 @@ function addDicts(HM) {
 let HeroManager = {
 
   getHeroManager: async function() {
-    return (await ClientCache.getJSON(ClientCache.Keys.HERO_MANAGER)) ?? this.fetchAndCacheHeroManager();
+    return (await ClientCache.get(ClientCache.Keys.HERO_MANAGER)) ?? this.fetchAndCacheHeroManager();
   },
 
   createHeroManager: function(rawHeroList) {
@@ -90,14 +90,14 @@ let HeroManager = {
     const enHeroList = heroJSON.en; //get english hero list
     const HM = this.createHeroManager(enHeroList);
     console.log("Created HeroManager using raw data received from server");
-    await ClientCache.setJSON(ClientCache.Keys.HERO_MANAGER, HM);
+    await ClientCache.cache(ClientCache.Keys.HERO_MANAGER, HM);
     console.log("Cached HeroManager using raw data recieved from server");
     printObjStruct(HM);
     return HM;
   },
 
   deleteHeroManager: async function() {
-    await ClientCache.deleteJSON(ClientCache.Keys.HERO_MANAGER);
+    await ClientCache.delete(ClientCache.Keys.HERO_MANAGER);
     console.log("Removed hero manager from cache");
   },
 

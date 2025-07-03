@@ -1,17 +1,9 @@
 import ClientCache from "../cache-manager.js";
 import { printObjStruct } from './e7-utils.js';
-import PYAPI from '../pyAPI.js'
 import HeroManager from "./hero-manager.js";
 import { LEAGUE_MAP } from "./references.js";
 import { generateRankPlot } from "./plots.js";
-
-const COLUMNS = [
-    "Date/Time", "Seq Num", "P1 ID", "P2 ID", 
-    "P1 League", "P2 League", "P1 Points", "Win", "Firstpick", 
-    "P1 Preban 1", "P1 Preban 2", "P2 Preban 1", "P2 Preban 2", 
-    "P1 Pick 1", "P1 Pick 2", "P1 Pick 3", "P1 Pick 4", "P1 Pick 5", 
-    "P2 Pick 1", "P2 Pick 2", "P2 Pick 3", "P2 Pick 4", "P2 Pick 5", 
-    "P1 Postban", "P2 Postban"];
+import { COLUMNS } from "./references.js";
 
 const HERO_COLUMNS = COLUMNS.filter(col => col.includes(" Pick ") || col.includes("ban "));
 
@@ -80,7 +72,7 @@ function formatBattleNumerical(cleanBattle, HM) {
     const getChampPrime = name => HeroManager.getHeroByName(name, HM).prime;
     return {
         "Date/Time": cleanBattle["Date/Time"],
-        "Seq Num": cleanBattle["Seq Num"],
+        "Seq Num": new Date(`${cleanBattle["Seq Num"].split(" ")[0]}T00:00:00`),
         "P1 ID": cleanBattle["P1 ID"],
         "P2 ID": cleanBattle["P2 ID"],
         "P1 League": LEAGUE_MAP[cleanBattle["P1 League"]] ?? "",
@@ -291,25 +283,19 @@ let BattleManager = {
   // gets battles (upload and/or queried) and returns as list in clean format; used directly to populate battles table
   getBattles: async function() {
     console.log("Getting battles");
-    return (await ClientCache.getJSON(ClientCache.Keys.BATTLES)) ?? null;
-  },
-
-  fetchUploadedBattles: async function() {
-    const battlesList = await ClientCache.getJSON(ClientCache.Keys.UPLOADED_BATTLES) ?? {};
-    printObjStruct(battlesList);
-    return battlesList;
+    return (await ClientCache.get(ClientCache.Keys.BATTLES)) ?? null;
   },
 
   // Removes all user battle data from cache, should be called when user is switched out
   removeBattles: async function() {
-    await ClientCache.deleteJSON(ClientCache.Keys.BATTLES);
-    await ClientCache.deleteJSON(ClientCache.Keys.UPLOADED_BATTLES);
-    await ClientCache.deleteJSON(ClientCache.Keys.FILTERED_BATTLES);
+    await ClientCache.delete(ClientCache.Keys.BATTLES);
+    await ClientCache.delete(ClientCache.Keys.UPLOADED_BATTLES);
+    await ClientCache.delete(ClientCache.Keys.FILTERED_BATTLES);
     console.log("Removed battle data from cache; cleared ['BATTLES', 'UPLOADED_BATTLES', 'FILTERED_BATTLES']");
   },
 
   removeFilteredBattles: async function() {
-    await ClientCache.deleteJSON(ClientCache.Keys.FILTERED_BATTLES);
+    await ClientCache.delete(ClientCache.Keys.FILTERED_BATTLES);
     console.log("Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']");
   },
 
@@ -319,12 +305,19 @@ let BattleManager = {
     filterList = filterList || [];
     let battles = await this.getBattles();
     for (let filter of filterList) {
-        battles = Object.fromEntries(
-            Object.entries(battles).filter(([key, battle]) => filter.call(battle))
-        )
+      console.log(`Applying filter: ${filter}`);
+      const startLen = Object.keys(battles).length;
+      battles = Object.fromEntries(
+          Object.entries(battles).filter(([key, battle]) => {
+            const include = filter.call(battle);
+            console.log(`Filtering battle: ${key} ${include ? "included" : "excluded"}`);
+            return include;
+        })
+      )
+      console.log(`Filtered ${startLen - Object.keys(battles).length} out of ${startLen}; new total = ${Object.keys(battles).length}`);
     }
-    console.log(`Caching filtered battles: ${battles}`);
-    await ClientCache.setJSON(ClientCache.Keys.FILTERED_BATTLES, battles);
+    console.log(`Caching filtered battles ; total = ${Object.keys(battles).length}`);
+    await ClientCache.cache(ClientCache.Keys.FILTERED_BATTLES, battles);
     console.log(`Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <${filterList.length}> filters`);
     return battles;
   },
@@ -342,9 +335,9 @@ let BattleManager = {
 
   //takes in list of battles then converts to dict and then adds to cached battles
   extendBattles: async function(cleanBattleList) {
-    let oldDict = await ClientCache.getJSON(ClientCache.Keys.BATTLES) ?? {};
+    let oldDict = await ClientCache.get(ClientCache.Keys.BATTLES) ?? {};
     const newDict = { ...oldDict, ...battleListToDict(cleanBattleList) };
-    await ClientCache.setJSON(ClientCache.Keys.BATTLES, newDict);
+    await ClientCache.cache(ClientCache.Keys.BATTLES, newDict);
     console.log("Extended user data in cache");
     return newDict;
   },
@@ -370,7 +363,7 @@ let BattleManager = {
         return [];
     }
     const cleanBattles = battleList.map(cleanUploadedBattle);
-    await ClientCache.setJSON(ClientCache.Keys.UPLOADED_BATTLES, cleanBattles);
+    await ClientCache.cache(ClientCache.Keys.UPLOADED_BATTLES, cleanBattles);
     let battles = await this.extendBattles(cleanBattles);
     console.log("Ingested uploaded battle data into cache; modified [BATTLES] and overwrote [UPLOADED_BATTLES]");
     return battles;

@@ -97,8 +97,9 @@
             await ClientCache.clearUserData();
             await BattleManager.cacheUpload(battleArr);
             if (autoQueryFlag) {
+              console.log("Received battles:", battleArr);
               const playerID = battleArr[0]["P1 ID"];
-              await PYAPI.fetchDataFromID(playerID)
+              PYAPI.fetchDataFromID(playerID)
               .then(response => response.json())
               .then(async data => {
                 if (data.success) {
@@ -117,7 +118,8 @@
               });
             } else {
               const playerID = battleArr[0]["P1 ID"];
-              const result = await PYAPI.fetchAndCacheUser({id: playerID});
+              const data = await PYAPI.fetchAndCacheUser({id: playerID});
+              console.log("Got data:", JSON.stringify(data));
               if (!data.error) {
                 window.location.href = URLS.loadDataWithoutQueryURL;
               } else {

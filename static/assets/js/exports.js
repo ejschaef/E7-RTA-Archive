@@ -8,14 +8,15 @@ import FilterSyntaxParser from "./e7/filter-syntax.js";
 import { test } from "./e7/test.js";
 import PageUtils from "./page-utils.js";
 import { RegExps } from "./e7/regex.js";
+import SeasonManager from "./e7/season-manager.js";
 
 export { 
     ClientCache, 
     PYAPI, 
     Tables, CardContent, 
     CSVParse, 
-    BattleManager, HeroManager,
+    BattleManager, HeroManager, SeasonManager,
     FilterSyntaxParser, test, 
     PageUtils,
-    RegExps
+    RegExps,
 };
