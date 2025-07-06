@@ -22,8 +22,10 @@
   const URLS = {
     loadDataWithQueryURL: "{{ url_for('home_blueprint.loading_user_data', query=True) | safe }}",
     loadDataWithoutQueryURL: "{{ url_for('home_blueprint.loading_user_data', query=False) | safe }}",
+    loadData : "{{ url_for('home_blueprint.loading_user_data') | safe }}",
     heroStatsURL: "{{ url_for('home_blueprint.hero_stats') | safe }}",
     userQueryURL: "{{ url_for('home_blueprint.user_query') | safe }}",
+    uploadURL : "{{ url_for('home_blueprint.upload_battle_data') | safe }}",
 
     addStrParam: function (URL, key, val) {
       const encodedParam = encodeURIComponent(val);

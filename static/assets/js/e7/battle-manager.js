@@ -72,7 +72,7 @@ function formatBattleNumerical(cleanBattle, HM) {
     const getChampPrime = name => HeroManager.getHeroByName(name, HM).prime;
     return {
         "Date/Time": cleanBattle["Date/Time"],
-        "Seq Num": new Date(`${cleanBattle["Seq Num"].split(" ")[0]}T00:00:00`),
+        "Seq Num": cleanBattle["Seq Num"],
         "P1 ID": cleanBattle["P1 ID"],
         "P2 ID": cleanBattle["P2 ID"],
         "P1 League": LEAGUE_MAP[cleanBattle["P1 League"]] ?? "",
@@ -301,30 +301,44 @@ let BattleManager = {
 
   /* after battles are set in cache, applies filters to the battles and stores filtered arr in cache under filtered 
   battle key all battles are stored in their clean format, not numerical format; convert after to compute metrics */
-  applyFilter: async function(filterList) {
-    filterList = filterList || [];
+  applyFilter: async function(filters) {
     let battles = await this.getBattles();
-    for (let filter of filterList) {
-      console.log(`Applying filter: ${filter}`);
+    const localFilterList = filters.localFilters || [];
+    const globalFilterList = filters.globalFilters || [];
+
+    // apply global filters (filters that require context of all battles); these are always applied before local filters in order of appearance
+    let battleList = Object.values(battles);
+    for (let filter of globalFilterList) {
+      console.log(`Applying global filter: ${filter}`);
+      const startLen = battleList.length;
+      battleList = filter.call(battleList);
+      battles = Object.fromEntries(battleList.map(b => [b["Seq Num"], b]));
+      console.log(`Filtered ${startLen - battleList.length} out of ${startLen}; new total = ${battleList.length}`);
+    }
+
+    // apply local filters (filters that can be resolved on each battle without context of other battles)
+    for (let filter of localFilterList) {
+      console.log(`Applying local filter: ${filter}`);
       const startLen = Object.keys(battles).length;
       battles = Object.fromEntries(
           Object.entries(battles).filter(([key, battle]) => {
             const include = filter.call(battle);
-            console.log(`Filtering battle: ${key} ${include ? "included" : "excluded"}`);
+            //console.log(`Filtering battle: ${key} ${include ? "included" : "excluded"}`);
             return include;
         })
       )
       console.log(`Filtered ${startLen - Object.keys(battles).length} out of ${startLen}; new total = ${Object.keys(battles).length}`);
     }
+
     console.log(`Caching filtered battles ; total = ${Object.keys(battles).length}`);
     await ClientCache.cache(ClientCache.Keys.FILTERED_BATTLES, battles);
-    console.log(`Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <${filterList.length}> filters`);
+    console.log(`Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <${localFilterList.length + globalFilterList.length}> filters`);
     return battles;
   },
 
   // should be called to compute metrics
-  getNumericalFilteredBattles: async function(filterList, HM) {
-    const battles = await this.applyFilter(filterList);
+  getNumericalFilteredBattles: async function(filters, HM) {
+    const battles = await this.applyFilter(filters);
     const mapFn = (key, battle) => [key, formatBattleNumerical(battle, HM)];
     const numericalBattles = Object.fromEntries(
             Object.entries(battles).map(([key, battle]) => mapFn(key, battle))
@@ -370,9 +384,10 @@ let BattleManager = {
   },
 
 
-  getStats: async function(battles, user, filters, HM) {
+  getStats: async function(battles, user, filters, HM, autoZoom) {
+    const numFilters = filters.localFilters.length + filters.globalFilters.length;
     const filteredBattles = await this.getNumericalFilteredBattles(filters, HM);
-    const plotContent = generateRankPlot(Object.values(battles), user, filters.length >= 1 ? filteredBattles : null);
+    const plotContent = generateRankPlot(Object.values(battles), user, numFilters >= 1 ? filteredBattles : null, autoZoom);
     const prebanStats = await this.getPrebanStats(filteredBattles, HM);
     const firstpickStats = await this.getFirstPickStats(filteredBattles, HM);
     const generalStats = await this.getGeneralStats(filteredBattles, HM);

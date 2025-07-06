@@ -31,6 +31,7 @@ Tables.functions = {
                 language: {
                     info: 'Total rows: _TOTAL_'
                 },
+                order: [[3, 'desc']], // order by pick rate desc
                 buttons: {
                     name: 'primary',
                     buttons: ['copy',
@@ -169,7 +170,7 @@ Tables.functions = {
                 language: {
                     info: 'Total rows: _TOTAL_'
                 },
-                order: [[1, 'desc']], // Sort by Date/Time desc by default
+                order: [[0, 'desc']], // Sort by Date/Time desc by default
                 columnDefs: [
                     { 
                         targets: '_all', className: 'no-wrap' 

@@ -1,6 +1,7 @@
-export function generateRankPlot(battles, user, filteredBattles = null) {
+export function generateRankPlot(battles, user, filteredBattles = null, zoomFiltered = false) {
     // Sort battles chronologically by time
-    //console.log("Creating plot HTML for:", JSON.stringify(battles));
+    // console.log("Creating plot HTML for:", JSON.stringify(battles));
+    // console.log("received Filtered Battles:", JSON.stringify(filteredBattles));
     battles.sort((a, b) => a["Date/Time"].slice(0,10).localeCompare(b["Date/Time"].slice(0,10)));
 
     // if the user is not passed, default the username to the ID of the player
@@ -14,11 +15,32 @@ export function generateRankPlot(battles, user, filteredBattles = null) {
     const x = battles.map((_, i) => i);
     const y = battles.map(b => b["P1 Points"]);
 
-    const markerMask = battles.map(b =>
-        filteredBattles && b["Seq Num"] in filteredBattles
-            ? markerFilteredColor
-            : markerDefaultColor
-    );
+    const markerMask = [];
+    const zoom = {
+        startX: null,
+        endX: null,
+        startY: null,
+        endY: null
+    }
+
+    const zoomYPadding = 50;
+    const zoomXPadding = 0.5;
+
+    // iterate through battles and build list to color filtered battles distinctly 
+    // and determine the area to zoom on if needed
+    for (let [idx, battle] of battles.entries()) {
+        if (filteredBattles && battle["Seq Num"] in filteredBattles) {
+            if (zoomFiltered === true) {
+                zoom.startX = idx < zoom.startX || zoom.startX === null ? idx - zoomXPadding : zoom.startX;
+                zoom.startY = battle["P1 Points"] < zoom.startY + zoomYPadding || zoom.startY === null ? battle["P1 Points"] - zoomYPadding : zoom.startY;
+                zoom.endX = idx > zoom.endX || zoom.endX === null ? idx + zoomXPadding : zoom.endX;
+                zoom.endY = battle["P1 Points"] > zoom.endY - zoomYPadding || zoom.endY === null ? battle["P1 Points"] + zoomYPadding : zoom.endY;
+            }
+            markerMask.push(markerFilteredColor);
+        } else {
+            markerMask.push(markerDefaultColor);
+        }
+    };
 
     const customdata = battles.map(b => [
         b["Date/Time"].slice(0,10), // date
@@ -66,7 +88,8 @@ export function generateRankPlot(battles, user, filteredBattles = null) {
             showgrid: true,
             gridcolor: '#8d8d8d',
             zeroline: false,
-            tickfont: { size: 12, color: '#dddddd' }
+            tickfont: { size: 12, color: '#dddddd' },
+            range: zoom.startX ? [zoom.startX, zoom.endX] : null
         },
         yaxis: {
             title: {
@@ -78,7 +101,8 @@ export function generateRankPlot(battles, user, filteredBattles = null) {
             zeroline: true,
             zerolinecolor: '#dddddd',
             zerolinewidth: 2,
-            tickfont: { size: 12, color: '#dddddd' }
+            tickfont: { size: 12, color: '#dddddd' },
+            range: zoom.startY ? [zoom.startY, zoom.endY] : null
         },
         plot_bgcolor: '#1e222d',
         paper_bgcolor: '#1e222d'

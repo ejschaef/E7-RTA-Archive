@@ -5,7 +5,7 @@
 {% block content %}
 
     <!-- [ Main Content ] start -->
-    <div class="pc-container" data-bs-theme="dark">
+    <div class="pc-container d-none" id="content-body" data-bs-theme="dark">
       <div class="pc-content" data-bs-theme="dark">
         <!-- [ breadcrumb ] start -->
 
@@ -32,14 +32,15 @@
                         </div>
                         <div class="d-flex justify-content-center text-center gap-4 mt-4">
                             <button type="submit" name="battle_data" class="btn btn-primary shadow px-sm-4">Submit File</button>
-                            <span class="toggle-container">
-                                <label class="toggle-switch">
-                                  <input type="checkbox" id="auto-query-flag" checked>
-                                  <span class="toggle-switch-background">
-                                    <span class="toggle-switch-handle"></span>
-                                  </span>
-                                </label>
-                                <h6> Auto-Query New Battles</h6></span>
+                            <span class="toggle-container", id="auto-query-toggle-container">
+                              <label class="toggle-switch">
+                                <input type="checkbox" id="auto-query-flag" checked>
+                                <span class="toggle-switch-background">
+                                  <span class="toggle-switch-handle"></span>
+                                </span>
+                              </label>
+                              <h6> Auto-Query New Battles</h6>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -57,9 +58,21 @@
 {% block extra_js %}
 
 <script type="module">
-  import { CSVParse, PYAPI, BattleManager, HeroManager, ClientCache } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+  import { CSVParse, PYAPI, ContentManager } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+
 
   document.addEventListener("DOMContentLoaded", async function () {
+
+    //auto set the query flag using Content manager
+    const checkbox = document.getElementById("auto-query-flag");
+    const container = document.getElementById("auto-query-toggle-container");
+    container.classList.add("no-transition");
+    checkbox.checked = await ContentManager.ClientCache.getFlag("autoQuery");
+
+    setTimeout(() => {
+      container.classList.remove("no-transition");
+    }, 20)
+    
     
     const params = new URLSearchParams(window.location.search);
 
@@ -67,6 +80,10 @@
     if (params.get("errorMSG")) {
       document.getElementById("errorMSG").textContent = params.get("errorMSG");
     }
+
+    checkbox.addEventListener("click", async () => {
+        await ContentManager.ClientCache.setFlag("autoQuery", checkbox.checked);
+    });
 
     let selectedFile = null;
 
@@ -87,53 +104,41 @@
         }
 
         // Get its state of auto-query checkbox
-        const checkbox = document.getElementById("auto-query-flag");
         const autoQueryFlag = checkbox.checked;
 
-        const HM = await HeroManager.getHeroManager();
+        const HM = await ContentManager.HeroManager.getHeroManager();
 
         try {
+            // parse uploaded battles into an array
             const battleArr = await CSVParse.parseUpload(selectedFile);
-            await ClientCache.clearUserData();
-            await BattleManager.cacheUpload(battleArr);
-            if (autoQueryFlag) {
-              console.log("Received battles:", battleArr);
-              const playerID = battleArr[0]["P1 ID"];
-              PYAPI.fetchDataFromID(playerID)
-              .then(response => response.json())
-              .then(async data => {
-                if (data.success) {
-                  const user = data.user;
-                  console.log("Server communication successful; received response data for file upload")
-                  console.log(`Found user: ${JSON.stringify(user)}`);
-                  document.getElementById("uploadMSG").textContent = "CSV uploaded successfully";
-                  document.getElementById("csvFile").value = "";
-                  await BattleManager.cacheQuery(data.battles, HM);
-                  await ClientCache.setUser(user);
-                  window.location.href = URLS.loadDataWithQueryURL;
-                } else {
-                  console.log("Server communication unsuccessful")
-                  document.getElementById("uploadError").textContent = data.error;
-                }
-              });
-            } else {
-              const playerID = battleArr[0]["P1 ID"];
-              const data = await PYAPI.fetchAndCacheUser({id: playerID});
-              console.log("Got data:", JSON.stringify(data));
-              if (!data.error) {
-                window.location.href = URLS.loadDataWithoutQueryURL;
-              } else {
-                document.getElementById("errorMSG").textContent = data.error;
+
+            // delete existing data for the old user if there was one
+            await ContentManager.ClientCache.clearUserData();
+
+            // cache uploaded battles
+            const uploadedBattles = await ContentManager.BattleManager.cacheUpload(battleArr);
+
+            const playerID = battleArr[0]["P1 ID"];
+            const data = await PYAPI.fetchAndCacheUser({id: playerID});
+            console.log("Got data:", JSON.stringify(data));
+            if (!data.error) {
+              await ContentManager.ClientCache.setUser(data.user);
+              const loadParams = {
+                source : "upload",
+                query : autoQueryFlag ? "true" : "false",
               }
+              window.location.href = URLS.addStrParams(URLS.loadData, loadParams);
+            } else {
+              document.getElementById("errorMSG").textContent = data.error;
             }
-            // You can now store the data, process it, or update your app state
         } catch (err) {
           console.error("Caught Error:", err);
           document.getElementById("uploadError").textcontent = err.message;
         }
     });
-
   });
+
+  document.getElementById("content-body").classList.remove('d-none');
 </script>
 
 {% endblock extra_js %}

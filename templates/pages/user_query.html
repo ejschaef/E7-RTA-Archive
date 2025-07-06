@@ -46,11 +46,9 @@
 
 {% block extra_js %}
 <script type="module">
-  import { PYAPI, ClientCache, PageUtils } from "{{ url_for('static', filename='assets/js/exports.js') }}"
+  import { PYAPI, ContentManager, PageUtils } from "{{ url_for('static', filename='assets/js/exports.js') }}"
 
   document.addEventListener("DOMContentLoaded", async function () {
-
-    await ClientCache.clearUserData();
 
     const params = new URLSearchParams(window.location.search);
 
@@ -79,8 +77,13 @@
         } else {
           try {
             const result = await PYAPI.fetchAndCacheUser({username, server});
-              if (!data.error) {
-                window.location.href = URLS.loadDataWithQueryURL;
+              if (!result.error) {
+                await ContentManager.ClientCache.setUser(result.user);
+                const loadParams = {
+                  source : "query",
+                  query : "true"
+                }
+                window.location.href = URLS.addStrParams(URLS.loadData, loadParams);
               } else {
                 document.getElementById("errorMSG").textContent = data.error;
               }

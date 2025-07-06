@@ -3,7 +3,7 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
-<div class="pc-container">
+<div class="pc-container d-none" id="content-body">
     <div class="pc-content">
         <!-- [ breadcrumb ] start -->
         <div class="page-header">
@@ -66,6 +66,15 @@
                                     <button type="submit" name="check-syntax" value="check" class="btn shadow px-sm-1">Check Syntax</button>
                                     <button type="submit" name="apply-filter" value="apply" class="btn shadow px-sm-1">Apply Filter</button>
                                     <button type="submit" name="clear-filter" value="clear" class="btn shadow px-sm-1">Clear Filter</button>
+                                    <div class="toggle-container-vertical" id="auto-zoom-toggle-container">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="auto-zoom-flag">
+                                            <span class="toggle-switch-background">
+                                            <span class="toggle-switch-handle"></span>
+                                            </span>
+                                        </label>
+                                        <h6>Auto-Zoom</h6>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -317,13 +326,16 @@
 
     {% block extra_js %}
 
-    <script type="module"> 
-    import { BattleManager, HeroManager, ClientCache, Tables, CardContent, SeasonManager } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+<script type="module"> 
+    import { PageUtils, RegExps, Tables, CardContent, ContentManager } from "{{ url_for('static', filename='assets/js/exports.js') }}";
 
     console.log("Attaching DOMContentLoaded listener");
     document.addEventListener("DOMContentLoaded", async () => {
 
-        const user = await ClientCache.getUser();
+        const checkbox = document.getElementById("auto-zoom-flag");
+        checkbox.checked = await ContentManager.ClientCache.getFlag("autoZoom");
+
+        const user = await ContentManager.ClientCache.getUser();
 
         if (!user) {
             window.location.href = URLS.addStrParam(URLS.userQueryURL, "errorMSG", "Type1: no user"); //URLS.userQueryURL;
@@ -331,27 +343,27 @@
 
         document.getElementById("switch-user-btn").addEventListener("click", async () => {
             console.log("Clearing User Data");
-            await ClientCache.clearUserData();
+            await ContentManager.ClientCache.clearUserData();
             window.location.href = URLS.userQueryURL;
         });
 
+        checkbox.addEventListener("click", async () => {
+            await ContentManager.ClientCache.setFlag("autoZoom", checkbox.checked);
+        });
 
         console.log("POPULATING DATA PROCESS INITIATED");
         
-
-        
-        const tbody = document.getElementById("season-body");
-
         try {
             console.log("Getting Season Details");
-            const seasonDetails = await SeasonManager.getSeasonDetails();
-            console.log("Got season details:", seasonDetails, typeof(seasonDetails), document.getElementById("season-details-json").textContent);
+            const seasonDetails = await ContentManager.SeasonManager.getSeasonDetails();
+            console.log("Got season details:", seasonDetails, typeof(seasonDetails));
 
             console.log("Getting Stats");
-            const stats = await ClientCache.get(ClientCache.Keys.STATS);
+            const stats = await ContentManager.ClientCache.getStats();
 
             //console.log("GOT STATS: ", JSON.stringify(stats));
 
+            console.time("populateTables");
             console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS");
             Tables.functions.populateSeasonDetailsTable('SeasonDetails', seasonDetails);
             Tables.functions.populateHeroStatsTable('PlayerTable', stats.playerHeroStats);
@@ -363,21 +375,20 @@
             CardContent.functions.populateBattlePercents(stats.generalStats);
             CardContent.functions.populateRankPlot(stats.plotContent);
             console.log("FINISHED POPULATING");
+            console.timeEnd("populateTables");
+            
         } catch (err) {
             console.error("Error loading data:", err);
-        }
-    });
-    </script>
+        };
 
-    <script type="module">
-
-        import { ClientCache, PageUtils, HeroManager, RegExps } from "{{ url_for('static', filename='assets/js/exports.js') }}"; 
+        // render content once all data is loaded
+        document.getElementById("content-body").classList.remove('d-none');
 
         CodeMirror.defineMode("myMode", function() {
         return {
             token: function(stream) {
                 let match;
-                if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()/i)) {
+                if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()|LAST-N(?=\()/i)) {
                     console.log("Matched stream as clause:", stream);
                     return "keyword";
                 }
@@ -385,15 +396,16 @@
                     console.log("Matched stream as operator:", stream);
                     return "operator"; 
                 }
-                if (stream.match(/[a-z0-9.,{}=)-](?:date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?=[,)\s;]|$)/i)) {
+                if (stream.match(new RegExp(`[a-z0-9."'}=)-]${RegExps.VALID_DATAFIELD_RE.source}(?=[,)\\s;]|$)`, "i"))) {
                     console.log("Matched stream as field with preceding fragment:", stream);
                     return null; 
                 }
-                
-                if (stream.match(/(?:^|\s)(?:date|firstpick|win|victory-points|p1.picks|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league)(?=[,)\s;]|$)/i)) {
-                    console.log("Matched stream as field:", stream);
-                    return "field"; 
+
+                if (stream.match(RegExps.padRegex(RegExps.VALID_DATAFIELD_RE))) {
+                    console.log("Matched stream as Data Field:", stream);
+                    return "datafield"; 
                 }
+
                 if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
                     console.log("Matched stream as non-num null")
                     return null
@@ -434,7 +446,7 @@
         });
 
         const textarea = document.getElementById("codeArea");
-        var editor = CodeMirror.fromTextArea(textarea, {
+        let editor = CodeMirror.fromTextArea(textarea, {
             mode: "myMode",
             lineNumbers: true,
             theme: "default"
@@ -442,7 +454,7 @@
 
         editor.setSize(null, 185);
 
-        const appliedFilter = await ClientCache.getFilterStr();
+        const appliedFilter = await ContentManager.ClientCache.getFilterStr();
         if (appliedFilter) {
             editor.setValue(appliedFilter);
         }
@@ -462,19 +474,28 @@
             if (action === "apply") {
                 const validFilter = await PageUtils.validateFilterSyntax(syntaxStr);
                 if (validFilter) {
-                    await ClientCache.setFilterStr(syntaxStr);
-                    window.location.href = URLS.loadDataWithoutQueryURL;
+                    await ContentManager.ClientCache.setFilterStr(syntaxStr);
+                    const checkbox = document.getElementById("auto-zoom-flag");
+                    const autoZoomFlag = checkbox.checked;
+                    const loadParams = {
+                        autoZoom: autoZoomFlag,
+                        query: "false"
+                    }
+                    window.location.href = URLS.addStrParams(URLS.loadData, loadParams);
                 }
             } else if (action === "check") {
                 console.log("Checking Str", syntaxStr);
                 await PageUtils.validateFilterSyntax(syntaxStr);
             } else if (action === "clear") {
                 editor.setValue("");
-                const currAppliedFilter = await ClientCache.getFilterStr();
-                if (currAppliedFilter) {
+                if (appliedFilter) {
                     console.log("Found filter str", currAppliedFilter);
-                    await ClientCache.setFilterStr("");
-                    window.location.href = URLS.loadDataWithoutQueryURL;
+                    await ContentManager.ClientCache.setFilterStr("");
+                    const loadParams = {
+                        autoZoom: autoZoomFlag,
+                        query: "false"
+                    }
+                    window.location.href = URLS.addStrParams(URLS.loadData, loadParams);;
                 }
             }
         });
@@ -486,6 +507,8 @@
 
         // Show the editor after it's initialized
         textarea.classList.remove('codemirror-hidden');
-    </script>
+
+    });
+</script>
 
     {% endblock extra_js %}

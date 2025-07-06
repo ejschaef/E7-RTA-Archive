@@ -7,7 +7,6 @@ Created on Sun Mar 30 13:54:07 2025
 
 import apps.e7_utils.references as refs
 import apps.e7_utils.utils as utils
-import os
 
 def get_all_user_data(world_code: str):
     """

@@ -3,12 +3,9 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-import json, time, jsonpickle, pickle
-import pandas as pd
 from datetime import datetime
-from io import StringIO
 
-
+import json
 from apps.config import *
 
 from celery import Celery
@@ -16,9 +13,6 @@ from celery.utils.log import get_task_logger
 from celery.schedules import crontab
 from celery.signals import worker_ready
 
-from apps.e7_utils.battle_manager import BattleManager, to_raw_dataframe, RAW_TYPE_DICT
-from apps.e7_utils.query_user_battles import get_battles, build_hero_stats
-from apps.e7_utils.plots import make_rank_plot
 from apps.content_manager import ContentManager
 import apps.references.cached_var_keys as KEYS
 from apps.redis_manager import GLOBAL_DB
@@ -164,55 +158,3 @@ def load_reference_content( self):
     GLOBAL_CLIENT.set(key, serialized_data)
     print("E7 reference content Updated")
     return None
-
-@celery_app.task(name="load_user_data", bind=True)
-def load_user_data( self, user, HM, uploaded_battles=None, resolver=None):
-    print("TASK STARTED")
-    self.update_state(state='STARTED')
-    user = jsonpickle.decode(user)
-    HM = jsonpickle.decode(HM)
-
-    #query the battles from epic 7 api
-    battles = get_battles(user)
-
-    # merge user uploaded battles with queried battles
-    if uploaded_battles is not None:
-        battles_df = pd.read_json(StringIO(uploaded_battles))
-        battles_df = to_raw_dataframe(battles_df, HM)
-        battles_df = battles_df.astype(RAW_TYPE_DICT)
-        BM = BattleManager.from_df(battles_df)
-        battles.merge(BM)
-
-    filtered_battles = None
-    filter_str = None
-
-    print("ORIG LEN", len(battles.battles))
-    
-    if resolver is not None:
-        resolver = jsonpickle.decode(resolver)
-        filter_str = resolver.as_str()
-        filters = resolver.filters
-        filtered_battles = battles.filter_battles(filters)
-        stats = build_hero_stats(filtered_battles, HM)
-    else:
-        stats = build_hero_stats(battles, HM)
-
-    stats.general_stats["unfiltered_total_battles"] = len(battles.battles)
-
-    print("NEW LEN", len(battles.battles))
-
-    pretty_df = battles.to_pretty_dataframe(HM)
-
-    plot_html = make_rank_plot(battles, user, filtered_battles=filtered_battles)
-
-
-    task_json = {
-        'player_hero_stats' : stats.player_hero_stats,
-        'enemy_hero_stats'  : stats.enemy_hero_stats,
-        'general_stats'     : stats.general_stats,
-        'rank_plot'         : plot_html,
-        'battles_data'      : pretty_df.to_dict(orient='records'),
-        'applied_filters'   : filter_str,
-    }
-
-    return task_json

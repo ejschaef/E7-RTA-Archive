@@ -7,6 +7,8 @@ const HERO_URL = '/api/get_hero_data';
 const USER_URL = '/api/get_user_data';
 const SEASON_URL = '/api/get_season_details';
 
+const ONE_DAY = 1000 * 60 * 60 * 24;
+
 let PYAPI = {
 
     test: function(data) {
@@ -42,20 +44,55 @@ let PYAPI = {
     },
 
     fetchAndCacheSeasonDetails: async function () {
-        await fetch(SEASON_URL)
-        .then(response => response.json())
-        .then(async data => {
-            if (data.success) {
-                const seasonDetails = JSON.parse(data.seasonDetails);
-                seasonDetails.forEach(season => {
-                    season.range = [season["Start"], season["End"]].map(d => new Date(`${d.split(" ")[0]}T00:00:00`))
-                });
-                await ClientCache.set(ClientCache.Keys.SEASON_DETAILS, seasonDetails);
-                return { seasonDetails: seasonDetails, error: false};
-            } else {
-                return { seasonDetails: null, error: data.error};
+        const response = await fetch(SEASON_URL);
+        const data = await response.json();
+        if (data.success) {
+            const seasonDetails = JSON.parse(data.seasonDetails);
+            seasonDetails.forEach(season => {
+                season.range = [season["Start"], season["End"]].map(d => new Date(`${d.split(" ")[0]}T00:00:00`))
+            });
+
+            seasonDetails.sort((a, b) => a["Season Number"] - b["Season Number"]);
+
+            // add pre seasons
+            const preSeasonFilled = [seasonDetails[0]]
+            let lastSeason = seasonDetails[0];
+            seasonDetails.slice(1).forEach(season => {
+                const [start, end] = [new Date(+lastSeason.range[1] + ONE_DAY), new Date(+season.range[0] - ONE_DAY)];
+                const preSeason = {
+                    "Season Number": lastSeason["Season Number"] + 0.5,
+                    "Code": null,
+                    "Season": `Pre-Season: ${season["Season"]}`,
+                    "Start": start.toISOString().slice(0, 10),
+                    "End": end.toISOString().slice(0, 10),
+                    "Status": "Complete",
+                    "range": [start, end]
+                }
+                preSeasonFilled.push(preSeason);
+                preSeasonFilled.push(season);
+                lastSeason = season;
+            })
+
+            // add another pre season if current season is complete
+            if (lastSeason.range[1] < new Date()) {
+                const start = new Date(+preSeasonFilled.at(-1).range[1] + ONE_DAY);
+                const preSeason = {
+                    "Season Number": lastSeason["Season Number"] + 0.5,
+                    "Code": null,
+                    "Season": `Pre-Season: ${season["Season"]}`,
+                    "Start": start.toISOString().slice(0, 10),
+                    "End": new Date().toISOString().slice(0, 10),
+                    "Status": "Active",
+                    "range": [start, new Date()]
+                };
+                preSeasonFilled.push(preSeason);
             }
-        })
+            preSeasonFilled.reverse();
+            await ClientCache.cache(ClientCache.Keys.SEASON_DETAILS, preSeasonFilled);
+            return { seasonDetails: preSeasonFilled, error: false};
+        } else {
+            return { seasonDetails: null, error: data.error};
+        }
     },
 
     fetchAndCacheUser: async function (userData) {

@@ -157,6 +157,7 @@ table.scrollables thead {
     flex: 0 0 auto;
     display: block;
     overflow-y: scroll;
+    scrollbar-width: 16px;
 }
 table.scrollables tbody {
     /* body takes all the remaining available space */
@@ -164,8 +165,15 @@ table.scrollables tbody {
     display: block;
     overflow-y: scroll;
 }
+
 table.scrollables thead {
    white-space: nowrap;
+   scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  /* Reserve space manually — typical scrollbar width is ~16px */
+  padding-right: 16px; 
+  box-sizing: content-box;
 }
 
 table.scrollables tr {
@@ -173,25 +181,20 @@ table.scrollables tr {
     display: table;
     table-layout: fixed;
 }
-table.scrollables-aqua thead:before
-{ 
-	position: absolute;
-  right:0em;
-	width: 1.1em;
-	height: 1.2em;
-	content: '';
-  background-color: #4e7d7e;
-  margin-top: 0em;
+
+
+.scroll-hidden {
+  overflow: scroll; /* or auto if conditional */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  /* Reserve space manually — typical scrollbar width is ~16px */
+  padding-right: 16px; 
+  box-sizing: content-box;
 }
-table.scrollables-aqua thead:after
-{ 
-	position: absolute;
-  right:0em;
-	width: 1.1em;
-	height: 1.2em;
-	content: '';
-  background-color: #4e7d7e;
-  margin-top: -1.2em;
+
+.table.scrollables thead::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Edge */
 }
 
 table.dataTable.w-100 th, 
@@ -199,26 +202,7 @@ table.dataTable.w-100 td {
   min-width: 100px !important;
 }
 
-table.scrollables-razz thead:before
-{ 
-	position: absolute;
-  right:0em;
-	width: 1.1em;
-	height: 1.2em;
-	content: '';
-  background-color: #a33867;
-  margin-top: 0em;
-}
-table.scrollables-razz thead:after
-{ 
-	position: absolute;
-  right:0em;
-	width: 1.1em;
-	height: 1.2em;
-	content: '';
-  background-color: #a33867;
-  margin-top: -1.2em;
-}
+
 
   table.col1-150 td:first-child,
   table.col1-150 th:first-child {
@@ -329,7 +313,7 @@ table.scrollables-razz thead:after
     .cm-bool { color: #3e64d4 !important; }
     .cm-comment { color: #6272a4; font-style: italic; }
     .cm-number  { color: #d7d440 !important; }
-    .cm-field  { color: #ffa25b !important; }
+    .cm-datafield  { color: #ffa25b !important; }
     .cm-def     { color: #8be9fd; }
     .cm-operator { color: #b300ff !important; font-style: italic;}
     .cm-bracket { color: #d8da7e !important; }  /* if you want neutral parentheses */
@@ -369,7 +353,7 @@ table.scrollables-razz thead:after
   background-color: #fff;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 
 .toggle-switch::before {
@@ -406,11 +390,20 @@ table.scrollables-razz thead:after
 
 .toggle-container {
   display: flex;
-  align-items: center;  /* Ensures vertical alignment */
-  gap: 10px;
+  align-items: center; 
+  gap: 0.5em;
 }
 
-.toggle-container h6 {
+.toggle-container-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.toggle-container h6, 
+.toggle-container-vertical h6 {
+  margin-bottom: 0;
   margin: 0;             /* Remove default margin */
   line-height: 1;        /* Tighter line spacing */
   padding: 0;            /* Ensure no extra space */
@@ -420,4 +413,9 @@ table.scrollables-razz thead:after
 
 .min-height-15 {
   min-height: 1.5em;
+}
+
+.no-transition * {
+  transition: none !important;
+  animation: none !important;
 }

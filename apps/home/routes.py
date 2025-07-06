@@ -22,14 +22,11 @@ from werkzeug.exceptions import RequestEntityTooLarge
 from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm
 from apps.e7_utils.user_manager import User
 from apps.e7_utils.query_user_battles import get_transformed_battles
-from apps.e7_utils.filter_syntax import FilterSyntaxResolver
 from apps.content_manager import get_mngr
-from apps.exceptions.exception import DataValidationException
 from apps.references import cached_var_keys as KEYS
-from apps.home.read_data import read_battle_csv
 import traceback
 
-from apps.tasks import celery_app, load_user_data
+from apps.tasks import celery_app
 from celery.result import AsyncResult
 
 ########################################################################################################

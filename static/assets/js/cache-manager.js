@@ -1,7 +1,30 @@
 // static/app.js
 import { openDB } from 'https://cdn.jsdelivr.net/npm/idb@8.0.3/+esm';
-import FilterSyntaxParser from './e7/filter-syntax.js'
 
+async function clearStore(db, storeName) {
+  const tx = db.transaction(storeName, 'readwrite');
+  const store = tx.objectStore(storeName);
+  store.clear();
+  await tx.done;
+};
+
+const Keys = {
+  USER: "current-user",
+  HERO_MANAGER: "hero-manager",
+  BATTLES: "battles",
+  UPLOADED_BATTLES: "uploaded-battles",
+  FILTERED_BATTLES: "filtered-battles",
+  FILTER_STR: "filter-str",
+  STATS: "stats",
+  SEASON_DETAILS: "season-details",
+  AUTO_ZOOM_FLAG: "auto-zoom",
+  AUTO_QUERY_FLAG: "auto-query",
+};
+
+const FlagsToKeys = {
+  "autoZoom": Keys.AUTO_ZOOM_FLAG,
+  "autoQuery": Keys.AUTO_QUERY_FLAG,
+};
 
 let ClientCache = {
   consts: {
@@ -12,16 +35,7 @@ let ClientCache = {
     CACHE_TIMEOUT: 1000 * 60 * 60 * 24 * 2, // 2 day cache timeout
   },
 
-  Keys: {
-    USER: "current-user",
-    HERO_MANAGER: "hero-manager",
-    BATTLES: "battles",
-    UPLOADED_BATTLES: "uploaded-battles",
-    FILTERED_BATTLES: "filtered-battles",
-    FILTER_STR: "filter-str",
-    STATS: "stats",
-    SEASON_DETAILS: "season-details",
-  },
+  Keys: {...Keys},
 
   MetaKeys: {
     TIMESTAMP: "timestamp",
@@ -51,23 +65,24 @@ let ClientCache = {
   get: async function(id) {
     const db = await this.openDB();
     const result = await db.get(this.consts.STORE_NAME, id);
-    if (result) {
-      console.log(`Returning ${id} from cache: ${result}`);
+    if (result !== null) {
+      console.log(`Found ${id} in cache`);
     } else {
       console.log(`${id} not found in cache; returning null`);
-    }
-    if (!result) {
       return null;
     }
     const useCache = await this.checkCacheTimeout(id);
     if (useCache){
+      console.log(`Timeout not reached, using cache for ${id}`);
       return result;
     } else {
+      console.log(`Timeout reached, returning null for ${id}`);
       return null;
     }
   },
 
   cache: async function(id, data) {
+    console.log(`Caching ${id} with data: ${data}`);
     const db = await this.openDB();
     await db.put(this.consts.STORE_NAME, data, id);
     await this.setTimestamp(id, Date.now());
@@ -108,17 +123,20 @@ let ClientCache = {
 
   clearData: async function() {
     const db = await this.openDB();
-    const tx = db.transaction(this.consts.STORE_NAME, 'readwrite');
-    const store = tx.objectStore(this.consts.STORE_NAME);
-    store.clear();
-    await tx.done; // optional, if using promises to track when complete
-    console.log('All data cleared from data cache');
+    await clearStore(db, this.consts.STORE_NAME);
+    await clearStore(db, this.consts.META_STORE_NAME);
+    console.log('All data cleared from data cache and meta data cache');
   },
 
   clearUserData: async function() {
-    const Keys = [this.Keys.USER, this.Keys.BATTLES, this.Keys.UPLOADED_BATTLES, this.Keys.FILTERED_BATTLES, this.Keys.FILTER_STR, this.Keys.STATS];
-    await Promise.all(Keys.map(key => this.delete(key)));
+    const toDelete = [Keys.USER, Keys.BATTLES, Keys.UPLOADED_BATTLES, Keys.FILTERED_BATTLES, Keys.FILTER_STR, Keys.STATS];
+    await Promise.all(toDelete.map(key => this.delete(key)));
     console.log("User data cleared from data cache");
+  },
+
+  clearSeasonData: async function() {
+    await this.delete(Keys.SEASON_DETAILS);
+    console.log("Season data cleared from data cache");
   },
 
   checkCacheTimeout: async function(id) {
@@ -141,22 +159,38 @@ let ClientCache = {
     await this.cache(ClientCache.Keys.USER, userData)
   },
 
-  setFilterStr: async function(filterStr) {
-    await this.cache(ClientCache.Keys.FILTER_STR, filterStr);
-  },
-
   getFilterStr: async function() {
     return await this.get(ClientCache.Keys.FILTER_STR);
   },
 
-  getFilters: async function(HM) {
-    const filterStr = await this.get(ClientCache.Keys.FILTER_STR);
-    if (!filterStr) {
-      return [];
+  setFilterStr: async function(filterStr) {
+    await this.cache(ClientCache.Keys.FILTER_STR, filterStr);
+  },
+
+  getStats: async function() {
+    return await this.get(ClientCache.Keys.STATS);
+  },
+
+  setStats: async function(stats) {
+    await this.cache(Keys.STATS, stats);
+  },
+
+  getFlag: async function(flag) {
+    const key = FlagsToKeys[flag];
+    if (!key) {
+      throw new Error(`No key found for flag <${flag}>`);
     }
-    const parser = await FilterSyntaxParser.createAndParse(filterStr, HM);
-    return parser.filters;
-  }
+    return await this.get(key);
+  },
+
+  setFlag: async function(flag, value) {
+    const key = FlagsToKeys[flag];
+    if (!key) {
+      throw new Error(`No key found for flag <${flag}>`);
+    }
+    await this.cache(key, value);
+  },
+
 };
 
 export default ClientCache; 

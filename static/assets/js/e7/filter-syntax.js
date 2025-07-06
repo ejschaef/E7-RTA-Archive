@@ -10,16 +10,21 @@ const PRINT_PREFIX = "   ";
 // must handle both regular sets and ranges
 function inOperatorFn(a, b) {
     const bStr = typeof b === "object" ? JSON.stringify(b) : `${b}`;
-    if (b instanceof Set) {
+    if (b instanceof Set ) {
         return b.has(a);
     } 
     // handle ranges
     else if (typeof b === "object" && b !== null && !Array.isArray(b) && ['start', 'end', 'endInclusive', 'type'].every(key => b.hasOwnProperty(key))) {
-        a = b.type === "Date" ? new Date(`${a}T00:00:00`) : a;
         return a >= b.start && (b.endInclusive ? a <= b.end : a < b.end);
+    } 
+    
+    // handles fields that are arrays (ie p1.picks)
+    else if (Array.isArray(b)) {
+        return b.includes(a);
     }
+
     else {
-        throw new Error(`Invalid match pattern for 'in' operators; got: '${a}' and '${bStr}'`);
+        throw new Error(`Invalid match pattern for 'in' operators; got: '${a}' and '${bStr}' (${b.constructor.name})`);
     }
 }
 
@@ -56,7 +61,7 @@ class FieldType {
 
     // FNS that take in a clean format battle and return the appropriate data
     static FIELD_EXTRACT_FN_MAP = {
-        'date'    : battle => battle["Date/Time"]?.slice(0, 10) || "N/A",
+        'date'    : battle => battle["Date/Time"] ? new Date(`${battle["Date/Time"]?.slice(0, 10)}T00:00:00`) : "N/A",
         'firstpick'      : battle => battle["Firstpick"] === "True" ? 1 : 0,
         'win'            : battle => battle["Win"] === "W" ? 1 : 0,
         'victory-points' : battle => battle["P1 Points"],
@@ -121,7 +126,7 @@ class StringType extends DataType {
         if (!hero && !league) {
             throw new Futils.SyntaxException(`Invalid string; All strings must either be a valid hero or league name; got: '${str}'`);
         } 
-        return hero ? hero.prime : league;
+        return hero ? hero.name : league;
     }
 
     toString() {
@@ -255,18 +260,24 @@ class SetType extends DataType {
 
 function parseKeywordAsDataType(str, sourceData) {
     if (RegExps.VALID_SEASON_LITERAL_RE.test(str)) {
+        const toStr = (date) => date.toISOString().slice(0, 10);
         if (sourceData.SeasonDetails.length < 1) {
             throw new Error(`Did not recieve any season details; failed on: '${str}'`);
         }
-        else if (str === "current-season") {}
-            const [start, end] = sourceData.SeasonDetails[0].range;
-            return new RangeType(`${start.toISOString()}...=${end.toISOString()}`);
+        else if (str === "current-season") {
+            const [start, end] = sourceData.SeasonDetails.find(season => season["Status"] === "Active").range;
+            return new RangeType(`${toStr(start)}...=${toStr(end)}`);
         } else {
             const seasonNum = Number(str.split("-")[1]);
-            const [start, end] = sourceData.SeasonDetails.find(season => season["Season Number"] === seasonNum).range;
-            return new RangeType(`${start.toISOString()}...=${end.toISOString()}`);
+            const season = sourceData.SeasonDetails.find(season => season["Season Number"] === seasonNum);
+            if (!season) {
+                throw new Error(`Invalid season specified; ${seasonNum} is not a valid season number; failed on str: '${str}'`);
+            }
+            const [start, end] = season.range;
+            return new RangeType(`${toStr(start)}...=${toStr(end)}`);
         }
     }
+}
 
 function parseDataType(str, HM, SeasonDetails) {
     console.log(`Trying to Parse DataType: ${str}`);
@@ -303,15 +314,55 @@ function parseDataType(str, HM, SeasonDetails) {
     }
 }
 
+class Fn {
 
-class ClauseFn {
-
-    constructor(fns) {
-        this.fns = fns
-    }
+    constructor() {}
 
     call(battle) {
         throw new Error(`Base class ${this.constructor.name} does not implement the 'call' method. Implement this method in a subclass.`);
+    }
+}
+
+class globalFilterFn extends Fn {
+
+    constructor() {
+        super();
+    }
+
+    toString(prefix = "") {
+        return `${prefix}${this.str}`;
+    }
+}
+
+
+class lastN extends globalFilterFn {
+
+    constructor(args) {
+        super();
+        this.name = "last-N";
+        if (args.length !== 1) {
+            throw new Futils.SyntaxException(`${this.name} expects 1 argument, got ${args.length}`);
+        } 
+        const num = Number(args[0]);
+        if (!Number.isInteger(num)) {
+            throw new Futils.TypeException(`${this.name} expects an integer argument, could not parse as integer ; got ${args[0]}`);
+        }
+        this.str = `${this.name}(${num})`;
+        this.n = num
+    }
+
+    call (battles) {
+        battles.sort((b1, b2) => b1["Seq Num"] - b2["Seq Num"]);
+        return battles.slice(-this.n);
+    }
+}
+
+
+class ClauseFn extends Fn {
+
+    constructor(fns) {
+        super();
+        this.fns = fns
     }
 
     toString(prefix = "") {
@@ -366,12 +417,16 @@ class NOT extends ClauseFn {
     }
 }
 
-const CLAUSE_FN_MAP = {
+const FN_MAP = {
     and: AND,
     or: OR,
     xor: XOR,
     not: NOT,
+    "last-n": lastN,
 }
+
+const CLAUSE_FNS = new Set([AND, OR, XOR, NOT]);
+const GLOBAL_FILTER_FNS = new Set([lastN]);
 
 class BaseFilter {
     constructor(str, fn) {
@@ -408,12 +463,25 @@ class FilterSyntaxParser {
         if (charCounts["("] !== charCounts[")"]) {
             throw new Futils.SyntaxException(`Imbalanced parentheses in filter string: "${str}"`);
         }
+        parser.globalFilters = []
         parser.filters = parser.parseFilters(parser.preParsedString);
         return parser;
     }
 
     toString() {
-        return `[\n${this.filters.map(filter => filter.toString(PRINT_PREFIX)).join(";\n")}\n]`;
+        const filters = [...this.filters.localFilters];
+        filters.push(...this.filters.globalFilters);
+        return `[\n${filters.map(filter => filter.toString(PRINT_PREFIX)).join(";\n")}\n]`;
+    }
+
+    parseGlobalFilterFn(globalFilterFn, str) {
+        const [delim, enclosureLevel] = [",", 1];
+        const args = Futils.tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
+        if (globalFilterFn === lastN) {
+            return {localFilters: [], globalFilters: [new lastN(args)]};
+        } else {
+            throw new Futils.SyntaxException(`Global filter function ${globalFilterFn.str} not mapped in parseGlobalFilterFn`);
+        }
     }
 
     parseClauseFn(clauseFn, str) {
@@ -422,13 +490,17 @@ class FilterSyntaxParser {
         const argArr = Futils.tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
         console.log("Got argArr:", argArr);
         const fns = argArr.reduce((acc, arg) => {
-            acc.push(...this.parseFilters(arg)); 
+            acc.localFilters.push(...this.parseFilters(arg).localFilters); 
+            acc.globalFilters.push(...this.parseFilters(arg).globalFilters);
             return acc
-        }, []);
+        }, {localFilters: [], globalFilters: []});
+        if (fns.globalFilters.length > 0) {
+            throw new Futils.SyntaxException(`Global filters not allowed in clause functions; got: ${fns.globalFilters.length} from string: "${str}"`);
+        }
         if (clauseFn === NOT && fns.length !== 1) {
             throw new Futils.SyntaxException(`NOT clause must have exactly one argument; got: ${fns.length} from string: "${str}"`);
         }
-        return [new clauseFn(fns)]
+        return {localFilters: new clauseFn(fns), globalFilters: []};
     }
 
     parseBaseFilter(str) {
@@ -437,10 +509,10 @@ class FilterSyntaxParser {
         const [delim, enclosureLevel, trim] = [" ", 0, true];
         const tokens = Futils.tokenizeWithNestedEnclosures(str, delim, enclosureLevel, trim);
 
-        console.log("Got tokens: ", tokens);
+        console.log("Got tokens: ", tokens, `; Length: ${tokens.length}`);
 
         // must be of form ['X', operator, 'Y']
-        if (!tokens.length === 3) {
+        if (!(tokens.length === 3)) {
             throw new Futils.SyntaxException(`Invalid base filter format; all filters must be of the form: ['X', operator, 'Y']; got tokens: [${tokens.join(", ")}]`);
         }
         let [left, operator, right] = tokens;
@@ -506,7 +578,7 @@ class FilterSyntaxParser {
             filterFn = (battle) => { return opFn(left.extractData(battle), right.extractData(battle)); };
         }
         console.log("Returning base filter", [new BaseFilter(str, filterFn).toString()]);
-        return [new BaseFilter(str, filterFn)];
+        return {localFilters: [new BaseFilter(str, filterFn)], globalFilters: []};
     }
 
     parseFilters(str) {
@@ -520,19 +592,31 @@ class FilterSyntaxParser {
         let split = str.split(";").filter(s => s.length > 0);
         if (split.length > 1) {
             console.log(`Processing <${split.length}> filters; filters: ${split}`);
-            return split.reduce((acc, filterStr) => { 
-                console.log(`Parsing component filter string: "${filterStr}"`);
-                acc.push(...this.parseFilters(filterStr));
-                return acc;
-            }, []);
+            return split.reduce((acc, arg) => {
+                acc.localFilters.push(...this.parseFilters(arg).localFilters); 
+                acc.globalFilters.push(...this.parseFilters(arg).globalFilters);
+                return acc
+            }, {localFilters: [], globalFilters: []});
         }
         const filterString = split[0];
         if (filterString.length < 4) {
             throw new Futils.SyntaxException(`Filter string cannot be valid (less than 4 characters); got filter string: "${filterString}"`);
         }
         const splitFilterString = filterString.split("(");
-        let clauseFn = CLAUSE_FN_MAP[splitFilterString[0]];
-        return clauseFn ? this.parseClauseFn(clauseFn, filterString) : this.parseBaseFilter(filterString);
+        const fn = FN_MAP[splitFilterString[0]];
+        console.log("Trying to look for Fn ; got:", splitFilterString[0], "from string:", filterString);
+        if (!fn) {
+            console.log("Did not find Fn; dispatching to base filter parser");
+            return this.parseBaseFilter(filterString);
+        } else if (CLAUSE_FNS.has(fn)) {
+            console.log("Found clause fn; dispatching to clause fn parser");
+            return this.parseClauseFn(fn, filterString);
+        } else if (GLOBAL_FILTER_FNS.has(fn)) {
+            console.log("Found global filter fn; dispatching to global filter fn parser");
+            return this.parseGlobalFilterFn(fn, filterString);
+        } else {
+            throw new Error(`could not parse filter string as Fn: "${str}" ; did not map to any defined pattern`);
+        }
     }
 }
 

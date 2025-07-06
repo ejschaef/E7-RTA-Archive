@@ -84,12 +84,17 @@ let HeroManager = {
     return HM;
   },
 
-  fetchAndCacheHeroManager: async function() {
-    console.log("HeroManager not found in cache, fetching from server and caching it")
+  fetchHeroManager: async function() {
     const heroJSON = await PYAPI.fetchHeroData();
     const enHeroList = heroJSON.en; //get english hero list
     const HM = this.createHeroManager(enHeroList);
     console.log("Created HeroManager using raw data received from server");
+    return HM;
+  },
+
+  fetchAndCacheHeroManager: async function() {
+    console.log("HeroManager not found in cache, fetching from server and caching it")
+    const HM = await this.fetchHeroManager();
     await ClientCache.cache(ClientCache.Keys.HERO_MANAGER, HM);
     console.log("Cached HeroManager using raw data recieved from server");
     printObjStruct(HM);

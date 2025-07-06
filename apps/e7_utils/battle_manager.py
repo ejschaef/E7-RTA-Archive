@@ -12,7 +12,6 @@ from apps.e7_utils.references import LEAGUES, PERFORMANT_TYPE_DICT, PRETTY_COLUM
 import pandas as pd
 import re
 import os
-import numpy as np
 import itertools
 import jsonpickle
 

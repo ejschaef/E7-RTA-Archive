@@ -7,6 +7,7 @@ let SeasonManager = {
 
     getSeasonDetails: async function() {
         let seasonDetails = await ClientCache.get(ClientCache.Keys.SEASON_DETAILS);
+        console.log(`Got season details response from cache: ${seasonDetails}`);
         if (seasonDetails === null) {
             const result = await PYAPI.fetchAndCacheSeasonDetails();
             if (result.error) {
