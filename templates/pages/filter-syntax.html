@@ -1,0 +1,221 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Icon Feather{% endblock title %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container" data-bs-theme="dark">
+      <div class="pc-content" data-bs-theme="dark">
+        <!-- [ breadcrumb ] start -->
+
+        <!-- [ breadcrumb ] end -->
+
+        <!-- [ Main Content ] start -->
+        <div class="row justify-content-center">
+          <!-- [ Filter Syntax Rules ] start -->
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header">
+                <h3>General Overview</h3>
+                <p>
+                  This page details the rules for writing filters within the Hero Stats page. Examples will be shown below, 
+                  and furthermore, a space to practice writing and validating filters is located at the bottom of this page.
+                </p>
+              </div>
+              <div class="card-body pc-component">
+                <h4>Filter Usage</h4>
+                <p>Filters are primarily used to adjust which battles the user wants to include 
+                  when calculating stats like win rate and pick rate. They can also be used to 
+                  automatically adjust the chart to the filtered subset if desired. EveAlmost all columns listed
+                  in the full table of battles at the bottom of the stats page can filtered on using the custom syntax.
+                  The rest of this page will detail the exact syntax and rules for writing filters.
+                </p>
+                <div class="clearfix"></div>
+                <hr>
+                <h4>Object Types</h4>
+                <p>There are 5 main syntactic objects:</p>
+                <ol class="text-sm">
+                  <li>Fields: keywords corresponding to data from each of the battles, 
+                    such as if the battle is a win, the victory points the player ended the battle at, 
+                    the first hero the player picked, etc.</li>
+                  <li>Declared Data: data values the user defines to filter the data on. They include integers, 
+                    dates, strings, sets, booleans, and ranges. There are also some keywords like "current-season" that allow the user to conveniently 
+                    utilize declared data based on predifined logic (in this case, the keyword would translate to a range of dates capturing the current season).
+                  </li>
+                  <li>Operators: the operations that allow the comparison of Fields to
+                     Declared Data and are the core of the filters (includes operations like >, <, =, set membership, etc.). </li>
+                  <li>Functions: higher level operators that may allow the combination of filters in a logical manner or correspond to complex predefined filters.</li>
+                  <li>Pure Syntax Elements: characters like brackets, quotes, commas, and semicolons that define how the filters are broken up and parsed.</li>
+                  <li>Some operations require specific data types; 
+                    if this is the case, an error will be thrown specifiying the necessary data type.</li>
+                </ol>
+                <div class="clearfix"></div>
+                <hr>
+                <h4>High Level Rules</h4>
+                <ol class="text-sm">
+                  <li>Filter syntax is entirely case insensitive. It will be converted to lowercase in the backend.</li>
+                  <li>All filters must be separated by a semicolon ( ; ) if multiple are applied.</li>
+                  <li>Every filter must either be a function call or a base filter of the form: X operator Y</li>
+                  <li>Functions and sets will have their constituent arguments separated by commas ( , ) not semicolons ( ; )</li>
+                  <li>Clause functions like And(...), OR(...), etc. can take nested clause functions as arguments but must ultimately terminate as base filters.</li>
+                  <li>Certain functions, like last-N(), are global filters that must take into account all 
+                    battles when filtering (last-N captures only the N most recent battles). Since these filters are affected by other filters, 
+                    to regulate the logic, all global filters will be hoisted to the top and executed in the order they were written. </li>
+                  <li>Apart from global filter hoisting, all filters will execute in the order they are written.</li>
+                </ol>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Fields</h5>
+              </div>
+              <div class="card-body pc-component cm-datafield text-sm">
+                <ul>
+                  <li>Lorem ipsum dolor sit amet</li>
+                  <li>Consectetur adipiscing elit</li>
+                  <li>Integer molestie lorem at massa</li>
+                  <li>Facilisis in pretium nisl aliquet</li>
+                  <li>Nulla volutpat aliquam velit
+                    <ul>
+                      <li>Phasellus iaculis neque</li>
+                      <li>Purus sodales ultricies</li>
+                      <li>Vestibulum laoreet porttitor sem</li>
+                      <li>Ac tristique libero volutpat at</li>
+                    </ul>
+                  </li>
+                  <li>Faucibus porta lacus fringilla vel</li>
+                  <li>Aenean sit amet erat nunc</li>
+                  <li>Eget porttitor lorem</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Declared Data</h5>
+              </div>
+              <div class="card-body pc-component text-sm">
+                <ol>
+                  <li class="cm-number">Integer: any valid non-negative integer (declare like '2787' without any syntax)</li>
+                  <li class="cm-string">String: text based data declared within either double or single quotes (example: "lone wolf peira"). The quotes are necessary when declared outside of a set</li>
+                  <li class="cm-date">Date: declare using YYYY-MM-DD format. Date must be valid.</li>
+                  <li class="cm-bool">Boolean: declare using 'true' or 'false' without additional syntax.</li>
+                  <li class="cm-set">Set: declare using the format {elt, elt, elt, ...}. 
+                    A trailing comma is optional. Sets can only contain strings and dates. Strings within sets do not need to be quoted.</li>
+                  <li class="cm-range">Range: corresponds to a continuous set. Can be used in cases where a set can be used. 
+                    Declare using the syntax: 'X...Y' or 'X...=Y', where the '=' indicates if Y should be included in the set. 
+                  X and Y must either both be integers or both be dates (example: 2025-05-01...2025-06-01 yields a set of all dates in May 2025)</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Operators</h5>
+              </div>
+              <div class="card-body pc-component cm-operator-normal text-sm">
+                <ul class="list-unstyled">
+                  <li>Lorem ipsum dolor sit amet</li>
+                  <li>Integer molestie lorem at massa
+                    <ul>
+                      <li>Phasellus iaculis neque</li>
+                    </ul>
+                  </li>
+                  <li>Faucibus porta lacus fringilla vel</li>
+                  <li>Eget porttitor lorem</li>
+                </ul>
+                <h5>Inline</h5>
+                <hr>
+                <ul class="list-inline m-b-0">
+                  <li class="list-inline-item">Lorem ipsum</li>
+                  <li class="list-inline-item">Phasellus iaculis</li>
+                  <li class="list-inline-item">Nulla volutpat</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- [ Filter Syntax Rules ] end -->
+          <!-- [ feather-icon ] start -->
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header text-center tight-fit">
+                <h3>Apply filter to battle data.</h3>
+                <h6 class="small-text">Syntax rules and examples can be viewed in the 'Syntax Rules' section. Use the 'Check Syntax' button to verify the filter is properly formed.</h6>
+              </div>
+              <div class="card-body text-center tight-fit">
+                <div class="row justify-content-center">
+                  <span class="d-block mb-1 rel-width-80 scrollable-60px" id="filterMSG">&nbsp;</span>
+                  <form method="post" id="filterForm" class="card-body">
+                      {{ form.hidden_tag() }}
+                      <textarea id="codeArea" name="code" class="codemirror-hidden">{{ code or '' }}</textarea>
+                      <div class="d-flex justify-content-center gap-3 mt-4">
+                          <button type="submit" name="check-syntax" value="check" class="btn shadow px-sm-1">Check Syntax</button>
+                      </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- [ feather-icon ] end -->
+        </div>
+        <!-- [ Main Content ] end -->
+      </div>
+    </div>
+
+{% endblock content %}
+
+{% block extra_js %}
+
+<script type="module">
+    import { RegExps, PageUtils } from "/static/assets/js/exports.js";
+
+
+    CodeMirror.defineMode("myMode", function() {
+      return {
+          token: function(stream, state) {
+              return RegExps.tokenMatch(stream);
+          }
+      };
+    });
+
+    const textarea = document.getElementById("codeArea");
+    const editor = CodeMirror.fromTextArea(textarea, {
+      mode: "myMode",
+      lineNumbers: true,
+      theme: "default"
+    });
+
+    // Intercept form submission
+    const filterForm = document.getElementById("filterForm");
+    filterForm.addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent actual form submission to server
+
+        // Ensure value is synced back to textarea before submit ; not strictly necessary since processed client-side
+        document.getElementById("codeArea").value = editor.getValue();
+
+        console.log("Processing Filter Action");
+        const clickedButton = event.submitter;
+        const action = clickedButton?.value;
+        const syntaxStr = editor.getValue();
+        if (action === "check") {
+            console.log("Checking Str", syntaxStr);
+            await PageUtils.validateFilterSyntax(syntaxStr);
+        }
+    });
+
+    // sync changes back to textarea if needed
+    editor.on("change", () => {
+        editor.save(); // Updates the hidden textarea for form submit
+    });
+
+    // Show the editor after it's initialized
+    textarea.classList.remove('codemirror-hidden');
+</script>
+
+{% endblock extra_js %}

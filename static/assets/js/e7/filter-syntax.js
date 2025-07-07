@@ -230,14 +230,16 @@ class SetType extends DataType {
         if (!RegExps.VALID_SET_RE.test(str)) {
             throw new Futils.SyntaxException(`Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( regex: ${RegExps.VALID_SET_RE.source} ) (Just chat gpt this one bro); got: '${str}'`);
         }
-        const elements = str.replace(/^\{|\}$/g, "").split(",").map(element => {
-            const trimmedElement = element.trim();
-            if (RegExps.VALID_STRING_RE.test(trimmedElement)) {
-                return new StringType(trimmedElement, HM);
-            } else if (RegExps.VALID_DATE_LITERAL_RE.test(trimmedElement)) {
-                return new DateType(trimmedElement);
+        const elements = str.replace(/^\{|\}$/g, "").split(",")
+        .map(e => e.trim())
+        .filter(e => e !== "")
+        .map(elt => {
+            if (RegExps.VALID_STRING_RE.test(elt)) {
+                return new StringType(elt, HM);
+            } else if (RegExps.VALID_DATE_LITERAL_RE.test(elt)) {
+                return new DateType(elt);
             } else {
-                throw new Futils.SyntaxException(`Invalid set element; must be a string or date; got: '${trimmedElement}'`);
+                throw new Futils.SyntaxException(`Invalid set element; must be a string or date; got: '${elt}'`);
             }
         });
         console.log("GOT ELEMENTS: ", elements);
@@ -363,11 +365,14 @@ class ClauseFn extends Fn {
     constructor(fns) {
         super();
         this.fns = fns
+        console.log("Clause Fn constructor got fns:", fns);
     }
 
     toString(prefix = "") {
         let output = '';
-        this.fns.forEach(fn => output += `${prefix}${prefix}${fn.toString(PRINT_PREFIX)};\n`);
+        const newPrefix = prefix + PRINT_PREFIX;
+        this.fns.localFilters.forEach(fn => output += `${fn.toString(newPrefix)},\n`);
+        console.log("Clause Fn toString got output:", output);
         return `${prefix}${this.str}(\n${output.trimEnd()}\n${prefix})`;
     }
 }
@@ -451,7 +456,12 @@ class FilterSyntaxParser {
         }
     }
 
+    emptyFilters() {
+        return {localFilters: [], globalFilters: []};
+    }
+
     static async createAndParse(string, HM = null, SeasonDetails = null) {
+        console.log("Initialized parsing of string:", string);
         const parser = new FilterSyntaxParser(FilterSyntaxParser.#INTERNAL_KEY);
         HM = HM || await HeroManager.getHeroManager();
         SeasonDetails = SeasonDetails || await SeasonManager.getSeasonDetails();
@@ -459,12 +469,10 @@ class FilterSyntaxParser {
         parser.HM = HM;
         parser.SeasonDetails = SeasonDetails;
         parser.preParsedString = preParse(string);
-        let charCounts = Futils.getCharCounts(parser.preParsedString);
-        if (charCounts["("] !== charCounts[")"]) {
-            throw new Futils.SyntaxException(`Imbalanced parentheses in filter string: "${str}"`);
-        }
-        parser.globalFilters = []
+        parser.globalFilters = [];
         parser.filters = parser.parseFilters(parser.preParsedString);
+        console.log("Got Filters\n");
+        console.log(parser.toString());
         return parser;
     }
 
@@ -493,14 +501,14 @@ class FilterSyntaxParser {
             acc.localFilters.push(...this.parseFilters(arg).localFilters); 
             acc.globalFilters.push(...this.parseFilters(arg).globalFilters);
             return acc
-        }, {localFilters: [], globalFilters: []});
+        }, this.emptyFilters);
         if (fns.globalFilters.length > 0) {
-            throw new Futils.SyntaxException(`Global filters not allowed in clause functions; got: ${fns.globalFilters.length} from string: "${str}"`);
+            throw new Futils.SyntaxException(`Global filters not allowed in clause functions; got: ${fns.globalFilters} from string: "${str}"`);
         }
-        if (clauseFn === NOT && fns.length !== 1) {
-            throw new Futils.SyntaxException(`NOT clause must have exactly one argument; got: ${fns.length} from string: "${str}"`);
+        if (clauseFn === NOT && fns.localFilters.length !== 1) {
+            throw new Futils.SyntaxException(`NOT clause must have exactly one argument; got: ${fns.length} arguments from string: "${str}"`);
         }
-        return {localFilters: new clauseFn(fns), globalFilters: []};
+        return {localFilters: [new clauseFn(fns)], globalFilters: []};
     }
 
     parseBaseFilter(str) {
@@ -577,7 +585,7 @@ class FilterSyntaxParser {
         } else {
             filterFn = (battle) => { return opFn(left.extractData(battle), right.extractData(battle)); };
         }
-        console.log("Returning base filter", [new BaseFilter(str, filterFn).toString()]);
+        console.log("Returning base local filter", [new BaseFilter(str, filterFn).toString()]);
         return {localFilters: [new BaseFilter(str, filterFn)], globalFilters: []};
     }
 
@@ -585,18 +593,34 @@ class FilterSyntaxParser {
         console.log(`Parsing filter string: "${str || this.preParsedString}"`);
 
         if (str === "") {
-            console.log("Empty filter string; Returning empty array");
-            return [];
+            console.log("Empty filter string; Returning empty filters");
+            return this.emptyFilters();
         }
         str = str.trim();
         let split = str.split(";").filter(s => s.length > 0);
+
+        for (let splitStr of split) {
+            let charCounts = Futils.getCharCounts(splitStr);
+            if (charCounts["("] !== charCounts[")"]) {
+                throw new Futils.SyntaxException(`Imbalanced parentheses in following string: "${splitStr}"`);
+            } else if (charCounts["{"] !== charCounts["}"]) {
+                throw new Futils.SyntaxException(`Imbalanced braces ('{', '}') in following string: "${splitStr}"`);
+            } else if ((charCounts["\""] || 0) % 2 !== 0) {
+                throw new Futils.SyntaxException(`Imbalanced double quotes in following string: "${splitStr}"`);
+            } else if ((charCounts["'"] || 0) % 2 !== 0) {
+                console.log("Imbalanced single quotes in following string:", splitStr, "; got:", charCounts["'"]);
+                throw new Futils.SyntaxException(`Imbalanced single quotes in following string: "${splitStr}"`);
+            }
+        }
+        
+
         if (split.length > 1) {
             console.log(`Processing <${split.length}> filters; filters: ${split}`);
             return split.reduce((acc, arg) => {
                 acc.localFilters.push(...this.parseFilters(arg).localFilters); 
                 acc.globalFilters.push(...this.parseFilters(arg).globalFilters);
                 return acc
-            }, {localFilters: [], globalFilters: []});
+            }, this.emptyFilters());
         }
         const filterString = split[0];
         if (filterString.length < 4) {

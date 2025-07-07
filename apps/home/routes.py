@@ -215,6 +215,18 @@ def upload_battle_data():
     upload_form = FileUploadForm()
     return render_template('pages/upload_battle_data.html', form=upload_form)
 
+@blueprint.route('/filter_syntax', methods=['GET'])
+def filter_syntax():
+    form = CodeForm()
+    code = request.form.get('code')
+
+    context = {'segment' : 'filter_syntax', 
+               'form' : form,
+               'code' : code,
+    }
+
+    return render_template('pages/filter-syntax.html', **context)
+
     
 ########################################################################################################
 # START HERO STATS SECTION
@@ -224,9 +236,6 @@ def upload_battle_data():
 def hero_stats():
     form = CodeForm()
     code = request.form.get('code')
-
-    if 'switch_user' in request.form:
-        return redirect(url_for("home_blueprint.user_query"))
 
     context = {'segment' : 'hero_stats', 
                'form' : form,

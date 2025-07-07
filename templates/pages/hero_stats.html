@@ -385,64 +385,11 @@
         document.getElementById("content-body").classList.remove('d-none');
 
         CodeMirror.defineMode("myMode", function() {
-        return {
-            token: function(stream) {
-                let match;
-                if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()|LAST-N(?=\()/i)) {
-                    console.log("Matched stream as clause:", stream);
-                    return "keyword";
+            return {
+                token: function(stream, state) {
+                    return RegExps.tokenMatch(stream);
                 }
-                if (stream.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)) {
-                    console.log("Matched stream as operator:", stream);
-                    return "operator"; 
-                }
-                if (stream.match(new RegExp(`[a-z0-9."'}=)-]${RegExps.VALID_DATAFIELD_RE.source}(?=[,)\\s;]|$)`, "i"))) {
-                    console.log("Matched stream as field with preceding fragment:", stream);
-                    return null; 
-                }
-
-                if (stream.match(RegExps.padRegex(RegExps.VALID_DATAFIELD_RE))) {
-                    console.log("Matched stream as Data Field:", stream);
-                    return "datafield"; 
-                }
-
-                if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
-                    console.log("Matched stream as non-num null")
-                    return null
-                }
-                if (stream.match(RegExps.padRegex(RegExps.VALID_RANGE_RE))) {
-                    console.log("Matched stream as range:", stream);
-                    return "range"; 
-                }
-                if (stream.match(RegExps.padRegex(RegExps.VALID_INT_RE))) {
-                    console.log("Matched stream as number:", stream);
-                    return "number"; 
-                }
-                if (stream.match(RegExps.padRegex(RegExps.VALID_DATE_RE))) {
-                    console.log("Matched stream as date:", stream);
-                    return "date"; 
-                }
-                if (stream.match(RegExps.padRegex(RegExps.VALID_SET_RE))) {
-                    console.log("Matched stream as set:", stream);
-                    return "set"; 
-                }
-                if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
-                    console.log("Matched stream as bool:", stream);
-                    return "bool"; 
-                }
-                if (stream.match(RegExps.padRegex(RegExps.VALID_STRING_LITERAL_RE))) {
-                    console.log("Matched stream as string:", stream)
-                    return "string"; 
-                }
-                if (stream.match(/[\(\)\{\}\;\,]/)) {
-                    console.log("Matched stream as bracket:", stream);
-                    return "bracket"; 
-                }
-                stream.next();
-                console.log("Matched stream as null:", stream);
-                return null;
-            }
-        };
+            };
         });
 
         const textarea = document.getElementById("codeArea");

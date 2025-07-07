@@ -26,6 +26,7 @@
     heroStatsURL: "{{ url_for('home_blueprint.hero_stats') | safe }}",
     userQueryURL: "{{ url_for('home_blueprint.user_query') | safe }}",
     uploadURL : "{{ url_for('home_blueprint.upload_battle_data') | safe }}",
+    exportsURL : "{{ url_for('static', filename='assets/js/exports.js') }}",
 
     addStrParam: function (URL, key, val) {
       const encodedParam = encodeURIComponent(val);

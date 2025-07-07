@@ -268,56 +268,6 @@ table.dataTable.w-100 td {
   .rel-width-80 {
     width: 80%;
   }
-
-  .CodeMirror pre {
-    text-align: left !important;
-    color: #7b3eff;
-  }
-
-  .CodeMirror-cursor {
-    border-left: 0.5px solid #cbcbcb;  /* Bright green */
-  }
-
-  .CodeMirror-gutters {
-    background-color: #2a2a2a;  /* Darker than background */              /* Line number color */
-    border-right: 1px solid #888888;
-  }
-
-  /* Change overall editor background */
-  .CodeMirror {
-    background-color: #2c2c2c;  
-    color: #7b3eff;             /* Default text color */
-  }
-
-  .CodeMirror-linenumber {
-    color: #7b3eff
-  }
-
-  .codemirror-hidden {
-    visibility: hidden;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-
-  /* Change selection color (the background when selecting text) */
-    .CodeMirror-selected {
-        background-color: rgba(105, 135, 191, 0.3) !important; /* custom color */
-    }
-
-    .cm-keyword { color: #ff2ea8 !important; }
-    .cm-string  { color: #40d793 !important; }
-    .cm-set    {color: #4089d7 !important}
-    .cm-date  { color: #d7d440 !important; }
-    .cm-bool { color: #3e64d4 !important; }
-    .cm-comment { color: #6272a4; font-style: italic; }
-    .cm-number  { color: #d7d440 !important; }
-    .cm-datafield  { color: #ffa25b !important; }
-    .cm-def     { color: #8be9fd; }
-    .cm-operator { color: #b300ff !important; font-style: italic;}
-    .cm-bracket { color: #d8da7e !important; }  /* if you want neutral parentheses */
-    .cm-range { color: #4089d7 !important; }
   
 
 .toggle-switch {

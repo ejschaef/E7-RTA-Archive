@@ -4,6 +4,7 @@ import HeroManager from "./hero-manager.js";
 import { LEAGUE_MAP } from "./references.js";
 import { generateRankPlot } from "./plots.js";
 import { COLUMNS } from "./references.js";
+import FilterSyntaxParser from "./filter-syntax.js";
 
 const HERO_COLUMNS = COLUMNS.filter(col => col.includes(" Pick ") || col.includes("ban "));
 
@@ -67,6 +68,10 @@ function cleanUploadedBattle(battle) {
     return battle;
 }
 
+/* 
+formatBattleNumerical takes our cleaned battle format from above and converts to numerical format so that we can more easily compute stats
+Note that filters are applied to the cleaned format before this not the numerical format
+*/ 
 function formatBattleNumerical(cleanBattle, HM) {
     // console.log(`Formatting battle: ${JSON.stringify(cleanBattle)}`);
     const getChampPrime = name => HeroManager.getHeroByName(name, HM).prime;
@@ -337,8 +342,7 @@ let BattleManager = {
   },
 
   // should be called to compute metrics
-  getNumericalFilteredBattles: async function(filters, HM) {
-    const battles = await this.applyFilter(filters);
+  getNumericalBattles: async function(battles, HM) {
     const mapFn = (key, battle) => [key, formatBattleNumerical(battle, HM)];
     const numericalBattles = Object.fromEntries(
             Object.entries(battles).map(([key, battle]) => mapFn(key, battle))
@@ -374,7 +378,7 @@ let BattleManager = {
   cacheUpload: async function(battleList) {
     if (!battleList) {
         console.log("No uploaded battles provided to cacheUpload");
-        return [];
+        return FilterSyntaxParser.emptyFilters();
     }
     const cleanBattles = battleList.map(cleanUploadedBattle);
     await ClientCache.cache(ClientCache.Keys.UPLOADED_BATTLES, cleanBattles);
@@ -386,15 +390,17 @@ let BattleManager = {
 
   getStats: async function(battles, user, filters, HM, autoZoom) {
     const numFilters = filters.localFilters.length + filters.globalFilters.length;
-    const filteredBattles = await this.getNumericalFilteredBattles(filters, HM);
-    const plotContent = generateRankPlot(Object.values(battles), user, numFilters >= 1 ? filteredBattles : null, autoZoom);
-    const prebanStats = await this.getPrebanStats(filteredBattles, HM);
-    const firstpickStats = await this.getFirstPickStats(filteredBattles, HM);
-    const generalStats = await this.getGeneralStats(filteredBattles, HM);
-    const heroStats = await this.getHeroStats(filteredBattles, HM);
+    const filteredBattles = await this.applyFilter(filters);
+    const numericalFilteredBattles = await this.getNumericalBattles(filteredBattles, HM);
+    const plotContent = generateRankPlot(Object.values(battles), user, numFilters >= 1 ? numericalFilteredBattles : null, autoZoom);
+    const prebanStats = await this.getPrebanStats(numericalFilteredBattles, HM);
+    const firstpickStats = await this.getFirstPickStats(numericalFilteredBattles, HM);
+    const generalStats = await this.getGeneralStats(numericalFilteredBattles, HM);
+    const heroStats = await this.getHeroStats(numericalFilteredBattles, HM);
 
     return {
       battles : Object.values(battles),
+      filteredBattles: Object.values(filteredBattles),
       plotContent : plotContent,
       prebanStats: prebanStats,
       generalStats: generalStats,
