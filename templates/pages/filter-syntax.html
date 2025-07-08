@@ -56,6 +56,7 @@
                 <ol class="text-sm">
                   <li>Filter syntax is entirely case insensitive. It will be converted to lowercase in the backend.</li>
                   <li>All filters must be separated by a semicolon ( ; ) if multiple are applied.</li>
+                  <li>The terminating semicolon ( ; ) for the last filter (including if only one filter) is optional.</li>
                   <li>Every filter must either be a function call or a base filter of the form: X operator Y</li>
                   <li>Functions and sets will have their constituent arguments separated by commas ( , ) not semicolons ( ; )</li>
                   <li>Clause functions like And(...), OR(...), etc. can take nested clause functions as arguments but must ultimately terminate as base filters.</li>
@@ -63,6 +64,10 @@
                     battles when filtering (last-N captures only the N most recent battles). Since these filters are affected by other filters, 
                     to regulate the logic, all global filters will be hoisted to the top and executed in the order they were written. </li>
                   <li>Apart from global filter hoisting, all filters will execute in the order they are written.</li>
+                  <li>Some filters or sets of filters are valid but will never return true. For instance, comparing different data types
+                    or using two filters which together specify a hero must be picked by both the player and the opponent. 
+                    These filters will pass validation, and the resulting stats will be empty.
+                  </li>
                 </ol>
                 <div class="clearfix"></div>
               </div>
@@ -73,22 +78,46 @@
               <div class="card-header">
                 <h5>Fields</h5>
               </div>
-              <div class="card-body pc-component cm-datafield text-sm">
-                <ul>
+              <div class="card-body pc-component text-sm">
+                <table class="table table-borderless cm-datafield" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">date</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">the date the battle occurred</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">is-win</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">boolean indicator flagging if the player won</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">is-firstpick</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">boolean indicator flagging if the player got firstpick</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">victory-points</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">integer indicating the victory points the player ended the battle at</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">prebans</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">set of all the prebanned heroes</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">postbans</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">set of the two postbanned heroes</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <P>Attributes</P>
+                <P class="text-sm">(access by using the syntax p1.'attribute here' or p2.'attribute here'; example: p1.pick1 -> first picked hero by player 1)</P>
+                <ul class="list-unstyled cm-datafield">
                   <li>Lorem ipsum dolor sit amet</li>
-                  <li>Consectetur adipiscing elit</li>
-                  <li>Integer molestie lorem at massa</li>
-                  <li>Facilisis in pretium nisl aliquet</li>
-                  <li>Nulla volutpat aliquam velit
-                    <ul>
-                      <li>Phasellus iaculis neque</li>
-                      <li>Purus sodales ultricies</li>
-                      <li>Vestibulum laoreet porttitor sem</li>
-                      <li>Ac tristique libero volutpat at</li>
-                    </ul>
-                  </li>
                   <li>Faucibus porta lacus fringilla vel</li>
-                  <li>Aenean sit amet erat nunc</li>
                   <li>Eget porttitor lorem</li>
                 </ul>
               </div>
@@ -100,17 +129,47 @@
                 <h5>Declared Data</h5>
               </div>
               <div class="card-body pc-component text-sm">
-                <ol>
-                  <li class="cm-number">Integer: any valid non-negative integer (declare like '2787' without any syntax)</li>
-                  <li class="cm-string">String: text based data declared within either double or single quotes (example: "lone wolf peira"). The quotes are necessary when declared outside of a set</li>
-                  <li class="cm-date">Date: declare using YYYY-MM-DD format. Date must be valid.</li>
-                  <li class="cm-bool">Boolean: declare using 'true' or 'false' without additional syntax.</li>
-                  <li class="cm-set">Set: declare using the format {elt, elt, elt, ...}. 
-                    A trailing comma is optional. Sets can only contain strings and dates. Strings within sets do not need to be quoted.</li>
-                  <li class="cm-range">Range: corresponds to a continuous set. Can be used in cases where a set can be used. 
+                <table class="table table-borderless cm-datafield" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td class="cm-number" style="white-space: nowrap;">Integer</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Any valid non-negative integer (declare like '2787' without the quotes)</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-date" style="white-space: nowrap;">Date</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Date value using YYYY-MM-DD format exclusively (declare like '2025-01-07' without the quotes). Date must be valid.</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-string" style="white-space: nowrap;">String</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Text based data declared within either double or single quotes (example: "lone wolf peira").
+                        The quotes are necessary when declared outside of a set
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-bool" style="white-space: nowrap;">Boolean</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Corresponds to true or false values; declare using 'true' or 'false' without the quotes</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-set" style="white-space: nowrap;">Set</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Used to group multiple individual pieces of data together; declare using the format { x, y, z, ...}. 
+                    A trailing comma after the last element is optional. Sets can only contain strings and dates and must be of a homegeneous type. 
+                    Strings within sets do not need to be quoted</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-range" style="white-space: nowrap;">Range</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Used to define a continuous range of either integers or dates. Can be used in cases where a set can be used. 
                     Declare using the syntax: 'X...Y' or 'X...=Y', where the '=' indicates if Y should be included in the set. 
-                  X and Y must either both be integers or both be dates (example: 2025-05-01...2025-06-01 yields a set of all dates in May 2025)</li>
-                </ol>
+                  X and Y must either both be integers or both be dates 
+                  (example: 2025-05-01...2025-06-01 yields a set of all dates in May 2025)</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -140,13 +199,68 @@
               </div>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Example Filter 1</h5>
+                <P class="text-sm">
+                  This filter takes only battles in the current season and filters for firstpick 
+                  games where the player selected either ML Peira or New Moon Luna as their first pick and 
+                  harsetti was prebanned.
+                </P>
+              </div>
+              <div class="card-body pc-component text-sm">
+                <textarea id="exFilter1" name="code" class="codemirror-hidden">
+                </textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Example Filter 2</h5>
+                <P class="text-sm">
+                  This filter first selects the most recent 500 battles, then filters 
+                  those for second pick games that occurred between April 2025 and June 2025
+                  in which either the opponent is in Warlord, Emeperor, or Legend and picked Zio on 3, or games
+                  in which the player ended with at or above 3000 victory points. <br><br>
+
+                  *Note that it does not matter when the last-n filter is placed; 
+                  it will always execute before local filters, since it is a global filter.
+                  Therefore, the result will likely have much less than 500 battles. <br><br>
+
+                  **Also note that the indentation is purely for readability. Multiple spaces or returns will be ignored during parsing.
+                </P>
+              </div>
+              <div class="card-body pc-component text-sm">
+                <textarea id="exFilter2" name="code" class="codemirror-hidden">
+                </textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Example Filter 3</h5>
+                <P class="text-sm">
+                  This filter selects only games in which ML Arunka and Rinak are prebanned,
+                  Harsetti was picked by the player and was not postbanned, and the player ended
+                  with victory points between 2500 and 3000 inclusively.
+                </P>
+              </div>
+              <div class="card-body pc-component text-sm">
+                <textarea id="exFilter3" name="code" class="codemirror-hidden">
+                </textarea>
+              </div>
+            </div>
+          </div>
           <!-- [ Filter Syntax Rules ] end -->
           <!-- [ feather-icon ] start -->
           <div class="col-sm-12">
             <div class="card">
               <div class="card-header text-center tight-fit">
-                <h3>Apply filter to battle data.</h3>
-                <h6 class="small-text">Syntax rules and examples can be viewed in the 'Syntax Rules' section. Use the 'Check Syntax' button to verify the filter is properly formed.</h6>
+                <h3>Test Filter Syntax</h3>
+                <h6 class="small-text">Write filter syntax below to test. Use the 'Check Syntax' button to verify the filter is properly formed.</h6>
               </div>
               <div class="card-body text-center tight-fit">
                 <div class="row justify-content-center">
@@ -176,7 +290,7 @@
     import { RegExps, PageUtils } from "/static/assets/js/exports.js";
 
 
-    CodeMirror.defineMode("myMode", function() {
+    CodeMirror.defineMode("filterSyntax", function() {
       return {
           token: function(stream, state) {
               return RegExps.tokenMatch(stream);
@@ -184,9 +298,64 @@
       };
     });
 
+    function dedent(str) {
+      const lines = str.replace(/^\n/, '')
+        .split('\n')
+        .filter(s => s !== "")
+        .map(s => s.trim());
+      return lines.join('\n');
+    }
+
+    function makeExFilter(textAreaID, str) {
+      const textArea = document.getElementById(textAreaID);
+      textArea.value = str.replace(/^\n/, '');
+      CodeMirror.fromTextArea(textArea, {
+        mode: "filterSyntax",
+        lineNumbers: true,
+        theme: "default",
+        readOnly: true
+      });
+      textArea.classList.remove('codemirror-hidden');
+    }
+
+
+    const ex1Str = `
+date in current-season;
+is-firstpick = true;
+p1.pick1 in {lone wolf peira, new moon luna};
+OR("harsetti" in p1.prebans, "harsetti" in p2.prebans);
+    `;
+
+    makeExFilter("exFilter1", ex1Str);
+
+
+    const ex2Str = `
+last-n(500);
+date in 2025-04-01...2025-07-01;
+is-firstpick = false;
+OR(
+	AND(
+		p2.league in {warlord, emperor, legend},
+    	p2.pick3 = "zio"
+    ),
+    victory-points >= 3000
+)`;
+
+    makeExFilter("exFilter2", ex2Str);
+
+    const ex3Str = `
+"Rinak" in prebans;
+"Boss Arunka" in prebans;
+"Harsetti" in p1.picks;
+NOT("Harsetti" = p2.postban);
+victory-points in 2500...=3000;`;
+
+    makeExFilter("exFilter3", ex3Str);
+
+
     const textarea = document.getElementById("codeArea");
     const editor = CodeMirror.fromTextArea(textarea, {
-      mode: "myMode",
+      mode: "filterSyntax",
       lineNumbers: true,
       theme: "default"
     });
@@ -205,7 +374,7 @@
         const syntaxStr = editor.getValue();
         if (action === "check") {
             console.log("Checking Str", syntaxStr);
-            await PageUtils.validateFilterSyntax(syntaxStr);
+            await PageUtils.validateFilterSyntaxNoCatch(syntaxStr);
         }
     });
 

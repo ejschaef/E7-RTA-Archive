@@ -13,7 +13,7 @@ let ContentManager = {
     getFilters: async function(HM) {
         const filterStr = await ClientCache.getFilterStr();
         if (!filterStr) {
-            return {localFilters: [], globalFilters: []};
+            return FilterSyntaxParser.getEmptyFilters();
         }
         const seasonDetails = await SeasonManager.getSeasonDetails();
         const parser = await FilterSyntaxParser.createAndParse(filterStr, HM, seasonDetails);

@@ -384,7 +384,7 @@
         // render content once all data is loaded
         document.getElementById("content-body").classList.remove('d-none');
 
-        CodeMirror.defineMode("myMode", function() {
+        CodeMirror.defineMode("filterSyntax", function() {
             return {
                 token: function(stream, state) {
                     return RegExps.tokenMatch(stream);
@@ -394,7 +394,7 @@
 
         const textarea = document.getElementById("codeArea");
         let editor = CodeMirror.fromTextArea(textarea, {
-            mode: "myMode",
+            mode: "filterSyntax",
             lineNumbers: true,
             theme: "default"
         });

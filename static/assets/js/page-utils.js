@@ -95,6 +95,16 @@ let PageUtils = {
             filterMSG.classList.add("text-danger");
             return false;
         }
+    },
+
+    validateFilterSyntaxNoCatch: async function(str) {
+        const HM = await HeroManager.getHeroManager();
+        let filterMSG = document.getElementById("filterMSG")
+        await FilterSyntaxParser.createAndParse(str, HM);
+        filterMSG.textContent = "Validation Passed";
+        filterMSG.classList.remove("text-danger");
+        filterMSG.classList.add("text-safe");
+        return true;
     }
 }
 

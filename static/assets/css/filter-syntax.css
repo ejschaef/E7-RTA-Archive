@@ -17,11 +17,11 @@
   /* Change overall editor background */
   .CodeMirror {
     background-color: #2c2c2c;  
-    color: #7b3eff;             /* Default text color */
+    color: #844df9;             /* Default text color */
   }
 
   .CodeMirror-linenumber {
-    color: #7b3eff
+    color: #844df9
   }
 
   .codemirror-hidden {
@@ -37,16 +37,17 @@
         background-color: rgba(105, 135, 191, 0.3) !important; /* custom color */
     }
 
+    .cm-default { color: #844df9 !important; }
     .cm-keyword { color: #ff2ea8 !important; }
-    .cm-string  { color: #40d793 !important; }
-    .cm-set    {color: #4089d7 !important}
+    .cm-string  { color: #40d766 !important; }
+    .cm-set    {color: #409dd7 !important}
     .cm-date  { color: #d7d440 !important; }
-    .cm-bool { color: #3e64d4 !important; }
+    .cm-bool { color: #40d7c0 !important; }
     .cm-comment { color: #6272a4; font-style: italic; }
     .cm-number  { color: #d7d440 !important; }
     .cm-datafield  { color: #ffa25b !important; }
-    .cm-def     { color: #8be9fd; }
+    .cm-def     { color: #dfeaec; }
     .cm-operator { color: #b300ff !important; font-style: italic;}
-    .cm-operator-normal { color: #b300ff !important; }
+    .cm-operator-normal { color: #b300ff !important; } /*Only used to show color in tables without needing italics*/
     .cm-bracket { color: #d8da7e !important; }  /* if you want neutral parentheses */
-    .cm-range { color: #4089d7 !important; }
+    .cm-range { color: #409dd7 !important; }

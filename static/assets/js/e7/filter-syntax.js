@@ -62,8 +62,8 @@ class FieldType {
     // FNS that take in a clean format battle and return the appropriate data
     static FIELD_EXTRACT_FN_MAP = {
         'date'    : battle => battle["Date/Time"] ? new Date(`${battle["Date/Time"]?.slice(0, 10)}T00:00:00`) : "N/A",
-        'firstpick'      : battle => battle["Firstpick"] === "True" ? 1 : 0,
-        'win'            : battle => battle["Win"] === "W" ? 1 : 0,
+        'is-firstpick'      : battle => battle["Firstpick"] === "True" ? 1 : 0,
+        'is-win'            : battle => battle["Win"] === "W" ? 1 : 0,
         'victory-points' : battle => battle["P1 Points"],
         'p1.picks'       : battle => battle["P1 Picks"],
         'p2.picks'       : battle => battle["P2 Picks"],
@@ -71,6 +71,8 @@ class FieldType {
         'p2.prebans'      : battle => battle["P2 Prebans"],
         'p1.postban'     : battle => battle["P1 Postban"],
         'p2.postban'     : battle => battle["P2 Postban"],
+        'postbans'       : battle => [battle["P1 Postban"], battle["P2 Postban"]],
+        'prebans'        : battle => [...battle["P1 Prebans"], ...battle["P2 Prebans"]],
         'p1.pick1'       : battle => battle["P1 Pick 1"],
         'p1.pick2'       : battle => battle["P1 Pick 2"],
         'p1.pick3'       : battle => battle["P1 Pick 3"],
@@ -456,7 +458,7 @@ class FilterSyntaxParser {
         }
     }
 
-    emptyFilters() {
+    getEmptyFilters() {
         return {localFilters: [], globalFilters: []};
     }
 
@@ -501,7 +503,7 @@ class FilterSyntaxParser {
             acc.localFilters.push(...this.parseFilters(arg).localFilters); 
             acc.globalFilters.push(...this.parseFilters(arg).globalFilters);
             return acc
-        }, this.emptyFilters);
+        }, this.getEmptyFilters());
         if (fns.globalFilters.length > 0) {
             throw new Futils.SyntaxException(`Global filters not allowed in clause functions; got: ${fns.globalFilters} from string: "${str}"`);
         }
@@ -539,7 +541,11 @@ class FilterSyntaxParser {
                 left = parseDataType(left, HM, this.SeasonDetails);
             }
         } catch (e) {
-            throw new Futils.SyntaxException(`Could not parse left side of filter; got: "${left}" from filter: "${str}", error: ${e.message}`);
+            for (let key in FieldType.FIELD_EXTRACT_FN_MAP) {
+                if (left.includes(key) || key.includes(left)) {
+                    throw new Futils.SyntaxException(`Could not parse left side of filter; got: "${left}" from filter: "${str}", did you mean to use '${key}' as a field instead?`);
+                }
+            }
         }
         try {
             if (right in FieldType.FIELD_EXTRACT_FN_MAP) {
@@ -548,6 +554,11 @@ class FilterSyntaxParser {
                 right = parseDataType(right, HM, this.SeasonDetails);
             }
         } catch (e) {
+            for (let key in FieldType.FIELD_EXTRACT_FN_MAP) {
+                if (right.includes(key) || key.includes(right)) {
+                    throw new Futils.SyntaxException(`Could not parse left side of filter; got: "${right}" from filter: "${str}", did you mean to use '${key}' as a field instead?`);
+                }
+            }
             throw new Futils.SyntaxException(`Could not parse right side of filter; got: "${right}" from filter: "${str}", error: ${e.message}`);
         }
 
@@ -594,7 +605,7 @@ class FilterSyntaxParser {
 
         if (str === "") {
             console.log("Empty filter string; Returning empty filters");
-            return this.emptyFilters();
+            return this.getEmptyFilters();
         }
         str = str.trim();
         let split = str.split(";").filter(s => s.length > 0);
@@ -620,7 +631,7 @@ class FilterSyntaxParser {
                 acc.localFilters.push(...this.parseFilters(arg).localFilters); 
                 acc.globalFilters.push(...this.parseFilters(arg).globalFilters);
                 return acc
-            }, this.emptyFilters());
+            }, this.getEmptyFilters());
         }
         const filterString = split[0];
         if (filterString.length < 4) {

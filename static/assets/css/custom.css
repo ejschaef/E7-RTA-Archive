@@ -369,3 +369,7 @@ table.dataTable.w-100 td {
   transition: none !important;
   animation: none !important;
 }
+
+.space-sep li {
+  margin-bottom: 1.5em;
+}
