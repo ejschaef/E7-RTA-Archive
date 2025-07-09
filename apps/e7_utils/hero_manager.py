@@ -20,6 +20,9 @@ def get_hero_data(lang="en"):
     Use in order to get a json of all the heroes in the game and their hero codes. JSON will be organized by language codes
     """
     file =  utils.load_json_from_url(HERO_JSON_URL)
+    if file is None:
+        print(f"Failed to fetch hero data from {HERO_JSON_URL}")  
+        return None
     if lang is None:
         return file
     else:
@@ -62,6 +65,8 @@ class HeroManager:
     
     def __init__(self):
         self.json = get_hero_data(lang=None)
+        if self.json is None:
+            raise Exception("Cannot create HeroManager from empty hero data")
         
         self.int_to_hero_dict = get_int_to_hero_dict(json=self.json)
         

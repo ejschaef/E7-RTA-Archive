@@ -1,5 +1,4 @@
 import ClientCache from "../cache-manager.js";
-import { printObjStruct } from './e7-utils.js';
 import HeroManager from "./hero-manager.js";
 import { LEAGUE_MAP } from "./references.js";
 import { generateRankPlot } from "./plots.js";
@@ -248,37 +247,61 @@ function getPrebanStats(battles, HM) {
 }
 
 function getGeneralStats(battles, HM) {
-        const totalBattles = Object.values(battles).length;
+  const battleList = Object.values(battles);
+  const totalBattles = battleList.length;
 
-        const fpBattles = Object.values(battles).filter(b => b["Firstpick"] === 1);
-        const spBattles = Object.values(battles).filter(b => b["Firstpick"] !== 1);
+  // create subsets for first pick and second pick battles
+  const fpBattles = battleList.filter(b => b["Firstpick"] === 1);
+  const spBattles = battleList.filter(b => b["Firstpick"] !== 1);
 
-        const fpCount = fpBattles.length;
-        const spCount = spBattles.length;
+  // get counts for first pick and second pick battles
+  const fpCount = fpBattles.length;
+  const spCount = spBattles.length;
 
-        const fpWins = fpBattles.reduce((acc, b) => acc + b.Win, 0);
-        const spWins = spBattles.reduce((acc, b) => acc + b.Win, 0);
+  // calculate wins for first pick and second pick battles
+  const fpWins = fpBattles.reduce((acc, b) => acc + b.Win, 0);
+  const spWins = spBattles.reduce((acc, b) => acc + b.Win, 0);
 
-        const fpR = totalBattles? fpCount / totalBattles : 0;
-        const spR = totalBattles? spCount / totalBattles : 0;
+  // calculate rate of occurrence for first pick and second pick battles
+  const fpR = totalBattles? fpCount / totalBattles : 0;
+  const spR = totalBattles? spCount / totalBattles : 0;
 
-        const fpWR = fpCount? fpWins / fpCount : 0;
-        const spWR = spCount? spWins / spCount : 0;
+  // calculate win rate for first pick and second pick battles
+  const fpWR = fpCount? fpWins / fpCount : 0;
+  const spWR = spCount? spWins / spCount : 0;
 
-        const winRate = totalBattles? (fpWins + spWins) / totalBattles : 0;
+  // calculate total win rate
+  const winRate = totalBattles? (fpWins + spWins) / totalBattles : 0;
 
-        const NA = "N/A";
+  // iterate through battles and calculate longest win/loss streaks
+  let [maxWinStreak, maxLossStreak, winStreak, lossStreak] = [0, 0, 0, 0];
+  for (let b of battleList) {
+    if (b.Win === 1) {
+      winStreak += 1;
+      maxWinStreak = Math.max(maxWinStreak, winStreak);
+      lossStreak = 0;
+    } else {
+      winStreak = 0
+      lossStreak += 1;
+      maxLossStreak = Math.max(maxLossStreak, lossStreak);
+    }
+  }
 
-        return {
-            "firstpick_count"   : fpCount,
-            "secondpick_count"  : spCount,
-            "firstpick_rate"    : fpCount? toPercent(fpR) : NA,
-            "secondpick_rate"   : spCount? toPercent(spR) : NA,
-            "firstpick_winrate" : fpCount? toPercent(fpWR) : NA,
-            "secondpick_winrate": spCount? toPercent(spWR) : NA,
-            "total_winrate"     : totalBattles? toPercent(winRate) : NA,
-            "total_battles"     : totalBattles,
-        }
+  const NA = "N/A";
+
+  return {
+      "firstpick_count"   : fpCount,
+      "secondpick_count"  : spCount,
+      "firstpick_rate"    : fpCount? toPercent(fpR) : NA,
+      "secondpick_rate"   : spCount? toPercent(spR) : NA,
+      "firstpick_winrate" : fpCount? toPercent(fpWR) : NA,
+      "secondpick_winrate": spCount? toPercent(spWR) : NA,
+      "total_winrate"     : totalBattles? toPercent(winRate) : NA,
+      "total_battles"     : totalBattles,
+      "total_wins"        : fpWins + spWins,
+      "max_win_streak"    : maxWinStreak,
+      "max_loss_streak"   : maxLossStreak
+  }
 }
 
 let BattleManager = {
@@ -391,16 +414,21 @@ let BattleManager = {
   getStats: async function(battles, user, filters, HM, autoZoom) {
     const numFilters = filters.localFilters.length + filters.globalFilters.length;
     const filteredBattles = await this.applyFilter(filters);
+    const battlesList = Object.values(battles);
+    const filteredBattlesList = Object.values(filteredBattles);
     const numericalFilteredBattles = await this.getNumericalBattles(filteredBattles, HM);
-    const plotContent = generateRankPlot(Object.values(battles), user, numFilters >= 1 ? numericalFilteredBattles : null, autoZoom);
+    const plotContent = generateRankPlot(
+      battlesList, 
+      user, numFilters > 0 ? numericalFilteredBattles : null, autoZoom
+    );
     const prebanStats = await this.getPrebanStats(numericalFilteredBattles, HM);
     const firstpickStats = await this.getFirstPickStats(numericalFilteredBattles, HM);
     const generalStats = await this.getGeneralStats(numericalFilteredBattles, HM);
     const heroStats = await this.getHeroStats(numericalFilteredBattles, HM);
 
     return {
-      battles : Object.values(battles),
-      filteredBattles: Object.values(filteredBattles),
+      battles : battlesList,
+      filteredBattles: filteredBattlesList,
       plotContent : plotContent,
       prebanStats: prebanStats,
       generalStats: generalStats,

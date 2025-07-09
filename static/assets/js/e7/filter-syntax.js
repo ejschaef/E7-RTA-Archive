@@ -48,8 +48,7 @@ function validateChars(str, charSet, objName) {
 }
 
 function preParse(str) {
-    str = str.replace(/\n/g, "").replace(/\t/g, "").replace(/\r/g, ""); //remove newlines, tabs, and carriage returns
-    str = str.replace(/ {2,}/g, ""); // remove two or more spaces
+    str = str.replace(/[\n\t\r]/g, " ").replace(/\s+/g, " "); // replace newlines with spaces and remove multiple spaces
     validateChars(str, ACCEPTED_CHARS, "Main Filter String");
     str = str.toLowerCase();
     return str;
@@ -71,7 +70,6 @@ class FieldType {
         'p2.prebans'      : battle => battle["P2 Prebans"],
         'p1.postban'     : battle => battle["P1 Postban"],
         'p2.postban'     : battle => battle["P2 Postban"],
-        'postbans'       : battle => [battle["P1 Postban"], battle["P2 Postban"]],
         'prebans'        : battle => [...battle["P1 Prebans"], ...battle["P2 Prebans"]],
         'p1.pick1'       : battle => battle["P1 Pick 1"],
         'p1.pick2'       : battle => battle["P1 Pick 2"],
@@ -83,14 +81,16 @@ class FieldType {
         'p2.pick3'       : battle => battle["P2 Pick 3"],
         'p2.pick4'       : battle => battle["P2 Pick 4"],
         'p2.pick5'       : battle => battle["P2 Pick 5"],
-        'p1.league'      : battle => battle["P1 League"],
-        'p2.league'      : battle => battle["P2 League"],
+        'p1.league'      : battle => LEAGUE_MAP[battle["P1 League"]],
+        'p2.league'      : battle => LEAGUE_MAP[battle["P2 League"]],
     }
 
     constructor (str) {
         const fn = FieldType.FIELD_EXTRACT_FN_MAP[str];
         if (!fn) {
             throw new Futils.ValidationError(`Invalid field type: '${str}'; valid types are: ${Object.keys(FieldType.FIELD_EXTRACT_FN_MAP).join(', ')}`);
+        } else {
+            console.log("Found valid field type: ", str);
         }
         this.str = str;
         this.extractData = fn;
@@ -120,12 +120,12 @@ class StringType extends DataType {
         str = str.replace(/'/g, "").replace(/"/g, "");
         str = str.trim();
         if (!RegExps.VALID_STRING_RE.test(str)) {
-            throw new Futils.SyntaxException(`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( regex: ${RegExps.VALID_STRING_LITERAL_RE.source} ); got: '${str}'`);
+            throw new Futils.SyntaxException(`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ${RegExps.VALID_STRING_LITERAL_RE.source} ); got: '${str}'`);
         } 
         str = str.replace(/"|'/g, "");
         const hero = HeroManager.getHeroByName(str, HM);
         const league = LEAGUE_MAP[str];
-        if (!hero && !league) {
+        if (!(hero || league)) {
             throw new Futils.SyntaxException(`Invalid string; All strings must either be a valid hero or league name; got: '${str}'`);
         } 
         return hero ? hero.name : league;
@@ -150,6 +150,9 @@ class DateType extends DataType {
 class IntType extends DataType {
 
     getData(str, _HM=null) {
+        if (!RegExps.VALID_INT_LITERAL_RE.test(str)) {
+            throw new Futils.SyntaxException(`Invalid integer; must be a number; got: '${str}'`);
+        }
         const parsedInt = parseInt(str);
         if (isNaN(parsedInt)) {
             throw new Futils.SyntaxException(`Invalid integer; must be a number; got: '${str}'`);
@@ -171,7 +174,7 @@ class BoolType extends DataType {
 
     }
     toString() {
-        return `${this.data}`;
+        return `${this.data ? "true" : "false"}`;
     }
 }
 
@@ -230,7 +233,7 @@ class SetType extends DataType {
 
     getData(str, HM) {
         if (!RegExps.VALID_SET_RE.test(str)) {
-            throw new Futils.SyntaxException(`Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( regex: ${RegExps.VALID_SET_RE.source} ) (Just chat gpt this one bro); got: '${str}'`);
+            throw new Futils.SyntaxException(`Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ${RegExps.VALID_SET_RE.source} ) (Just chat gpt this one bro); got: '${str}'`);
         }
         const elements = str.replace(/^\{|\}$/g, "").split(",")
         .map(e => e.trim())
@@ -307,12 +310,13 @@ function parseDataType(str, HM, SeasonDetails) {
         console.log("Parsing as DataWord");
         return parseKeywordAsDataType(str, { SeasonDetails });
     } else {
+        console.log("Failed to parse DataType");
         if (RegExps.VALID_STRING_LITERAL_RE.test(`'${str}'`)) {
             throw new Futils.SyntaxException(`Invalid DataType declaration; got: '${str}'; did you forget to wrap string literals in double or single quotes?`);
         } else if (str.includes("'") && str.includes('"')) {
             throw new Futils.SyntaxException(`Invalid DataType declaration; got: '${str}'; did you encase in mismatching quote types?`);
         } else if (str.includes('.=') || str.includes("..")) {
-            throw new Futils.SyntaxException(`Invalid DataType declaration; got: '${str}'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only b int-int or date-date`);
+            throw new Futils.SyntaxException(`Invalid DataType declaration; got: '${str}'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only be int-int or date-date`);
         }
         throw new Futils.SyntaxException(`Invalid DataType declaration; could not parse to valid Field, set, or primitive type; got: '${str}'`);
     }
@@ -349,7 +353,7 @@ class lastN extends globalFilterFn {
         } 
         const num = Number(args[0]);
         if (!Number.isInteger(num)) {
-            throw new Futils.TypeException(`${this.name} expects an integer argument, could not parse as integer ; got ${args[0]}`);
+            throw new Futils.TypeException(`${this.name} expects an integer argument, could not parse '${args[0]}' as integer`);
         }
         this.str = `${this.name}(${num})`;
         this.n = num
@@ -385,7 +389,7 @@ class AND extends ClauseFn {
         this.str = "AND";
     }
     call (battle) {
-        return this.fns.every(fn => fn.call(battle));
+        return this.fns.localFilters.every(fn => fn.call(battle));
     }
 }
 
@@ -395,7 +399,7 @@ class OR extends ClauseFn {
         this.str = "OR";
     }
     call (battle) {
-        return this.fns.some(fn =>{
+        return this.fns.localFilters.some(fn =>{
             return fn.call(battle);
         });
     }
@@ -407,20 +411,22 @@ class XOR extends ClauseFn {
         this.str = "XOR";
     }
     call (battle) {
-        return this.fns.some(fn => fn.call(battle)) && !this.fns.every(fn => fn.call(battle));
+        let result = false;
+        // Cascading XOR
+        for (let fn of this.fns.localFilters) {
+            result = (!result && fn.call(battle)) || (result && !fn.call(battle));
+        }
+        return result;
     }
 }
 
 class NOT extends ClauseFn {
     constructor(fns) {
-        if (!fns.length === 1) {
-            throw new Futils.SyntaxException(`NOT clause must have exactly one argument; got: ${fns.length}`);
-        }
         super(fns);
         this.str = "NOT";
     }
     call (battle) {
-        return !this.fns[0].call(battle);
+        return !this.fns.localFilters[0].call(battle);
     }
 }
 
@@ -448,17 +454,37 @@ class BaseFilter {
     }
 }
 
+function tryParseFilterElement(leftOrRight, strValue, filterStr, HM, SeasonDetails) {
+    let parsedValue = null;
+    try {
+        if (strValue in FieldType.FIELD_EXTRACT_FN_MAP) {
+            parsedValue = new FieldType(strValue);
+        } else {
+            parsedValue = parseDataType(strValue, HM, SeasonDetails);
+        }
+    } catch (e) {
+        for (let key in FieldType.FIELD_EXTRACT_FN_MAP) {
+            if (strValue.includes(key) || key.includes(strValue)) {
+                throw new Futils.SyntaxException(`Could not parse ${leftOrRight} side of filter; got: "${strValue}" from filter: [${filterStr}], did you mean to use '${key}' as a field instead?`);
+            }
+        }
+        console.error(e);
+        throw new Futils.SyntaxException(`Could not parse ${leftOrRight} side of filter; got: "${strValue}" from filter: [${filterStr}]; error: ${e.message}`);
+    }
+    return parsedValue;
+}
+
 class FilterSyntaxParser {
 
     static #INTERNAL_KEY = Symbol("internal");
 
     constructor(key) {
-        if (!key === FilterSyntaxParser.#INTERNAL_KEY) {
+        if (key !== FilterSyntaxParser.#INTERNAL_KEY) {
             throw new Error("Cannot instantiate FilterSyntaxParser directly; use createAndParse method instead.");
         }
     }
 
-    getEmptyFilters() {
+    static getEmptyFilters() {
         return {localFilters: [], globalFilters: []};
     }
 
@@ -485,6 +511,10 @@ class FilterSyntaxParser {
     }
 
     parseGlobalFilterFn(globalFilterFn, str) {
+        const pattern = RegExps.anchorExp(RegExps.VALID_GLOBAL_FILTER_RE);
+        if (!pattern.test(str)) {
+            throw new Futils.SyntaxException(`Invalid global filter format; must follow the case insensitive regex format "${pattern.source}" ; got: '${str}'`);
+        }
         const [delim, enclosureLevel] = [",", 1];
         const args = Futils.tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
         if (globalFilterFn === lastN) {
@@ -499,11 +529,16 @@ class FilterSyntaxParser {
         const [delim, enclosureLevel] = [",", 1];
         const argArr = Futils.tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
         console.log("Got argArr:", argArr);
+        if (clauseFn === XOR && argArr.length < 2) {
+            throw new Futils.SyntaxException(`XOR clause must have at least two arguments; got: ${argArr.length} arguments from string: "${str}"`);
+        } else if (clauseFn === NOT && argArr.length !== 1) {
+            throw new Futils.SyntaxException(`NOT clause must have exactly one argument; got: ${argArr.length} arguments from string: "${str}"`);
+        }
         const fns = argArr.reduce((acc, arg) => {
             acc.localFilters.push(...this.parseFilters(arg).localFilters); 
             acc.globalFilters.push(...this.parseFilters(arg).globalFilters);
             return acc
-        }, this.getEmptyFilters());
+        }, FilterSyntaxParser.getEmptyFilters());
         if (fns.globalFilters.length > 0) {
             throw new Futils.SyntaxException(`Global filters not allowed in clause functions; got: ${fns.globalFilters} from string: "${str}"`);
         }
@@ -529,43 +564,18 @@ class FilterSyntaxParser {
 
         // Validate operator
         if (!OPERATOR_MAP[operator]) {
-            throw new Futils.SyntaxException(`Invalid operator in base filter; got: "${operator} as operator in filter: "${str}"`);
+            throw new Futils.SyntaxException(`Invalid operator in base filter; got: "${operator}" as the operator in filter: [${str}]`);
         }
         const opFn = OPERATOR_MAP[operator];
 
         // try to converty to field types and data types
-        try {
-            if (left in FieldType.FIELD_EXTRACT_FN_MAP) {
-                left = new FieldType(left);
-            } else {
-                left = parseDataType(left, HM, this.SeasonDetails);
-            }
-        } catch (e) {
-            for (let key in FieldType.FIELD_EXTRACT_FN_MAP) {
-                if (left.includes(key) || key.includes(left)) {
-                    throw new Futils.SyntaxException(`Could not parse left side of filter; got: "${left}" from filter: "${str}", did you mean to use '${key}' as a field instead?`);
-                }
-            }
-        }
-        try {
-            if (right in FieldType.FIELD_EXTRACT_FN_MAP) {
-                right = new FieldType(right);
-            } else {
-                right = parseDataType(right, HM, this.SeasonDetails);
-            }
-        } catch (e) {
-            for (let key in FieldType.FIELD_EXTRACT_FN_MAP) {
-                if (right.includes(key) || key.includes(right)) {
-                    throw new Futils.SyntaxException(`Could not parse left side of filter; got: "${right}" from filter: "${str}", did you mean to use '${key}' as a field instead?`);
-                }
-            }
-            throw new Futils.SyntaxException(`Could not parse right side of filter; got: "${right}" from filter: "${str}", error: ${e.message}`);
-        }
+        left = tryParseFilterElement("left", left, str, HM, this.SeasonDetails);
+        right = tryParseFilterElement("right", right, str, HM, this.SeasonDetails);
 
         // validate filter
         if (operator === "in" || operator === "!in") {
             if (!(right instanceof SetType || right instanceof RangeType)) {
-                if(!right instanceof FieldType || ! right.str in ["p1.picks", "p2.picks", "p1.prebans", "p2.prebans"]) {
+                if(!(right instanceof FieldType) || !(["p1.picks", "p2.picks", "p1.prebans", "p2.prebans"].includes(right.str))) {
                     throw new Futils.TypeException(`When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '${str}'`);
                 }
             }
@@ -605,7 +615,7 @@ class FilterSyntaxParser {
 
         if (str === "") {
             console.log("Empty filter string; Returning empty filters");
-            return this.getEmptyFilters();
+            return FilterSyntaxParser.getEmptyFilters();
         }
         str = str.trim();
         let split = str.split(";").filter(s => s.length > 0);
@@ -631,11 +641,11 @@ class FilterSyntaxParser {
                 acc.localFilters.push(...this.parseFilters(arg).localFilters); 
                 acc.globalFilters.push(...this.parseFilters(arg).globalFilters);
                 return acc
-            }, this.getEmptyFilters());
+            }, FilterSyntaxParser.getEmptyFilters());
         }
         const filterString = split[0];
         if (filterString.length < 4) {
-            throw new Futils.SyntaxException(`Filter string cannot be valid (less than 4 characters); got filter string: "${filterString}"`);
+            throw new Futils.SyntaxException(`Filter string cannot be valid (less than 4 characters); got filter string: [${filterString}]`);
         }
         const splitFilterString = filterString.split("(");
         const fn = FN_MAP[splitFilterString[0]];

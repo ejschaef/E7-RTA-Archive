@@ -1,6 +1,6 @@
 import BattleManager from "./e7/battle-manager.js";
 import ClientCache from "./cache-manager.js";
-import PYAPI from "./pyAPI.js";
+import PYAPI from "./py-API.js";
 import HeroManager from "./e7/hero-manager.js"
 import FilterSyntaxParser from "./e7/filter-syntax.js";
 
@@ -90,6 +90,7 @@ let PageUtils = {
             filterMSG.classList.add("text-safe");
             return true;
         } catch(err) {
+            console.error(err);
             filterMSG.textContent = `Validation Failed: ${err.message}`;
             filterMSG.classList.remove("text-safe");
             filterMSG.classList.add("text-danger");

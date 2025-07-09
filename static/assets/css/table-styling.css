@@ -1,5 +1,5 @@
-/* Only applies to cells in #SeasonDetails */
-#BattlesTable td.no-wrap, #SeasonDetails th.no-wrap {
+table.dataTable th.nowrap, 
+table.dataTable td.nowrap {
   white-space: nowrap !important;
 }
 
@@ -7,4 +7,20 @@
 #BattlesTable.dataTable {
   table-layout: auto !important;
   width: auto !important;
+}
+
+table.filter-syntax-table td {
+  padding-bottom: 4px;
+  padding-top: 4px;
+  border-bottom: 1px solid #ffffff4d;
+  border-top: 1px solid #ffffff4d;
+}
+
+table.filter-syntax-table tbody tr:first-child td {
+  border-top: none !important;
+}
+
+/* Remove bottom border on the last row */
+table.filter-syntax-table tbody tr:last-child td {
+  border-bottom: none !important;
 }

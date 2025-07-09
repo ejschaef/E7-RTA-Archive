@@ -17,7 +17,11 @@ def get_all_user_data(world_code: str):
         return
     world_code = world_code.replace("world_", "")
     api_url = f"https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_{world_code}.json"
-    return utils.load_json_from_url(api_url)["users"]
+    result = utils.load_json_from_url(api_url)
+    if result is None:
+        print(f"No User Data returned: code {world_code} not in {refs.WORLD_CODES}")
+        return None
+    return result['users']
 
 class User:
     __slots__ = 'id', 'name', 'level', 'world_code'
@@ -53,6 +57,8 @@ class UserManager:
         
     def load_server_users(self, world_code):
         user_data = get_all_user_data(world_code)
+        if user_data is None:
+            raise Exception(f"No User Data returned: code {world_code} not in {refs.WORLD_CODES}")
         id_dict = {}
         name_server_dict = {}
         user_objs = []

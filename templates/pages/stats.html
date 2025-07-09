@@ -1,0 +1,525 @@
+{% extends "layouts/base-herostats.html" %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<div class="pc-container d-none" id="content-body">
+    <div class="pc-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h3 class="mb-0">RTA Unit Data</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+
+            <!-- [ season details table ] start -->
+            <div class="col-sm-6 min-width-450">
+                <div class="card aqua-kpi height-400">
+                    <div class="card-header kpi-header">
+                        <h5 class="text-white">Season Details</h5>
+                    </div>
+                    <div class="card-body kpi-body rel-height-80">
+                        <div class="rel-height-100">
+                            <table id="SeasonDetails" class="scrollables scrollables-aqua interior-border-tbl clean-table align-center-except-second col2-150">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Season</th>
+                                        <th scope="col">Start</th>
+                                        <th scope="col">End</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="SeasonDetailsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ season details table ] end -->
+
+            <!-- [ filter code mirror ] start -->
+            <div class="col-sm-6 min-width-450">
+                <div class="card height-400">
+                    <div class="card-header kpi-header">
+                        <h5>Filter battles for calculations</h5>
+                    </div>
+                    <div class="card-body text-center tight-fit rel-height-100">
+                        <div class="row justify-content-center">
+                            <span class="d-block mb-1 rel-width-80 scrollable-60px" id="filterMSG">&nbsp;</span>
+                            <form method="post" id="filterForm" class="card-body">
+                                {{ form.hidden_tag() }}
+                                <textarea id="codeArea" name="code" class="codemirror-hidden">{{ code or '' }}</textarea>
+                                <div class="d-flex justify-content-center gap-3 mt-4">
+                                    <button type="submit" name="check-syntax" value="check" class="btn shadow px-sm-1">Check Syntax</button>
+                                    <button type="submit" name="apply-filter" value="apply" class="btn shadow px-sm-1">Apply Filter</button>
+                                    <button type="submit" name="clear-filter" value="clear" class="btn shadow px-sm-1">Clear Filter</button>
+                                    <div class="toggle-container-vertical" id="auto-zoom-toggle-container">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="auto-zoom-flag">
+                                            <span class="toggle-switch-background">
+                                            <span class="toggle-switch-handle"></span>
+                                            </span>
+                                        </label>
+                                        <h6>Auto-Zoom</h6>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ filter code mirror ] end -->
+
+
+            <!-- [ fp/sp counts section ] start -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Total Battles:</h5>
+                            </div>
+                            <div class="col-5 text-align-left">
+                                <h5 class="f-w-200 d-inline m-b-0" id="total-battles">&nbsp;</h5>
+                            </div>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">1st Pick Games:</h5>
+                            </div>
+                            <div class="col-5 text-align-left">
+                                <h5 class="f-w-200 d-inline m-b-0" id="firstpick-count">&nbsp;</h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0" id="firstpick-rate">&nbsp;</p>
+                            </div>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">2nd Pick Games:</h5>
+                            </div>
+                            <div class="col-5 text-align-left">
+                                <h5 class="f-w-200 d-inline  m-b-0" id="secondpick-count">&nbsp;</h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0" id="secondpick-rate">&nbsp;</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ fp/sp counts section ] end -->
+
+            <!-- [ streaks section ] start -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Total Wins:</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="total-wins">&nbsp;</h5>
+                            </div>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Max Win Streak:</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="max-win-streak">&nbsp;</h5>
+                            </div>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Max Loss Streak:</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="max-loss-streak">&nbsp;</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ streaks section ] end -->
+
+            <!-- [ fp/sp winrates section ] start -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Total Win Rate:</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="total-winrate">&nbsp;</h5>
+                            </div>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">1st Pick Win Rate:</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="firstpick-winrate">&nbsp;</h5>
+                            </div>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">2nd Pick Win Rate:</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="secondpick-winrate">&nbsp;</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ fp/sp winrates section ] end -->
+
+            <!-- [ first pick stats table ] start -->
+            <div class="col-sm-6 min-width-450">
+                <div class="card aqua-kpi height-300">
+                    <div class="card-header kpi-header">
+                        <h5 class="text-white">Firstpick Hero Stats</h5>
+                    </div>
+                    <div class="card-body kpi-body rel-height-80">
+                        <div class="rel-height-100">
+                            <table id="FirstpickStats" class="scrollables scrollables-aqua interior-border-tbl clean-table align-center-except-first col1-150">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Hero</th>
+                                        <th scope="col">Battles</th>
+                                        <th scope="col">Pick Rate</th>
+                                        <th scope="col">Win Rate</th>
+                                        <th scope="col">+/-</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="FirstpickStatsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ first pick stats table ] end -->
+
+
+            <!-- [ preban stats table ] start -->
+            <div class="col-sm-6 min-width-450">
+                <div class="card aqua-kpi height-300">
+                    <div class="card-header kpi-header">
+                        <h5 class="text-white">Preban Stats</h5>
+                    </div>
+                    <div class="card-body kpi-body rel-height-80">
+                        <div class="rel-height-100">
+                            <table id="PrebanStats" class="scrollables scrollables-aqua interior-border-tbl clean-table align-center-except-first col1-150">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Preban</th>
+                                        <th scope="col">Battles</th>
+                                        <th scope="col">Ban Rate</th>
+                                        <th scope="col">Win Rate</th>
+                                        <th scope="col">+/-</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="PrebanStatsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ preban stats table ] end -->
+
+
+            <!-- [ plot section ] start -->
+            <div class="col-sm-12" id="rank-plot-col" style="width:100%">
+                <div class="card" style="width:100%">
+                    <div id="rank-plot-container"></div>
+                </div>
+            </div>
+
+            <script>
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'));
+                }, 10);
+            </script>
+            <!-- [ plot section ] end -->
+
+            <!-- [ player hero stats section ] start -->
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-header fixed-height-table-header">
+                        <h5>Player Heroes</h5>
+                        <br>
+                        <h6 style="font-size: 0.7em;">
+                            Displays statistics for heroes computed
+                            based on battles when they appear on the player's team.
+                        </h6>
+                    </div>
+                    <div class="card-body kpi-body">
+                        <table id="PlayerTable" class="display compact cell-border" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Hero Name</th>
+                                    <th scope="col">Wins</th>
+                                    <th scope="col">Battles</th>
+                                    <th scope="col">Pick Rate</th>
+                                    <th scope="col">Win rate</th>
+                                    <th scope="col">+/-</th>
+                                </tr>
+                            </thead>
+                            <tbody id="PlayerTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- [ player hero stats section ] end -->
+
+            <!-- [ opponent hero stats section ] start -->
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-header fixed-height-table-header">
+                        <h5>Enemy Heroes</h5>
+                        <br>
+                        <h6 style="font-size: 0.7em;">
+                            Displays statistics for heroes computed based on battles when they appear on the enemy team.
+                            The win rate and +/- is relative to the player, and the pick rate is relative to the opponent.
+                        </h6>
+                    </div>
+                    <div class="card-body kpi-body">
+                        <table id="OpponentTable" class="display compact cell-border" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Hero Name</th>
+                                    <th scope="col">Wins</th>
+                                    <th scope="col">Battles</th>
+                                    <th scope="col">Pick Rate</th>
+                                    <th scope="col">Win rate</th>
+                                    <th scope="col">+/-</th>
+                                </tr>
+                            </thead>
+                            <tbody id="OpponentTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- [ opponent hero stats section ] end -->
+
+            <!-- [ battles df section ] start -->
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header text-center kpi-header">
+                        <h3>Player Battles</h3>
+                        <h5 style="font-size: 0.7em;">
+                            Displays information for each of the player's battles. Export this table and upload to maintain hostory Two star heroes will show as 'Fodder'.
+                        </h5>
+                    </div>
+                    <div class="card-body kpi-body">
+                        <div class="toggle-container" id="filter-battle-toggle-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="filter-battle-table">
+                                <span class="toggle-switch-background">
+                                <span class="toggle-switch-handle"></span>
+                                </span>
+                            </label>
+                            <h6>Apply Filters to Table</h6>
+                        </div>
+                        <table id="BattlesTable" class="display compact cell-border" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Date/Time</th>
+                                    <th scope="col">Seq Num</th>
+                                    <th scope="col">P1 ID</th>
+                                    <th scope="col">P2 ID</th>
+                                    <th scope="col">P1 League</th>
+                                    <th scope="col">P2 League</th>
+                                    <th scope="col">P1 Points</th>
+                                    <th scope="col">Win</th>
+                                    <th scope="col">Firstpick</th>
+                                    <th scope="col">P1 Preban 1</th>
+                                    <th scope="col">P1 Preban 2</th>
+                                    <th scope="col">P2 Preban 1</th>
+                                    <th scope="col">P2 Preban 2</th>
+                                    <th scope="col">P1 Pick 1</th>
+                                    <th scope="col">P1 Pick 2</th>
+                                    <th scope="col">P1 Pick 3</th>
+                                    <th scope="col">P1 Pick 4</th>
+                                    <th scope="col">P1 Pick 5</th>
+                                    <th scope="col">P2 Pick 1</th>
+                                    <th scope="col">P2 Pick 2</th>
+                                    <th scope="col">P2 Pick 3</th>
+                                    <th scope="col">P2 Pick 4</th>
+                                    <th scope="col">P2 Pick 5</th>
+                                    <th scope="col">P1 Postban</th>
+                                    <th scope="col">P2 Postban</th>
+                                </tr>
+                            </thead>
+                            <tbody id="BattlesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- [ battles df stats section ] end -->
+        </div>
+    </div>
+</div>
+    {% endblock content %}
+
+    {% block extra_js %}
+
+<script type="module"> 
+    import { PageUtils, RegExps, Tables, CardContent, ContentManager } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+
+    console.log("Attaching DOMContentLoaded listener");
+    document.addEventListener("DOMContentLoaded", async () => {
+
+        const params = new URLSearchParams(window.location.search);
+        const paramObj = Object.fromEntries(params.entries());
+        console.log("GOT PARAMS:", paramObj);
+
+        const autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+        autoZoomCheckbox.checked = await ContentManager.ClientCache.getFlag("autoZoom");
+        autoZoomCheckbox.addEventListener("click", async () => {
+            await ContentManager.ClientCache.setFlag("autoZoom", autoZoomCheckbox.checked);
+        });
+
+        const user = await ContentManager.ClientCache.getUser();
+
+        if (!user) {
+            window.location.href = URLS.addStrParam(URLS.userQueryURL, "errorMSG", "Type1: no user"); //URLS.userQueryURL;
+        }
+
+        if (params.get("errorMSG")) {
+            const filterMSG = document.getElementById("filterMSG");
+            filterMSG.textContent = params.get("errorMSG");
+            filterMSG.classList.remove("text-safe");
+            filterMSG.classList.add("text-danger");
+        }
+
+        document.getElementById("switch-user-btn").addEventListener("click", async () => {
+            console.log("Clearing User Data");
+            await ContentManager.ClientCache.clearUserData();
+            window.location.href = URLS.userQueryURL;
+        });
+
+
+        console.log("POPULATING DATA PROCESS INITIATED");
+        
+        try {
+            console.log("Getting Season Details");
+            const seasonDetails = await ContentManager.SeasonManager.getSeasonDetails();
+            console.log("Got season details:", seasonDetails, typeof(seasonDetails));
+
+            console.log("Getting Stats");
+            const stats = await ContentManager.ClientCache.getStats();
+
+            //console.log("GOT STATS: ", JSON.stringify(stats));
+
+            console.time("populateTables");
+            console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS");
+            Tables.functions.populateSeasonDetailsTable('SeasonDetails', seasonDetails);
+            Tables.functions.populateHeroStatsTable('PlayerTable', stats.playerHeroStats);
+            Tables.functions.populateHeroStatsTable('OpponentTable', stats.enemyHeroStats);
+            Tables.functions.populatePlayerFirstpickTable('FirstpickStats', stats.firstpickStats);
+            Tables.functions.populatePlayerPrebansTable('PrebanStats', stats.prebanStats);
+            const battleTable = Tables.functions.populateFullBattlesTable('BattlesTable', stats.battles, user);
+            CardContent.functions.populateBattleCounts(stats.generalStats);
+            CardContent.functions.populateBattlePercents(stats.generalStats);
+            CardContent.functions.populateBattleStreaks(stats.generalStats);
+            CardContent.functions.populateRankPlot(stats.plotContent);
+            console.log("FINISHED POPULATING");
+            console.timeEnd("populateTables");
+            
+            console.log("Setting listener for filter-battle-table checkbox");
+            const filterBattleTableCheckbox = document.getElementById("filter-battle-table");
+            filterBattleTableCheckbox.addEventListener("click", async () => {
+                if (!filterBattleTableCheckbox.checked) {
+                    Tables.functions.replaceDatatableData(battleTable, stats.battles);
+                } else {
+                    Tables.functions.replaceDatatableData(battleTable, stats.filteredBattles);
+                }
+            });
+
+        } catch (err) {
+            console.error("Error loading data:", err);
+        };
+
+        // render content once all data is loaded
+        document.getElementById("content-body").classList.remove('d-none');
+
+        CodeMirror.defineMode("filterSyntax", function() {
+            return {
+                token: function(stream, state) {
+                    return RegExps.tokenMatch(stream);
+                }
+            };
+        });
+
+        const textarea = document.getElementById("codeArea");
+        let editor = CodeMirror.fromTextArea(textarea, {
+            mode: "filterSyntax",
+            lineNumbers: true,
+            theme: "default"
+        });
+
+        editor.setSize(null, 185);
+
+        const appliedFilter = await ContentManager.ClientCache.getFilterStr();
+        if (appliedFilter) {
+            editor.setValue(appliedFilter);
+        }
+
+        // Intercept form submission
+        const filterForm = document.getElementById("filterForm");
+        filterForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent actual form submission to server
+
+            // Ensure value is synced back to textarea before submit ; not strictly necessary since processed client-side
+            document.getElementById("codeArea").value = editor.getValue();
+
+            console.log("Processing Filter Action");
+            const clickedButton = event.submitter;
+            const action = clickedButton?.value;
+            const syntaxStr = editor.getValue();
+            if (action === "apply") {
+                const validFilter = await PageUtils.validateFilterSyntax(syntaxStr);
+                if (validFilter) {
+                    await ContentManager.ClientCache.setFilterStr(syntaxStr);
+                    const autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+                    const autoZoomFlag = autoZoomCheckbox.checked;
+                    const loadParams = {
+                        autoZoom: autoZoomFlag,
+                        query: "false"
+                    }
+                    window.location.href = URLS.addStrParams(URLS.loadData, loadParams);
+                }
+            } else if (action === "check") {
+                console.log("Checking Str", syntaxStr);
+                await PageUtils.validateFilterSyntax(syntaxStr);
+            } else if (action === "clear") {
+                editor.setValue("");
+                if (appliedFilter) {
+                    console.log("Found filter str", appliedFilter);
+                    await ContentManager.ClientCache.setFilterStr("");
+                    const loadParams = {
+                        autoZoom: autoZoomFlag,
+                        query: "false"
+                    }
+                    window.location.href = URLS.addStrParams(URLS.loadData, loadParams);;
+                }
+            }
+        });
+
+        // Optional: sync changes back to textarea if needed
+        editor.on("change", () => {
+            editor.save(); // Updates the hidden textarea for form submit
+        });
+
+        // Show the editor after it's initialized
+        textarea.classList.remove('codemirror-hidden');
+
+    });
+</script>
+
+    {% endblock extra_js %}

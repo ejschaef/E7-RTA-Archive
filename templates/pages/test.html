@@ -49,29 +49,8 @@
 {% block extra_js %}
 
 <script type="module">
-    import { PYAPI, ClientCache, FilterSyntaxParser, HeroManager, BattleManager, test } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+    import { PYAPI, test } from "{{ url_for('static', filename='assets/js/exports.js') }}";
     document.addEventListener("DOMContentLoaded", async () => {
-        //ClientCache.clearUserData();
-
-        const HM = await HeroManager.getHeroManager();
-
-        /* 
-        const seasonDetails = JSON.parse({{ season_details | tojson }});
-
-        console.log(`Season Details: ${JSON.stringify(seasonDetails)}`);
-
-        let syntax_str = `
-            2365 < victory-points;
-            2024-04-12 >= p1.picks;
-            'Zio' <>in p1.picks;
-            OR( 2022-04-12 < battle-date, p1.league = "champion")
-        `;
-        
-        let parser = await FilterSyntaxParser.createAndParse(syntax_str, HM);
-
-        console.log(`Filter Syntax: ${parser.toString()}`);
-
-        */
 
         await test();
         

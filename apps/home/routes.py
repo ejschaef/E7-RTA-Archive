@@ -232,19 +232,19 @@ def filter_syntax():
 # START HERO STATS SECTION
 ########################################################################################################
 
-@blueprint.route('/hero_stats', methods=['GET'])
-def hero_stats():
+@blueprint.route('/stats', methods=['GET'])
+def stats():
     form = CodeForm()
     code = request.form.get('code')
 
-    context = {'segment' : 'hero_stats', 
+    context = {'segment' : 'stats', 
                'form' : form,
                'code' : code,
     }
 
     print("RENDERING STATS")
 
-    return render_template('pages/hero_stats.html', **context)
+    return render_template('pages/stats.html', **context)
 
 
 ########################################################################################################

@@ -39,6 +39,9 @@ class Config(object):
     SESSION_REDIS = redis.from_url(SESSION_DB.str)
     PERMANENT_SESSION_LIFETIME = timedelta(days=5)
 
+    # ContentManger save path
+    APP_DATA_PATH = os.path.join(BASE_DIR, 'app_data')
+
     # Set up the App SECRET_KEY
     SECRET_KEY  = os.getenv('SECRET_KEY', secrets.token_hex(32))
 

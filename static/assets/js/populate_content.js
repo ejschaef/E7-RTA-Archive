@@ -47,6 +47,22 @@ Tables.functions = {
                         }
                     ]
                 },
+                columnDefs: [
+                    { 
+                        targets: '_all', className: 'nowrap' 
+                    },
+                    {
+                        targets: 4, // "win_rate" column
+                        createdCell: function(td, cellData) {
+                            const num = Number(cellData.replace("%", ""));
+                            if (num < 50) {
+                                td.style.color = 'red';
+                            } else if (num > 50) {
+                                td.style.color = 'mediumspringgreen';
+                            }
+                        }
+                    },
+                ],
                 pageLength: 50,
                 scrollY: '300px',
                 deferRender: true,
@@ -173,7 +189,7 @@ Tables.functions = {
                 order: [[0, 'desc']], // Sort by Date/Time desc by default
                 columnDefs: [
                     { 
-                        targets: '_all', className: 'no-wrap' 
+                        targets: '_all', className: 'nowrap' 
                     },
                     {
                         targets: 7, // "Result" column
@@ -215,9 +231,41 @@ Tables.functions = {
                 deferRender: true,
                 scroller: true,
                 scrollCollapse: false,
+                columns: [
+                    { data: 'Date/Time' },
+                    { data: 'Seq Num' },
+                    { data: 'P1 ID' },
+                    { data: 'P2 ID' },
+                    { data: 'P1 League' },
+                    { data: 'P2 League' },
+                    { data: 'P1 Points' },
+                    { data: 'Win' },
+                    { data: 'Firstpick' },
+                    { data: 'P1 Preban 1' },
+                    { data: 'P1 Preban 2' },
+                    { data: 'P2 Preban 1' },
+                    { data: 'P2 Preban 2' },
+                    { data: 'P1 Pick 1' },
+                    { data: 'P1 Pick 2' },
+                    { data: 'P1 Pick 3' },
+                    { data: 'P1 Pick 4' },
+                    { data: 'P1 Pick 5' },
+                    { data: 'P2 Pick 1' },
+                    { data: 'P2 Pick 2' },
+                    { data: 'P2 Pick 3' },
+                    { data: 'P2 Pick 4' },
+                    { data: 'P2 Pick 5' },
+                    { data: 'P1 Postban' },
+                    { data: 'P2 Postban' },
+                ],
             }
         );
+        return table;
     },
+
+    replaceDatatableData(datatableReference, data) {
+        datatableReference.clear().rows.add(data).draw();
+    }
 
 };
 
@@ -237,6 +285,12 @@ CardContent.functions = {
         document.getElementById("total-winrate").textContent = general_stats.total_winrate;
         document.getElementById("firstpick-winrate").textContent = general_stats.firstpick_winrate;
         document.getElementById("secondpick-winrate").textContent = general_stats.secondpick_winrate; 
+    },
+
+    populateBattleStreaks: function(general_stats) {
+        document.getElementById("total-wins").textContent = general_stats.total_wins;
+        document.getElementById("max-win-streak").textContent = general_stats.max_win_streak;
+        document.getElementById("max-loss-streak").textContent = general_stats.max_loss_streak; 
     },
 
     populateRankPlot: function(rank_plot_html) {

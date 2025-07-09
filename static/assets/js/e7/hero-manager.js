@@ -1,7 +1,8 @@
 import ClientCache from "../cache-manager.js";
 import { printObjStruct } from './e7-utils.js';
 import { PRIMES } from "./references.js";
-import PYAPI from '../pyAPI.js'
+import PYAPI from '../py-API.js'
+import E7API from "../e7-API.js";
 
 const FODDER_NAME = "Fodder";
 const EMPTY_NAME = "Empty";
@@ -85,7 +86,7 @@ let HeroManager = {
   },
 
   fetchHeroManager: async function() {
-    const heroJSON = await PYAPI.fetchHeroData();
+    const heroJSON = await E7API.fetchHeroJSON() ?? await PYAPI.fetchHeroData();
     const enHeroList = heroJSON.en; //get english hero list
     const HM = this.createHeroManager(enHeroList);
     console.log("Created HeroManager using raw data received from server");

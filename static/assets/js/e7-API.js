@@ -1,0 +1,73 @@
+import { WORLD_CODES } from "./e7/references.js";
+
+const HERO_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json";
+
+async function fetchE7Data(url) {
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Fetched data from E7 Server; keys:", Object.keys(data));
+        return data;
+
+    } catch (error) {
+        console.error("Error fetching global user data:", error);
+        return null;
+    }
+}
+
+async function fetchHeroJSON(lang=null) {
+    console.log(`Fetching hero data (lang=${lang ?? "all"}) from E7 Server...`);
+    let data = await fetchE7Data(HERO_URL);
+    if (lang && data[lang]) {
+        data = data[lang];
+    } else if (lang && !data[lang]) {
+        console.error("Could not find hero data for language:", lang);
+        data = null;
+    }
+    return data;
+}
+
+async function fetchUserJSON(world_code) {
+    world_code = world_code.replace("world_", "");
+    if (![...WORLD_CODES].some(code => code.replace("world_", "") === world_code)) {
+        console.error(`Could not find world code: ${world_code}`);
+        return null;
+    }
+    console.log(`Fetching users for world code: ${world_code} from E7 Server...`);
+    const url = `https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_${world_code}.json`;
+    const data = await fetchE7Data(url);
+    if (data) {
+        console.log(`Got user data for world: ${world_code} ; Found ${data.users.length} users`);
+    }
+    return data;
+}
+
+function createUser(userJSON, world_code) {
+    return {
+        "id"         : userJSON.nick_no,
+        "name"       : userJSON.nick_nm.toLowerCase(),
+        "code"       : userJSON.code,
+        "rank"       : userJSON.rank,
+        "world_code" : world_code
+    }
+}
+
+async function getUserList(world_code) {
+    const rawUserJSON = await fetchUserJSON(world_code);
+    if (!rawUserList) {
+        return null;
+    }
+    return rawUserJSON.users.map(user => createUser(user, world_code));
+}
+
+let E7API = {
+    fetchHeroJSON: fetchHeroJSON,
+    fetchUserJSON: fetchUserJSON
+}
+
+export default E7API;

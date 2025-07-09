@@ -2,10 +2,13 @@ from typing import Self
 from apps.e7_utils.hero_manager import HeroManager
 from apps.e7_utils.user_manager import UserManager
 from apps.e7_utils.season_details import get_rta_seasons_df
+from apps.e7_utils.utils import load_pickle, save_pickle
 from apps.references.cached_var_keys import CONTENT_MNGR_KEY
 import pickle
 import pandas as pd
 from apps.redis_manager import GLOBAL_DB
+from apps.config import *
+from datetime import datetime
 
 GLOBAL_CLIENT = GLOBAL_DB.get_client()
 
@@ -13,17 +16,32 @@ GLOBAL_CLIENT = GLOBAL_DB.get_client()
 _reference_obj = None
 _reference_loaded_at = 0
 
+HERO_MANAGER_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'hero_manager.pickle')
+USER_MANAGER_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'user_manager.pickle')
+SEASON_DETAILS_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'season_details.pickle')
+
+def try_load(obj_name, fetch_fn, pickle_path):
+    try:
+        raise Exception("USING BACKUPS: MUST REMOVE WHEN DEPLOYING PROD INSTANCE")
+        obj = fetch_fn()
+        print(f"{obj_name} Loaded From E7 API")
+        save_pickle(obj, pickle_path)
+        print(f"{obj_name} Saved To Pickle Backup")
+        return obj
+    except Exception as e:
+        print(f"ERROR LOADING FROM E7 API: {str(e)}")
+        obj = load_pickle(pickle_path)
+        modified_datetime = datetime.fromtimestamp(os.path.getmtime(pickle_path))
+        print(f"{obj_name} Loaded From Pickle Backup last updated: {modified_datetime}")
+        return obj
+
 class ContentManager:
 
     def __init__(self):
         print("Initializing ContentManager")
-        self.HeroManager     : HeroManager  = HeroManager()
-        print("Hero Manager Loaded")
-        self.UserManager    : UserManager  = UserManager(load_all=True)
-        print("User Manager Loaded")
-        self.SeasonDetails  : pd.DataFrame = get_rta_seasons_df()
-        print("Season Details Loaded")
-        self.SeasonDetailsJSON = self.get_season_details_json()
+        self.HeroManager     : HeroManager  = try_load("HeroManager", lambda: HeroManager(), HERO_MANAGER_PICKLE_PATH)
+        self.UserManager     : UserManager  = try_load("UserManager", lambda: UserManager(load_all=True), USER_MANAGER_PICKLE_PATH)
+        self.SeasonDetails   : pd.DataFrame = try_load("SeasonDetails", get_rta_seasons_df, SEASON_DETAILS_PICKLE_PATH)
 
     @classmethod
     def decode(cls, str) -> Self:

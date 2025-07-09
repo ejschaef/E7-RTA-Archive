@@ -19,8 +19,8 @@
               <div class="card-header">
                 <h3>General Overview</h3>
                 <p>
-                  This page details the rules for writing filters within the Hero Stats page. Examples will be shown below, 
-                  and furthermore, a space to practice writing and validating filters is located at the bottom of this page.
+                  This page details the rules for writing filters within the Hero Stats page. Examples will be shown below 
+                  along with space to practice writing and validating filters.
                 </p>
               </div>
               <div class="card-body pc-component">
@@ -73,13 +73,13 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-12">
             <div class="card">
               <div class="card-header">
                 <h5>Fields</h5>
               </div>
               <div class="card-body pc-component text-sm">
-                <table class="table table-borderless cm-datafield" style="width: 100%;">
+                <table class="table filter-syntax-table" style="width: 100%;">
                   <tbody>
                     <tr>
                       <td class="cm-datafield" style="white-space: nowrap;">date</td>
@@ -114,22 +114,49 @@
                   </tbody>
                 </table>
                 <P>Attributes</P>
-                <P class="text-sm">(access by using the syntax p1.'attribute here' or p2.'attribute here'; example: p1.pick1 -> first picked hero by player 1)</P>
-                <ul class="list-unstyled cm-datafield">
-                  <li>Lorem ipsum dolor sit amet</li>
-                  <li>Faucibus porta lacus fringilla vel</li>
-                  <li>Eget porttitor lorem</li>
-                </ul>
+                <P class="text-sm">Attributes are types of fields that are accessed by using the syntax 
+                  p1.'attribute here' or p2.'attribute here' ; for example, 'p1.pick1' is used to access the 
+                  first picked hero by player 1 in the battle.</P>
+                <table class="table filter-syntax-table" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">pick[n]</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Accesses pick n for the corresponsing player. 
+                        Replace [n] with numbers 1 - 5 to access the corresponding pick.</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">picks</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Accesses a set of all 5 picks for the specified player</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">league</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">a string value that gives the league the specified player ended the battle in (i.e. emperor, warlord, etc.)</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">prebans</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Accesses the set of the 2 heroes prebanned by the specified player</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">postban</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Accesses the hero postbanned by the speficied player</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-12">
             <div class="card">
               <div class="card-header">
                 <h5>Declared Data</h5>
               </div>
               <div class="card-body pc-component text-sm">
-                <table class="table table-borderless cm-datafield" style="width: 100%;">
+                <table class="table filter-syntax-table" style="width: 100%;">
                   <tbody>
                     <tr>
                       <td class="cm-number" style="white-space: nowrap;">Integer</td>
@@ -168,38 +195,193 @@
                   X and Y must either both be integers or both be dates 
                   (example: 2025-05-01...2025-06-01 yields a set of all dates in May 2025)</td>
                     </tr>
+                    <tr>
+                      <td class="cm-datafield" style="white-space: nowrap;">Season</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Used to easily define a range of dates corresponding particular seasons or preseasons.
+                        Can be declared by writing "season-n" without quotes, where n is the number of the desired season. 
+                        Season numbers and dates can be seen in the season details table at the top of the stats page. The keyword 
+                        "current-season" can alternatively be used to access the active season.
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-12">
             <div class="card">
               <div class="card-header">
                 <h5>Operators</h5>
               </div>
-              <div class="card-body pc-component cm-operator-normal text-sm">
-                <ul class="list-unstyled">
-                  <li>Lorem ipsum dolor sit amet</li>
-                  <li>Integer molestie lorem at massa
-                    <ul>
-                      <li>Phasellus iaculis neque</li>
-                    </ul>
-                  </li>
-                  <li>Faucibus porta lacus fringilla vel</li>
-                  <li>Eget porttitor lorem</li>
-                </ul>
-                <h5>Inline</h5>
-                <hr>
-                <ul class="list-inline m-b-0">
-                  <li class="list-inline-item">Lorem ipsum</li>
-                  <li class="list-inline-item">Phasellus iaculis</li>
-                  <li class="list-inline-item">Nulla volutpat</li>
-                </ul>
+              <div class="card-body pc-component text-sm">
+                <table class="table filter-syntax-table" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td class="cm-operator" style="white-space: nowrap;">=</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Checks if left side is equal to right side.</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-operator" style="white-space: nowrap;">=</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Checks if left side is not equal to right side.</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-operator" style="white-space: nowrap;">></td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Checks if left side is greater than right side,</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-operator" style="white-space: nowrap;">>=</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Checks if left side is greater than or equal to right side,</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-operator" style="white-space: nowrap;"><</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Checks if left side is less than right side,</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-operator" style="white-space: nowrap;"><=</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Checks if left side is less than or equal to right side,</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-operator" style="white-space: nowrap;">in</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Checks if the left side of the operator is contained within the right side. 
+                        The right side of the operator must be a Range, Set, or Field that corresponds to a set (i.e. p1.picks, p2.prebans, etc.).
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-operator" style="white-space: nowrap;">!in</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Checks if the left side of the operator is not contained within the right side. 
+                        The right side of the operator must be a Range, Set, or Field that corresponds to a set (i.e. p1.picks, p2.prebans, etc.).
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>Functions</h5>
+              </div>
+              <div class="card-body pc-component text-sm">
+                <P>Clause Functions</P>
+                <P class="text-sm">
+                  Clause functions generally take 1 or more filters as arguments and create logic gates to combine the result.
+                  Clause functions can take other clause functions as arguments, but the syntax tree must eventually terminate
+                  as base filters. Global Filter Functions cannot be used within Clause Functions.
+                </P>
+                <table class="table filter-syntax-table" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">AND</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Creates an AND gate for the filter arguments, returning
+                        true if alls arguments return true. An empty AND function will always return true
+                        Call using the syntax 'AND( arg1, arg2, ...)'
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">OR</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Creates an OR gate for the filter arguments, returning true if any argument returns true. 
+                        An empty OR function will always return false.
+                        Call using the syntax 'OR( arg1, arg2, ...)'
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">XOR</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Creates an XOR gate for the filter arguments, returning a boolean value based on a cascading XOR. 
+                        XOR requires at least 2 arguments to pass validation.
+                        Call using the syntax 'XOR( arg1, arg2, ...)'
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">NOT</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        The NOT function takes exactly one argument which must 
+                        be a filter (not an individual Field or Data Declaration)
+                        and inverts the boolean result. Call using the syntax 'NOT(arg)'.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <P>Global Filter Functions</P>
+                <P class="text-sm">
+                  Global filter functions are context aware, meaning that they cannot be applied to one battle in a vacuum.
+                  They require knowledge of the other battles to determine resulting truth value for the battle being processed.
+                  As such, they are affected by other filters in the chain. Therefore, to standardize behavior, all global 
+                  filter functions are hoisted to the top of the filter chain and executed in order.
+                </P>
+                <table class="table filter-syntax-table" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">last-N</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Filters for the most recent N battles. Requires and Integer as an argument.
+                        Call using the syntax 'last-N(Integer)'
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>Syntax Elements</h5>
+              </div>
+              <div class="card-body pc-component text-sm">
+                <table class="table filter-syntax-table" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td class="cm-bracket" style="white-space: nowrap;">;</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Must use semicolons to separate filters when multiple are used.
+                         Do not use semicolons in functions.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-bracket" style="white-space: nowrap;">,</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Commas are used to separate arguments to functions or sets.</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-bracket" style="white-space: nowrap;">()</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Parentheses are used to bound the arguments to function calls.</td>
+                    </tr>
+                    <tr>
+                      <td class="cm-bracket" style="white-space: nowrap;">{}</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">Braces are used to bound the arguments to a set declaration.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- [ Filter Syntax Rules ] end -->
+
+          <!-- [ Filter Examples ] start -->
+          <div class="col-sm-12">
             <div class="card">
               <div class="card-header">
                 <h5>Example Filter 1</h5>
@@ -210,12 +392,14 @@
                 </P>
               </div>
               <div class="card-body pc-component text-sm">
-                <textarea id="exFilter1" name="code" class="codemirror-hidden">
-                </textarea>
+                <div id="exFilter1-wrapper">
+                  <textarea id="exFilter1" name="code" class="codemirror-hidden">
+                  </textarea>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-12">
             <div class="card">
               <div class="card-header">
                 <h5>Example Filter 2</h5>
@@ -233,12 +417,14 @@
                 </P>
               </div>
               <div class="card-body pc-component text-sm">
-                <textarea id="exFilter2" name="code" class="codemirror-hidden">
-                </textarea>
+                <div id="exFilter2-wrapper">
+                  <textarea id="exFilter2" name="code" class="codemirror-hidden">
+                  </textarea>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-sm-12">
             <div class="card">
               <div class="card-header">
                 <h5>Example Filter 3</h5>
@@ -249,20 +435,40 @@
                 </P>
               </div>
               <div class="card-body pc-component text-sm">
-                <textarea id="exFilter3" name="code" class="codemirror-hidden">
-                </textarea>
+                <div id="exFilter3-wrapper">
+                  <textarea id="exFilter3" name="code" class="codemirror-hidden">
+                  </textarea>
+                </div>
               </div>
             </div>
           </div>
-          <!-- [ Filter Syntax Rules ] end -->
-          <!-- [ feather-icon ] start -->
           <div class="col-sm-12">
             <div class="card">
-              <div class="card-header text-center tight-fit">
+              <div class="card-header">
+                <h5>Example Filter 4</h5>
+                <P class="text-sm">
+                  This filter selects only games which occurred 
+                  in the pre-season following season 16 that the player won
+                </P>
+              </div>
+              <div class="card-body pc-component text-sm">
+                <div id="exFilter4-wrapper">
+                  <textarea id="exFilter4" name="code" class="codemirror-hidden">
+                  </textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- [ Filter Examples ] end -->
+
+          <!-- [ Filter Syntax Test ] start -->
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header text-center kpi-header tight-fit">
                 <h3>Test Filter Syntax</h3>
                 <h6 class="small-text">Write filter syntax below to test. Use the 'Check Syntax' button to verify the filter is properly formed.</h6>
               </div>
-              <div class="card-body text-center tight-fit">
+              <div class="card-body text-center kpi-body tight-fit">
                 <div class="row justify-content-center">
                   <span class="d-block mb-1 rel-width-80 scrollable-60px" id="filterMSG">&nbsp;</span>
                   <form method="post" id="filterForm" class="card-body">
@@ -276,7 +482,7 @@
               </div>
             </div>
           </div>
-          <!-- [ feather-icon ] end -->
+          <!-- [ Filter Syntax Test] end -->
         </div>
         <!-- [ Main Content ] end -->
       </div>
@@ -323,8 +529,7 @@
 date in current-season;
 is-firstpick = true;
 p1.pick1 in {lone wolf peira, new moon luna};
-OR("harsetti" in p1.prebans, "harsetti" in p2.prebans);
-    `;
+OR("harsetti" in p1.prebans, "harsetti" in p2.prebans);`;
 
     makeExFilter("exFilter1", ex1Str);
 
@@ -352,6 +557,12 @@ victory-points in 2500...=3000;`;
 
     makeExFilter("exFilter3", ex3Str);
 
+    const ex4Str = `
+date in season-16.5;
+is-win = true;`;
+
+    makeExFilter("exFilter4", ex4Str);
+
 
     const textarea = document.getElementById("codeArea");
     const editor = CodeMirror.fromTextArea(textarea, {
@@ -374,7 +585,7 @@ victory-points in 2500...=3000;`;
         const syntaxStr = editor.getValue();
         if (action === "check") {
             console.log("Checking Str", syntaxStr);
-            await PageUtils.validateFilterSyntaxNoCatch(syntaxStr);
+            await PageUtils.validateFilterSyntax(syntaxStr);
         }
     });
 

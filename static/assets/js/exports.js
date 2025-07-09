@@ -1,4 +1,4 @@
-import PYAPI from "./pyAPI.js";
+import PYAPI from "./py-API.js";
 import {Tables, CardContent} from "./populate_content.js";
 import CSVParse from "./csv-parse.js";
 import { test } from "./e7/test.js";

@@ -14,6 +14,9 @@ def get_rta_seasons_df():
         
         # No payload required, but still must use POST
         response = requests.post(url, headers=headers)
+        if not response.ok:
+             raise Exception(f"Failed to fetch season data from {url}. Status code: {response.status_code}")
+        
         df = pd.DataFrame(response.json()['result_body'])
         
         for col in df.columns:

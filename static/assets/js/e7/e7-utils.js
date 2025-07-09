@@ -27,13 +27,12 @@ async function getJSON(url) {
 
 function createUser(userJSON, world_code) {
     return {
-        "ID"         : userJSON.nick_no,
-        "Name"       : userJSON.nick_nm.toLowerCase(),
+        "id"         : userJSON.nick_no,
+        "name"       : userJSON.nick_nm.toLowerCase(),
         "code"       : userJSON.code,
         "rank"       : userJSON.rank,
         "world_code" : world_code
     }
-
 }
 
 async function getUsers(world_code) {

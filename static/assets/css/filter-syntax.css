@@ -51,3 +51,19 @@
     .cm-operator-normal { color: #b300ff !important; } /*Only used to show color in tables without needing italics*/
     .cm-bracket { color: #d8da7e !important; }  /* if you want neutral parentheses */
     .cm-range { color: #409dd7 !important; }
+
+#exFilter1-wrapper .CodeMirror {
+    max-height: 120px;             
+  }
+
+#exFilter2-wrapper .CodeMirror {
+    max-height: 200px;             
+  }
+
+#exFilter3-wrapper .CodeMirror {
+    max-height: 120px;             
+  }
+
+#exFilter4-wrapper .CodeMirror {
+    max-height: 100px;             
+  }

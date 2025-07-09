@@ -6,6 +6,7 @@ Created on Sun Apr  7 13:03:19 2024
 """
 
 import json
+import pickle
 import pandas as pd
 import requests
 import sys
@@ -38,8 +39,12 @@ def getsize(obj):
     
 def load_json_from_url(url):
     response = requests.get(url)
-    json_data = json.loads(response.text)
-    return json_data
+    if response.ok:
+        json_data = json.loads(response.text)
+        return json_data
+    else:
+        print(f"Failed to fetch data from {url}. Status code: {response.status_code}")
+        return None
 
 
 def list_of_dicts_to_dataframe(data, index_key=None):
@@ -101,6 +106,15 @@ def dict_to_dataframe(data_dict, index=False) -> pd.DataFrame:
         df = df.drop(col, axis=1)
 
     return df
+
+
+def load_pickle(file):
+    with open(file, 'rb') as f:
+        return pickle.load(f)
+    
+def save_pickle(data, file):
+    with open(file, 'wb') as f:
+        pickle.dump(data, f)
         
         
 if __name__ == "__main__":
