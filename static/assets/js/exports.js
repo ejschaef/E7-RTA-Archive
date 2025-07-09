@@ -5,6 +5,7 @@ import { test } from "./e7/test.js";
 import PageUtils from "./page-utils.js";
 import { RegExps } from "./e7/regex.js";
 import ContentManager from "./content-manager.js";
+import SavedFilters from "./e7/saved-filters.js";
 
 export { 
     PYAPI, 
@@ -14,4 +15,5 @@ export {
     PageUtils,
     RegExps,
     ContentManager,
+    SavedFilters
 };

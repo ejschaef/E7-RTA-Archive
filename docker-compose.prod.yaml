@@ -24,7 +24,7 @@ services:
     depends_on:
       - redis
 
-  celery_beat:
+  celery-beat:
     build: ./
     container_name: e7-celery-beat
     image: ejschaef/e7-celery-beat:latest

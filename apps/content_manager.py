@@ -42,6 +42,7 @@ class ContentManager:
         self.HeroManager     : HeroManager  = try_load("HeroManager", lambda: HeroManager(), HERO_MANAGER_PICKLE_PATH)
         self.UserManager     : UserManager  = try_load("UserManager", lambda: UserManager(load_all=True), USER_MANAGER_PICKLE_PATH)
         self.SeasonDetails   : pd.DataFrame = try_load("SeasonDetails", get_rta_seasons_df, SEASON_DETAILS_PICKLE_PATH)
+        self.SeasonDetailsJSON = self.get_season_details_json()
 
     @classmethod
     def decode(cls, str) -> Self:

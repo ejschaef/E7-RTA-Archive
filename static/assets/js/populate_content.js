@@ -112,7 +112,7 @@ Tables.functions = {
         });
     },
 
-    populatePlayerFirstpickTable: function(tableid, data) {
+    populatePlayerFirstPickTable: function(tableid, data) {
         const tbody = document.getElementById(`${tableid}Body`);
         tbody.innerHTML = '';  // Clear existing rows
 
@@ -155,7 +155,7 @@ Tables.functions = {
             <td>${item['P2 League']}</td>
             <td>${item['P1 Points']}</td>
             <td>${item['Win']}</td>
-            <td>${item['Firstpick']}</td>
+            <td>${item['First Pick']}</td>
             <td>${item['P1 Preban 1']}</td>
             <td>${item['P1 Preban 2']}</td>
             <td>${item['P2 Preban 1']}</td>
@@ -240,7 +240,7 @@ Tables.functions = {
                     { data: 'P2 League' },
                     { data: 'P1 Points' },
                     { data: 'Win' },
-                    { data: 'Firstpick' },
+                    { data: 'First Pick' },
                     { data: 'P1 Preban 1' },
                     { data: 'P1 Preban 2' },
                     { data: 'P2 Preban 1' },
@@ -275,16 +275,16 @@ CardContent.functions = {
 
     populateBattleCounts: function(general_stats) {
         document.getElementById("total-battles").textContent = general_stats.total_battles;
-        document.getElementById("firstpick-count").textContent = general_stats.firstpick_count;
-        document.getElementById("firstpick-rate").textContent = ` (${general_stats.firstpick_rate})`;
-        document.getElementById("secondpick-count").textContent = general_stats.secondpick_count;
-        document.getElementById("secondpick-rate").textContent = ` (${general_stats.secondpick_rate})`; 
+        document.getElementById("first-pick-count").textContent = general_stats.first_pick_count;
+        document.getElementById("first-pick-rate").textContent = ` (${general_stats.first_pick_rate})`;
+        document.getElementById("second-pick-count").textContent = general_stats.second_pick_count;
+        document.getElementById("second-pick-rate").textContent = ` (${general_stats.second_pick_rate})`; 
     },
 
     populateBattlePercents: function(general_stats) {
         document.getElementById("total-winrate").textContent = general_stats.total_winrate;
-        document.getElementById("firstpick-winrate").textContent = general_stats.firstpick_winrate;
-        document.getElementById("secondpick-winrate").textContent = general_stats.secondpick_winrate; 
+        document.getElementById("first-pick-winrate").textContent = general_stats.first_pick_winrate;
+        document.getElementById("second-pick-winrate").textContent = general_stats.second_pick_winrate; 
     },
 
     populateBattleStreaks: function(general_stats) {

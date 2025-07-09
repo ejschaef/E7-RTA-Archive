@@ -35,7 +35,7 @@ FIELDS:
 battle-date    -> date of battle (must use format YYYY-MM-DD)
 p1             -> access user attributes
 p2             -> access opponent attributes
-firstpick      -> True if p1 has firstpick, False else
+first pick      -> True if p1 has first pick, False else
 win            -> True if p1 won the game, False else
 victory-points -> integer number representing the victory points of the player when the battle occurred
 

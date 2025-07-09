@@ -92,9 +92,9 @@
                       <td class="cm-default">boolean indicator flagging if the player won</td>
                     </tr>
                     <tr>
-                      <td class="cm-datafield" style="white-space: nowrap;">is-firstpick</td>
+                      <td class="cm-datafield" style="white-space: nowrap;">is-first-pick</td>
                       <td class="cm-def">&rarr;</td>
-                      <td class="cm-default">boolean indicator flagging if the player got firstpick</td>
+                      <td class="cm-default">boolean indicator flagging if the player got first pick</td>
                     </tr>
                     <tr>
                       <td class="cm-datafield" style="white-space: nowrap;">victory-points</td>
@@ -386,7 +386,7 @@
               <div class="card-header">
                 <h5>Example Filter 1</h5>
                 <P class="text-sm">
-                  This filter takes only battles in the current season and filters for firstpick 
+                  This filter takes only battles in the current season and filters for first pick 
                   games where the player selected either ML Peira or New Moon Luna as their first pick and 
                   harsetti was prebanned.
                 </P>
@@ -527,7 +527,7 @@
 
     const ex1Str = `
 date in current-season;
-is-firstpick = true;
+is-first-pick = true;
 p1.pick1 in {lone wolf peira, new moon luna};
 OR("harsetti" in p1.prebans, "harsetti" in p2.prebans);`;
 
@@ -537,7 +537,7 @@ OR("harsetti" in p1.prebans, "harsetti" in p2.prebans);`;
     const ex2Str = `
 last-n(500);
 date in 2025-04-01...2025-07-01;
-is-firstpick = false;
+is-first-pick = false;
 OR(
 	AND(
 		p2.league in {warlord, emperor, legend},

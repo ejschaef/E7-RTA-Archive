@@ -27,7 +27,7 @@ class Battle:
     __slots__ = 'time', 'seq_num', 'p1_id', 'p2_id', \
                 'p1_picks', 'p2_picks', 'winner',    \
                 'grades', 'scores', 'p1_preban',     \
-                'p2_preban', 'postbans', 'firstpick'
+                'p2_preban', 'postbans', 'first_pick'
     
     @property
     def key(self):
@@ -80,13 +80,13 @@ def to_pretty_dataframe(df: pd.DataFrame, HM: HeroManager):
     df = df[[col for col in PRETTY_COLUMN_DICT]].copy()
     
     df["Win"] = df["Win"].map({1: "W", 2: "L"}).astype(str)
-    df["Firstpick"] = df["Firstpick"].map({1: True, 2: False}).astype(bool)
+    df["First Pick"] = df["First Pick"].map({1: True, 2: False}).astype(bool)
     return df
 
 def to_raw_dataframe(df: pd.DataFrame, HM: HeroManager):
     col_replace_dict = {
             "Win" : {"W":1, "L":2},
-            "Firstpick" : {True:1, False:2, "True":1, "False":2},
+            "First Pick" : {True:1, False:2, "True":1, "False":2},
         }
     
     df = df.replace(HM.name_str_map).infer_objects(copy=False)
@@ -115,7 +115,7 @@ def query_stats(battles: pd.DataFrame, total_battles: int) -> dict[str, float]:
             '+/-'             : int(2 * games_won - games_appeared)
             }
 
-def get_firstpick_stats(fp_battles: pd.DataFrame, HM: HeroManager) -> dict[str]:
+def get_first_pick_stats(fp_battles: pd.DataFrame, HM: HeroManager) -> dict[str]:
     """
     Adds to general stats; covers stats for heroes that were picked first in first pick games
     """
@@ -331,35 +331,35 @@ class BattleManager:
         pfdf = self.to_performant_df(HM)
         total_battles = len(pfdf)
 
-        fp_df = pfdf[pfdf['firstpick']==1]
-        sp_df = pfdf[pfdf['firstpick']!=1]
+        fp_df = pfdf[pfdf['first pick']==1]
+        sp_df = pfdf[pfdf['first pick']!=1]
 
-        firstpick_count = len(fp_df)
-        secondpick_count = len(sp_df)
+        first_pick_count = len(fp_df)
+        second_pick_count = len(sp_df)
 
         fp_wins = (fp_df['winner'] == 1).sum()
         sp_wins = (sp_df['winner'] == 1).sum()
 
-        fp_r = firstpick_count / total_battles if total_battles > 0 else 0
-        sp_r = secondpick_count / total_battles if total_battles > 0 else 0
+        fp_r = first_pick_count / total_battles if total_battles > 0 else 0
+        sp_r = second_pick_count / total_battles if total_battles > 0 else 0
 
-        fp_wr = fp_wins / firstpick_count if firstpick_count > 0 else 0
-        sp_wr = sp_wins / secondpick_count if secondpick_count > 0 else 0
+        fp_wr = fp_wins / first_pick_count if first_pick_count > 0 else 0
+        sp_wr = sp_wins / second_pick_count if second_pick_count > 0 else 0
 
         winrate = (pfdf["winner"] == 1).sum() / total_battles if total_battles > 0 else 0
 
         NA = "N/A"
 
         return {
-            "firstpick_count"   : firstpick_count,
-            "secondpick_count"  : secondpick_count,
-            "firstpick_rate"    : to_percent(fp_r) if firstpick_count > 0 else NA,
-            "secondpick_rate"   : to_percent(sp_r) if secondpick_count > 0 else NA,
-            "firstpick_winrate" : to_percent(fp_wr) if firstpick_count > 0 else NA,
-            "secondpick_winrate": to_percent(sp_wr) if secondpick_count > 0 else NA,
+            "first_pick_count"   : first_pick_count,
+            "second_pick_count"  : second_pick_count,
+            "first_pick_rate"    : to_percent(fp_r) if first_pick_count > 0 else NA,
+            "second_pick_rate"   : to_percent(sp_r) if second_pick_count > 0 else NA,
+            "first_pick_winrate" : to_percent(fp_wr) if first_pick_count > 0 else NA,
+            "second_pick_winrate": to_percent(sp_wr) if second_pick_count > 0 else NA,
             "total_winrate"     : to_percent(winrate) if total_battles > 0 else NA,
             "total_battles"     : total_battles,
-            "firstpick_stats"   : get_firstpick_stats(fp_df, HM),
+            "first_pick_stats"   : get_first_pick_stats(fp_df, HM),
             'preban_stats'      : get_preban_stats(pfdf, HM)
         }
         

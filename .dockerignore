@@ -1,6 +1,8 @@
 *.pyc
 __pycache__/
 .env
+env/
+e7_rs_package/
 node_modules/
 .git
 .gitignore

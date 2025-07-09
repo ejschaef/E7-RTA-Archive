@@ -61,7 +61,7 @@ class FieldType {
     // FNS that take in a clean format battle and return the appropriate data
     static FIELD_EXTRACT_FN_MAP = {
         'date'    : battle => battle["Date/Time"] ? new Date(`${battle["Date/Time"]?.slice(0, 10)}T00:00:00`) : "N/A",
-        'is-firstpick'      : battle => battle["Firstpick"] === "True" ? 1 : 0,
+        'is-first-pick'      : battle => battle["First Pick"] === "True" ? 1 : 0,
         'is-win'            : battle => battle["Win"] === "W" ? 1 : 0,
         'victory-points' : battle => battle["P1 Points"],
         'p1.picks'       : battle => battle["P1 Picks"],
@@ -273,7 +273,7 @@ function parseKeywordAsDataType(str, sourceData) {
         }
         else if (str === "current-season") {
             const [start, end] = sourceData.SeasonDetails.find(season => season["Status"] === "Active").range;
-            return new RangeType(`${toStr(start)}...=${toStr(end)}`);
+            return new RangeType(`${toStr(start)}...=${toStr(end === "N/A" ? new Date() : end)}`);
         } else {
             const seasonNum = Number(str.split("-")[1]);
             const season = sourceData.SeasonDetails.find(season => season["Season Number"] === seasonNum);
@@ -318,7 +318,7 @@ function parseDataType(str, HM, SeasonDetails) {
         } else if (str.includes('.=') || str.includes("..")) {
             throw new Futils.SyntaxException(`Invalid DataType declaration; got: '${str}'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only be int-int or date-date`);
         }
-        throw new Futils.SyntaxException(`Invalid DataType declaration; could not parse to valid Field, set, or primitive type; got: '${str}'`);
+        throw new Futils.SyntaxException(`Invalid DataType declaration; could not parse to valid Field or Declared Data Type; got: '${str}'`);
     }
 }
 

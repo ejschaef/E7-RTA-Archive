@@ -20,7 +20,7 @@ const VALID_BOOL_LITERAL_RE = /^(true|false)$/i;
 
 const VALID_DATA_WORD_RE = new RegExp(`(?:${VALID_SEASON_RE.source})`, "i");
 
-const VALID_FIELD_WORD_RE = /(?:date|is-firstpick|is-win|victory-points|p1.picks|p1.prebans|p2.prebans|prebans|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league|p1.postban|p2.postban)/i
+const VALID_FIELD_WORD_RE = /(?:date|is-first-pick|is-win|victory-points|p1.picks|p1.prebans|p2.prebans|prebans|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league|p1.postban|p2.postban)/i
 
 //consts without RE are used for injecting into regex patterns
 const STR = VALID_STRING_RE.source;

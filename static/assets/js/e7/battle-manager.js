@@ -30,7 +30,7 @@ function formatBattleClean(raw, HM) {
         "P2 League": raw.grades[1] ?? "",
         "P1 Points": raw.scores[0] ?? null,
         "Win": raw.winner === 1 ? "W" : "L",
-        "Firstpick": raw.firstpick === 1 ? "True" : "False",
+        "First Pick": raw.first_pick === 1 ? "True" : "False",
         "P1 Preban 1": getChampName(raw.p1_preban[0]),
         "P1 Preban 2": getChampName(raw.p1_preban[1]),
         "P2 Preban 1": getChampName(raw.p2_preban[0]),
@@ -83,7 +83,7 @@ function formatBattleNumerical(cleanBattle, HM) {
         "P2 League": LEAGUE_MAP[cleanBattle["P2 League"]] ?? "",
         "P1 Points": cleanBattle["P1 Points"],
         "Win": cleanBattle.Win === "W" ? 1 : 0,
-        "Firstpick": cleanBattle.Firstpick === "True" ? 1 : 0,
+        "First Pick": cleanBattle["First Pick"] === "True" ? 1 : 0,
         "P1 Preban 1": getChampPrime(cleanBattle["P1 Preban 1"]),
         "P1 Preban 2": getChampPrime(cleanBattle["P1 Preban 2"]),
         "P2 Preban 1": getChampPrime(cleanBattle["P2 Preban 1"]),
@@ -157,7 +157,7 @@ function getHeroStats(battles, HM) {
 }
 
 function getFirstPickStats(battles, HM) {
-    const battleList = Object.values(battles).filter(b => b["Firstpick"]);
+    const battleList = Object.values(battles).filter(b => b["First Pick"]);
 
     if (battleList.length === 0) {
       return [];
@@ -251,8 +251,8 @@ function getGeneralStats(battles, HM) {
   const totalBattles = battleList.length;
 
   // create subsets for first pick and second pick battles
-  const fpBattles = battleList.filter(b => b["Firstpick"] === 1);
-  const spBattles = battleList.filter(b => b["Firstpick"] !== 1);
+  const fpBattles = battleList.filter(b => b["First Pick"] === 1);
+  const spBattles = battleList.filter(b => b["First Pick"] !== 1);
 
   // get counts for first pick and second pick battles
   const fpCount = fpBattles.length;
@@ -290,12 +290,12 @@ function getGeneralStats(battles, HM) {
   const NA = "N/A";
 
   return {
-      "firstpick_count"   : fpCount,
-      "secondpick_count"  : spCount,
-      "firstpick_rate"    : fpCount? toPercent(fpR) : NA,
-      "secondpick_rate"   : spCount? toPercent(spR) : NA,
-      "firstpick_winrate" : fpCount? toPercent(fpWR) : NA,
-      "secondpick_winrate": spCount? toPercent(spWR) : NA,
+      "first_pick_count"   : fpCount,
+      "second_pick_count"  : spCount,
+      "first_pick_rate"    : fpCount? toPercent(fpR) : NA,
+      "second_pick_rate"   : spCount? toPercent(spR) : NA,
+      "first_pick_winrate" : fpCount? toPercent(fpWR) : NA,
+      "second_pick_winrate": spCount? toPercent(spWR) : NA,
       "total_winrate"     : totalBattles? toPercent(winRate) : NA,
       "total_battles"     : totalBattles,
       "total_wins"        : fpWins + spWins,
@@ -422,7 +422,7 @@ let BattleManager = {
       user, numFilters > 0 ? numericalFilteredBattles : null, autoZoom
     );
     const prebanStats = await this.getPrebanStats(numericalFilteredBattles, HM);
-    const firstpickStats = await this.getFirstPickStats(numericalFilteredBattles, HM);
+    const firstPickStats = await this.getFirstPickStats(numericalFilteredBattles, HM);
     const generalStats = await this.getGeneralStats(numericalFilteredBattles, HM);
     const heroStats = await this.getHeroStats(numericalFilteredBattles, HM);
 
@@ -432,7 +432,7 @@ let BattleManager = {
       plotContent : plotContent,
       prebanStats: prebanStats,
       generalStats: generalStats,
-      firstpickStats: firstpickStats,
+      firstPickStats: firstPickStats,
       playerHeroStats: heroStats.playerHeroStats,
       enemyHeroStats: heroStats.enemyHeroStats
     }

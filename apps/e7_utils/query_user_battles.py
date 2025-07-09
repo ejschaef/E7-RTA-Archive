@@ -56,7 +56,7 @@ def transform_battle_data(raw_battle_data):
             'p1_preban': p1_preban,
             'p2_preban': p2_preban,
             'postbans' : (p2_postbanned, p1_postbanned), #we invert to indicate the choice each player made.
-            'firstpick': check_first_pick() #1 if p1 got firstpick else 2
+            'first_pick': check_first_pick() #1 if p1 got first pick else 2
             }
     
     return output

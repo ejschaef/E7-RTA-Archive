@@ -58,14 +58,32 @@
                     </div>
                     <div class="card-body text-center tight-fit rel-height-100">
                         <div class="row justify-content-center">
-                            <span class="d-block mb-1 rel-width-80 scrollable-60px" id="filterMSG">&nbsp;</span>
+                            <div class="d-flex justify-content-between align-items-center mt-2 w-100 px-2">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle filter-pane-btn ms-3" type="button" id="filter-select" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Premade Filters
+                                    </button>
+                                    <ul class="dropdown-menu scrollable-300px f-12" aria-labelledby="filter-select" id="premade-filters">
+                                        <li><a class="dropdown-item" href="#">Current Season</a></li>
+                                        <li><a class="dropdown-item" href="#">First Pick</a></li>
+                                        <li><a class="dropdown-item" href="#">Second Pick</a></li>
+                                        <li><a class="dropdown-item" href="#">Wins</a></li>
+                                        <li><a class="dropdown-item" href="#">Losses</a></li>
+                                        <li><a class="dropdown-item" href="#">Champion+ Opponent</a></li>
+                                        <li><a class="dropdown-item" href="#">Warlord+ Opponent</a></li>
+                                        <li><a class="dropdown-item" href="#">Emperor+ Opponent</a></li>
+                                        <li><a class="dropdown-item" href="#">Legend Opponent</a></li>
+                                    </ul>
+                                </div>
+                                <span class="d-block me-3 rel-width-60 scrollable-40px f-10" id="filterMSG">&nbsp;</span>
+                            </div>
                             <form method="post" id="filterForm" class="card-body">
                                 {{ form.hidden_tag() }}
                                 <textarea id="codeArea" name="code" class="codemirror-hidden">{{ code or '' }}</textarea>
                                 <div class="d-flex justify-content-center gap-3 mt-4">
-                                    <button type="submit" name="check-syntax" value="check" class="btn shadow px-sm-1">Check Syntax</button>
-                                    <button type="submit" name="apply-filter" value="apply" class="btn shadow px-sm-1">Apply Filter</button>
-                                    <button type="submit" name="clear-filter" value="clear" class="btn shadow px-sm-1">Clear Filter</button>
+                                    <button type="submit" name="check-syntax" value="check" class="btn shadow px-sm-1 filter-pane-btn">Check Syntax</button>
+                                    <button type="submit" name="apply-filter" value="apply" class="btn shadow px-sm-1 filter-pane-btn">Apply Filter</button>
+                                    <button type="submit" name="clear-filter" value="clear" class="btn shadow px-sm-1 filter-pane-btn">Clear Filter</button>
                                     <div class="toggle-container-vertical" id="auto-zoom-toggle-container">
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="auto-zoom-flag">
@@ -73,7 +91,7 @@
                                             <span class="toggle-switch-handle"></span>
                                             </span>
                                         </label>
-                                        <h6>Auto-Zoom</h6>
+                                        <span class="filter-pane-btn">Auto-Zoom</span>
                                     </div>
                                 </div>
                             </form>
@@ -99,15 +117,15 @@
                                 <h5 class="f-w-200 d-flex align-items-center m-b-0">1st Pick Games:</h5>
                             </div>
                             <div class="col-5 text-align-left">
-                                <h5 class="f-w-200 d-inline m-b-0" id="firstpick-count">&nbsp;</h5>
-                                <p class="d-inline f-w-100 f-8 m-b-0" id="firstpick-rate">&nbsp;</p>
+                                <h5 class="f-w-200 d-inline m-b-0" id="first-pick-count">&nbsp;</h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0" id="first-pick-rate">&nbsp;</p>
                             </div>
                             <div class="col-7">
                                 <h5 class="f-w-200 d-flex align-items-center m-b-0">2nd Pick Games:</h5>
                             </div>
                             <div class="col-5 text-align-left">
-                                <h5 class="f-w-200 d-inline  m-b-0" id="secondpick-count">&nbsp;</h5>
-                                <p class="d-inline f-w-100 f-8 m-b-0" id="secondpick-rate">&nbsp;</p>
+                                <h5 class="f-w-200 d-inline  m-b-0" id="second-pick-count">&nbsp;</h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0" id="second-pick-rate">&nbsp;</p>
                             </div>
                         </div>
                     </div>
@@ -159,13 +177,13 @@
                                 <h5 class="f-w-200 d-inline align-items-center m-b-0">1st Pick Win Rate:</h5>
                             </div>
                             <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="firstpick-winrate">&nbsp;</h5>
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="first-pick-winrate">&nbsp;</h5>
                             </div>
                             <div class="col-8">
                                 <h5 class="f-w-200 d-inline align-items-center m-b-0">2nd Pick Win Rate:</h5>
                             </div>
                             <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="secondpick-winrate">&nbsp;</h5>
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="second-pick-winrate">&nbsp;</h5>
                             </div>
                         </div>
                     </div>
@@ -177,11 +195,11 @@
             <div class="col-sm-6 min-width-450">
                 <div class="card aqua-kpi height-300">
                     <div class="card-header kpi-header">
-                        <h5 class="text-white">Firstpick Hero Stats</h5>
+                        <h5 class="text-white">First Pick Hero Stats</h5>
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="FirstpickStats" class="scrollables scrollables-aqua interior-border-tbl clean-table align-center-except-first col1-150">
+                            <table id="FirstPickStats" class="scrollables scrollables-aqua interior-border-tbl clean-table align-center-except-first col1-150">
                                 <thead>
                                     <tr>
                                         <th scope="col">Hero</th>
@@ -191,7 +209,7 @@
                                         <th scope="col">+/-</th>
                                     </tr>
                                 </thead>
-                                <tbody id="FirstpickStatsBody">
+                                <tbody id="FirstPickStatsBody">
                                 </tbody>
                             </table>
                         </div>
@@ -251,7 +269,7 @@
                         <br>
                         <h6 style="font-size: 0.7em;">
                             Displays statistics for heroes computed
-                            based on battles when they appear on the player's team.
+                            based on when they appear on the player's team.
                         </h6>
                     </div>
                     <div class="card-body kpi-body">
@@ -281,8 +299,8 @@
                         <h5>Enemy Heroes</h5>
                         <br>
                         <h6 style="font-size: 0.7em;">
-                            Displays statistics for heroes computed based on battles when they appear on the enemy team.
-                            The win rate and +/- is relative to the player, and the pick rate is relative to the opponent.
+                            Displays statistics for heroes computed based on when they appear on the enemy team.
+                            Win rate and +/- are relative to the player; pick rate is relative to the opponent.
                         </h6>
                     </div>
                     <div class="card-body kpi-body">
@@ -335,7 +353,7 @@
                                     <th scope="col">P2 League</th>
                                     <th scope="col">P1 Points</th>
                                     <th scope="col">Win</th>
-                                    <th scope="col">Firstpick</th>
+                                    <th scope="col">First Pick</th>
                                     <th scope="col">P1 Preban 1</th>
                                     <th scope="col">P1 Preban 2</th>
                                     <th scope="col">P2 Preban 1</th>
@@ -369,7 +387,7 @@
     {% block extra_js %}
 
 <script type="module"> 
-    import { PageUtils, RegExps, Tables, CardContent, ContentManager } from "{{ url_for('static', filename='assets/js/exports.js') }}";
+    import { PageUtils, RegExps, Tables, CardContent, ContentManager, SavedFilters } from "{{ url_for('static', filename='assets/js/exports.js') }}";
 
     console.log("Attaching DOMContentLoaded listener");
     document.addEventListener("DOMContentLoaded", async () => {
@@ -421,7 +439,7 @@
             Tables.functions.populateSeasonDetailsTable('SeasonDetails', seasonDetails);
             Tables.functions.populateHeroStatsTable('PlayerTable', stats.playerHeroStats);
             Tables.functions.populateHeroStatsTable('OpponentTable', stats.enemyHeroStats);
-            Tables.functions.populatePlayerFirstpickTable('FirstpickStats', stats.firstpickStats);
+            Tables.functions.populatePlayerFirstPickTable('FirstPickStats', stats.firstPickStats);
             Tables.functions.populatePlayerPrebansTable('PrebanStats', stats.prebanStats);
             const battleTable = Tables.functions.populateFullBattlesTable('BattlesTable', stats.battles, user);
             CardContent.functions.populateBattleCounts(stats.generalStats);
@@ -466,11 +484,25 @@
         editor.setSize(null, 185);
 
         const appliedFilter = await ContentManager.ClientCache.getFilterStr();
+
         if (appliedFilter) {
             editor.setValue(appliedFilter);
         }
 
-        // Intercept form submission
+        // Logic for adding premade filters to filter pane
+        document.getElementById("premade-filters").addEventListener("click", function(event) {
+            console.log("Attempting to add a premade filter")
+            event.preventDefault();
+            const target = event.target.closest(".dropdown-item");
+            if (!target) return;
+            const filterName = target.textContent.trim();
+            console.log("Target found:", filterName)
+            const currStr = editor.getValue();
+            const newStr = SavedFilters.extendFilters(currStr, filterName);
+            editor.setValue(newStr);
+        });
+
+        // Logic for submit buttons on filter pane
         const filterForm = document.getElementById("filterForm");
         filterForm.addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent actual form submission to server
@@ -499,11 +531,12 @@
                 await PageUtils.validateFilterSyntax(syntaxStr);
             } else if (action === "clear") {
                 editor.setValue("");
+                console.log("Found applied filter", appliedFilter, "when clearing");
                 if (appliedFilter) {
                     console.log("Found filter str", appliedFilter);
                     await ContentManager.ClientCache.setFilterStr("");
                     const loadParams = {
-                        autoZoom: autoZoomFlag,
+                        autoZoom: autoZoomCheckbox.checked,
                         query: "false"
                     }
                     window.location.href = URLS.addStrParams(URLS.loadData, loadParams);;

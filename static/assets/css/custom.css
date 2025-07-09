@@ -130,9 +130,36 @@ input.filled, .form-control {
     padding: 5%;
   }
 
-  .scrollable-200 {
+  .scrollable-300px {
+    overflow-y: auto;
+    max-height: 300px;
+  }
+
+  .scrollable-200px {
     overflow-y: auto;
     max-height: 200px;
+  }
+
+  .scrollable-35px {
+    overflow-y: auto;
+    max-height: 35px;
+  }
+
+  .scrollable-40px {
+    overflow-y: auto;
+    max-height: 40px;
+    min-height: 40px;
+    height: 40px;
+  }
+
+  .scrollable-50px {
+    overflow-y: auto;
+    max-height: 50px;
+  }
+
+  .scrollable-55px {
+    overflow-y: auto;
+    max-height: 55px;
   }
 
   .scrollable-60px {
@@ -268,6 +295,26 @@ table.dataTable.w-100 td {
   .rel-width-80 {
     width: 80%;
   }
+
+  .rel-width-70 {
+    width: 70%;
+  }
+
+  .rel-width-60 {
+    width: 60%;
+  }
+
+  .rel-width-40 {
+    width: 40%;
+  }
+
+  .rel-width-30 {
+    width: 30%;
+  }
+
+  .rel-width-20 {
+    width: 20%;
+  }
   
 
 .toggle-switch {
@@ -372,4 +419,8 @@ table.dataTable.w-100 td {
 
 .space-sep li {
   margin-bottom: 1.5em;
+}
+
+.filter-pane-btn {
+  font-size: 12px !important;
 }
