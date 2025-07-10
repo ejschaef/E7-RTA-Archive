@@ -24,3 +24,11 @@ table.filter-syntax-table tbody tr:first-child td {
 table.filter-syntax-table tbody tr:last-child td {
   border-bottom: none !important;
 }
+
+.text-over50 {
+  color : mediumspringgreen !important;
+}
+
+.text-below50 {
+  color : red !important;
+}

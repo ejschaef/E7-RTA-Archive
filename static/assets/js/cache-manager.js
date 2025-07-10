@@ -19,6 +19,11 @@ const Keys = {
   SEASON_DETAILS: "season-details",
   AUTO_ZOOM_FLAG: "auto-zoom",
   AUTO_QUERY_FLAG: "auto-query",
+  GLOBAL_USERS: "global-users",
+  EU_USERS: "eu-users",
+  ASIA_USERS: "asia-users",
+  JPN_USERS: "jpn-users",
+  KOR_USERS: "kor-users",
 };
 
 const FlagsToKeys = {
@@ -149,14 +154,6 @@ let ClientCache = {
       return false;
     }
     return true;
-  },
-
-  getUser: async function() {
-    return await this.get(ClientCache.Keys.USER);
-  },
-
-  setUser: async function(userData) {
-    await this.cache(ClientCache.Keys.USER, userData)
   },
 
   getFilterStr: async function() {

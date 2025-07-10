@@ -1,6 +1,18 @@
 let Tables =  {};
 
 
+function convertPercentToColorClass(str) {
+    const num =Number(str.replace("%", ""));
+    if (num > 50) {
+        return "text-over50"
+    } else if (num < 50) {
+        return "text-below50"
+    } else {
+        return ""
+    }
+}
+
+
 Tables.functions = {
     populateHeroStatsTable: function(tableid, data) {
         const tbody = document.getElementById(`${tableid}Body`);
@@ -92,6 +104,28 @@ Tables.functions = {
         });
     },
 
+    populateServerStatsTable: function(tableid, data) {
+        const tbody = document.getElementById(`${tableid}-body`);
+        tbody.innerHTML = '';  // Clear existing rows
+
+        data.forEach(item => {
+            const row = document.createElement('tr');
+
+            // Populate each <td> in order
+            row.innerHTML = `
+            <td>${item['server']}</td>
+            <td>${item['count']}</td>
+            <td>${item['frequency']}</td>
+            <td>${item['wins']}</td>
+            <td class="${convertPercentToColorClass(item['win_rate'])}">${item['win_rate']}</td>
+            <td>${item['+/-']}</td>
+            <td class="${convertPercentToColorClass(item['fp_wr'])}">${item['fp_wr']}</td>
+            <td class="${convertPercentToColorClass(item['sp_wr'])}">${item['sp_wr']}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    },
+
     populatePlayerPrebansTable: function(tableid, data) {
         const tbody = document.getElementById(`${tableid}Body`);
         tbody.innerHTML = '';  // Clear existing rows
@@ -104,7 +138,7 @@ Tables.functions = {
             <td>${item['preban']}</td>
             <td>${item['appearances']}</td>
             <td>${item['appearance_rate']}</td>
-            <td>${item['win_rate']}</td>
+            <td class="${convertPercentToColorClass(item['win_rate'])}">${item['win_rate']}</td>
             <td>${item['+/-']}</td>
             `;
 
@@ -124,7 +158,7 @@ Tables.functions = {
             <td>${item['hero']}</td>
             <td>${item['appearances']}</td>
             <td>${item['appearance_rate']}</td>
-            <td>${item['win_rate']}</td>
+            <td class="${convertPercentToColorClass(item['win_rate'])}">${item['win_rate']}</td>
             <td>${item['+/-']}</td>
             `;
 
@@ -150,10 +184,12 @@ Tables.functions = {
             <td>${item['Date/Time']}</td>
             <td>${item['Seq Num']}</td>
             <td>${item['P1 ID']}</td>
-            <td>${item['P2 ID']}</td>
+            <td>${item['P1 Server']}</td>
             <td>${item['P1 League']}</td>
-            <td>${item['P2 League']}</td>
             <td>${item['P1 Points']}</td>
+            <td>${item['P2 ID']}</td>
+            <td>${item['P2 Server']}</td>
+            <td>${item['P2 League']}</td>
             <td>${item['Win']}</td>
             <td>${item['First Pick']}</td>
             <td>${item['P1 Preban 1']}</td>
@@ -192,7 +228,7 @@ Tables.functions = {
                         targets: '_all', className: 'nowrap' 
                     },
                     {
-                        targets: 7, // "Result" column
+                        targets: 9, // "Result" column
                         createdCell: function(td, cellData) {
                             if (cellData === 'W') {
                                 td.style.color = 'mediumspringgreen';
@@ -202,7 +238,7 @@ Tables.functions = {
                         }
                     },
                     {
-                        targets: 8, // "Result" column
+                        targets: 10, // "Result" column
                         createdCell: function(td, cellData) {
                             if (cellData === 'True') {
                                 td.style.color = 'deepskyblue';
@@ -235,10 +271,12 @@ Tables.functions = {
                     { data: 'Date/Time' },
                     { data: 'Seq Num' },
                     { data: 'P1 ID' },
-                    { data: 'P2 ID' },
+                    { data: 'P1 Server' },
                     { data: 'P1 League' },
-                    { data: 'P2 League' },
                     { data: 'P1 Points' },
+                    { data: 'P2 ID' },
+                    { data: 'P2 Server' },
+                    { data: 'P2 League' },
                     { data: 'Win' },
                     { data: 'First Pick' },
                     { data: 'P1 Preban 1' },
@@ -273,24 +311,21 @@ let CardContent =  {};
 
 CardContent.functions = {
 
-    populateBattleCounts: function(general_stats) {
+    populateGeneralStats: function(general_stats) {
         document.getElementById("total-battles").textContent = general_stats.total_battles;
         document.getElementById("first-pick-count").textContent = general_stats.first_pick_count;
         document.getElementById("first-pick-rate").textContent = ` (${general_stats.first_pick_rate})`;
         document.getElementById("second-pick-count").textContent = general_stats.second_pick_count;
         document.getElementById("second-pick-rate").textContent = ` (${general_stats.second_pick_rate})`; 
-    },
 
-    populateBattlePercents: function(general_stats) {
         document.getElementById("total-winrate").textContent = general_stats.total_winrate;
         document.getElementById("first-pick-winrate").textContent = general_stats.first_pick_winrate;
         document.getElementById("second-pick-winrate").textContent = general_stats.second_pick_winrate; 
-    },
 
-    populateBattleStreaks: function(general_stats) {
         document.getElementById("total-wins").textContent = general_stats.total_wins;
         document.getElementById("max-win-streak").textContent = general_stats.max_win_streak;
         document.getElementById("max-loss-streak").textContent = general_stats.max_loss_streak; 
+        document.getElementById("avg-ppg").textContent = general_stats.avg_ppg; 
     },
 
     populateRankPlot: function(rank_plot_html) {

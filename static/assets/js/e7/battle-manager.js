@@ -1,9 +1,10 @@
 import ClientCache from "../cache-manager.js";
 import HeroManager from "./hero-manager.js";
-import { LEAGUE_MAP } from "./references.js";
+import { LEAGUE_MAP, WORLD_CODE_TO_CLEAN_STR } from "./references.js";
 import { generateRankPlot } from "./plots.js";
 import { COLUMNS } from "./references.js";
 import FilterSyntaxParser from "./filter-syntax.js";
+import UserManager from "./user-manager.js";
 
 const HERO_COLUMNS = COLUMNS.filter(col => col.includes(" Pick ") || col.includes("ban "));
 
@@ -21,6 +22,8 @@ function battleListToDict(battleList) {
 function formatBattleClean(raw, HM) {
     //console.log(`Formatting battle: ${JSON.stringify(raw)}`);
     const getChampName = code => HeroManager.getHeroByCode(code, HM)?.name ?? HM.Fodder.name;
+
+    // server columns not included since they are added later during cacheQuery by utilizing UserManager
     const battle = {
         "Date/Time": raw.time,
         "Seq Num": raw.seq_num,
@@ -248,6 +251,23 @@ function getPrebanStats(battles, HM) {
 
 function getGeneralStats(battles, HM) {
   const battleList = Object.values(battles);
+  battleList.sort((b1, b2) => new Date(b1["Date/Time"]) - new Date(b2["Date/Time"]));
+
+  let totalGain = 0;
+  let battlesConsidered = 0;
+  if (battleList.length > 1) {
+    for (let i = 0; i < battleList.length - 1; i++) {
+      const [b1, b2] = [battleList[i], battleList[i + 1]];
+      const pointsDiff = b2["P1 Points"] - b1["P1 Points"];
+      if (pointsDiff < -40) {
+        continue
+      }
+      totalGain += pointsDiff;
+      battlesConsidered += 1;
+    }
+  }
+  const avgPPG = battlesConsidered > 0 ? totalGain / battlesConsidered : 0;
+
   const totalBattles = battleList.length;
 
   // create subsets for first pick and second pick battles
@@ -300,8 +320,46 @@ function getGeneralStats(battles, HM) {
       "total_battles"     : totalBattles,
       "total_wins"        : fpWins + spWins,
       "max_win_streak"    : maxWinStreak,
-      "max_loss_streak"   : maxLossStreak
+      "max_loss_streak"   : maxLossStreak,
+      "avg_ppg"           : avgPPG.toFixed(2),
   }
+}
+
+function getServerStats(battlesList) {
+  const allServerStats = [];
+  const totalBattles = battlesList.length;
+  for (const server of Object.values(WORLD_CODE_TO_CLEAN_STR)) {
+    const subset = battlesList.filter(b => b["P2 Server"] === server);
+    const count = subset.length;
+    const wins = subset.reduce((acc, b) => acc + (b.Win === "W" ? 1 : 0), 0);
+    const winRate = count > 0 ? wins / count : "N/A";
+    const frequency = totalBattles > 0 ? count / totalBattles : "N/A";
+
+    const firstPickGames = subset.filter(b => b["First Pick"] === "True");
+    const fpWins = firstPickGames.reduce((acc, b) => acc + (b.Win === "W" ? 1 : 0), 0);
+    const fpWinRate = firstPickGames.length > 0 ? fpWins / firstPickGames.length : "N/A";
+
+    const secondPickGames = subset.filter(b => b["First Pick"] === "False");
+    const spWins = secondPickGames.reduce((acc, b) => acc + (b.Win === "W" ? 1 : 0), 0);
+    const spWinRate = secondPickGames.length > 0 ? spWins / secondPickGames.length : "N/A";
+
+    allServerStats.push(
+      {
+        server,
+        count, 
+        wins, 
+        win_rate: toPercent(winRate), 
+        frequency: toPercent(frequency),
+        "+/-": 2 * wins - count,
+        fp_games : firstPickGames.length,
+        sp_games : secondPickGames.length,
+        fp_wr : toPercent(fpWinRate),
+        sp_wr : toPercent(spWinRate)
+      }
+    );
+  }
+  allServerStats.sort((a, b) => a.server.localeCompare(b.server));
+  return allServerStats;
 }
 
 let BattleManager = {
@@ -364,7 +422,7 @@ let BattleManager = {
     return battles;
   },
 
-  // should be called to compute metrics
+  // should be called when computing metrics
   getNumericalBattles: async function(battles, HM) {
     const mapFn = (key, battle) => [key, formatBattleNumerical(battle, HM)];
     const numericalBattles = Object.fromEntries(
@@ -377,6 +435,8 @@ let BattleManager = {
   //takes in list of battles then converts to dict and then adds to cached battles
   extendBattles: async function(cleanBattleList) {
     let oldDict = await ClientCache.get(ClientCache.Keys.BATTLES) ?? {};
+
+    // new battles automatically overwrite old ones if they share same seq_num
     const newDict = { ...oldDict, ...battleListToDict(cleanBattleList) };
     await ClientCache.cache(ClientCache.Keys.BATTLES, newDict);
     console.log("Extended user data in cache");
@@ -384,7 +444,7 @@ let BattleManager = {
   },
 
   //Takes queried battles, clean format and extend in cache
-  cacheQuery: async function(battleList, HM) {
+  cacheQuery: async function(battleList, user,  HM) {
     if (!battleList) {
         console.log("No query battles provided to cacheQuery");
         return [];
@@ -392,8 +452,15 @@ let BattleManager = {
     console.log(`Caching queried battles: ${battleList} battles; modified [BATTLES]`);
     const mapFn = battle => formatBattleClean(battle, HM);
     const cleanBattles = battleList.map(mapFn);
+
+    // add Servers to battles
+    const cleanServerStr =  UserManager.convertServerStr(user.world_code);
+    cleanBattles.map(b => {b["P1 Server"] = cleanServerStr})
+    await UserManager.addP2ServersByID(cleanBattles);
+    
     const battles = await this.extendBattles(cleanBattles);
     console.log("Cached queried battles in cache; modified [BATTLES]");
+
     return battles;
   },
 
@@ -425,6 +492,7 @@ let BattleManager = {
     const firstPickStats = await this.getFirstPickStats(numericalFilteredBattles, HM);
     const generalStats = await this.getGeneralStats(numericalFilteredBattles, HM);
     const heroStats = await this.getHeroStats(numericalFilteredBattles, HM);
+    const serverStats = await this.getServerStats(filteredBattlesList);
 
     return {
       battles : battlesList,
@@ -434,14 +502,16 @@ let BattleManager = {
       generalStats: generalStats,
       firstPickStats: firstPickStats,
       playerHeroStats: heroStats.playerHeroStats,
-      enemyHeroStats: heroStats.enemyHeroStats
+      enemyHeroStats: heroStats.enemyHeroStats,
+      serverStats: serverStats,
     }
   },
 
   getPrebanStats    : getPrebanStats,
   getFirstPickStats : getFirstPickStats,
   getGeneralStats   : getGeneralStats,
-  getHeroStats      : getHeroStats
+  getHeroStats      : getHeroStats,
+  getServerStats    : getServerStats,
 }
 
 export default BattleManager;

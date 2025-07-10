@@ -3,6 +3,7 @@ import ClientCache from "./cache-manager.js";
 import PYAPI from "./py-API.js";
 import HeroManager from "./e7/hero-manager.js"
 import FilterSyntaxParser from "./e7/filter-syntax.js";
+import UserManager from "./e7/user-manager.js";
 
 let PageUtils = {
 
@@ -51,7 +52,7 @@ let PageUtils = {
         .then( async data => {
             if (data.success) {
                 const rawBattles = data.battles;
-                await BattleManager.cacheQuery(rawBattles, HM);
+                await BattleManager.cacheQuery(rawBattles, user, HM);
                 console.log("Cached queried battles")
             } else {
                 let returnURL = null;

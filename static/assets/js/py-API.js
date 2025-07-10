@@ -1,13 +1,9 @@
-import ClientCache from "./cache-manager.js";
-
-
 const BATTLE_URL = '/api/get_battle_data';
 const HERO_URL = '/api/get_hero_data';
 const USER_URL = '/api/get_user_data';
 const SEASON_URL = '/api/get_season_details';
 
 let PYAPI = {
-
 
     test: function(data) {
         // test the fetching works properly
@@ -52,9 +48,9 @@ let PYAPI = {
         }
     },
 
-    fetchAndCacheUser: async function (userData) {
-        if ((!userData.username || !userData.server) && !userData.id) {
-            throw new Error("Must pass both username and server or just ID to fetch user");
+    fetchUser: async function (userData) {
+        if ((!userData.name || !userData.world_code) && !userData.id) {
+            throw new Error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");
         }
         const response = await fetch(USER_URL, {
             method: 'POST',
@@ -67,9 +63,9 @@ let PYAPI = {
         try {
             if (response.ok) {
                 if (!data.foundUser) {
-                    if (userData.username) {
-                        let serverStr = userData.server.replace("world_", "");
-                        return { user: null, error: `Could not find user: "${userData.username}" in server: ${serverStr}`};
+                    if (userData.name) {
+                        let worldCodeStr = userData.world_code.replace("world_", "");
+                        return { user: null, error: `Could not find user: "${userData.name}" in world_code: ${worldCodeStr}`};
                     } else if (userData.id) {
                         return { user: null, error: `Could not find user with ID: ${userData.id}`};
                     }
@@ -77,7 +73,6 @@ let PYAPI = {
                     const user = data.user;
                     console.log("Server communication successful; received response data for user");
                     console.log(`Found user: ${JSON.stringify(user)}`);
-                    await ClientCache.setUser(user);
                     return { user, error: false};
                 }
             } else {
@@ -85,7 +80,8 @@ let PYAPI = {
                 return { user: null, error: data.error};
             };
         } catch (e) {
-            throw new Error(`Error fetching and caching user: ${e}`);
+            console.error(`Error fetching and caching user: ${e}`);
+            return { user: null, error: e.message};
         }
     },
 

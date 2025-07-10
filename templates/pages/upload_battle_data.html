@@ -25,8 +25,7 @@
                     <form id="uploadForm" class="card-body">
                         {{ form.hidden_tag() }}
                         <h4 class="text-center f-w-500 mb-3">Upload CSV</h4>
-                        <span id="uploadMSG" class="d-block text-safe mb-3"></span>
-                        <span id="uploadError" class="d-block text-danger mb-3"></span>
+                        <span id="errorMSG" class="d-block text-danger mb-3"></span>
                         <div class="form-group mb-3">
                           {{ form.file(class="form-control", id="csvFile") }}
                         </div>
@@ -119,10 +118,10 @@
             const uploadedBattles = await ContentManager.BattleManager.cacheUpload(battleArr);
 
             const playerID = battleArr[0]["P1 ID"];
-            const data = await PYAPI.fetchAndCacheUser({id: playerID});
+            const data = await ContentManager.UserManager.findUser({id: playerID})
             console.log("Got data:", JSON.stringify(data));
             if (!data.error) {
-              await ContentManager.ClientCache.setUser(data.user);
+              await ContentManager.UserManager.setUser(data.user);
               const loadParams = {
                 source : "upload",
                 query : autoQueryFlag ? "true" : "false",

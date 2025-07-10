@@ -1,4 +1,4 @@
-import { LEAGUE_MAP } from './references.js';
+import { LEAGUE_MAP, WORLD_CODE_TO_CLEAN_STR } from './references.js';
 import HeroManager from './hero-manager.js';
 import Futils from './filter-utils.js';
 import { RegExps } from './regex.js';
@@ -83,6 +83,8 @@ class FieldType {
         'p2.pick5'       : battle => battle["P2 Pick 5"],
         'p1.league'      : battle => LEAGUE_MAP[battle["P1 League"]],
         'p2.league'      : battle => LEAGUE_MAP[battle["P2 League"]],
+        'p1.server'      : battle => battle["P1 Server"],
+        'p2.server'      : battle => battle["P2 Server"],
     }
 
     constructor (str) {
@@ -125,10 +127,11 @@ class StringType extends DataType {
         str = str.replace(/"|'/g, "");
         const hero = HeroManager.getHeroByName(str, HM);
         const league = LEAGUE_MAP[str];
-        if (!(hero || league)) {
-            throw new Futils.SyntaxException(`Invalid string; All strings must either be a valid hero or league name; got: '${str}'`);
+        const server = Object.values(WORLD_CODE_TO_CLEAN_STR).find(server => server.toLowerCase() === str);
+        if (!(hero || league || server)) {
+            throw new Futils.SyntaxException(`Invalid string; All strings must either be a valid hero, league name, or server; got: '${str}'`);
         } 
-        return hero ? hero.name : league;
+        return hero ? hero.name : league ? league : server;
     }
 
     toString() {

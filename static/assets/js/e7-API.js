@@ -47,23 +47,6 @@ async function fetchUserJSON(world_code) {
     return data;
 }
 
-function createUser(userJSON, world_code) {
-    return {
-        "id"         : userJSON.nick_no,
-        "name"       : userJSON.nick_nm.toLowerCase(),
-        "code"       : userJSON.code,
-        "rank"       : userJSON.rank,
-        "world_code" : world_code
-    }
-}
-
-async function getUserList(world_code) {
-    const rawUserJSON = await fetchUserJSON(world_code);
-    if (!rawUserList) {
-        return null;
-    }
-    return rawUserJSON.users.map(user => createUser(user, world_code));
-}
 
 let E7API = {
     fetchHeroJSON: fetchHeroJSON,

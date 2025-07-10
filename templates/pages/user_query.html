@@ -69,16 +69,16 @@
 
         const data = new FormData(form);
         
-        const username = data.get("username");
-        const server = data.get("server");
+        const name = data.get("username");
+        const world_code = data.get("server");
 
-        if (!username) {
+        if (!name) {
           document.getElementById("errorMSG").textContent = "Must enter username"
         } else {
           try {
-            const result = await PYAPI.fetchAndCacheUser({username, server});
+            const result = await ContentManager.UserManager.findUser({name, world_code})
               if (!result.error) {
-                await ContentManager.ClientCache.setUser(result.user);
+                await ContentManager.UserManager.setUser(result.user);
                 const loadParams = {
                   source : "query",
                   query : "true"

@@ -2,7 +2,7 @@ export function generateRankPlot(battles, user, filteredBattles = null, zoomFilt
     // Sort battles chronologically by time
     // console.log("Creating plot HTML for:", JSON.stringify(battles));
     // console.log("received Filtered Battles:", JSON.stringify(filteredBattles));
-    battles.sort((a, b) => a["Date/Time"].slice(0,10).localeCompare(b["Date/Time"].slice(0,10)));
+    battles.sort((a, b) => new Date(a["Date/Time"]) - new Date(b["Date/Time"]));
 
     // if the user is not passed, default the username to the ID of the player
     if (!user) {

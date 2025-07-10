@@ -1,5 +1,21 @@
 export const WORLD_CODES = new Set(["world_kor", "world_global", "world_jpn", "world_asia", "world_eu"]);
 
+export const WORLD_CODE_ENUM = {
+  GLOBAL : "world_global", 
+  KOR : "world_kor", 
+  JPN : "world_jpn", 
+  ASIA : "world_asia", 
+  EU : "world_eu"
+}
+
+export const WORLD_CODE_TO_CLEAN_STR = {
+  "world_global" : "Global",
+  "world_kor" : "Korea",
+  "world_jpn" : "Japan",
+  "world_asia" : "Asia",
+  "world_eu" : "Europe"
+}
+
 export const ONE_DAY = 1000 * 60 * 60 * 24;
 
 export const LEAGUE_MAP = {
@@ -15,12 +31,18 @@ export const LEAGUE_MAP = {
 }
 
 export const COLUMNS = [
-    "Date/Time", "Seq Num", "P1 ID", "P2 ID", 
-    "P1 League", "P2 League", "P1 Points", "Win", "First Pick", 
-    "P1 Preban 1", "P1 Preban 2", "P2 Preban 1", "P2 Preban 2", 
-    "P1 Pick 1", "P1 Pick 2", "P1 Pick 3", "P1 Pick 4", "P1 Pick 5", 
-    "P2 Pick 1", "P2 Pick 2", "P2 Pick 3", "P2 Pick 4", "P2 Pick 5", 
-    "P1 Postban", "P2 Postban"];
+  "Date/Time","Seq Num",
+
+  "P1 ID","P1 Server","P1 League","P1 Points",
+  "P2 ID","P2 Server","P2 League",
+
+  "Win","First Pick","P1 Preban 1","P1 Preban 2","P2 Preban 1","P2 Preban 2",
+
+  "P1 Pick 1","P1 Pick 2","P1 Pick 3","P1 Pick 4","P1 Pick 5",
+  "P2 Pick 1","P2 Pick 2","P2 Pick 3","P2 Pick 4","P2 Pick 5",
+  
+  "P1 Postban","P2 Postban"
+  ];
 
 /**
  * Generates a list of all prime numbers up to and including the given limit.

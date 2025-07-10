@@ -32,7 +32,7 @@
 
     try {    
       const HM = await ContentManager.HeroManager.getHeroManager();
-      const user = await ContentManager.ClientCache.getUser();
+      const user = await ContentManager.UserManager.getUser();
 
       // if new user query or auto query from upload battles we query the users battles from the server else skip
       if (params.get("query") === 'true') {
@@ -44,6 +44,7 @@
 
       // retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
       const battles = await ContentManager.BattleManager.getBattles(HM);
+
       const filters = await ContentManager.getFilters(HM);
       console.log(`Received Filters: ${JSON.stringify(filters)}`)
       const stats = await ContentManager.BattleManager.getStats(battles, user, filters, HM, autoZoom);

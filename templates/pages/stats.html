@@ -102,94 +102,122 @@
             <!-- [ filter code mirror ] end -->
 
 
-            <!-- [ fp/sp counts section ] start -->
-            <div class="col-md-6 col-xl-4">
+            <!-- [ general stats section ] start -->
+            <div class="col-md-6 col-xl-4 d-flex flex-column gap">
                 <div class="card">
                     <div class="card-body">
                         <div class="row d-flex align-items-center">
-                            <div class="col-7">
+                            <div class="col-8">
                                 <h5 class="f-w-200 d-flex align-items-center m-b-0">Total Battles:</h5>
                             </div>
-                            <div class="col-5 text-align-left">
+                            <div class="col-4 text-align-left px-0">
                                 <h5 class="f-w-200 d-inline m-b-0" id="total-battles">&nbsp;</h5>
                             </div>
-                            <div class="col-7">
-                                <h5 class="f-w-200 d-flex align-items-center m-b-0">1st Pick Games:</h5>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Total Wins:</h5>
                             </div>
-                            <div class="col-5 text-align-left">
-                                <h5 class="f-w-200 d-inline m-b-0" id="first-pick-count">&nbsp;</h5>
-                                <p class="d-inline f-w-100 f-8 m-b-0" id="first-pick-rate">&nbsp;</p>
+                            <div class="col-4 px-0">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="total-wins">&nbsp;</h5>
                             </div>
-                            <div class="col-7">
-                                <h5 class="f-w-200 d-flex align-items-center m-b-0">2nd Pick Games:</h5>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Total Win Rate:</h5>
                             </div>
-                            <div class="col-5 text-align-left">
-                                <h5 class="f-w-200 d-inline  m-b-0" id="second-pick-count">&nbsp;</h5>
-                                <p class="d-inline f-w-100 f-8 m-b-0" id="second-pick-rate">&nbsp;</p>
+                            <div class="col-4 px-0">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="total-winrate">&nbsp;</h5>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- [ fp/sp counts section ] end -->
-
-            <!-- [ streaks section ] start -->
-            <div class="col-md-6 col-xl-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="row d-flex align-items-center">
                             <div class="col-8">
-                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Total Wins:</h5>
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">1st Pick Games:</h5>
                             </div>
-                            <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="total-wins">&nbsp;</h5>
+                            <div class="col-4 text-align-left px-0">
+                                <h5 class="f-w-200 d-inline m-b-0" id="first-pick-count">&nbsp;</h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0" id="first-pick-rate">&nbsp;</p>
+                            </div>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">2nd Pick Games:</h5>
+                            </div>
+                            <div class="col-4 text-align-left px-0">
+                                <h5 class="f-w-200 d-inline  m-b-0" id="second-pick-count">&nbsp;</h5>
+                                <p class="d-inline f-w-100 f-8 m-b-0" id="second-pick-rate">&nbsp;</p>
+                            </div>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">1st Pick Win Rate:</h5>
+                            </div>
+                            <div class="col-4 px-0">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="first-pick-winrate">&nbsp;</h5>
+                            </div>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">2nd Pick Win Rate:</h5>
+                            </div>
+                            <div class="col-4 px-0">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="second-pick-winrate">&nbsp;</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-8 ">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Avg PPG:</h5>
+                            </div>
+                            <div class="col-4 px-0">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="avg-ppg">&nbsp;</h5>
                             </div>
                             <div class="col-8">
                                 <h5 class="f-w-200 d-inline align-items-center m-b-0">Max Win Streak:</h5>
                             </div>
-                            <div class="col-4">
+                            <div class="col-4 px-0">
                                 <h5 class="f-w-200 d-inline text-align-left m-b-0" id="max-win-streak">&nbsp;</h5>
                             </div>
                             <div class="col-8">
                                 <h5 class="f-w-200 d-inline align-items-center m-b-0">Max Loss Streak:</h5>
                             </div>
-                            <div class="col-4">
+                            <div class="col-4 px-0">
                                 <h5 class="f-w-200 d-inline text-align-left m-b-0" id="max-loss-streak">&nbsp;</h5>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- [ streaks section ] end -->
+            <!-- [ general stats section ] end -->
 
-            <!-- [ fp/sp winrates section ] start -->
-            <div class="col-md-6 col-xl-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row d-flex align-items-center">
-                            <div class="col-8">
-                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Total Win Rate:</h5>
-                            </div>
-                            <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="total-winrate">&nbsp;</h5>
-                            </div>
-                            <div class="col-8">
-                                <h5 class="f-w-200 d-inline align-items-center m-b-0">1st Pick Win Rate:</h5>
-                            </div>
-                            <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="first-pick-winrate">&nbsp;</h5>
-                            </div>
-                            <div class="col-8">
-                                <h5 class="f-w-200 d-inline align-items-center m-b-0">2nd Pick Win Rate:</h5>
-                            </div>
-                            <div class="col-4">
-                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="second-pick-winrate">&nbsp;</h5>
-                            </div>
+            <!-- [ server stats table ] start -->
+            <div class="col-sm-8 min-width-450">
+                <div class="card height-400">
+                    <div class="card-header kpi-header">
+                        <h5 class="text-white">Server Stats</h5>
+                        <p class="f-w-100 f-10 mb-0" id="first-pick-rate">(FP WR = First Pick Win Rate, SP WR = Second Pick Win Rate)</p>
+                    </div>
+                    <div class="card-body kpi-body rel-height-80">
+                        <div class="rel-height-100">
+                            <table id="server-stats" class="interior-border-tbl clean-table align-center-except-first col1-150 f-16">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Battles</th>
+                                        <th scope="col">Freq</th>
+                                        <th scope="col">Wins</th>
+                                        <th scope="col">Win Rate</th>
+                                        <th scope="col">+/-</th>
+                                        <th scope="col">FP WR</th>
+                                        <th scope="col">SP WR</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="server-stats-body">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- [ fp/sp winrates section ] end -->
+            <!-- [ server stats table ] end -->
+
 
             <!-- [ first pick stats table ] start -->
             <div class="col-sm-6 min-width-450">
@@ -329,7 +357,7 @@
                     <div class="card-header text-center kpi-header">
                         <h3>Player Battles</h3>
                         <h5 style="font-size: 0.7em;">
-                            Displays information for each of the player's battles. Export this table and upload to maintain hostory Two star heroes will show as 'Fodder'.
+                            Displays information for each of the player's battles. Export this table and upload to maintain history. Two star heroes will show as 'Fodder'.
                         </h5>
                     </div>
                     <div class="card-body kpi-body">
@@ -348,10 +376,12 @@
                                     <th scope="col">Date/Time</th>
                                     <th scope="col">Seq Num</th>
                                     <th scope="col">P1 ID</th>
-                                    <th scope="col">P2 ID</th>
+                                    <th scope="col">P1 Server</th>
                                     <th scope="col">P1 League</th>
-                                    <th scope="col">P2 League</th>
                                     <th scope="col">P1 Points</th>
+                                    <th scope="col">P2 ID</th>
+                                    <th scope="col">P2 Server</th>
+                                    <th scope="col">P2 League</th>
                                     <th scope="col">Win</th>
                                     <th scope="col">First Pick</th>
                                     <th scope="col">P1 Preban 1</th>
@@ -402,7 +432,7 @@
             await ContentManager.ClientCache.setFlag("autoZoom", autoZoomCheckbox.checked);
         });
 
-        const user = await ContentManager.ClientCache.getUser();
+        const user = await ContentManager.UserManager.getUser();
 
         if (!user) {
             window.location.href = URLS.addStrParam(URLS.userQueryURL, "errorMSG", "Type1: no user"); //URLS.userQueryURL;
@@ -441,10 +471,9 @@
             Tables.functions.populateHeroStatsTable('OpponentTable', stats.enemyHeroStats);
             Tables.functions.populatePlayerFirstPickTable('FirstPickStats', stats.firstPickStats);
             Tables.functions.populatePlayerPrebansTable('PrebanStats', stats.prebanStats);
+            Tables.functions.populateServerStatsTable("server-stats", stats.serverStats)
             const battleTable = Tables.functions.populateFullBattlesTable('BattlesTable', stats.battles, user);
-            CardContent.functions.populateBattleCounts(stats.generalStats);
-            CardContent.functions.populateBattlePercents(stats.generalStats);
-            CardContent.functions.populateBattleStreaks(stats.generalStats);
+            CardContent.functions.populateGeneralStats(stats.generalStats);
             CardContent.functions.populateRankPlot(stats.plotContent);
             console.log("FINISHED POPULATING");
             console.timeEnd("populateTables");
