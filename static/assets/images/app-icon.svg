@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="app-icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="205.06096"
+     inkscape:cy="167.23075"
+     inkscape:window-width="1920"
+     inkscape:window-height="986"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <rect
+       x="-145.32547"
+       y="109.39044"
+       width="137.39862"
+       height="126.8295"
+       id="rect4" />
+    <rect
+       x="-137.92708"
+       y="116.26037"
+       width="365.69173"
+       height="256.30128"
+       id="rect3" />
+    <rect
+       x="109.1131"
+       y="345.2757"
+       width="336.3075"
+       height="372.1803"
+       id="rect1" />
+    <rect
+       x="-137.92708"
+       y="116.26037"
+       width="365.69174"
+       height="256.30127"
+       id="rect3-7" />
+    <rect
+       x="-137.92708"
+       y="116.26037"
+       width="365.69174"
+       height="256.30127"
+       id="rect3-2" />
+    <rect
+       x="-137.92708"
+       y="116.26037"
+       width="365.69174"
+       height="256.30127"
+       id="rect3-72" />
+    <rect
+       x="-137.92708"
+       y="116.26037"
+       width="365.69174"
+       height="256.30127"
+       id="rect3-1" />
+    <rect
+       x="-137.92708"
+       y="116.26037"
+       width="365.69174"
+       height="256.30127"
+       id="rect3-0" />
+    <rect
+       x="-137.92708"
+       y="116.26037"
+       width="449.69174"
+       height="365.30127"
+       id="rect3-2-3" />
+    <rect
+       x="-137.92708"
+       y="116.26037"
+       width="365.69174"
+       height="256.30127"
+       id="rect3-2-7" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#00ffff;stroke-width:0.269982"
+       id="rect2-5"
+       width="100"
+       height="100"
+       x="0"
+       y="0"
+       ry="21.428572"
+       rx="26.020409" />
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text1"
+       style="font-size:48px;white-space:pre;shape-inside:url(#rect1);display:inline;fill:#000000" />
+    <rect
+       style="fill:#000000;stroke-width:0.237584"
+       id="rect2"
+       width="88"
+       height="88"
+       x="6"
+       y="6"
+       ry="18.857143"
+       rx="22.897959" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,54.140414,-20.073594)"
+       id="text2-0-6"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:221.333px;font-family:'Yu Gothic';-inkscape-font-specification:'Yu Gothic Bold';white-space:pre;shape-inside:url(#rect3-2-3);display:inline;fill:#000000"><tspan
+         x="-137.92773"
+         y="338.67349"
+         id="tspan2"><tspan
+           style="font-weight:normal;font-family:'Trebuchet MS';-inkscape-font-specification:'Trebuchet MS';fill:#00ffff"
+           id="tspan1">e7</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text3"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:48px;font-family:'Yu Gothic';-inkscape-font-specification:'Yu Gothic Light';white-space:pre;shape-inside:url(#rect4);display:inline;fill:#000000" />
+  </g>
+</svg>
