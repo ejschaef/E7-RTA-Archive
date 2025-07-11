@@ -2,7 +2,7 @@ import BattleManager from "./e7/battle-manager.js";
 import ClientCache from "./cache-manager.js";
 import PYAPI from "./py-API.js";
 import HeroManager from "./e7/hero-manager.js"
-import FilterSyntaxParser from "./e7/filter-syntax.js";
+import FilterSyntaxParser from "./e7/filter-syntax-parser.js";
 import UserManager from "./e7/user-manager.js";
 
 let PageUtils = {

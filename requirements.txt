@@ -9,6 +9,10 @@ pandas==2.2.3
 # Session
 flask_session==0.8.0
 
+# Compression
+brotli==1.1.0
+flask-compress===1.17
+
 # DB
 flask_migrate==4.1.0
 flask_sqlalchemy==3.1.1

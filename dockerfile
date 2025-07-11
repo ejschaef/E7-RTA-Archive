@@ -1,6 +1,5 @@
-# Dockerfile
 
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -17,4 +16,4 @@ COPY . /code
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Default command to run Flask
-CMD ["python", "run.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app"]

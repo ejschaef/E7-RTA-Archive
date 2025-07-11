@@ -1,0 +1,31 @@
+{
+  "name": "e7-rta-analyzer",
+  "version": "1.0.0",
+  "description": "Open-source **Flask** project crafted on top of **Datta Able Dashboard**, an open-source `Bootstrap` design. The product is designed to deliver the best possible user experience with highly customizable feature-rich pages.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ejschaef/E7-RTA-Analyzer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ejschaef/E7-RTA-Analyzer/issues"
+  },
+  "homepage": "https://github.com/ejschaef/E7-RTA-Analyzer#readme",
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "babel-loader": "^10.0.0",
+    "webpack": "^5.100.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "idb": "^8.0.3",
+    "papaparse": "^5.5.3"
+  }
+}

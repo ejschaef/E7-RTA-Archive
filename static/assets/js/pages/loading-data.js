@@ -1,0 +1,63 @@
+import {
+  ContentManager,
+  PageUtils,
+} from "../exports.js";
+
+ContentManager.HeroManager.deleteHeroManager();
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const paramObj = Object.fromEntries(params.entries());
+  console.log("GOT PARAMS:", paramObj);
+
+  try {
+    const HM = await ContentManager.HeroManager.getHeroManager();
+    const user = await ContentManager.UserManager.getUser();
+
+    // if new user query or auto query from upload battles we query the users battles from the server else skip
+    if (params.get("query") === "true") {
+      console.log(
+        "querying and caching user battles for user: ",
+        JSON.stringify(user)
+      );
+      await PageUtils.queryAndCacheBattles(user, params, HM);
+    }
+
+    const autoZoom = params.get("autoZoom") === "true" ? true : false;
+
+    // retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
+    const battles = await ContentManager.BattleManager.getBattles(HM);
+
+    const filters = await ContentManager.getFilters(HM);
+    console.log(`Received Filters: ${JSON.stringify(filters)}`);
+    const stats = await ContentManager.BattleManager.getStats(
+      battles,
+      user,
+      filters,
+      HM,
+      autoZoom
+    );
+    await ContentManager.ClientCache.setStats(stats);
+
+    // send user from loading page to hero stats page
+    window.location.replace(URLS.statsURL);
+  } catch (err) {
+    let errURL;
+    const source = params.get("source")?.toLowerCase();
+    if (source === "upload") {
+      errURL = URLS.uploadURL;
+    } else if (source === "query") {
+      errURL = URLS.userQueryURL;
+    } else if (source === "stats") {
+      errURLS = URLS.statsURLS;
+    }
+    console.error(`Failed to load data: ${err.message}`);
+    window.location.replace(
+      URLS.addStrParam(
+        errURL,
+        "errorMSG",
+        `Failed to load data: ${err.message}`
+      )
+    );
+  }
+});

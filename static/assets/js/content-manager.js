@@ -2,7 +2,7 @@ import HeroManager from "./e7/hero-manager.js";
 import BattleManager from "./e7/battle-manager.js";
 import SeasonManager from "./e7/season-manager.js";
 import ClientCache from "./cache-manager.js";
-import FilterSyntaxParser from "./e7/filter-syntax.js";
+import FilterSyntaxParser from "./e7/filter-syntax-parser.js";
 import UserManager from "./e7/user-manager.js";
 
 let ContentManager = {

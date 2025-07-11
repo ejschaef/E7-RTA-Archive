@@ -1,0 +1,10 @@
+Compression                 : nginx handles compression with gzip
+Server backend              : redis
+Server multi-threading      : celery
+Server job scheduling       : celery beat
+interactive plots           : plotly
+interactive code panels     : CodeMirror
+containerization            : docker
+version control             : github
+front end proxy             : nginx
+JS bundling                 : webpack

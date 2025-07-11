@@ -1,45 +1,36 @@
-import { parse } from 'https://cdn.jsdelivr.net/npm/csv-parse@5.6.0/+esm';
+import Papa from 'papaparse';
 import { COLUMNS } from './e7/references.js';
 
 let CSVParse = {
 
     parseUpload: async function(upload_file) {
         this.validateCSV(upload_file);
+
         const csvString = await upload_file.text();
-        const lines = csvString.split('\n').filter(line => line.trim());
-        const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-        const battleArr = [];
 
-        headers.map((h, i) => {
-            if (h !== COLUMNS[i]) {
-                throw new Error(`Header ${h} does not match expected column ${COLUMNS[i]} at index ${i}`);
+        // Parse with PapaParse
+        const result = Papa.parse(csvString, {
+            header: true,
+            skipEmptyLines: true,
+            quoteChar: '"',
+            dynamicTyping: false,
+        });
+
+        // Validate headers
+        const parsedHeaders = result.meta.fields;
+        parsedHeaders.forEach((h, i) => {
+            const cleaned = h.trim().replace(/"/g, '');
+            if (cleaned !== COLUMNS[i]) {
+                throw new Error(`Header ${cleaned} does not match expected column ${COLUMNS[i]} at index ${i}`);
             }
         });
 
-        const parser = parse({
-            columns: true, // Treat the first row as column headers
-            skip_empty_lines: true, // Ignore empty lines
-            quote: '"',
-        });
+        if (result.errors.length > 0) {
+            const error = result.errors[0];
+            throw new Error(`Failed to parse CSV: Row ${error.row}, ${error.message}`);
+        }
 
-        parser.on("readable", () => {
-            let record;
-            while ((record = parser.read()) !== null) {
-                battleArr.push(record);
-            }
-        });
-
-        parser.on("error", (error) => {
-            throw new Error(`Failed to parse CSV file: ${error.message}`);
-        });
-
-        lines.map(line => {
-            parser.write(`${line}\n`);
-        });
-
-        parser.end();
-
-        return battleArr;
+        return result.data;
     },
 
     validateCSV: function(upload_file) {

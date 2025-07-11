@@ -3,7 +3,7 @@ import HeroManager from "./hero-manager.js";
 import { LEAGUE_MAP, WORLD_CODE_TO_CLEAN_STR } from "./references.js";
 import { generateRankPlot } from "./plots.js";
 import { COLUMNS } from "./references.js";
-import FilterSyntaxParser from "./filter-syntax.js";
+import FilterSyntaxParser from "./filter-syntax-parser.js";
 import UserManager from "./user-manager.js";
 
 const HERO_COLUMNS = COLUMNS.filter(col => col.includes(" Pick ") || col.includes("ban "));

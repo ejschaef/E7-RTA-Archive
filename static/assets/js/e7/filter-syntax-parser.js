@@ -56,6 +56,9 @@ function preParse(str) {
 
 const INT_FIELDS = new Set(["victory-points"]);
 
+// Fields that will extract arrays and can be used with the 'in' operators
+const SET_FIELDS = new Set(["prebans", "p1.picks", "p2.picks", "p1.prebans", "p2.prebans"]);
+
 class FieldType {
 
     // FNS that take in a clean format battle and return the appropriate data
@@ -578,7 +581,7 @@ class FilterSyntaxParser {
         // validate filter
         if (operator === "in" || operator === "!in") {
             if (!(right instanceof SetType || right instanceof RangeType)) {
-                if(!(right instanceof FieldType) || !(["p1.picks", "p2.picks", "p1.prebans", "p2.prebans"].includes(right.str))) {
+                if(!(right instanceof FieldType) || !(SET_FIELDS.has(right.str))) {
                     throw new Futils.TypeException(`When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '${str}'`);
                 }
             }

@@ -1,5 +1,5 @@
 // static/app.js
-import { openDB } from 'https://cdn.jsdelivr.net/npm/idb@8.0.3/+esm';
+import { openDB } from 'idb';
 
 async function clearStore(db, storeName) {
   const tx = db.transaction(storeName, 'readwrite');
