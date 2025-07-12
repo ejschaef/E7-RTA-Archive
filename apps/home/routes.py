@@ -125,7 +125,26 @@ def get_battle_data():
         traceback.print_exc()
         print(f"SERVER ERROR WHEN RETURNING BATTLE DATA: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
-    
+
+@blueprint.route('api/rs_get_battle_data', methods=["POST"])
+def rs_get_battle_data():
+    try:
+        MNGR = get_mngr()
+        data = request.get_json()
+        print(f"Got: {data}")
+        userjson = data["user"]
+        username = userjson["name"]
+        server = userjson["world_code"]
+        print(f"Got: username: {username}, server: {server}")
+        user = MNGR.UserManager.get_user_from_name(username, server, all_servers=False)
+        print(f"SERVER QUERYING: <name={user.name}, server={user.world_code}>, id={user.id}")
+        battle_data = get_transformed_battles(user)
+        return jsonify({ 'battles' : battle_data, 'success' : True}), 200 #Http status code Ok
+    except Exception as e:
+        traceback.print_exc()
+        print(f"SERVER ERROR WHEN RETURNING BATTLE DATA: {str(e)}")
+        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
+
 
 @blueprint.route('api/get_season_details')
 def get_season_details():

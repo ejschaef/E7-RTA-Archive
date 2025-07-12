@@ -1,16 +1,42 @@
 
-FROM python:3.13-slim
+FROM python:3.12-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV COMPOSE_BAKE=true
 
+# Install rust library
+# Install build dependencies for maturin and Rust tooling
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    python3-dev \
+    libssl-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust (for maturin and building)
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
 # Set working directory
 WORKDIR /code
 
 # Copy project files
 COPY . /code
+
+# Install maturin
+RUN pip install maturin
+
+# Set working directory to rust folder
+WORKDIR /code/rust
+
+# Build and install Rust Python lib with maturin develop
+RUN maturin develop --release
+
+# Set working directory to flask folder
+WORKDIR /code
 
 # Install dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt

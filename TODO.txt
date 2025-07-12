@@ -1,8 +1,12 @@
 TODO
 
-Add compression algorithm to flask with brotli. Shouldn't need to do any decompression
-Added proxy using Nginx in front of flask
-Bundled JS files using webpack and node
+Add compression algorithm to flask with nginx gzip. Shouldn't need to do any decompression --
+Added proxy using Nginx in front of flask --
+Bundled JS files using webpack and node --
+
+finish the Rust API and data expansion
+add logging
+Update readme
 
 # Would be nice
 Use same API function to query battles for both upload and user query (would need to search either by ID or name/server)

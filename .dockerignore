@@ -4,10 +4,12 @@ __pycache__/
 env/
 .venv
 venv/
-e7_rs_package/
+e7_rs_tools/
 node_modules/
 .git
 .gitignore
+.vscode
+test.py
 
 apps/static/assets/node_modules
 apps/static/assets/yarn.lock

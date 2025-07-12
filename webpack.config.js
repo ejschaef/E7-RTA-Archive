@@ -2,11 +2,11 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    home            : './static/assets/js/pages/home.js',
+    "home"          : './static/assets/js/pages/home.js',
     "filter-syntax" : './static/assets/js/pages/filter-syntax.js',
-    stats           : './static/assets/js/pages/stats.js',
+    "stats"         : './static/assets/js/pages/stats.js',
     "user-query"    : './static/assets/js/pages/user-query.js',
-    upload          : './static/assets/js/pages/upload.js',
+    "upload"        : './static/assets/js/pages/upload.js',
     "loading-data"  : './static/assets/js/pages/loading-data.js',
   },
   output: {

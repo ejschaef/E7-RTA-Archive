@@ -38,5 +38,12 @@ apps/static/assets/node_modules
 apps/static/assets/yarn.lock
 apps/static/assets/.temp
 
+# vscode
+.vscode
+
+# misc
+features.txt
+TODO.txt
+
 
 #migrations

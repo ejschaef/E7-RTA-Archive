@@ -7,8 +7,8 @@
   <div class="pc-container">
     <div class="pc-content">
         <div class="row justify-content-center">
-            <div class="col-md-9">
-                <div class="card">
+            <div class="col-md-9 mb-0">
+                <div class="card mb-0">
                     <div class="card-header text-center">
                         <h3>Welcome to E7 RTA Analyzer</h3>
                     </div>
@@ -24,37 +24,39 @@
                     </div>
                 </div>
             </div>
-            <div class="nav-grid col-md-12">
-                <a href="{{ url_for('home_blueprint.user_query') }}" class="nav-link">
-                    <div class="nav-cell">
-                        <img src="{{ url_for('static', filename='assets/images/download-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="download">
-                        <div class="nav-label">Query User</div>
-                    </div>
-                </a>
-                <a href="{{ url_for('home_blueprint.upload_battle_data') }}" class="nav-link">
-                    <div class="nav-cell">
-                        <img src="{{ url_for('static', filename='assets/images/upload-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="upload">
-                        <div class="nav-label">Upload Data</div>
-                    </div>
-                </a>
-                <a href="{{ url_for('home_blueprint.filter_syntax') }}" class="nav-link">
-                    <div class="nav-cell">
-                        <img src="{{ url_for('static', filename='assets/images/filter-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="filter">
-                        <div class="nav-label">Filter Syntax</div>
-                    </div>
-                </a>
-                <a href="{{ url_for('home_blueprint.stats') }}" class="nav-link">
-                    <div class="nav-cell">
-                        <img src="{{ url_for('static', filename='assets/images/chart-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="chart">
-                        <div class="nav-label">Stats</div>
-                    </div>
-                </a>
-                <a href="https://github.com/ejschaef/E7-RTA-Analyzer" class="nav-link">
-                    <div class="nav-cell">
-                        <img src="{{ url_for('static', filename='assets/images/github-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="github">
-                        <div class="nav-label">GitHub</div>
-                    </div>
-                </a>
+            <div class="col-md-9 mt-0">
+                <div class="nav-grid">
+                    <a href="{{ url_for('home_blueprint.user_query') }}" class="nav-link">
+                        <div class="nav-cell">
+                            <img src="{{ url_for('static', filename='assets/images/download-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="download">
+                            <div class="nav-label">Query User</div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('home_blueprint.upload_battle_data') }}" class="nav-link">
+                        <div class="nav-cell">
+                            <img src="{{ url_for('static', filename='assets/images/upload-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="upload">
+                            <div class="nav-label">Upload Data</div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('home_blueprint.filter_syntax') }}" class="nav-link">
+                        <div class="nav-cell">
+                            <img src="{{ url_for('static', filename='assets/images/filter-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="filter">
+                            <div class="nav-label">Filter Syntax</div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('home_blueprint.stats') }}" class="nav-link">
+                        <div class="nav-cell">
+                            <img src="{{ url_for('static', filename='assets/images/chart-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="chart">
+                            <div class="nav-label">Stats</div>
+                        </div>
+                    </a>
+                    <a href="https://github.com/ejschaef/E7-RTA-Analyzer" class="nav-link">
+                        <div class="nav-cell">
+                            <img src="{{ url_for('static', filename='assets/images/github-icon.svg') }}" width="50" height="50" class="img-fluid nav-icon" alt="github">
+                            <div class="nav-label">GitHub</div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
