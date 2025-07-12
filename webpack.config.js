@@ -8,6 +8,7 @@ module.exports = {
     "user-query"    : './static/assets/js/pages/user-query.js',
     "upload"        : './static/assets/js/pages/upload.js',
     "loading-data"  : './static/assets/js/pages/loading-data.js',
+    "test"          : './static/assets/js/pages/test.js',
   },
   output: {
     filename: '[name].bundle.js',         // Output bundled files

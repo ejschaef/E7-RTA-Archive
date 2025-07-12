@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     libssl-dev \
     pkg-config \
+    patchelf \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Rust (for maturin and building)
@@ -30,10 +31,11 @@ COPY . /code
 RUN pip install maturin
 
 # Set working directory to rust folder
-WORKDIR /code/rust
+WORKDIR /code/e7_rs_tools
 
 # Build and install Rust Python lib with maturin develop
-RUN maturin develop --release
+RUN maturin build --release --interpreter python3
+RUN pip install target/wheels/*.whl
 
 # Set working directory to flask folder
 WORKDIR /code

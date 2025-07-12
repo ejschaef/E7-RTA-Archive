@@ -24,6 +24,7 @@ from apps.e7_utils.user_manager import User
 from apps.e7_utils.query_user_battles import get_transformed_battles
 from apps.content_manager import get_mngr
 from apps.references import cached_var_keys as KEYS
+from e7_rs_tools import get_battle_array
 import traceback
 
 from apps.tasks import celery_app
@@ -125,25 +126,33 @@ def get_battle_data():
         traceback.print_exc()
         print(f"SERVER ERROR WHEN RETURNING BATTLE DATA: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
+    
+
+class SlimUserObject:
+
+    slots = ['id', 'name', 'world_code']
+
+    def __init__(self, user_dict):
+        self.id = user_dict["id"]
+        self.name = user_dict["name"]
+        self.world_code = user_dict["world_code"]
 
 @blueprint.route('api/rs_get_battle_data', methods=["POST"])
 def rs_get_battle_data():
+    print("RS API Call to get_battle_data was made")
     try:
-        MNGR = get_mngr()
         data = request.get_json()
         print(f"Got: {data}")
-        userjson = data["user"]
-        username = userjson["name"]
-        server = userjson["world_code"]
-        print(f"Got: username: {username}, server: {server}")
-        user = MNGR.UserManager.get_user_from_name(username, server, all_servers=False)
-        print(f"SERVER QUERYING: <name={user.name}, server={user.world_code}>, id={user.id}")
-        battle_data = get_transformed_battles(user)
-        return jsonify({ 'battles' : battle_data, 'success' : True}), 200 #Http status code Ok
+        user = SlimUserObject(data["user"])
+        name, world_code = user.name, user.world_code
+        print(f"SERVER QUERYING: <name={name}, server={world_code}>, id={user.id} using RS")
+        battle_data = get_battle_array(int(user.id), user.world_code)
+        print(f"Got {len(battle_data)} battles for {name} on {world_code}")
+        return jsonify({ 'battles' : battle_data }), 200 #Http status code Ok
     except Exception as e:
         traceback.print_exc()
         print(f"SERVER ERROR WHEN RETURNING BATTLE DATA: {str(e)}")
-        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
+        return jsonify({ 'error' : str(e) }), 500 #Http status code Internal Server Error
 
 
 @blueprint.route('api/get_season_details')

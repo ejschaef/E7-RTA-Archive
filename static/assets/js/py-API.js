@@ -1,4 +1,5 @@
 const BATTLE_URL = '/api/get_battle_data';
+const RS_BATTLE_URL = '/api/rs_get_battle_data';
 const HERO_URL = '/api/get_hero_data';
 const USER_URL = '/api/get_user_data';
 const SEASON_URL = '/api/get_season_details';
@@ -29,6 +30,20 @@ let PYAPI = {
             throw new Error("Must pass user to fetch battles data");
         }
         return await fetch(BATTLE_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user: user })
+          })
+    },
+
+    // uses the new API endpoint that utilizes Rust for fetching and processing the battles
+    rsFetchBattleData: async function (user) {
+        if (!user) {
+            throw new Error("Must pass user to fetch battles data");
+        }
+        return await fetch(RS_BATTLE_URL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

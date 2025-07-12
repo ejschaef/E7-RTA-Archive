@@ -22,6 +22,8 @@ docker-compose -f docker-compose.prod.yaml build
 docker-compose -f docker-compose.dev.yaml build
 
 docker-compose -f docker-compose.prod.yaml up
+docker-compose -f docker-compose.dev.yaml up
+
 docker ps -a | grep nginx
 
 #Push prod to docker repository; repository tag is defined in file

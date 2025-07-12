@@ -109,7 +109,7 @@ impl BattleStatsBundle {
             date_time: entry.battle_day,
             season_name: entry.season_name,
             seq_num: entry.battle_seq,
-            win: entry.iswin,
+            win: entry.iswin, // will be either 1 or 2 so we will always check for 1 to align with normal bool behavior
             first_pick: first_pick,
             turns: entry.turn,
             seconds: entry.battle_time,
