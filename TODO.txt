@@ -8,6 +8,20 @@ finish the Rust API and data expansion
 add logging
 Update readme
 
+
+parse uploads
+fix footer loading in
+
 # Would be nice
 Use same API function to query battles for both upload and user query (would need to search either by ID or name/server)
 brotli compression in nginx, would likely need separate docker image to build
+
+filter function ideas:
+
+complete() -> filters out turns === 0 games
+[p1,p2].equipment("hero", set) -> filters battles where hero in picks and equipment in the set
+
+new fields
+
+turns -> int
+seconds -> int

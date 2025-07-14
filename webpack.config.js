@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    "home"          : './static/assets/js/pages/home.js',
+    "home-page"     : './static/assets/js/pages/home-page.js',
     "filter-syntax" : './static/assets/js/pages/filter-syntax.js',
     "stats"         : './static/assets/js/pages/stats.js',
     "user-query"    : './static/assets/js/pages/user-query.js',
@@ -14,7 +14,9 @@ module.exports = {
     filename: '[name].bundle.js',         // Output bundled files
     path: path.resolve(__dirname, 'static/dist'),  // Output folder
   },
-  mode: 'production',             // Enables minification
+  //mode: 'production',             // Enables minification
+  mode: 'development',
+  devtool: 'source-map',
   module: {
     rules: [
       {

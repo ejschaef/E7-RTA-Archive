@@ -113,7 +113,7 @@ export function generateRankPlot(battles, user, filteredBattles = null, zoomFilt
     };
 
     // Generate HTML string
-    const divId = `plot-${Math.random().toString(36).substr(2, 9)}`;
+    const divId = `rank-plot-container`;
     const containerDiv = `<div id="${divId}"></div>`;
     const plotScript = `
 <script>

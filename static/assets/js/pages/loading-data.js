@@ -1,9 +1,4 @@
-import {
-  ContentManager,
-  PageUtils,
-} from "../exports.js";
-
-ContentManager.HeroManager.deleteHeroManager();
+import { ContentManager, PageUtils } from "../exports.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
@@ -26,9 +21,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const autoZoom = params.get("autoZoom") === "true" ? true : false;
 
     // retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
-    const battles = await ContentManager.BattleManager.getBattles(HM);
+    console.log("Getting Battles From Cache");
+    const battles = await ContentManager.BattleManager.getBattles();
 
+    console.log("Getting Filters From Cache");
     const filters = await ContentManager.getFilters(HM);
+
     console.log(`Received Filters: ${JSON.stringify(filters)}`);
     const stats = await ContentManager.BattleManager.getStats(
       battles,
@@ -39,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     await ContentManager.ClientCache.setStats(stats);
 
-    // send user from loading page to hero stats page
+    //send user from loading page to hero stats page
     window.location.replace(URLS.statsURL);
   } catch (err) {
     let errURL;

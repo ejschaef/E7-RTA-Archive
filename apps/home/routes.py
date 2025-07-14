@@ -188,12 +188,12 @@ def get_user_data():
         user_data = data["userData"]
 
         #split logic based on what user data is passed
-        if user_data.get("username"):
-            username = user_data["username"]
-            server = user_data["server"]
-            user = MNGR.UserManager.get_user_from_name(username, server, all_servers=False)
+        if user_data.get("name"):
+            name = user_data["username"]
+            world_code = user_data["server"]
+            user = MNGR.UserManager.get_user_from_name(name, world_code, all_servers=False)
         else:
-            user = MNGR.UserManager.get_user_from_id(int(user_data.get("id")))
+            user = MNGR.UserManager.get_user_from_id(int(user_data["id"]))
 
         if user:
             print(f"SERVER RETURNING: <name={user.name}, server={user.world_code}>, id={user.id}")
@@ -262,11 +262,16 @@ def filter_syntax():
 
 @blueprint.route('/stats', methods=['GET'])
 def stats():
-    form = CodeForm()
+    filter_form = CodeForm()
+    query_form = UserQueryForm()
+    file_upload_form = FileUploadForm()
+
     code = request.form.get('code')
 
     context = {'segment' : 'stats', 
-               'form' : form,
+               'filter_form' : filter_form,
+               'query_form' : query_form,
+               'upload_form' : file_upload_form,
                'code' : code,
     }
 

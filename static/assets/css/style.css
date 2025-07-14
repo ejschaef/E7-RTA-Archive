@@ -24,11 +24,13 @@ File: style.css
   --pc-sidebar-caption-color: #e8edf7;
   --pc-sidebar-border: none;
   /* --pc-header-background: rgba(var(--bs-body-bg-rgb), 0.7); */
-  --pc-header-color: #5b6b79;
+  --pc-header-color: #ffffff;
   --pc-header-shadow: none;
   --pc-card-box-shadow: 0 1px 20px 0 rgba(69, 90, 100, .08);
   --pc-header-submenu-background: #ffffff;
   --pc-header-submenu-color: #5b6b79;
+  --pc-header-background-color: #000000;
+  --pc-header-border-color: #878787ef;
 }
 
 [data-pc-sidebar_theme=true] {
@@ -19251,15 +19253,18 @@ pre[class*=language-]>code {
 
 .pc-header {
   background: var(--pc-header-background);
+  background-color: var(--pc-header-background-color);
+  border-bottom: 1px solid var(--pc-header-border-color);
   color: var(--pc-header-color);
-  min-height: 50px;
-  max-height: 60px;
+  min-height: 66px;
+  max-height: 100px;
   box-shadow: var(--pc-header-shadow);
   -webkit-backdrop-filter: blur(7px);
   backdrop-filter: blur(7px);
   position: fixed;
   left: 208px;
   right: 0;
+  top: 0;
   z-index: 1025;
   display: flex;
 }
@@ -19282,6 +19287,7 @@ pre[class*=language-]>code {
   display: flex;
   padding: 0 25px;
   flex-grow: 1;
+  top: 0;
 }
 
 @media (max-width: 575.98px) {
@@ -19329,7 +19335,7 @@ pre[class*=language-]>code {
 }
 
 .pc-header .pc-h-item {
-  min-height: 74px;
+  min-height: 50px;
   display: flex;
   align-items: center;
   position: relative;

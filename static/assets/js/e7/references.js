@@ -16,6 +16,27 @@ export const WORLD_CODE_TO_CLEAN_STR = {
   "world_eu" : "Europe"
 }
 
+export const EQUIPMENT_SET_MAP = {
+  "set_speed" : "Speed",
+  "set_acc" : "Hit",
+  "set_cri" : "Crit",
+  "set_res" : "Resist",
+  "set_def" : "Defense",
+  "set_att" : "Attack",
+  "set_max_hp" : "HP",
+  "set_cri_dmg" : "Crit DMG",
+  "set_coop" : "Unity",
+  "set_immune" : "Immunity",
+  "set_rage" : "Rage",
+  "set_vampire" : "Lifesteal",
+  "set_shield" : "Protection",
+  "set_revenge" : "Revenge",
+  "set_penetrate" : "Penetration",
+  "set_torrent" : "Torrent",
+  "set_counter" : "Counter",
+  "set_scar" : "Injury"
+}
+
 export const ONE_DAY = 1000 * 60 * 60 * 24;
 
 export const LEAGUE_MAP = {
@@ -43,6 +64,82 @@ export const COLUMNS = [
   
   "P1 Postban","P2 Postban"
   ];
+
+export const COLUMNS_EXPANDED = [
+  "Season",
+  "Date/Time",
+  "Seconds",
+  "Turns",
+  "Seq Num",
+  "P1 ID",
+  "P1 Server",
+  "P2 ID",
+  "P2 Server",
+  "P1 League",
+  "P2 League",
+  "P1 Points",
+  "Point Gain",
+  "Win",
+  "First Pick",
+  "CR Bar",
+  "First Turn",
+  "First Turn Hero",
+  "P1 Prebans",
+  "P2 Prebans",
+  "P1 Picks",
+  "P2 Picks",
+  "P1 Postban",
+  "P2 Postban",
+  "P1 Equipment",
+  "P2 Equipment",
+  "P1 Artifacts",
+  "P2 Artifacts",
+  "P1 MVP",
+  "P2 MVP"
+]
+
+export const COLUMNS_MAP = {
+  SEASON: "Season",
+  DATE_TIME: "Date/Time",
+  SECONDS: "Seconds",
+  TURNS: "Turns",
+  SEQ_NUM: "Seq Num",
+  P1_ID: "P1 ID",
+  P1_SERVER: "P1 Server",
+  P2_ID: "P2 ID",
+  P2_SERVER: "P2 Server",
+  P1_LEAGUE: "P1 League",
+  P2_LEAGUE: "P2 League",
+  P1_POINTS: "P1 Points",
+  POINT_GAIN: "Point Gain",
+  WIN: "Win",
+  FIRST_PICK: "First Pick",
+  CR_BAR: "CR Bar",
+  FIRST_TURN: "First Turn",
+  FIRST_TURN_HERO: "First Turn Hero",
+  P1_PREBANS: "P1 Prebans",
+  P2_PREBANS: "P2 Prebans",
+  P1_PICKS: "P1 Picks",
+  P2_PICKS: "P2 Picks",
+  P1_POSTBAN: "P1 Postban",
+  P2_POSTBAN: "P2 Postban",
+  P1_EQUIPMENT: "P1 Equipment",
+  P2_EQUIPMENT: "P2 Equipment",
+  P1_ARTIFACTS: "P1 Artifacts",
+  P2_ARTIFACTS: "P2 Artifacts",
+  P1_MVP: "P1 MVP",
+  P2_MVP: "P2 MVP",
+  P1_PICKS_PRIMES: "P1 Picks Primes",
+  P1_PICKS_PRIME_PRODUCT: "P1 Picks Prime Product",
+  P2_PICKS_PRIMES: "P2 Picks Primes",
+  P2_PICKS_PRIME_PRODUCT: "P2 Picks Prime Product",
+  P1_PREBANS_PRIMES: "P1 Prebans Primes",
+  P1_PREBANS_PRIME_PRODUCT: "P1 Prebans Prime Product",
+  P2_PREBANS_PRIMES: "P2 Prebans Primes",
+  P2_PREBANS_PRIME_PRODUCT: "P2 Prebans Prime Product"
+};
+
+
 
 /**
  * Generates a list of all prime numbers up to and including the given limit.

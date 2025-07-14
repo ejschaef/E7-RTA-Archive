@@ -1,5 +1,7 @@
 import Papa from 'papaparse';
-import { COLUMNS } from './e7/references.js';
+import { COLUMNS_MAP } from './e7/references.js';
+
+const COLUMNS = Object.values(COLUMNS_MAP);
 
 let CSVParse = {
 
@@ -29,7 +31,8 @@ let CSVParse = {
             const error = result.errors[0];
             throw new Error(`Failed to parse CSV: Row ${error.row}, ${error.message}`);
         }
-
+        console.log("Parsed CSV");
+        console.log(result.data);
         return result.data;
     },
 

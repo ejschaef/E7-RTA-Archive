@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   document
-    .getElementById("switch-user-btn")
+    .getElementById("switch-user-nav")
     .addEventListener("click", async () => {
       console.log("Clearing User Data");
       await ContentManager.ClientCache.clearUserData();

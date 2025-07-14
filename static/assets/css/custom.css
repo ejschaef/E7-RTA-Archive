@@ -61,14 +61,14 @@ table.dataTable tbody td {
 .btn {
     --bs-btn-color: #ffffff;
     --bs-btn-bg: #1e222d;
-    --bs-btn-border-color: #0b0c0d;
-    --bs-btn-hover-color: #ffffff;
+    --bs-btn-border-color: #444444;
+    --bs-btn-hover-color: #0cdfe3;
     --bs-btn-hover-bg: #14171e;
-    --bs-btn-hover-border-color: #090a0a;
+    --bs-btn-hover-border-color: #0cdfe3;
     --bs-btn-focus-shadow-rgb: 42, 182, 247;
-    --bs-btn-active-color: #9b9b9b;
+    --bs-btn-active-color: #0ca9ab;
     --bs-btn-active-bg: #000000;
-    --bs-btn-active-border-color: #050505;
+    --bs-btn-active-border-color: #0cdfe3;
     --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     --bs-btn-disabled-color: #ffffff;
     --bs-btn-disabled-bg: #888888;

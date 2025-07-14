@@ -1,32 +1,49 @@
 <header class="pc-header">
-    <div class="header-wrapper d-flex align-items-center"> <!-- [Mobile Media Block] start -->
-      <div class="me-auto pc-mob-drp d-flex">
-        <ul class="list-unstyled">
-          <!-- ======= Menu collapse Icon ===== -->
-          <li class="pc-h-item pc-sidebar-collapse">
-            <a href="#" class="pc-head-link ms-0" id="sidebar-hide">
-              <i data-feather="menu"></i>
-            </a>
-          </li>
-          <li class="pc-h-item pc-sidebar-popup">
-            <a href="#" class="pc-head-link ms-0" id="mobile-collapse">
-              <i data-feather="menu"></i>
-            </a>
-          </li>
-        </ul>
-        <div class="toggle-container" id="user-options">
-          <!-- <label class="toggle-switch">
-              <input type="checkbox">
-              <span class="toggle-switch-background">
-                <span class="toggle-switch-handle"></span>
-              </span>
-          </label>
-          <h6>  Save Current User</h6> -->
-
-            <button name="switch_user" class="btn btn-primary" type="submit" action="switch-user" id="switch-user-btn">
-                Switch User
-            </button>
-        </div>
+  <div class="header-wrapper d-flex align-items-center"> <!-- [Mobile Media Block] start -->
+    <div class="me-auto pc-mob-drp d-flex">
+      <ul class="list-unstyled">
+        <!-- ======= Menu collapse Icon ===== -->
+        <li class="pc-h-item pc-sidebar-collapse">
+          <a href="#" class="pc-head-link ms-0" id="sidebar-hide">
+            <i data-feather="menu"></i>
+          </a>
+        </li>
+        <li class="pc-h-item pc-sidebar-popup">
+          <a href="#" class="pc-head-link ms-0" id="mobile-collapse">
+            <i data-feather="menu"></i>
+          </a>
+        </li>
+      </ul>
+      <div class="nav-grid">
+        <button type="button" class="nav-link" data-nav="select-data">
+          <span class="nav-cell">
+            <img src="{{ url_for('static', filename='assets/images/data-icon.svg') }}" class="img-fluid nav-icon"
+              alt="download">
+            <span class="nav-label">Select Data</span>
+          </span>
+        </button>
+        <button type="button" class="nav-link" data-nav="show-stats">
+          <span class="nav-cell">
+            <img src="{{ url_for('static', filename='assets/images/chart-icon.svg') }}" class="img-fluid nav-icon"
+              alt="chart">
+            <span class="nav-label">Stats</span>
+          </span>
+        </button>
+        <a href="{{ url_for('home_blueprint.filter_syntax') }}" data-nav="filter-syntax" class="nav-link">
+          <div class="nav-cell">
+            <img src="{{ url_for('static', filename='assets/images/filter-icon.svg') }}" class="img-fluid nav-icon"
+              alt="filter">
+            <div class="nav-label">Filter Syntax</div>
+          </div>
+        </a>
+        <a href="https://github.com/ejschaef/E7-RTA-Analyzer" data-nav="github" target="_blank" class="nav-link">
+          <div class="nav-cell">
+            <img src="{{ url_for('static', filename='assets/images/github-icon.svg') }}" class="img-fluid nav-icon"
+              alt="github">
+            <div class="nav-label">GitHub</div>
+          </div>
+        </a>
       </div>
     </div>
+  </div>
 </header>

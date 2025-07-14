@@ -24,6 +24,8 @@ const Keys = {
   ASIA_USERS: "asia-users",
   JPN_USERS: "jpn-users",
   KOR_USERS: "kor-users",
+  ARTIFACTS: "artifacts",
+  HOME_PAGE_STATE: "home-page-state",
 };
 
 const FlagsToKeys = {

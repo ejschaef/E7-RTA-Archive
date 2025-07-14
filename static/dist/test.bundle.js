@@ -1,2 +1,5326 @@
-/*! For license information please see test.bundle.js.LICENSE.txt */
-(()=>{"use strict";var t=new Set(["world_kor","world_global","world_jpn","world_asia","world_eu"]),e={world_global:"Global",world_kor:"Korea",world_jpn:"Japan",world_asia:"Asia",world_eu:"Europe"},n=864e5,r={bronze:0,silver:1,gold:2,master:3,challenger:4,champion:5,warlord:6,emperor:7,legend:8},o=function(t){for(var e=new Uint8Array(30001),n=[],r=2;r<=t;r++)if(!e[r]){n.push(r);for(var o=r*r;o<=t;o+=r)e[o]=1}return n}(3e4);function a(t){return function(t){if(Array.isArray(t))return i(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||function(t,e){if(t){if("string"==typeof t)return i(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?i(t,e):void 0}}(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function i(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function c(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var c=r&&r.prototype instanceof s?r:s,l=Object.create(c.prototype);return u(l,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),l}var i={};function s(){}function l(){}function f(){}e=Object.getPrototypeOf;var p=[][r]?e(e([][r]())):(u(e={},r,function(){return this}),e),d=f.prototype=s.prototype=Object.create(p);function h(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,f):(t.__proto__=f,u(t,o,"GeneratorFunction")),t.prototype=Object.create(d),t}return l.prototype=f,u(d,"constructor",f),u(f,"constructor",l),l.displayName="GeneratorFunction",u(f,o,"GeneratorFunction"),u(d),u(d,o,"Generator"),u(d,r,function(){return this}),u(d,"toString",function(){return"[object Generator]"}),(c=function(){return{w:a,m:h}})()}function u(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}u=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){u(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},u(t,e,n,r)}function s(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function l(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){s(a,r,o,i,c,"next",t)}function c(t){s(a,r,o,i,c,"throw",t)}i(void 0)})}}function f(t){return p.apply(this,arguments)}function p(){return(p=l(c().m(function t(e){var n,r,o;return c().w(function(t){for(;;)switch(t.n){case 0:return t.p=0,t.n=1,fetch(e);case 1:if((n=t.v).ok){t.n=2;break}throw new Error("HTTP error: status: ".concat(n.status));case 2:return t.n=3,n.json();case 3:return r=t.v,console.log("Fetched data from E7 Server; keys:",Object.keys(r)),t.a(2,r);case 4:return t.p=4,o=t.v,console.error("Error fetching global user data:",o),t.a(2,null)}},t,null,[[0,4]])}))).apply(this,arguments)}function d(){return d=l(c().m(function t(){var e,n,r=arguments;return c().w(function(t){for(;;)switch(t.n){case 0:return e=r.length>0&&void 0!==r[0]?r[0]:null,console.log("Fetching hero data (lang=".concat(null!=e?e:"all",") from E7 Server...")),t.n=1,f("https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json");case 1:return n=t.v,e&&n[e]?n=n[e]:e&&!n[e]&&(console.error("Could not find hero data for language:",e),n=null),t.a(2,n)}},t)})),d.apply(this,arguments)}function h(){return(h=l(c().m(function e(n){var r,o;return c().w(function(e){for(;;)switch(e.n){case 0:if(n=n.replace("world_",""),a(t).some(function(t){return t.replace("world_","")===n})){e.n=1;break}return console.error("Could not find world code: ".concat(n)),e.a(2,null);case 1:return console.log("Fetching users for world code: ".concat(n," from E7 Server...")),r="https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(n,".json"),e.n=2,f(r);case 2:return(o=e.v)&&console.log("Got user data for world: ".concat(n," ; Found ").concat(o.users.length," users")),e.a(2,o)}},e)}))).apply(this,arguments)}const y={fetchHeroJSON:function(){return d.apply(this,arguments)},fetchUserJSON:function(t){return h.apply(this,arguments)}};function v(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return g(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(g(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,g(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,g(f,"constructor",s),g(s,"constructor",u),u.displayName="GeneratorFunction",g(s,o,"GeneratorFunction"),g(f),g(f,o,"Generator"),g(f,r,function(){return this}),g(f,"toString",function(){return"[object Generator]"}),(v=function(){return{w:a,m:p}})()}function g(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}g=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){g(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},g(t,e,n,r)}function m(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function b(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){m(a,r,o,i,c,"next",t)}function c(t){m(a,r,o,i,c,"throw",t)}i(void 0)})}}var w,S,P,E,_,T,k;const O={test:function(t){console.log("Got data in test:",t.rank_plot)},fetchFromPython:(k=b(v().m(function t(e){var n,r;return v().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,fetch(e);case 1:if((n=t.v).ok){t.n=3;break}return console.log("Retrying Fetch..."),t.n=2,fetch(e);case 2:n=t.v;case 3:return t.n=4,n.json();case 4:return r=t.v,t.a(2,r||null)}},t)})),function(t){return k.apply(this,arguments)}),fetchHeroData:(T=b(v().m(function t(){return v().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.fetchFromPython("/api/get_hero_data");case 1:return t.a(2,t.v)}},t,this)})),function(){return T.apply(this,arguments)}),fetchBattleData:(_=b(v().m(function t(e){return v().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}throw new Error("Must pass user to fetch battles data");case 1:return t.n=2,fetch("/api/get_battle_data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:e})});case 2:return t.a(2,t.v)}},t)})),function(t){return _.apply(this,arguments)}),rsFetchBattleData:(E=b(v().m(function t(e){return v().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}throw new Error("Must pass user to fetch battles data");case 1:return t.n=2,fetch("/api/rs_get_battle_data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:e})});case 2:return t.a(2,t.v)}},t)})),function(t){return E.apply(this,arguments)}),fetchSeasonDetails:(P=b(v().m(function t(){var e,n,r;return v().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,fetch("/api/get_season_details");case 1:return e=t.v,t.n=2,e.json();case 2:if(!(n=t.v).success){t.n=3;break}return r=JSON.parse(n.seasonDetails),t.a(2,{seasonDetails:r,error:!1});case 3:return t.a(2,{seasonDetails:null,error:n.error});case 4:return t.a(2)}},t)})),function(){return P.apply(this,arguments)}),fetchUser:(S=b(v().m(function t(e){var n,r,o,a,i;return v().w(function(t){for(;;)switch(t.n){case 0:if(e.name&&e.world_code||e.id){t.n=1;break}throw new Error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");case 1:return t.n=2,fetch("/api/get_user_data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({userData:e})});case 2:return n=t.v,t.n=3,n.json();case 3:if(r=t.v,t.p=4,!n.ok){t.n=9;break}if(r.foundUser){t.n=7;break}if(!e.name){t.n=5;break}return o=e.world_code.replace("world_",""),t.a(2,{user:null,error:'Could not find user: "'.concat(e.name,'" in world_code: ').concat(o)});case 5:if(!e.id){t.n=6;break}return t.a(2,{user:null,error:"Could not find user with ID: ".concat(e.id)});case 6:t.n=8;break;case 7:return a=r.user,console.log("Server communication successful; received response data for user"),console.log("Found user: ".concat(JSON.stringify(a))),t.a(2,{user:a,error:!1});case 8:t.n=10;break;case 9:return console.log("Server communication unsuccessful"),t.a(2,{user:null,error:r.error});case 10:t.n=12;break;case 11:return t.p=11,i=t.v,console.error("Error fetching and caching user: ".concat(i)),t.a(2,{user:null,error:i.message});case 12:return t.a(2)}},t,null,[[4,11]])})),function(t){return S.apply(this,arguments)}),fetchDataFromID:(w=b(v().m(function t(e){return v().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}throw new Error("Must pass ID to fetch user");case 1:return t.n=2,fetch("/api/get_battle_data_from_id",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:e})});case 2:return t.a(2,t.v)}},t)})),function(t){return w.apply(this,arguments)})},A=(t,e)=>e.some(e=>t instanceof e);let D,I;const j=new WeakMap,L=new WeakMap,R=new WeakMap;let x={get(t,e,n){if(t instanceof IDBTransaction){if("done"===e)return j.get(t);if("store"===e)return n.objectStoreNames[1]?void 0:n.objectStore(n.objectStoreNames[0])}return M(t[e])},set:(t,e,n)=>(t[e]=n,!0),has:(t,e)=>t instanceof IDBTransaction&&("done"===e||"store"===e)||e in t};function F(t){x=t(x)}function N(t){return"function"==typeof t?(e=t,(I||(I=[IDBCursor.prototype.advance,IDBCursor.prototype.continue,IDBCursor.prototype.continuePrimaryKey])).includes(e)?function(...t){return e.apply(B(this),t),M(this.request)}:function(...t){return M(e.apply(B(this),t))}):(t instanceof IDBTransaction&&function(t){if(j.has(t))return;const e=new Promise((e,n)=>{const r=()=>{t.removeEventListener("complete",o),t.removeEventListener("error",a),t.removeEventListener("abort",a)},o=()=>{e(),r()},a=()=>{n(t.error||new DOMException("AbortError","AbortError")),r()};t.addEventListener("complete",o),t.addEventListener("error",a),t.addEventListener("abort",a)});j.set(t,e)}(t),A(t,D||(D=[IDBDatabase,IDBObjectStore,IDBIndex,IDBCursor,IDBTransaction]))?new Proxy(t,x):t);var e}function M(t){if(t instanceof IDBRequest)return function(t){const e=new Promise((e,n)=>{const r=()=>{t.removeEventListener("success",o),t.removeEventListener("error",a)},o=()=>{e(M(t.result)),r()},a=()=>{n(t.error),r()};t.addEventListener("success",o),t.addEventListener("error",a)});return R.set(e,t),e}(t);if(L.has(t))return L.get(t);const e=N(t);return e!==t&&(L.set(t,e),R.set(e,t)),e}const B=t=>R.get(t);function G(t,e,{blocked:n,upgrade:r,blocking:o,terminated:a}={}){const i=indexedDB.open(t,e),c=M(i);return r&&i.addEventListener("upgradeneeded",t=>{r(M(i.result),t.oldVersion,t.newVersion,M(i.transaction),t)}),n&&i.addEventListener("blocked",t=>n(t.oldVersion,t.newVersion,t)),c.then(t=>{a&&t.addEventListener("close",()=>a()),o&&t.addEventListener("versionchange",t=>o(t.oldVersion,t.newVersion,t))}).catch(()=>{}),c}const C=["get","getKey","getAll","getAllKeys","count"],U=["put","add","delete","clear"],V=new Map;function H(t,e){if(!(t instanceof IDBDatabase)||e in t||"string"!=typeof e)return;if(V.get(e))return V.get(e);const n=e.replace(/FromIndex$/,""),r=e!==n,o=U.includes(n);if(!(n in(r?IDBIndex:IDBObjectStore).prototype)||!o&&!C.includes(n))return;const a=async function(t,...e){const a=this.transaction(t,o?"readwrite":"readonly");let i=a.store;return r&&(i=i.index(e.shift())),(await Promise.all([i[n](...e),o&&a.done]))[0]};return V.set(e,a),a}F(t=>({...t,get:(e,n,r)=>H(e,n)||t.get(e,n,r),has:(e,n)=>!!H(e,n)||t.has(e,n)}));const K=["continue","continuePrimaryKey","advance"],W={},q=new WeakMap,Y=new WeakMap,z={get(t,e){if(!K.includes(e))return t[e];let n=W[e];return n||(n=W[e]=function(...t){q.set(this,Y.get(this)[e](...t))}),n}};async function*J(...t){let e=this;if(e instanceof IDBCursor||(e=await e.openCursor(...t)),!e)return;const n=new Proxy(e,z);for(Y.set(n,e),R.set(n,B(e));e;)yield n,e=await(q.get(n)||e.continue()),q.delete(n)}function X(t,e){return e===Symbol.asyncIterator&&A(t,[IDBIndex,IDBObjectStore,IDBCursor])||"iterate"===e&&A(t,[IDBIndex,IDBObjectStore])}function $(t){return $="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},$(t)}function Q(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Z(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Z(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Z(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Z(f,"constructor",s),Z(s,"constructor",u),u.displayName="GeneratorFunction",Z(s,o,"GeneratorFunction"),Z(f),Z(f,o,"Generator"),Z(f,r,function(){return this}),Z(f,"toString",function(){return"[object Generator]"}),(Q=function(){return{w:a,m:p}})()}function Z(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Z=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Z(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Z(t,e,n,r)}function tt(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),n.push.apply(n,r)}return n}function et(t,e,n){return(e=function(t){var e=function(t){if("object"!=$(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=$(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==$(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function nt(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function rt(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){nt(a,r,o,i,c,"next",t)}function c(t){nt(a,r,o,i,c,"throw",t)}i(void 0)})}}function ot(t,e){return at.apply(this,arguments)}function at(){return(at=rt(Q().m(function t(e,n){var r;return Q().w(function(t){for(;;)switch(t.n){case 0:return(r=e.transaction(n,"readwrite")).objectStore(n).clear(),t.n=1,r.done;case 1:return t.a(2)}},t)}))).apply(this,arguments)}F(t=>({...t,get:(e,n,r)=>X(e,n)?J:t.get(e,n,r),has:(e,n)=>X(e,n)||t.has(e,n)}));var it,ct,ut,st,lt,ft,pt,dt,ht,yt,vt,gt,mt,bt,wt,St,Pt,Et,_t={USER:"current-user",HERO_MANAGER:"hero-manager",BATTLES:"battles",UPLOADED_BATTLES:"uploaded-battles",FILTERED_BATTLES:"filtered-battles",FILTER_STR:"filter-str",STATS:"stats",SEASON_DETAILS:"season-details",AUTO_ZOOM_FLAG:"auto-zoom",AUTO_QUERY_FLAG:"auto-query",GLOBAL_USERS:"global-users",EU_USERS:"eu-users",ASIA_USERS:"asia-users",JPN_USERS:"jpn-users",KOR_USERS:"kor-users"},Tt={autoZoom:_t.AUTO_ZOOM_FLAG,autoQuery:_t.AUTO_QUERY_FLAG},kt={consts:{DB_NAME:"E7ArenaStatsClientDB",DB_VERSION:1,STORE_NAME:"DataStore",META_STORE_NAME:"MetaStore",CACHE_TIMEOUT:1728e5},Keys:function(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?tt(Object(n),!0).forEach(function(e){et(t,e,n[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):tt(Object(n)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))})}return t}({},_t),MetaKeys:{TIMESTAMP:"timestamp"},loaded_UM:new Set,openDB:(Et=rt(Q().m(function t(){return Q().w(function(t){for(;;)if(0===t.n)return t.a(2,G(kt.consts.DB_NAME,kt.consts.DB_VERSION,{upgrade:function(t){t.objectStoreNames.contains(kt.consts.STORE_NAME)&&(t.deleteObjectStore(kt.consts.STORE_NAME),console.log("Old store deleted")),t.objectStoreNames.contains(kt.consts.STORE_NAME)||(console.log("Created data store"),t.createObjectStore(kt.consts.STORE_NAME)),t.objectStoreNames.contains(kt.consts.META_STORE_NAME)||(console.log("Created meta data store"),t.createObjectStore(kt.consts.META_STORE_NAME))}}))},t)})),function(){return Et.apply(this,arguments)}),get:(Pt=rt(Q().m(function t(e){var n,r;return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,t.n=2,n.get(this.consts.STORE_NAME,e);case 2:if(null===(r=t.v)){t.n=3;break}console.log("Found ".concat(e," in cache")),t.n=4;break;case 3:return console.log("".concat(e," not found in cache; returning null")),t.a(2,null);case 4:return t.n=5,this.checkCacheTimeout(e);case 5:if(!t.v){t.n=6;break}return console.log("Timeout not reached, using cache for ".concat(e)),t.a(2,r);case 6:return console.log("Timeout reached, returning null for ".concat(e)),t.a(2,null);case 7:return t.a(2)}},t,this)})),function(t){return Pt.apply(this,arguments)}),cache:(St=rt(Q().m(function t(e,n){var r;return Q().w(function(t){for(;;)switch(t.n){case 0:return console.log("Caching ".concat(e," with data: ").concat(n)),t.n=1,this.openDB();case 1:return r=t.v,t.n=2,r.put(this.consts.STORE_NAME,n,e);case 2:return t.n=3,this.setTimestamp(e,Date.now());case 3:return t.a(2)}},t,this)})),function(t,e){return St.apply(this,arguments)}),delete:(wt=rt(Q().m(function t(e){var n;return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,t.n=2,n.delete(this.consts.STORE_NAME,e);case 2:return t.n=3,this.deleteTimestamp(e);case 3:return t.a(2)}},t,this)})),function(t){return wt.apply(this,arguments)}),deleteDB:(bt=rt(Q().m(function t(){return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,indexedDB.deleteDatabase(this.consts.DB_NAME);case 1:console.log("Database deleted");case 2:return t.a(2)}},t,this)})),function(){return bt.apply(this,arguments)}),getTimestamp:(mt=rt(Q().m(function t(e){var n,r,o;return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,r="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,n.get(this.consts.META_STORE_NAME,r);case 2:return o=t.v,t.a(2,null!=o?o:null)}},t,this)})),function(t){return mt.apply(this,arguments)}),setTimestamp:(gt=rt(Q().m(function t(e,n){var r,o,a;return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return r=t.v,o="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,r.put(this.consts.META_STORE_NAME,n,o);case 2:return t.n=3,r.get(this.consts.META_STORE_NAME,o);case 3:a=t.v,console.log("Timestamp set: ".concat(a));case 4:return t.a(2)}},t,this)})),function(t,e){return gt.apply(this,arguments)}),deleteTimestamp:(vt=rt(Q().m(function t(e){var n,r;return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,r="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,n.delete(this.consts.META_STORE_NAME,r);case 2:console.log("Timestamp deleted for <".concat(e,">"));case 3:return t.a(2)}},t,this)})),function(t){return vt.apply(this,arguments)}),clearData:(yt=rt(Q().m(function t(){var e;return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return e=t.v,t.n=2,ot(e,this.consts.STORE_NAME);case 2:return t.n=3,ot(e,this.consts.META_STORE_NAME);case 3:console.log("All data cleared from data cache and meta data cache");case 4:return t.a(2)}},t,this)})),function(){return yt.apply(this,arguments)}),clearUserData:(ht=rt(Q().m(function t(){var e,n=this;return Q().w(function(t){for(;;)switch(t.n){case 0:return e=[_t.USER,_t.BATTLES,_t.UPLOADED_BATTLES,_t.FILTERED_BATTLES,_t.FILTER_STR,_t.STATS],t.n=1,Promise.all(e.map(function(t){return n.delete(t)}));case 1:console.log("User data cleared from data cache");case 2:return t.a(2)}},t)})),function(){return ht.apply(this,arguments)}),clearSeasonData:(dt=rt(Q().m(function t(){return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.delete(_t.SEASON_DETAILS);case 1:console.log("Season data cleared from data cache");case 2:return t.a(2)}},t,this)})),function(){return dt.apply(this,arguments)}),checkCacheTimeout:(pt=rt(Q().m(function t(e){var n,r;return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.getTimestamp(e);case 1:if(n=t.v,r=Date.now(),console.log("Checking Timeout for <".concat(e,"> | Current time: ").concat(r,", cache timestamp: ").concat(n,", difference: ").concat(r-n," ms")),n&&!(r-n>kt.consts.CACHE_TIMEOUT)){t.n=3;break}return console.log("Cache timeout reached, clearing data from <".concat(e,">")),t.n=2,this.delete(e);case 2:return t.a(2,!1);case 3:return t.a(2,!0)}},t,this)})),function(t){return pt.apply(this,arguments)}),getFilterStr:(ft=rt(Q().m(function t(){return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.get(kt.Keys.FILTER_STR);case 1:return t.a(2,t.v)}},t,this)})),function(){return ft.apply(this,arguments)}),setFilterStr:(lt=rt(Q().m(function t(e){return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.cache(kt.Keys.FILTER_STR,e);case 1:return t.a(2)}},t,this)})),function(t){return lt.apply(this,arguments)}),getStats:(st=rt(Q().m(function t(){return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.get(kt.Keys.STATS);case 1:return t.a(2,t.v)}},t,this)})),function(){return st.apply(this,arguments)}),setStats:(ut=rt(Q().m(function t(e){return Q().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.cache(_t.STATS,e);case 1:return t.a(2)}},t,this)})),function(t){return ut.apply(this,arguments)}),getFlag:(ct=rt(Q().m(function t(e){var n;return Q().w(function(t){for(;;)switch(t.n){case 0:if(n=Tt[e]){t.n=1;break}throw new Error("No key found for flag <".concat(e,">"));case 1:return t.n=2,this.get(n);case 2:return t.a(2,t.v)}},t,this)})),function(t){return ct.apply(this,arguments)}),setFlag:(it=rt(Q().m(function t(e,n){var r;return Q().w(function(t){for(;;)switch(t.n){case 0:if(r=Tt[e]){t.n=1;break}throw new Error("No key found for flag <".concat(e,">"));case 1:return t.n=2,this.cache(r,n);case 2:return t.a(2)}},t,this)})),function(t,e){return it.apply(this,arguments)})};const Ot=kt;function At(t){var e={};for(var n in t)Array.isArray(t[n])&&t[n].length>0?e[n]=[t[n][0],"Length: ".concat(t[n].length)]:e[n]=t[n];console.log(e)}function Dt(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],u=!0,s=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(s)throw o}}return c}}(t,e)||It(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function It(t,e){if(t){if("string"==typeof t)return jt(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?jt(t,e):void 0}}function jt(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Lt(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Rt(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Rt(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Rt(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Rt(f,"constructor",s),Rt(s,"constructor",u),u.displayName="GeneratorFunction",Rt(s,o,"GeneratorFunction"),Rt(f),Rt(f,o,"Generator"),Rt(f,r,function(){return this}),Rt(f,"toString",function(){return"[object Generator]"}),(Lt=function(){return{w:a,m:p}})()}function Rt(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Rt=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Rt(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Rt(t,e,n,r)}function xt(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Ft(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){xt(a,r,o,i,c,"next",t)}function c(t){xt(a,r,o,i,c,"throw",t)}i(void 0)})}}var Nt,Mt,Bt,Gt,Ct={getHeroManager:(Gt=Ft(Lt().m(function t(){var e,n,r,o;return Lt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.get(Ot.Keys.HERO_MANAGER);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=4;break;case 3:o=this.fetchAndCacheHeroManager();case 4:return t.a(2,o)}},t,this)})),function(){return Gt.apply(this,arguments)}),createHeroManager:function(t){var e,n=function(t){var e="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!e){if(Array.isArray(t)||(e=It(t))){e&&(t=e);var n=0,r=function(){};return{s:r,n:function(){return n>=t.length?{done:!0}:{done:!1,value:t[n++]}},e:function(t){throw t},f:r}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,a=!0,i=!1;return{s:function(){e=e.call(t)},n:function(){var t=e.next();return a=t.done,t},e:function(t){i=!0,o=t},f:function(){try{a||null==e.return||e.return()}finally{if(i)throw o}}}}(t.entries());try{for(n.s();!(e=n.n()).done;){var r=Dt(e.value,2),a=r[0],i=r[1],c=o[a];i.prime=c}}catch(t){n.e(t)}finally{n.f()}var u={heroes:t};return u=function(t){console.log("Adding Lookup Dicts"),console.log("\tAdding name lookup"),t.name_lookup=t.heroes.reduce(function(t,e){return t[e.name.toLowerCase().replace(/\s+/g,"")]=e,t},{}),console.log("\tAdding prime lookup"),t.prime_lookup=t.heroes.reduce(function(t,e){return t[e.prime]=e,t},{}),console.log("\tAdding code lookup"),t.code_lookup=t.heroes.reduce(function(t,e){return t[e.code]=e,t},{}),console.log("\tAdding prime pair lookup");var e=t.heroes.reduce(function(t,e){return t[e.prime]=e.name,t},{}),n=Object.keys(t.prime_lookup).length-1;console.log("\tAdding prime pair lookup; primes to process",n);for(var r=0;r<n-1;r++)for(var a=o[r],i=r+1;i<n;i++){var c=o[i],u=a*c,s=t.prime_lookup[a].name,l=t.prime_lookup[c].name;e[u]=[s,l].sort().join(", ")}return e[t.Fodder.prime*t.Fodder.prime]=[t.Fodder.name,t.Fodder.prime],t.prime_pair_lookup=e,t}(u=function(t){var e=t.heroes.length,n={attribute_cd:"N/A",code:"N/A",grade:"N/A",job_cd:"N/A",name:"Empty",prime:1},r={attribute_cd:"N/A",code:"N/A",grade:"2/3",job_cd:"N/A",name:"Fodder",prime:o[e]};return t.heroes.push(n),t.heroes.push(r),t.Fodder=r,t.Empty=n,t}(u)),u},fetchHeroManager:(Bt=Ft(Lt().m(function t(){var e,n,r,o,a,i;return Lt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,y.fetchHeroJSON();case 1:if(a=e=t.v,!(o=null!==a)){t.n=2;break}o=void 0!==e;case 2:if(!o){t.n=3;break}i=e,t.n=5;break;case 3:return t.n=4,O.fetchHeroData();case 4:i=t.v;case 5:return n=i.en,r=this.createHeroManager(n),console.log("Created HeroManager using raw data received from server"),t.a(2,r)}},t,this)})),function(){return Bt.apply(this,arguments)}),fetchAndCacheHeroManager:(Mt=Ft(Lt().m(function t(){var e;return Lt().w(function(t){for(;;)switch(t.n){case 0:return console.log("HeroManager not found in cache, fetching from server and caching it"),t.n=1,this.fetchHeroManager();case 1:return e=t.v,t.n=2,Ot.cache(Ot.Keys.HERO_MANAGER,e);case 2:return console.log("Cached HeroManager using raw data recieved from server"),At(e),t.a(2,e)}},t,this)})),function(){return Mt.apply(this,arguments)}),deleteHeroManager:(Nt=Ft(Lt().m(function t(){return Lt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.delete(Ot.Keys.HERO_MANAGER);case 1:console.log("Removed hero manager from cache");case 2:return t.a(2)}},t)})),function(){return Nt.apply(this,arguments)}),getHeroByName:function(t,e){var n;if(!e)throw new Error("HeroManager instance must be passed to lookup functions");if(!t)return e.Empty;var r=t.toLowerCase().replace(/\s+/g,"");return null!==(n=e.name_lookup[r])&&void 0!==n?n:null},getHeroByPrime:function(t,e){if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return e.prime_lookup[t]},getHeroByCode:function(t,e){var n;if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return t?null!==(n=e.code_lookup[t])&&void 0!==n?n:null:e.Empty},getPairNamesByProduct:function(t,e){if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return e.prime_pair_lookup[t]}};const Ut=Ct;function Vt(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],u=!0,s=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(s)throw o}}return c}}(t,e)||Ht(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function Ht(t,e){if(t){if("string"==typeof t)return Kt(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Kt(t,e):void 0}}function Kt(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Wt(t,e){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null,r=arguments.length>3&&void 0!==arguments[3]&&arguments[3];t.sort(function(t,e){return new Date(t["Date/Time"])-new Date(e["Date/Time"])}),e||(e={name:"UID: ".concat(t[0]["P1 ID"])});var o,a=t.map(function(t,e){return e}),i=t.map(function(t){return t["P1 Points"]}),c=[],u={startX:null,endX:null,startY:null,endY:null},s=function(t){var e="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!e){if(Array.isArray(t)||(e=Ht(t))){e&&(t=e);var n=0,r=function(){};return{s:r,n:function(){return n>=t.length?{done:!0}:{done:!1,value:t[n++]}},e:function(t){throw t},f:r}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,a=!0,i=!1;return{s:function(){e=e.call(t)},n:function(){var t=e.next();return a=t.done,t},e:function(t){i=!0,o=t},f:function(){try{a||null==e.return||e.return()}finally{if(i)throw o}}}}(t.entries());try{for(s.s();!(o=s.n()).done;){var l=Vt(o.value,2),f=l[0],p=l[1];n&&p["Seq Num"]in n?(!0===r&&(u.startX=f<u.startX||null===u.startX?f-.5:u.startX,u.startY=p["P1 Points"]<u.startY+50||null===u.startY?p["P1 Points"]-50:u.startY,u.endX=f>u.endX||null===u.endX?f+.5:u.endX,u.endY=p["P1 Points"]>u.endY-50||null===u.endY?p["P1 Points"]+50:u.endY),c.push("#ff9900")):c.push("#0df8fd")}}catch(t){s.e(t)}finally{s.f()}var d={x:a,y:i,mode:"lines+markers",line:{color:"#4f9293",width:2},marker:{symbol:"circle",size:4,color:c},customdata:t.map(function(t){return[t["Date/Time"].slice(0,10),t["P1 League"]]}),hovertemplate:"Points: %{y}<br>Date: %{customdata[0]}<br>League: %{customdata[1]}<extra></extra>"},h={autosize:!0,font:{family:"Roboto, Open Sans"},title:{text:"".concat(e.name,"'s RTA Point Plot"),font:{size:24,color:"#dddddd"},xanchor:"center",yanchor:"top",y:.95,x:.5},xaxis:{title:{text:"Battle Number (Chronological)",font:{size:18,color:"#dddddd"}},showgrid:!0,gridcolor:"#8d8d8d",zeroline:!1,tickfont:{size:12,color:"#dddddd"},range:u.startX?[u.startX,u.endX]:null},yaxis:{title:{text:"Victory Points",font:{size:18,color:"#dddddd"}},showgrid:!0,gridcolor:"#8d8d8d",zeroline:!0,zerolinecolor:"#dddddd",zerolinewidth:2,tickfont:{size:12,color:"#dddddd"},range:u.startY?[u.startY,u.endY]:null},plot_bgcolor:"#1e222d",paper_bgcolor:"#1e222d"},y="plot-".concat(Math.random().toString(36).substr(2,9));return'<div id="'.concat(y,'"></div>')+"\n<script>\n    Plotly.newPlot('".concat(y,"', [").concat(JSON.stringify(d),"], ").concat(JSON.stringify(h),", ").concat(JSON.stringify({responsive:!0}),");\n<\/script>\n")}function qt(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"i";return new RegExp("^(?:".concat(t.source,")(?=[,)\\s;]|$)"),e)}function Yt(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"i";return new RegExp("^(?:".concat(t.source,")$"),e)}var zt=/[a-z][a-z0-9.\s]*/i,Jt=/\d{4}-\d{2}-\d{2}/,Xt=/\{\s*\}/,$t=/\d+/,Qt=/season-[1-9]+[0-9]*(\.[1-9]*)?|current-season/i,Zt=new RegExp("^".concat(Jt.source,"$"),"i"),te=new RegExp("(?:".concat(Qt.source,")"),"i"),ee=/(?:date|is-first-pick|is-win|victory-points|p1.picks|p1.prebans|p2.prebans|prebans|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league|p1.postban|p2.postban|p1.server|p2.server)/i,ne=zt.source,re=$t.source,oe=Jt.source,ae=ee.source,ie=te.source,ce=new RegExp('"('.concat(ne,")\"|'(").concat(ne,")'"),"i"),ue=new RegExp(Yt(ce),"i"),se=ce.source,le=new RegExp("(?:".concat(se,"|").concat(ne,"|").concat(oe,")"),"i"),fe=new RegExp("(?:".concat(ae,"|").concat(ie,")"),"i"),pe=le.source,de=new RegExp("\\{\\s*(?:".concat(pe,"\\s*)(?:,\\s*").concat(pe,"\\s*)*,?\\s*\\}|").concat(Xt.source),"i"),he=new RegExp("".concat(re,"\\.\\.\\.").concat(re,"|").concat(oe,"\\.\\.\\.").concat(oe,"|").concat(re,"\\.\\.\\.=").concat(re,"|").concat(oe,"\\.\\.\\.=").concat(oe)),ye=new RegExp("^".concat(he.source,"$")),ve={VALID_STRING_RE:zt,VALID_DATE_RE:Jt,VALID_INT_RE:$t,EMPTY_SET_RE:Xt,SET_ELEMENT_RE:le,VALID_SET_RE:de,VALID_STRING_LITERAL_RE:ue,VALID_DATE_LITERAL_RE:Zt,VALID_INT_LITERAL_RE:/^\d+$/,VALID_BOOL_LITERAL_RE:/^(true|false)$/i,VALID_RANGE_RE:he,VALID_RANGE_LITERAL_RE:ye,VALID_SEASON_RE:Qt,VALID_SEASON_LITERAL_RE:Yt(Qt),VALID_DATA_WORD_RE:te,VALID_DATA_WORD_LITERAL_RE:Yt(te),VALID_FIELD_WORD_RE:ee,VALID_DATAFIELD_RE:fe,VALID_GLOBAL_FILTER_RE:/last-n\(\d+\)/i,ANCHORED_STR_LITERAL_RE:Yt(ue),padRegex:qt,anchorExp:Yt,tokenMatch:function(t){return t.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()|LAST-N(?=\()/i)?(console.log("Matched stream as clause:",t),"keyword"):t.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)?(console.log("Matched stream as operator:",t),"operator"):t.match(new RegExp("[a-z0-9.\"'}=)-]".concat(fe.source,"(?=[,)\\s;]|$)"),"i"))?(console.log("Matched stream as field with preceding fragment:",t),null):t.match(qt(fe))?(console.log("Matched stream as Data Field:",t),"datafield"):t.match(/[^(,\s;.=0-9]+\d+/i)?(console.log("Matched stream as non-num null"),null):t.match(qt(he))?(console.log("Matched stream as range:",t),"range"):t.match(qt($t))?(console.log("Matched stream as number:",t),"number"):t.match(qt(Jt))?(console.log("Matched stream as date:",t),"date"):t.match(qt(de))?(console.log("Matched stream as set:",t),"set"):t.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)?(console.log("Matched stream as bool:",t),"bool"):t.match(qt(ce))?(console.log("Matched stream as string:",t),"string"):t.match(/[\(\)\{\}\;\,]/)?(console.log("Matched stream as bracket:",t),"bracket"):(t.next(),console.log("Matched stream as null:",t),null)}};function ge(t){return ge="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},ge(t)}function me(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],u=!0,s=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(s)throw o}}return c}}(t,e)||we(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function be(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=we(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var a,i=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return i=t.done,t},e:function(t){c=!0,a=t},f:function(){try{i||null==n.return||n.return()}finally{if(c)throw a}}}}function we(t,e){if(t){if("string"==typeof t)return Se(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Se(t,e):void 0}}function Se(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Pe(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,_e(r.key),r)}}function Ee(t,e,n){return e&&Pe(t.prototype,e),n&&Pe(t,n),Object.defineProperty(t,"prototype",{writable:!1}),t}function _e(t){var e=function(t){if("object"!=ge(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=ge(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==ge(e)?e:e+""}function Te(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function ke(t,e,n){return e=je(e),function(t,e){if(e&&("object"==ge(e)||"function"==typeof e))return e;if(void 0!==e)throw new TypeError("Derived constructors may only return object or undefined");return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(t,De()?Reflect.construct(e,n||[],je(t).constructor):e.apply(t,n))}function Oe(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),Object.defineProperty(t,"prototype",{writable:!1}),e&&Ie(t,e)}function Ae(t){var e="function"==typeof Map?new Map:void 0;return Ae=function(t){if(null===t||!function(t){try{return-1!==Function.toString.call(t).indexOf("[native code]")}catch(e){return"function"==typeof t}}(t))return t;if("function"!=typeof t)throw new TypeError("Super expression must either be null or a function");if(void 0!==e){if(e.has(t))return e.get(t);e.set(t,n)}function n(){return function(t,e,n){if(De())return Reflect.construct.apply(null,arguments);var r=[null];r.push.apply(r,e);var o=new(t.bind.apply(t,r));return n&&Ie(o,n.prototype),o}(t,arguments,je(this).constructor)}return n.prototype=Object.create(t.prototype,{constructor:{value:n,enumerable:!1,writable:!0,configurable:!0}}),Ie(n,t)},Ae(t)}function De(){try{var t=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(t){}return(De=function(){return!!t})()}function Ie(t,e){return Ie=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(t,e){return t.__proto__=e,t},Ie(t,e)}function je(t){return je=Object.setPrototypeOf?Object.getPrototypeOf.bind():function(t){return t.__proto__||Object.getPrototypeOf(t)},je(t)}var Le=function(t){function e(t){var n;return Te(this,e),(n=ke(this,e,[t])).name="Filter Syntax Exception",n}return Oe(e,t),Ee(e)}(Ae(Error)),Re=function(t){function e(t){var n;return Te(this,e),(n=ke(this,e,[t])).name="Filter Type Exception",n}return Oe(e,t),Ee(e)}(Ae(Error)),xe=function(t){function e(t){var n;return Te(this,e),(n=ke(this,e,[t])).name="Filter Validation Error",n}return Oe(e,t),Ee(e)}(Ae(Error)),Fe={"(":")","{":"}",'"':'"',"'":"'"},Ne=Object.fromEntries(Object.entries(Fe).filter(function(t){var e=me(t,2);return e[0]!==e[1]}).map(function(t){var e=me(t,2),n=e[0];return[e[1],n]}));const Me={SyntaxException:Le,TypeException:Re,ValidationError:xe,retrieveEnclosure:function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"(",n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:")";if(e===n)throw new Error("Enclosure characters must be different: ".concat(e," = ").concat(n));var r,o=!1,a=0,i="",c=be(function(t){return function(t){if(Array.isArray(t))return Se(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||we(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}(t).entries());try{for(c.s();!(r=c.n()).done;){var u=me(r.value,2),s=u[0],l=u[1];if(l===e){if(a+=1,!o){o=!0;continue}}else l===n&&(a-=1);if(0===a&&o){if(s!=t.length-1)throw new Le("Enclosure should not be resolved before end of string; resolved at index: ".concat(s,"; input string: ").concat(t));return i}if(a<0)throw new Le("Unbalanced enclosure at index: ".concat(s," of input string: ").concat(t,'; balance of "').concat(e,"...").concat(n,'" enclosures became negative.'));o&&(i+=l)}}catch(t){c.e(t)}finally{c.f()}if(!o)throw new Le("Enclosure of type ".concat(e,"...").concat(n," not found in string; input string: ").concat(t));if(a>0)throw new Le("Enclosure could not be resolved; too many '".concat(n,"'; balance = +{count}; input string {string}"))},retrieveArgs:function(t){var e,n=0,r=[],o="",a=be(t);try{for(a.s();!(e=a.n()).done;){var i=e.value;if("("===i){if(1===(n+=1))continue}else")"===i&&(n-=1);1===n&&","===i?(r.push(o.trim()),o=""):n>=1&&(o+=i)}}catch(t){a.e(t)}finally{a.f()}return o.trim()&&r.push(o.trim()),r},getCharCounts:function(t){var e,n={},r=be(t);try{for(r.s();!(e=r.n()).done;){var o=e.value;n[o]=(n[o]||0)+1}}catch(t){r.e(t)}finally{r.f()}return n},tokenizeWithNestedEnclosures:function(t){for(var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:" ",n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0,r=!(arguments.length>3&&void 0!==arguments[3])||arguments[3],o=[],a="",i=[],c=0;c<t.length;c++){var u=t[c];if(e.includes(u)&&i.length===n)a&&(o.push(r?a.trim():a),a="");else if(Ne[u]){var s=Ne[u];if(i.length>n&&(a+=u),i[i.length-1]!==s)throw new Error("Unbalanced closing bracket at position ".concat(c));i.pop()}else i.length>=n&&(a+=u),Fe[u]&&(i[i.length-1]===Fe[u]&&u===Fe[u]?i.pop():i.push(u))}if(i.length>0)throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: ",i);return a&&o.push(r?a.trim():a),o},parseDate:function(t){if(!ve.VALID_DATE_LITERAL_RE.test(t))throw new Le("Invalid date; must be in the format: YYYY-MM-DD ( regex: ".concat(ve.VALID_DATE_LITERAL_RE.source," ); got: '").concat(t,"'"));var e=t.split(" ")[0],n=new Date("".concat(e,"T00:00:00"));if(isNaN(n.getTime()))throw new Le("Invalid date; could not be parsed as a valid date; got: '".concat(t,"'"));var r=me(n.toISOString().split("T")[0].split("-").map(Number),3),o=r[0],a=r[1],i=r[2];if(n.getFullYear()!==o||n.getMonth()+1!==a||n.getDate()!==i)throw new Le("Invalid date; parsed date: ".concat(n.toISOString()," does not match passed in string: ").concat(e));return console.log("Parsed date: ".concat(n.toISOString()," ; ").concat(n.constructor.name)),n},tryConvert:function(t,e,n){var r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:null;null===r&&(r="Could not convert ".concat(n," to ").concat(e));try{return t(n)}catch(t){throw new Re("".concat(r,": ").concat(t.message))}}};function Be(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Ge(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Ge(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Ge(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Ge(f,"constructor",s),Ge(s,"constructor",u),u.displayName="GeneratorFunction",Ge(s,o,"GeneratorFunction"),Ge(f),Ge(f,o,"Generator"),Ge(f,r,function(){return this}),Ge(f,"toString",function(){return"[object Generator]"}),(Be=function(){return{w:a,m:p}})()}function Ge(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Ge=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Ge(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Ge(t,e,n,r)}function Ce(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Ue(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){Ce(a,r,o,i,c,"next",t)}function c(t){Ce(a,r,o,i,c,"throw",t)}i(void 0)})}}var Ve,He,Ke,We={fetchAndCacheSeasonDetails:(Ke=Ue(Be().m(function t(){var e,r,o,a,i,c;return Be().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,O.fetchSeasonDetails();case 1:if(!(e=t.v).error){t.n=2;break}throw new Error("Could not fetch season details: ".concat(e.error));case 2:return(r=e.seasonDetails).forEach(function(t){t.range=[t.Start,t.End].map(function(t){return new Date("".concat(t.split(" ")[0],"T00:00:00"))})}),r.sort(function(t,e){return t["Season Number"]-e["Season Number"]}),o=[r[0]],a=r[0],r.slice(1).forEach(function(t){var e=new Date(+a.range[1]+n),r=new Date(+t.range[0]-n),i={"Season Number":a["Season Number"]+.5,Code:null,Season:"Pre-Season: ".concat(t.Season),Start:e.toISOString().slice(0,10),End:r.toISOString().slice(0,10),Status:"Complete",range:[e,r]};o.push(i),o.push(t),a=t}),a.range[1]<new Date&&(i=new Date(+o.at(-1).range[1]+n),c={"Season Number":a["Season Number"]+.5,Code:null,Season:"Pre-Season: ".concat(season.Season),Start:i.toISOString().slice(0,10),End:"N/A",Status:"Active",range:[i,new Date]},o.push(c)),o.reverse(),t.n=3,Ot.cache(Ot.Keys.SEASON_DETAILS,o);case 3:return t.a(2,o)}},t)})),function(){return Ke.apply(this,arguments)}),getSeasonDetails:(He=Ue(Be().m(function t(){var e,n,r,o;return Be().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.get(Ot.Keys.SEASON_DETAILS);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=5;break;case 3:return t.n=4,We.fetchAndCacheSeasonDetails();case 4:o=t.v;case 5:return t.a(2,o)}},t)})),function(){return He.apply(this,arguments)}),clearSeasonDetails:(Ve=Ue(Be().m(function t(){return Be().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.delete(Ot.Keys.SEASON_DETAILS);case 1:console.log("Season details cleared from data cache");case 2:return t.a(2)}},t)})),function(){return Ve.apply(this,arguments)})};const qe=We;function Ye(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return ze(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(ze(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,ze(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,ze(f,"constructor",s),ze(s,"constructor",u),u.displayName="GeneratorFunction",ze(s,o,"GeneratorFunction"),ze(f),ze(f,o,"Generator"),ze(f,r,function(){return this}),ze(f,"toString",function(){return"[object Generator]"}),(Ye=function(){return{w:a,m:p}})()}function ze(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}ze=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){ze(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},ze(t,e,n,r)}function Je(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Xe(t){return function(t){if(Array.isArray(t))return ln(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||sn(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function $e(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],u=!0,s=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(s)throw o}}return c}}(t,e)||sn(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function Qe(t,e,n){return e=tn(e),function(t,e){if(e&&("object"==fn(e)||"function"==typeof e))return e;if(void 0!==e)throw new TypeError("Derived constructors may only return object or undefined");return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(t,Ze()?Reflect.construct(e,n||[],tn(t).constructor):e.apply(t,n))}function Ze(){try{var t=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(t){}return(Ze=function(){return!!t})()}function tn(t){return tn=Object.setPrototypeOf?Object.getPrototypeOf.bind():function(t){return t.__proto__||Object.getPrototypeOf(t)},tn(t)}function en(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),Object.defineProperty(t,"prototype",{writable:!1}),e&&nn(t,e)}function nn(t,e){return nn=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(t,e){return t.__proto__=e,t},nn(t,e)}function rn(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function on(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,cn(r.key),r)}}function an(t,e,n){return e&&on(t.prototype,e),n&&on(t,n),Object.defineProperty(t,"prototype",{writable:!1}),t}function cn(t){var e=function(t){if("object"!=fn(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=fn(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==fn(e)?e:e+""}function un(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=sn(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var a,i=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return i=t.done,t},e:function(t){c=!0,a=t},f:function(){try{i||null==n.return||n.return()}finally{if(c)throw a}}}}function sn(t,e){if(t){if("string"==typeof t)return ln(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?ln(t,e):void 0}}function ln(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function fn(t){return fn="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},fn(t)}var pn=new Set("'\"(),-.=; ><!1234567890{}abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");function dn(t,e){var n="object"===fn(e)?JSON.stringify(e):"".concat(e);if(e instanceof Set)return e.has(t);if("object"===fn(e)&&null!==e&&!Array.isArray(e)&&["start","end","endInclusive","type"].every(function(t){return e.hasOwnProperty(t)}))return t>=e.start&&(e.endInclusive?t<=e.end:t<e.end);if(Array.isArray(e))return e.includes(t);throw new Error("Invalid match pattern for 'in' operators; got: '".concat(t,"' and '").concat(n,"' (").concat(e.constructor.name,")"))}var hn={">":function(t,e){return t>e},"<":function(t,e){return t<e},"=":function(t,e){return t===e},in:function(t,e){return dn(t,e)},">=":function(t,e){return t>=e},"<=":function(t,e){return t<=e},"!=":function(t,e){return t!==e},"!in":function(t,e){return!dn(t,e)}};function yn(t){return function(t,e){var n,r=un(t);try{for(r.s();!(n=r.n()).done;){var o=n.value;if(!e.has(o))throw new Me.SyntaxException("Invalid character within <".concat("Main Filter String","> ; ' ").concat(o," ' is not allowed; got string: '").concat(t,"'"))}}catch(t){r.e(t)}finally{r.f()}}(t=t.replace(/[\n\t\r]/g," ").replace(/\s+/g," "),pn),t.toLowerCase()}var vn,gn,mn,bn=new Set(["victory-points"]),wn=new Set(["prebans","p1.picks","p2.picks","p1.prebans","p2.prebans"]),Sn=function(){return an(function t(e){rn(this,t);var n=t.FIELD_EXTRACT_FN_MAP[e];if(!n)throw new Me.ValidationError("Invalid field type: '".concat(e,"'; valid types are: ").concat(Object.keys(t.FIELD_EXTRACT_FN_MAP).join(", ")));console.log("Found valid field type: ",e),this.str=e,this.extractData=n},[{key:"toString",value:function(){return this.str}}])}();vn=Sn,mn={date:function(t){var e;return t["Date/Time"]?new Date("".concat(null===(e=t["Date/Time"])||void 0===e?void 0:e.slice(0,10),"T00:00:00")):"N/A"},"is-first-pick":function(t){return"True"===t["First Pick"]?1:0},"is-win":function(t){return"W"===t.Win?1:0},"victory-points":function(t){return t["P1 Points"]},"p1.picks":function(t){return t["P1 Picks"]},"p2.picks":function(t){return t["P2 Picks"]},"p1.prebans":function(t){return t["P1 Prebans"]},"p2.prebans":function(t){return t["P2 Prebans"]},"p1.postban":function(t){return t["P1 Postban"]},"p2.postban":function(t){return t["P2 Postban"]},prebans:function(t){return[].concat(Xe(t["P1 Prebans"]),Xe(t["P2 Prebans"]))},"p1.pick1":function(t){return t["P1 Pick 1"]},"p1.pick2":function(t){return t["P1 Pick 2"]},"p1.pick3":function(t){return t["P1 Pick 3"]},"p1.pick4":function(t){return t["P1 Pick 4"]},"p1.pick5":function(t){return t["P1 Pick 5"]},"p2.pick1":function(t){return t["P2 Pick 1"]},"p2.pick2":function(t){return t["P2 Pick 2"]},"p2.pick3":function(t){return t["P2 Pick 3"]},"p2.pick4":function(t){return t["P2 Pick 4"]},"p2.pick5":function(t){return t["P2 Pick 5"]},"p1.league":function(t){return r[t["P1 League"]]},"p2.league":function(t){return r[t["P2 League"]]},"p1.server":function(t){return t["P1 Server"]},"p2.server":function(t){return t["P2 Server"]}},(gn=cn(gn="FIELD_EXTRACT_FN_MAP"))in vn?Object.defineProperty(vn,gn,{value:mn,enumerable:!0,configurable:!0,writable:!0}):vn[gn]=mn;var Pn=function(){return an(function t(e){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null;rn(this,t),this.rawString=e,this.data=this.getData(e,n)},[{key:"toString",value:function(){return"".concat(this.data)}}])}(),En=function(t){function n(){return rn(this,n),Qe(this,n,arguments)}return en(n,t),an(n,[{key:"getData",value:function(t,n){if(t=(t=t.replace(/'/g,"").replace(/"/g,"")).trim(),!ve.VALID_STRING_RE.test(t))throw new Me.SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(ve.VALID_STRING_LITERAL_RE.source," ); got: '").concat(t,"'"));t=t.replace(/"|'/g,"");var o=Ut.getHeroByName(t,n),a=r[t],i=Object.values(e).find(function(e){return e.toLowerCase()===t});if(!(o||a||i))throw new Me.SyntaxException("Invalid string; All strings must either be a valid hero, league name, or server; got: '".concat(t,"'"));return o?o.name:a||i}},{key:"toString",value:function(){return'"'.concat(this.data,'"')}}])}(Pn),_n=function(t){function e(){return rn(this,e),Qe(this,e,arguments)}return en(e,t),an(e,[{key:"getData",value:function(t){return Me.parseDate(t)}},{key:"toString",value:function(){return"".concat(this.data)}}])}(Pn),Tn=function(t){function e(){return rn(this,e),Qe(this,e,arguments)}return en(e,t),an(e,[{key:"getData",value:function(t){if(!ve.VALID_INT_LITERAL_RE.test(t))throw new Me.SyntaxException("Invalid integer; must be a number; got: '".concat(t,"'"));var e=parseInt(t);if(isNaN(e))throw new Me.SyntaxException("Invalid integer; must be a number; got: '".concat(t,"'"));return e}},{key:"toString",value:function(){return"".concat(this.data)}}])}(Pn),kn=function(t){function e(){return rn(this,e),Qe(this,e,arguments)}return en(e,t),an(e,[{key:"getData",value:function(t){if(!ve.VALID_BOOL_LITERAL_RE.test(t))throw new Me.SyntaxException("Invalid boolean; must be 'true' or 'false'; got: '".concat(t,"'"));return"true"===t?1:0}},{key:"toString",value:function(){return"".concat(this.data?"true":"false")}}])}(Pn),On=function(t){function e(){return rn(this,e),Qe(this,e,arguments)}return en(e,t),an(e,[{key:"getData",value:function(t){var e=t.split("...");if(2!==e.length)throw new Me.SyntaxException("Invalid range; ranges must be of the format x...y or x...=y ; got more than two values when splitting string: '".concat(t,"'"));var n=$e(e,2),r=n[0],o=n[1],a=!1;o.includes("=")&&(o=o.replace("=",""),a=!0);var i={start:null,end:null,endInclusive:a};if(ve.VALID_DATE_LITERAL_RE.test(r)){if(i.start=Me.tryConvert(Me.parseDate,"Date",r,"Could not convert '".concat(r,"' to Date in declared range: '").concat(t,"'")),i.end=Me.tryConvert(Me.parseDate,"Date",o,"Could not convert '".concat(o,"' to Date in declared range: '").concat(t,"' ; Ranges must have homogenous types")),i.start>i.end)throw new Me.SyntaxException("Invalid range; start date must be on or before end date; ".concat(i.start," > ").concat(i.end));i.type="Date"}else{if(!ve.VALID_INT_LITERAL_RE.test(r))throw new Me.SyntaxException("Invalid range; must be of the format x...y or x...=y ; got: '".concat(t,"'"));if(i.start=Me.tryConvert(function(t){return new Tn(t)},"Int",r,"Could not convert '".concat(r,"' to Int in declared range: '").concat(t,"'")).data,i.end=Me.tryConvert(function(t){return new Tn(t)},"Int",o,"Could not convert '".concat(o,"' to Int in declared range: '").concat(t,"' ; Ranges must have homogenous types")).data,i.start>i.end)throw new Me.SyntaxException("Invalid range; start integer must be equal to or less than end integer; ".concat(i.start," > ").concat(i.end));i.type="Int"}return console.log("Built Range: ".concat(JSON.stringify(i))),i}},{key:"toString",value:function(){var t=this.data.endInclusive?"...=":"...";return"Date"===this.data.type?"".concat(this.data.start.toISOString()).concat(t).concat(this.data.end.toISOString(),")"):"Int"===this.data.type?"".concat(this.data.start,"...").concat(t).concat(this.data.end):"Error Converting Range to String => < ".concat(this.data.start,"...").concat(t).concat(this.data.end," >")}}])}(Pn),An=function(t){function e(){return rn(this,e),Qe(this,e,arguments)}return en(e,t),an(e,[{key:"getData",value:function(t,e){if(!ve.VALID_SET_RE.test(t))throw new Me.SyntaxException("Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ".concat(ve.VALID_SET_RE.source," ) (Just chat gpt this one bro); got: '").concat(t,"'"));var n=t.replace(/^\{|\}$/g,"").split(",").map(function(t){return t.trim()}).filter(function(t){return""!==t}).map(function(t){if(ve.VALID_STRING_RE.test(t))return new En(t,e);if(ve.VALID_DATE_LITERAL_RE.test(t))return new _n(t);throw new Me.SyntaxException("Invalid set element; must be a string or date; got: '".concat(t,"'"))});console.log("GOT ELEMENTS: ",n);var r,o=new Set,a=un(n);try{for(a.s();!(r=a.n()).done;){var i=r.value;o.add(i.constructor.name)}}catch(t){a.e(t)}finally{a.f()}if(o=Xe(o),console.log("GOT TYPES: ",o),o.size>1)throw new Me.SyntaxException("Invalid set; all set elements must have the same data type; got: types: [".concat(o.join(", "),"]"));return this.Type=o[0],new Set(n.map(function(t){return t.data}))}},{key:"toString",value:function(){return"{".concat(this.data.map(function(t){return t.toString()}).join(", "),"}")}}])}(Pn);var Dn=function(){return an(function t(){rn(this,t)},[{key:"call",value:function(t){throw new Error("Base class ".concat(this.constructor.name," does not implement the 'call' method. Implement this method in a subclass."))}}])}(),In=function(t){function e(t){var n;if(rn(this,e),(n=Qe(this,e)).name="last-N",1!==t.length)throw new Me.SyntaxException("".concat(n.name," expects 1 argument, got ").concat(t.length));var r=Number(t[0]);if(!Number.isInteger(r))throw new Me.TypeException("".concat(n.name," expects an integer argument, could not parse '").concat(t[0],"' as integer"));return n.str="".concat(n.name,"(").concat(r,")"),n.n=r,n}return en(e,t),an(e,[{key:"call",value:function(t){return t.sort(function(t,e){return t["Seq Num"]-e["Seq Num"]}),t.slice(-this.n)}}])}(function(t){function e(){return rn(this,e),Qe(this,e)}return en(e,t),an(e,[{key:"toString",value:function(){return"".concat(arguments.length>0&&void 0!==arguments[0]?arguments[0]:"").concat(this.str)}}])}(Dn)),jn=function(t){function e(t){var n;return rn(this,e),(n=Qe(this,e)).fns=t,console.log("Clause Fn constructor got fns:",t),n}return en(e,t),an(e,[{key:"toString",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",e="",n=t+"   ";return this.fns.localFilters.forEach(function(t){return e+="".concat(t.toString(n),",\n")}),console.log("Clause Fn toString got output:",e),"".concat(t).concat(this.str,"(\n").concat(e.trimEnd(),"\n").concat(t,")")}}])}(Dn),Ln=function(t){function e(t){var n;return rn(this,e),(n=Qe(this,e,[t])).str="AND",n}return en(e,t),an(e,[{key:"call",value:function(t){return this.fns.localFilters.every(function(e){return e.call(t)})}}])}(jn),Rn=function(t){function e(t){var n;return rn(this,e),(n=Qe(this,e,[t])).str="OR",n}return en(e,t),an(e,[{key:"call",value:function(t){return this.fns.localFilters.some(function(e){return e.call(t)})}}])}(jn),xn=function(t){function e(t){var n;return rn(this,e),(n=Qe(this,e,[t])).str="XOR",n}return en(e,t),an(e,[{key:"call",value:function(t){var e,n=!1,r=un(this.fns.localFilters);try{for(r.s();!(e=r.n()).done;){var o=e.value;n=!n&&o.call(t)||n&&!o.call(t)}}catch(t){r.e(t)}finally{r.f()}return n}}])}(jn),Fn=function(t){function e(t){var n;return rn(this,e),(n=Qe(this,e,[t])).str="NOT",n}return en(e,t),an(e,[{key:"call",value:function(t){return!this.fns.localFilters[0].call(t)}}])}(jn),Nn={and:Ln,or:Rn,xor:xn,not:Fn,"last-n":In},Mn=new Set([Ln,Rn,xn,Fn]),Bn=new Set([In]),Gn=function(){return an(function t(e,n){rn(this,t),this.str=e,this.fn=n},[{key:"call",value:function(t){return this.fn(t)}},{key:"toString",value:function(){return"".concat(arguments.length>0&&void 0!==arguments[0]?arguments[0]:"").concat(this.str)}}])}();function Cn(t,e,n,r,o){var a=null;try{a=e in Sn.FIELD_EXTRACT_FN_MAP?new Sn(e):function(t,e,n){if(console.log("Trying to Parse DataType: ".concat(t)),ve.VALID_STRING_LITERAL_RE.test(t))return console.log("Parsing as StringType"),new En(t,e);if(ve.VALID_DATE_LITERAL_RE.test(t))return console.log("Parsing as DateType"),new _n(t);if(ve.VALID_INT_LITERAL_RE.test(t))return console.log("Parsing as IntType"),new Tn(t);if(ve.VALID_BOOL_LITERAL_RE.test(t))return console.log("Parsing as BoolType"),new kn(t);if(/\{.*\}/.test(t))return console.log("Parsing as SetType"),new An(t,e);if(ve.VALID_RANGE_LITERAL_RE.test(t))return console.log("Parsing as RangeType"),new On(t);if(ve.VALID_DATA_WORD_LITERAL_RE.test(t))return console.log("Parsing as DataWord"),function(t,e){if(ve.VALID_SEASON_LITERAL_RE.test(t)){var n=function(t){return t.toISOString().slice(0,10)};if(e.SeasonDetails.length<1)throw new Error("Did not recieve any season details; failed on: '".concat(t,"'"));if("current-season"===t){var r=$e(e.SeasonDetails.find(function(t){return"Active"===t.Status}).range,2),o=r[0],a=r[1];return new On("".concat(n(o),"...=").concat(n("N/A"===a?new Date:a)))}var i=Number(t.split("-")[1]),c=e.SeasonDetails.find(function(t){return t["Season Number"]===i});if(!c)throw new Error("Invalid season specified; ".concat(i," is not a valid season number; failed on str: '").concat(t,"'"));var u=$e(c.range,2),s=u[0],l=u[1];return new On("".concat(n(s),"...=").concat(n(l)))}}(t,{SeasonDetails:n});if(console.log("Failed to parse DataType"),ve.VALID_STRING_LITERAL_RE.test("'".concat(t,"'")))throw new Me.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; did you forget to wrap string literals in double or single quotes?"));if(t.includes("'")&&t.includes('"'))throw new Me.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; did you encase in mismatching quote types?"));if(t.includes(".=")||t.includes(".."))throw new Me.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only be int-int or date-date"));throw new Me.SyntaxException("Invalid DataType declaration; could not parse to valid Field or Declared Data Type; got: '".concat(t,"'"))}(e,r,o)}catch(r){for(var i in Sn.FIELD_EXTRACT_FN_MAP)if(e.includes(i)||i.includes(e))throw new Me.SyntaxException("Could not parse ".concat(t,' side of filter; got: "').concat(e,'" from filter: [').concat(n,"], did you mean to use '").concat(i,"' as a field instead?"));throw console.error(r),new Me.SyntaxException("Could not parse ".concat(t,' side of filter; got: "').concat(e,'" from filter: [').concat(n,"]; error: ").concat(r.message))}return a}var Un=function(){function t(e){if(rn(this,t),e!==Vn._)throw new Error("Cannot instantiate FilterSyntaxParser directly; use createAndParse method instead.")}return an(t,[{key:"toString",value:function(){var t=Xe(this.filters.localFilters);return t.push.apply(t,Xe(this.filters.globalFilters)),"[\n".concat(t.map(function(t){return t.toString("   ")}).join(";\n"),"\n]")}},{key:"parseGlobalFilterFn",value:function(t,e){var n=ve.anchorExp(ve.VALID_GLOBAL_FILTER_RE);if(!n.test(e))throw new Me.SyntaxException('Invalid global filter format; must follow the case insensitive regex format "'.concat(n.source,"\" ; got: '").concat(e,"'"));var r=Me.tokenizeWithNestedEnclosures(e,",",1);if(t===In)return{localFilters:[],globalFilters:[new In(r)]};throw new Me.SyntaxException("Global filter function ".concat(t.str," not mapped in parseGlobalFilterFn"))}},{key:"parseClauseFn",value:function(e,n){var r=this;console.log("Parsing clause fn:",e.name,n);var o=Me.tokenizeWithNestedEnclosures(n,",",1);if(console.log("Got argArr:",o),e===xn&&o.length<2)throw new Me.SyntaxException("XOR clause must have at least two arguments; got: ".concat(o.length,' arguments from string: "').concat(n,'"'));if(e===Fn&&1!==o.length)throw new Me.SyntaxException("NOT clause must have exactly one argument; got: ".concat(o.length,' arguments from string: "').concat(n,'"'));var a=o.reduce(function(t,e){var n,o;return(n=t.localFilters).push.apply(n,Xe(r.parseFilters(e).localFilters)),(o=t.globalFilters).push.apply(o,Xe(r.parseFilters(e).globalFilters)),t},t.getEmptyFilters());if(a.globalFilters.length>0)throw new Me.SyntaxException("Global filters not allowed in clause functions; got: ".concat(a.globalFilters,' from string: "').concat(n,'"'));if(e===Fn&&1!==a.localFilters.length)throw new Me.SyntaxException("NOT clause must have exactly one argument; got: ".concat(a.length,' arguments from string: "').concat(n,'"'));return{localFilters:[new e(a)],globalFilters:[]}}},{key:"parseBaseFilter",value:function(t){console.log("Parsing base filter:",t);var e=this.HM,n=Me.tokenizeWithNestedEnclosures(t," ",0,!0);if(console.log("Got tokens: ",n,"; Length: ".concat(n.length)),3!==n.length)throw new Me.SyntaxException("Invalid base filter format; all filters must be of the form: ['X', operator, 'Y']; got tokens: [".concat(n.join(", "),"]"));var r=$e(n,3),o=r[0],a=r[1],i=r[2];if(!hn[a])throw new Me.SyntaxException('Invalid operator in base filter; got: "'.concat(a,'" as the operator in filter: [').concat(t,"]"));var c=hn[a];if(o=Cn("left",o,t,e,this.SeasonDetails),i=Cn("right",i,t,e,this.SeasonDetails),("in"===a||"!in"===a)&&!(i instanceof An||i instanceof On||i instanceof Sn&&wn.has(i.str)))throw new Me.TypeException("When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '".concat(t,"'"));if(i instanceof On)if("Date"===i.data.type){if(!o.str.includes("date"))throw new Me.TypeException("When using a Date Range, the left side of the operator must be a date field; ".concat(o.str," is not a date field; error found in filter: '").concat(t,"'"))}else if("Int"===i.data.type&&!bn.has(o.str))throw new Me.TypeException("When using an Int Range, the left side of the operator must be an integer field; ".concat(o.str," is not an integer field; error found in filter: '").concat(t,"'"));if(i instanceof Pn&&o instanceof Pn)throw new Me.SyntaxException("Either left or right side of filter must be a data field (a property of a battle); both ".concat(o," and ").concat(i,' are user declared data types in filter: "').concat(t,'"'));var u;return u=o instanceof Pn?function(t){return c(o.data,i.extractData(t))}:i instanceof Pn?function(t){return c(o.extractData(t),i.data)}:function(t){return c(o.extractData(t),i.extractData(t))},console.log("Returning base local filter",[new Gn(t,u).toString()]),{localFilters:[new Gn(t,u)],globalFilters:[]}}},{key:"parseFilters",value:function(e){var n=this;if(console.log('Parsing filter string: "'.concat(e||this.preParsedString,'"')),""===e)return console.log("Empty filter string; Returning empty filters"),t.getEmptyFilters();var r,o=(e=e.trim()).split(";").filter(function(t){return t.length>0}),a=un(o);try{for(a.s();!(r=a.n()).done;){var i=r.value,c=Me.getCharCounts(i);if(c["("]!==c[")"])throw new Me.SyntaxException('Imbalanced parentheses in following string: "'.concat(i,'"'));if(c["{"]!==c["}"])throw new Me.SyntaxException("Imbalanced braces ('{', '}') in following string: \"".concat(i,'"'));if((c['"']||0)%2!=0)throw new Me.SyntaxException('Imbalanced double quotes in following string: "'.concat(i,'"'));if((c["'"]||0)%2!=0)throw console.log("Imbalanced single quotes in following string:",i,"; got:",c["'"]),new Me.SyntaxException('Imbalanced single quotes in following string: "'.concat(i,'"'))}}catch(t){a.e(t)}finally{a.f()}if(o.length>1)return console.log("Processing <".concat(o.length,"> filters; filters: ").concat(o)),o.reduce(function(t,e){var r,o;return(r=t.localFilters).push.apply(r,Xe(n.parseFilters(e).localFilters)),(o=t.globalFilters).push.apply(o,Xe(n.parseFilters(e).globalFilters)),t},t.getEmptyFilters());var u=o[0];if(u.length<4)throw new Me.SyntaxException("Filter string cannot be valid (less than 4 characters); got filter string: [".concat(u,"]"));var s=u.split("("),l=Nn[s[0]];if(console.log("Trying to look for Fn ; got:",s[0],"from string:",u),l){if(Mn.has(l))return console.log("Found clause fn; dispatching to clause fn parser"),this.parseClauseFn(l,u);if(Bn.has(l))return console.log("Found global filter fn; dispatching to global filter fn parser"),this.parseGlobalFilterFn(l,u);throw new Error('could not parse filter string as Fn: "'.concat(e,'" ; did not map to any defined pattern'))}return console.log("Did not find Fn; dispatching to base filter parser"),this.parseBaseFilter(u)}}],[{key:"getEmptyFilters",value:function(){return{localFilters:[],globalFilters:[]}}},{key:"createAndParse",value:(e=Ye().m(function e(n){var r,o,a,i,c,u=arguments;return Ye().w(function(e){for(;;)switch(e.n){case 0:if(r=u.length>1&&void 0!==u[1]?u[1]:null,o=u.length>2&&void 0!==u[2]?u[2]:null,console.log("Initialized parsing of string:",n),a=new t(Vn._),i=r){e.n=2;break}return e.n=1,Ut.getHeroManager();case 1:i=e.v;case 2:if(r=i,c=o){e.n=4;break}return e.n=3,qe.getSeasonDetails();case 3:c=e.v;case 4:return o=c,a.rawString=n,a.HM=r,a.SeasonDetails=o,a.preParsedString=yn(n),a.globalFilters=[],a.filters=a.parseFilters(a.preParsedString),console.log("Got Filters\n"),console.log(a.toString()),e.a(2,a)}},e)}),n=function(){var t=this,n=arguments;return new Promise(function(r,o){var a=e.apply(t,n);function i(t){Je(a,r,o,i,c,"next",t)}function c(t){Je(a,r,o,i,c,"throw",t)}i(void 0)})},function(t){return n.apply(this,arguments)})}]);var e,n}(),Vn={_:Symbol("internal")};const Hn=Un;function Kn(t){return Kn="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Kn(t)}function Wn(t){return function(t){if(Array.isArray(t))return zn(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||Yn(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function qn(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=Yn(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var a,i=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return i=t.done,t},e:function(t){c=!0,a=t},f:function(){try{i||null==n.return||n.return()}finally{if(c)throw a}}}}function Yn(t,e){if(t){if("string"==typeof t)return zn(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?zn(t,e):void 0}}function zn(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Jn(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Xn(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Xn(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Xn(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Xn(f,"constructor",s),Xn(s,"constructor",u),u.displayName="GeneratorFunction",Xn(s,o,"GeneratorFunction"),Xn(f),Xn(f,o,"Generator"),Xn(f,r,function(){return this}),Xn(f,"toString",function(){return"[object Generator]"}),(Jn=function(){return{w:a,m:p}})()}function Xn(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Xn=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Xn(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Xn(t,e,n,r)}function $n(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Qn(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){$n(a,r,o,i,c,"next",t)}function c(t){$n(a,r,o,i,c,"throw",t)}i(void 0)})}}var Zn={world_global:Ot.Keys.GLOBAL_USERS,world_eu:Ot.Keys.EU_USERS,world_asia:Ot.Keys.ASIA_USERS,world_jpn:Ot.Keys.JPN_USERS,world_kor:Ot.Keys.KOR_USERS};function tr(t,e){return{id:t.nick_no,name:t.nick_nm.toLowerCase(),code:t.code,rank:t.rank,world_code:e}}function er(t){return nr.apply(this,arguments)}function nr(){return(nr=Qn(Jn().m(function t(e){var n;return Jn().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting user map for world code from E7 server: ".concat(e)),t.n=1,y.fetchUserJSON(e);case 1:if(n=t.v){t.n=2;break}return console.log("Could not get user map from E7 server for world code: ".concat(e)),t.a(2,null);case 2:return console.log("Got user map from E7 server for world code: ".concat(e)),t.a(2,Object.fromEntries(n.users.map(function(t){return[t.nick_no,tr(t,e)]})))}},t)}))).apply(this,arguments)}var rr,or,ar,ir,cr,ur,sr={getUserMap:(ur=Qn(Jn().m(function t(e){var n,r;return Jn().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting user map for world code: ".concat(e)),t.n=1,Ot.get(Zn[e]);case 1:if(null===(n=t.v)){t.n=2;break}return console.log("Got user map from cache"),t.a(2,n);case 2:return t.n=3,er(e);case 3:return r=t.v,t.n=4,Ot.cache(Zn[e],r);case 4:return t.a(2,r)}},t)})),function(t){return ur.apply(this,arguments)}),findUser:(cr=Qn(Jn().m(function e(n){var r,o,a,i,c,u,s,l,f,p,d,h,y;return Jn().w(function(e){for(;;)switch(e.n){case 0:if(!n.id){e.n=10;break}r=qn(t),e.p=1,r.s();case 2:if((o=r.n()).done){e.n=6;break}return a=o.value,e.n=3,this.getUserMap(a);case 3:if(i=e.v,!(c=Object.values(i).find(function(t){return t.id===n.id}))){e.n=4;break}return console.log("Found user: ".concat(JSON.stringify(c)," in world code: ").concat(a)),e.a(2,{user:c,error:!1});case 4:console.log("Could not find user with ID: ".concat(n.id," in world code: ").concat(a," from client-side means"));case 5:e.n=2;break;case 6:e.n=8;break;case 7:e.p=7,y=e.v,r.e(y);case 8:return e.p=8,r.f(),e.f(8);case 9:e.n=15;break;case 10:if(!n.name||!n.world_code){e.n=14;break}return u=[n.name,n.world_code],s=u[0],l=u[1],e.n=11,this.getUserMap(l);case 11:if(f=e.v,p=s.toLowerCase(),d=Object.values(f).find(function(t){return p===t.name.toLowerCase()}),!d){e.n=12;break}return console.log("Found user: ".concat(JSON.stringify(d)," in world code: ").concat(l)),e.a(2,{user:d,error:!1});case 12:console.log("Could not find user with ID: ".concat(n.id," in world code: ").concat(l," from client-side means"));case 13:e.n=15;break;case 14:return console.error("Must pass a user object with either user.name and user.world_code or user.id to fetch user"),e.a(2,{user:null,error:"Must pass a user object with either user.name and user.world_code or user.id to fetch user"});case 15:return e.n=16,O.fetchUser(n);case 16:if(!(h=e.v).error){e.n=17;break}return e.a(2,{user:null,error:h.error});case 17:return e.a(2,{user:h.user,error:!1})}},e,this,[[1,7,8,9]])})),function(t){return cr.apply(this,arguments)}),addP2ServersByID:(ir=Qn(Jn().m(function e(n){var r,o,a,i=this;return Jn().w(function(e){for(;;)switch(e.n){case 0:return console.log("Adding P2 servers by ID..."),r=Object.values(n),o=[],e.p=1,e.n=2,Promise.all(Wn(t).map(function(t){return i.getUserMap(t)}));case 2:o=e.v,e.n=4;break;case 3:return e.p=3,a=e.v,console.error(a),r.forEach(function(t){return t["P2 Server"]="Not Found"}),e.a(2);case 4:if(0!==o.length){e.n=5;break}return console.error("Failed to get any user maps"),r.forEach(function(t){return t["P2 Server"]="Not Found"}),e.a(2);case 5:r.forEach(function(t){var e,n=null===(e=o.find(function(e){return e[t["P2 ID"]]}))||void 0===e?void 0:e[t["P2 ID"]].world_code;n?t["P2 Server"]=i.convertServerStr(n):(console.log("Could not find user with ID: ".concat(t["P2 ID"]," in client-side means ; typeof: ").concat(Kn(t["P2 ID"]),", id type: ").concat(Kn(Object.keys(USER_MAPS[0])[0]))),t["P2 Server"]="Not Found")});case 6:return e.a(2)}},e,null,[[1,3]])})),function(t){return ir.apply(this,arguments)}),setUser:(ar=Qn(Jn().m(function t(e){return Jn().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.cache(Ot.Keys.USER,e);case 1:return t.a(2)}},t)})),function(t){return ar.apply(this,arguments)}),getUser:(or=Qn(Jn().m(function t(){return Jn().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.get(Ot.Keys.USER);case 1:return t.a(2,t.v)}},t)})),function(){return or.apply(this,arguments)}),clearUserData:function(){var t=Qn(Jn().m(function t(){return Jn().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.clearUserData();case 1:return t.a(2)}},t)}));return function(){return t.apply(this,arguments)}}(),clearUserDataLists:(rr=Qn(Jn().m(function t(){return Jn().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.delete(Ot.Keys.GLOBAL_USERS);case 1:return t.n=2,Ot.delete(Ot.Keys.EU_USERS);case 2:return t.n=3,Ot.delete(Ot.Keys.ASIA_USERS);case 3:return t.n=4,Ot.delete(Ot.Keys.JPN_USERS);case 4:return t.n=5,Ot.delete(Ot.Keys.KOR_USERS);case 5:return t.a(2)}},t)})),function(){return rr.apply(this,arguments)}),convertServerStr:function(t){return e[t]}};const lr=sr;function fr(t){return fr="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},fr(t)}function pr(t){if(null!=t){var e=t["function"==typeof Symbol&&Symbol.iterator||"@@iterator"],n=0;if(e)return e.call(t);if("function"==typeof t.next)return t;if(!isNaN(t.length))return{next:function(){return t&&n>=t.length&&(t=void 0),{value:t&&t[n++],done:!t}}}}throw new TypeError(fr(t)+" is not iterable")}function dr(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return hr(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(hr(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,hr(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,hr(f,"constructor",s),hr(s,"constructor",u),u.displayName="GeneratorFunction",hr(s,o,"GeneratorFunction"),hr(f),hr(f,o,"Generator"),hr(f,r,function(){return this}),hr(f,"toString",function(){return"[object Generator]"}),(dr=function(){return{w:a,m:p}})()}function hr(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}hr=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){hr(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},hr(t,e,n,r)}function yr(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function vr(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){yr(a,r,o,i,c,"next",t)}function c(t){yr(a,r,o,i,c,"throw",t)}i(void 0)})}}function gr(t){return function(t){if(Array.isArray(t))return _r(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||Er(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function mr(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],u=!0,s=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(s)throw o}}return c}}(t,e)||Er(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function br(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),n.push.apply(n,r)}return n}function wr(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?br(Object(n),!0).forEach(function(e){Sr(t,e,n[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):br(Object(n)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))})}return t}function Sr(t,e,n){return(e=function(t){var e=function(t){if("object"!=fr(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=fr(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==fr(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function Pr(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=Er(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var a,i=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return i=t.done,t},e:function(t){c=!0,a=t},f:function(){try{i||null==n.return||n.return()}finally{if(c)throw a}}}}function Er(t,e){if(t){if("string"==typeof t)return _r(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?_r(t,e):void 0}}function _r(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}var Tr=["Date/Time","Seq Num","P1 ID","P1 Server","P1 League","P1 Points","P2 ID","P2 Server","P2 League","Win","First Pick","P1 Preban 1","P1 Preban 2","P2 Preban 1","P2 Preban 2","P1 Pick 1","P1 Pick 2","P1 Pick 3","P1 Pick 4","P1 Pick 5","P2 Pick 1","P2 Pick 2","P2 Pick 3","P2 Pick 4","P2 Pick 5","P1 Postban","P2 Postban"].filter(function(t){return t.includes(" Pick ")||t.includes("ban ")});function kr(t){var e={};console.log("Processing ".concat(t.length," battles into dict..."));var n,r=Pr(t);try{for(r.s();!(n=r.n()).done;){var o=n.value;console.log("Processing battle: ".concat(o)),e[o["Seq Num"]]=o}}catch(t){r.e(t)}finally{r.f()}return e}function Or(t,e){var n,r,o,a=function(t){var n,r;return null!==(n=null===(r=Ut.getHeroByCode(t,e))||void 0===r?void 0:r.name)&&void 0!==n?n:e.Fodder.name},i={"Date/Time":t.time,"Seq Num":t.seq_num,"P1 ID":t.p1_id.toString(),"P2 ID":t.p2_id.toString(),"P1 League":null!==(n=t.grades[0])&&void 0!==n?n:"","P2 League":null!==(r=t.grades[1])&&void 0!==r?r:"","P1 Points":null!==(o=t.scores[0])&&void 0!==o?o:null,Win:1===t.winner?"W":"L","First Pick":1===t.first_pick?"True":"False","P1 Preban 1":a(t.p1_preban[0]),"P1 Preban 2":a(t.p1_preban[1]),"P2 Preban 1":a(t.p2_preban[0]),"P2 Preban 2":a(t.p2_preban[1]),"P1 Pick 1":a(t.p1_picks[0]),"P1 Pick 2":a(t.p1_picks[1]),"P1 Pick 3":a(t.p1_picks[2]),"P1 Pick 4":a(t.p1_picks[3]),"P1 Pick 5":a(t.p1_picks[4]),"P2 Pick 1":a(t.p2_picks[0]),"P2 Pick 2":a(t.p2_picks[1]),"P2 Pick 3":a(t.p2_picks[2]),"P2 Pick 4":a(t.p2_picks[3]),"P2 Pick 5":a(t.p2_picks[4]),"P1 Postban":a(t.postbans[1]),"P2 Postban":a(t.postbans[0])};return i["P1 Picks"]=[i["P1 Pick 1"],i["P1 Pick 2"],i["P1 Pick 3"],i["P1 Pick 4"],i["P1 Pick 5"]],i["P2 Picks"]=[i["P2 Pick 1"],i["P2 Pick 2"],i["P2 Pick 3"],i["P2 Pick 4"],i["P2 Pick 5"]],i["P1 Prebans"]=[i["P1 Preban 1"],i["P1 Preban 2"]],i["P2 Prebans"]=[i["P2 Preban 1"],i["P2 Preban 2"]],i}function Ar(t){var e,n=Pr(Tr);try{for(n.s();!(e=n.n()).done;){var r=e.value;t[r]=t[r]?t[r]:"Empty"}}catch(t){n.e(t)}finally{n.f()}return t["P1 Points"]=Number(t["P1 Points"])||t["P1 Points"],t["P1 Picks"]=[t["P1 Pick 1"],t["P1 Pick 2"],t["P1 Pick 3"],t["P1 Pick 4"],t["P1 Pick 5"]],t["P2 Picks"]=[t["P2 Pick 1"],t["P2 Pick 2"],t["P2 Pick 3"],t["P2 Pick 4"],t["P2 Pick 5"]],t["P1 Prebans"]=[t["P1 Preban 1"],t["P1 Preban 2"]],t["P2 Prebans"]=[t["P2 Preban 1"],t["P2 Preban 2"]],t}function Dr(t,e){var n,o,a=function(t){return Ut.getHeroByName(t,e).prime};return{"Date/Time":t["Date/Time"],"Seq Num":t["Seq Num"],"P1 ID":t["P1 ID"],"P2 ID":t["P2 ID"],"P1 League":null!==(n=r[t["P1 League"]])&&void 0!==n?n:"","P2 League":null!==(o=r[t["P2 League"]])&&void 0!==o?o:"","P1 Points":t["P1 Points"],Win:"W"===t.Win?1:0,"First Pick":"True"===t["First Pick"]?1:0,"P1 Preban 1":a(t["P1 Preban 1"]),"P1 Preban 2":a(t["P1 Preban 2"]),"P2 Preban 1":a(t["P2 Preban 1"]),"P2 Preban 2":a(t["P2 Preban 2"]),"P1 Pick 1":a(t["P1 Pick 1"]),"P1 Pick 2":a(t["P1 Pick 2"]),"P1 Pick 3":a(t["P1 Pick 3"]),"P1 Pick 4":a(t["P1 Pick 4"]),"P1 Pick 5":a(t["P1 Pick 5"]),"P2 Pick 1":a(t["P2 Pick 1"]),"P2 Pick 2":a(t["P2 Pick 2"]),"P2 Pick 3":a(t["P2 Pick 3"]),"P2 Pick 4":a(t["P2 Pick 4"]),"P2 Pick 5":a(t["P2 Pick 5"]),"P1 Postban":a(t["P1 Postban"]),"P2 Postban":a(t["P2 Postban"]),"P1 Picks":t["P1 Picks"].map(a).reduce(function(t,e){return t*e},1),"P2 Picks":t["P2 Picks"].map(a).reduce(function(t,e){return t*e},1),"P1 Prebans":t["P1 Prebans"].map(a).reduce(function(t,e){return t*e},1),"P2 Prebans":t["P2 Prebans"].map(a).reduce(function(t,e){return t*e},1)}}function Ir(t){return(100*t).toFixed(2)+"%"}function jr(t,e){var n=t.filter(function(t){return t.Win}).length,r=t.length,o=0!==r?n/r:0;return{games_won:n,games_appeared:r,total_games:e,appearance_rate:Ir(0!==e?r/e:0),win_rate:Ir(o),"+/-":2*n-r}}var Lr,Rr,xr,Fr,Nr,Mr,Br,Gr,Cr={loaded_servers:new Set,getBattles:(Gr=vr(dr().m(function t(){var e,n,r,o;return dr().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting battles"),t.n=1,Ot.get(Ot.Keys.BATTLES);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=4;break;case 3:o=null;case 4:return t.a(2,o)}},t)})),function(){return Gr.apply(this,arguments)}),removeBattles:(Br=vr(dr().m(function t(){return dr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.delete(Ot.Keys.BATTLES);case 1:return t.n=2,Ot.delete(Ot.Keys.UPLOADED_BATTLES);case 2:return t.n=3,Ot.delete(Ot.Keys.FILTERED_BATTLES);case 3:console.log("Removed battle data from cache; cleared ['BATTLES', 'UPLOADED_BATTLES', 'FILTERED_BATTLES']");case 4:return t.a(2)}},t)})),function(){return Br.apply(this,arguments)}),removeFilteredBattles:(Mr=vr(dr().m(function t(){return dr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.delete(Ot.Keys.FILTERED_BATTLES);case 1:console.log("Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']");case 2:return t.a(2)}},t)})),function(){return Mr.apply(this,arguments)}),applyFilter:(Nr=vr(dr().m(function t(e){var n,r,o,a,i,c,u,s,l,f,p,d;return dr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.getBattles();case 1:n=t.v,r=e.localFilters||[],o=e.globalFilters||[],a=Object.values(n),i=Pr(o);try{for(i.s();!(c=i.n()).done;)u=c.value,console.log("Applying global filter: ".concat(u)),s=a.length,a=u.call(a),n=Object.fromEntries(a.map(function(t){return[t["Seq Num"],t]})),console.log("Filtered ".concat(s-a.length," out of ").concat(s,"; new total = ").concat(a.length))}catch(t){i.e(t)}finally{i.f()}l=Pr(r),t.p=2,p=dr().m(function t(){var e,r;return dr().w(function(t){for(;;)switch(t.n){case 0:e=f.value,console.log("Applying local filter: ".concat(e)),r=Object.keys(n).length,n=Object.fromEntries(Object.entries(n).filter(function(t){var n=mr(t,2),r=(n[0],n[1]);return e.call(r)})),console.log("Filtered ".concat(r-Object.keys(n).length," out of ").concat(r,"; new total = ").concat(Object.keys(n).length));case 1:return t.a(2)}},t)}),l.s();case 3:if((f=l.n()).done){t.n=5;break}return t.d(pr(p()),4);case 4:t.n=3;break;case 5:t.n=7;break;case 6:t.p=6,d=t.v,l.e(d);case 7:return t.p=7,l.f(),t.f(7);case 8:return console.log("Caching filtered battles ; total = ".concat(Object.keys(n).length)),t.n=9,Ot.cache(Ot.Keys.FILTERED_BATTLES,n);case 9:return console.log("Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <".concat(r.length+o.length,"> filters")),t.a(2,n)}},t,this,[[2,6,7,8]])})),function(t){return Nr.apply(this,arguments)}),getNumericalBattles:(Fr=vr(dr().m(function t(e,n){var r,o;return dr().w(function(t){for(;;)if(0===t.n)return r=function(t,e){return[t,Dr(e,n)]},o=Object.fromEntries(Object.entries(e).map(function(t){var e=mr(t,2),n=e[0],o=e[1];return r(n,o)})),t.a(2,o)},t)})),function(t,e){return Fr.apply(this,arguments)}),extendBattles:(xr=vr(dr().m(function t(e){var n,r,o,a,i;return dr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.get(Ot.Keys.BATTLES);case 1:if(a=n=t.v,!(o=null!==a)){t.n=2;break}o=void 0!==n;case 2:if(!o){t.n=3;break}i=n,t.n=4;break;case 3:i={};case 4:return r=wr(wr({},i),kr(e)),t.n=5,Ot.cache(Ot.Keys.BATTLES,r);case 5:return console.log("Extended user data in cache"),t.a(2,r)}},t)})),function(t){return xr.apply(this,arguments)}),cacheQuery:(Rr=vr(dr().m(function t(e,n,r){var o,a,i,c;return dr().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}return console.log("No query battles provided to cacheQuery"),t.a(2,[]);case 1:return console.log("Caching queried battles: ".concat(e," battles; modified [BATTLES]")),o=function(t){return Or(t,r)},a=e.map(o),i=lr.convertServerStr(n.world_code),a.map(function(t){t["P1 Server"]=i}),t.n=2,lr.addP2ServersByID(a);case 2:return t.n=3,this.extendBattles(a);case 3:return c=t.v,console.log("Cached queried battles in cache; modified [BATTLES]"),t.a(2,c)}},t,this)})),function(t,e,n){return Rr.apply(this,arguments)}),cacheUpload:(Lr=vr(dr().m(function t(e){var n,r;return dr().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}return console.log("No uploaded battles provided to cacheUpload"),t.a(2,Hn.emptyFilters());case 1:return n=e.map(Ar),t.n=2,Ot.cache(Ot.Keys.UPLOADED_BATTLES,n);case 2:return t.n=3,this.extendBattles(n);case 3:return r=t.v,console.log("Ingested uploaded battle data into cache; modified [BATTLES] and overwrote [UPLOADED_BATTLES]"),t.a(2,r)}},t,this)})),function(t){return Lr.apply(this,arguments)}),getStats:function(){var t=vr(dr().m(function t(e,n,r,o,a){var i,c,u,s,l,f,p,d,h,y,v;return dr().w(function(t){for(;;)switch(t.n){case 0:return i=r.localFilters.length+r.globalFilters.length,t.n=1,this.applyFilter(r);case 1:return c=t.v,u=Object.values(e),s=Object.values(c),t.n=2,this.getNumericalBattles(c,o);case 2:return l=t.v,f=Wt(u,n,i>0?l:null,a),t.n=3,this.getPrebanStats(l,o);case 3:return p=t.v,t.n=4,this.getFirstPickStats(l,o);case 4:return d=t.v,t.n=5,this.getGeneralStats(l,o);case 5:return h=t.v,t.n=6,this.getHeroStats(l,o);case 6:return y=t.v,t.n=7,this.getServerStats(s);case 7:return v=t.v,t.a(2,{battles:u,filteredBattles:s,plotContent:f,prebanStats:p,generalStats:h,firstPickStats:d,playerHeroStats:y.playerHeroStats,enemyHeroStats:y.enemyHeroStats,serverStats:v})}},t,this)}));return function(e,n,r,o,a){return t.apply(this,arguments)}}(),getPrebanStats:function(t,e){var n=Ut.getHeroByName("Empty",e).prime,r=Object.values(t);if(0===r.length)return[];var o,a=function(t){return gr(new Set(r)).map(function(e){return e[t]}).filter(function(t){return t&&t!==n})},i=a("P1 Preban 1"),c=a("P1 Preban 2"),u=new Set([].concat(gr(i),gr(c))),s=[],l=Pr(u);try{for(l.s();!(o=l.n()).done;){var f=o.value;s.push(f)}}catch(t){l.e(t)}finally{l.f()}var p,d=Pr(u);try{for(d.s();!(p=d.n()).done;){var h,y=p.value,v=Pr(u);try{for(v.s();!(h=v.n()).done;){var g=h.value;y<g&&s.push(y*g)}}catch(t){v.e(t)}finally{v.f()}}}catch(t){d.e(t)}finally{d.f()}for(var m=r.length,b=[],w=function(){var t=P[S],n=r.filter(function(e){return e["P1 Prebans"]%t===0}),o=n.length;if(o<1)return 1;var a=n.reduce(function(t,e){return t+e.Win},0),i=m>0?o/m:0,c=o>0?a/o:0,u=2*a-o;b.push({preban:e.prime_pair_lookup[t],wins:a,appearances:o,appearance_rate:Ir(i),win_rate:Ir(c),"+/-":u})},S=0,P=s;S<P.length;S++)w();return b.sort(function(t,e){return e.appearances-t.appearances}),b},getFirstPickStats:function(t,e){var n=Object.values(t).filter(function(t){return t["First Pick"]});if(0===n.length)return[];var r,o=n.length,a={},i=Pr(n);try{for(i.s();!(r=i.n()).done;){var c=r.value,u=c["P1 Pick 1"];u in a||(a[u]={wins:0,appearances:0}),a[u].wins+=c.Win?1:0,a[u].appearances+=1}}catch(t){i.e(t)}finally{i.f()}var s=Object.entries(a).map(function(t){var n=mr(t,2),r=n[0],a=n[1];return{hero:Ut.getHeroByPrime(r,e).name,wins:a.wins,appearances:a.appearances,win_rate:Ir(a.wins/a.appearances),appearance_rate:Ir(a.appearances/o),"+/-":2*a.wins-a.appearances}});return s.sort(function(t,e){return e.appearances-t.appearances}),s},getGeneralStats:function(t,e){var n=Object.values(t);n.sort(function(t,e){return new Date(t["Date/Time"])-new Date(e["Date/Time"])});var r=0,o=0;if(n.length>1)for(var a=0;a<n.length-1;a++){var i=[n[a],n[a+1]],c=i[0],u=i[1]["P1 Points"]-c["P1 Points"];u<-40||(r+=u,o+=1)}for(var s=o>0?r/o:0,l=n.length,f=n.filter(function(t){return 1===t["First Pick"]}),p=n.filter(function(t){return 1!==t["First Pick"]}),d=f.length,h=p.length,y=f.reduce(function(t,e){return t+e.Win},0),v=p.reduce(function(t,e){return t+e.Win},0),g=l?d/l:0,m=l?h/l:0,b=d?y/d:0,w=h?v/h:0,S=l?(y+v)/l:0,P=0,E=0,_=0,T=0,k=0,O=n;k<O.length;k++)1===O[k].Win?(_+=1,P=Math.max(P,_),T=0):(_=0,T+=1,E=Math.max(E,T));var A="N/A";return{first_pick_count:d,second_pick_count:h,first_pick_rate:d?Ir(g):A,second_pick_rate:h?Ir(m):A,first_pick_winrate:d?Ir(b):A,second_pick_winrate:h?Ir(w):A,total_winrate:l?Ir(S):A,total_battles:l,total_wins:y+v,max_win_streak:P,max_loss_streak:E,avg_ppg:s.toFixed(2)}},getHeroStats:function(t,e){var n=e.heroes,r=Object.values(t);if(0===r.length)return{playerHeroStats:[],enemyHeroStats:[]};var o,a=r.length,i=[],c=[],u=Pr(n);try{var s=function(){var t=o.value;if(t.name===e.Empty.name)return 1;var n=t.prime,u=r.filter(function(t){return t["P1 Picks"]%n===0}),s=r.filter(function(t){return t["P2 Picks"]%n===0});u.length>0&&i.push(wr(wr({},jr(u,a)),{},{hero:t.name})),s.length>0&&c.push(wr(wr({},jr(s,a)),{},{hero:t.name}))};for(u.s();!(o=u.n()).done;)s()}catch(t){u.e(t)}finally{u.f()}return{playerHeroStats:i.sort(function(t,e){return t.hero.localeCompare(e.hero)}),enemyHeroStats:c.sort(function(t,e){return t.hero.localeCompare(e.hero)})}},getServerStats:function(t){for(var n=[],r=t.length,o=function(){var e=i[a],o=t.filter(function(t){return t["P2 Server"]===e}),c=o.length,u=o.reduce(function(t,e){return t+("W"===e.Win?1:0)},0),s=c>0?u/c:"N/A",l=r>0?c/r:"N/A",f=o.filter(function(t){return"True"===t["First Pick"]}),p=f.reduce(function(t,e){return t+("W"===e.Win?1:0)},0),d=f.length>0?p/f.length:"N/A",h=o.filter(function(t){return"False"===t["First Pick"]}),y=h.reduce(function(t,e){return t+("W"===e.Win?1:0)},0),v=h.length>0?y/h.length:"N/A";n.push({server:e,count:c,wins:u,win_rate:Ir(s),frequency:Ir(l),"+/-":2*u-c,fp_games:f.length,sp_games:h.length,fp_wr:Ir(d),sp_wr:Ir(v)})},a=0,i=Object.values(e);a<i.length;a++)o();return n.sort(function(t,e){return t.server.localeCompare(e.server)}),n}};function Ur(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Vr(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Vr(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Vr(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Vr(f,"constructor",s),Vr(s,"constructor",u),u.displayName="GeneratorFunction",Vr(s,o,"GeneratorFunction"),Vr(f),Vr(f,o,"Generator"),Vr(f,r,function(){return this}),Vr(f,"toString",function(){return"[object Generator]"}),(Ur=function(){return{w:a,m:p}})()}function Vr(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Vr=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Vr(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Vr(t,e,n,r)}function Hr(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}var Kr,Wr,qr={HeroManager:Ut,BattleManager:Cr,SeasonManager:qe,UserManager:lr,ClientCache:Ot,getFilters:(Kr=Ur().m(function t(e){var n,r,o;return Ur().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Ot.getFilterStr();case 1:if(n=t.v){t.n=2;break}return t.a(2,Hn.getEmptyFilters());case 2:return t.n=3,qe.getSeasonDetails();case 3:return r=t.v,t.n=4,Hn.createAndParse(n,e,r);case 4:return o=t.v,t.a(2,o.filters)}},t)}),Wr=function(){var t=this,e=arguments;return new Promise(function(n,r){var o=Kr.apply(t,e);function a(t){Hr(o,n,r,a,i,"next",t)}function i(t){Hr(o,n,r,a,i,"throw",t)}a(void 0)})},function(t){return Wr.apply(this,arguments)})};const Yr=qr;function zr(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Jr(s,"_invoke",function(n,r,o){var a,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:d,f:d.bind(t,4),d:function(e,n){return a=e,c=0,u=t,p.n=n,i}};function d(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,a=l[e],d=p.p,h=a[2];n>3?(o=h===r)&&(u=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=d&&((o=n<2&&d<a[1])?(c=0,p.v=r,p.n=a[1]):d<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,p.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&d(l,h),c=l,u=h;(e=c<2?t:u)||!f;){a||(c?c<3?(c>1&&(p.n=-1),d(c,u)):p.n=u:p.v=u);try{if(s=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==i)break}catch(e){a=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,a),!0),s}var i={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Jr(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Jr(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Jr(f,"constructor",s),Jr(s,"constructor",u),u.displayName="GeneratorFunction",Jr(s,o,"GeneratorFunction"),Jr(f),Jr(f,o,"Generator"),Jr(f,r,function(){return this}),Jr(f,"toString",function(){return"[object Generator]"}),(zr=function(){return{w:a,m:p}})()}function Jr(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Jr=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Jr(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Jr(t,e,n,r)}function Xr(t,e,n,r,o,a,i){try{var c=t[a](i),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function $r(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){Xr(a,r,o,i,c,"next",t)}function c(t){Xr(a,r,o,i,c,"throw",t)}i(void 0)})}}document.addEventListener("DOMContentLoaded",$r(zr().m(function t(){var e,n,r;return zr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Yr.UserManager.findUser({id:"195863691"});case 1:return e=t.v,t.n=2,O.rsFetchBattleData(e.user);case 2:if(!(n=t.v).ok){t.n=4;break}return t.n=3,n.json();case 3:r=t.v,console.log("Success"),console.log(r.battles),t.n=5;break;case 4:console.error("Error:",n.error);case 5:return t.a(2)}},t)})))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/idb/build/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/idb/build/index.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
+/* harmony export */   openDB: () => (/* binding */ openDB),
+/* harmony export */   unwrap: () => (/* binding */ unwrap),
+/* harmony export */   wrap: () => (/* binding */ wrap)
+/* harmony export */ });
+const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
+
+let idbProxyableTypes;
+let cursorAdvanceMethods;
+// This is a function to prevent it throwing up in node environments.
+function getIdbProxyableTypes() {
+    return (idbProxyableTypes ||
+        (idbProxyableTypes = [
+            IDBDatabase,
+            IDBObjectStore,
+            IDBIndex,
+            IDBCursor,
+            IDBTransaction,
+        ]));
+}
+// This is a function to prevent it throwing up in node environments.
+function getCursorAdvanceMethods() {
+    return (cursorAdvanceMethods ||
+        (cursorAdvanceMethods = [
+            IDBCursor.prototype.advance,
+            IDBCursor.prototype.continue,
+            IDBCursor.prototype.continuePrimaryKey,
+        ]));
+}
+const transactionDoneMap = new WeakMap();
+const transformCache = new WeakMap();
+const reverseTransformCache = new WeakMap();
+function promisifyRequest(request) {
+    const promise = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            request.removeEventListener('success', success);
+            request.removeEventListener('error', error);
+        };
+        const success = () => {
+            resolve(wrap(request.result));
+            unlisten();
+        };
+        const error = () => {
+            reject(request.error);
+            unlisten();
+        };
+        request.addEventListener('success', success);
+        request.addEventListener('error', error);
+    });
+    // This mapping exists in reverseTransformCache but doesn't exist in transformCache. This
+    // is because we create many promises from a single IDBRequest.
+    reverseTransformCache.set(promise, request);
+    return promise;
+}
+function cacheDonePromiseForTransaction(tx) {
+    // Early bail if we've already created a done promise for this transaction.
+    if (transactionDoneMap.has(tx))
+        return;
+    const done = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            tx.removeEventListener('complete', complete);
+            tx.removeEventListener('error', error);
+            tx.removeEventListener('abort', error);
+        };
+        const complete = () => {
+            resolve();
+            unlisten();
+        };
+        const error = () => {
+            reject(tx.error || new DOMException('AbortError', 'AbortError'));
+            unlisten();
+        };
+        tx.addEventListener('complete', complete);
+        tx.addEventListener('error', error);
+        tx.addEventListener('abort', error);
+    });
+    // Cache it for later retrieval.
+    transactionDoneMap.set(tx, done);
+}
+let idbProxyTraps = {
+    get(target, prop, receiver) {
+        if (target instanceof IDBTransaction) {
+            // Special handling for transaction.done.
+            if (prop === 'done')
+                return transactionDoneMap.get(target);
+            // Make tx.store return the only store in the transaction, or undefined if there are many.
+            if (prop === 'store') {
+                return receiver.objectStoreNames[1]
+                    ? undefined
+                    : receiver.objectStore(receiver.objectStoreNames[0]);
+            }
+        }
+        // Else transform whatever we get back.
+        return wrap(target[prop]);
+    },
+    set(target, prop, value) {
+        target[prop] = value;
+        return true;
+    },
+    has(target, prop) {
+        if (target instanceof IDBTransaction &&
+            (prop === 'done' || prop === 'store')) {
+            return true;
+        }
+        return prop in target;
+    },
+};
+function replaceTraps(callback) {
+    idbProxyTraps = callback(idbProxyTraps);
+}
+function wrapFunction(func) {
+    // Due to expected object equality (which is enforced by the caching in `wrap`), we
+    // only create one new func per func.
+    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
+    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
+    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
+    // with real promises, so each advance methods returns a new promise for the cursor object, or
+    // undefined if the end of the cursor has been reached.
+    if (getCursorAdvanceMethods().includes(func)) {
+        return function (...args) {
+            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+            // the original object.
+            func.apply(unwrap(this), args);
+            return wrap(this.request);
+        };
+    }
+    return function (...args) {
+        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+        // the original object.
+        return wrap(func.apply(unwrap(this), args));
+    };
+}
+function transformCachableValue(value) {
+    if (typeof value === 'function')
+        return wrapFunction(value);
+    // This doesn't return, it just creates a 'done' promise for the transaction,
+    // which is later returned for transaction.done (see idbObjectHandler).
+    if (value instanceof IDBTransaction)
+        cacheDonePromiseForTransaction(value);
+    if (instanceOfAny(value, getIdbProxyableTypes()))
+        return new Proxy(value, idbProxyTraps);
+    // Return the same value back if we're not going to transform it.
+    return value;
+}
+function wrap(value) {
+    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
+    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
+    if (value instanceof IDBRequest)
+        return promisifyRequest(value);
+    // If we've already transformed this value before, reuse the transformed value.
+    // This is faster, but it also provides object equality.
+    if (transformCache.has(value))
+        return transformCache.get(value);
+    const newValue = transformCachableValue(value);
+    // Not all types are transformed.
+    // These may be primitive types, so they can't be WeakMap keys.
+    if (newValue !== value) {
+        transformCache.set(value, newValue);
+        reverseTransformCache.set(newValue, value);
+    }
+    return newValue;
+}
+const unwrap = (value) => reverseTransformCache.get(value);
+
+/**
+ * Open a database.
+ *
+ * @param name Name of the database.
+ * @param version Schema version.
+ * @param callbacks Additional callbacks.
+ */
+function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
+    const request = indexedDB.open(name, version);
+    const openPromise = wrap(request);
+    if (upgrade) {
+        request.addEventListener('upgradeneeded', (event) => {
+            upgrade(wrap(request.result), event.oldVersion, event.newVersion, wrap(request.transaction), event);
+        });
+    }
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event.newVersion, event));
+    }
+    openPromise
+        .then((db) => {
+        if (terminated)
+            db.addEventListener('close', () => terminated());
+        if (blocking) {
+            db.addEventListener('versionchange', (event) => blocking(event.oldVersion, event.newVersion, event));
+        }
+    })
+        .catch(() => { });
+    return openPromise;
+}
+/**
+ * Delete a database.
+ *
+ * @param name Name of the database.
+ */
+function deleteDB(name, { blocked } = {}) {
+    const request = indexedDB.deleteDatabase(name);
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event));
+    }
+    return wrap(request).then(() => undefined);
+}
+
+const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
+const writeMethods = ['put', 'add', 'delete', 'clear'];
+const cachedMethods = new Map();
+function getMethod(target, prop) {
+    if (!(target instanceof IDBDatabase &&
+        !(prop in target) &&
+        typeof prop === 'string')) {
+        return;
+    }
+    if (cachedMethods.get(prop))
+        return cachedMethods.get(prop);
+    const targetFuncName = prop.replace(/FromIndex$/, '');
+    const useIndex = prop !== targetFuncName;
+    const isWrite = writeMethods.includes(targetFuncName);
+    if (
+    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
+    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
+        !(isWrite || readMethods.includes(targetFuncName))) {
+        return;
+    }
+    const method = async function (storeName, ...args) {
+        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
+        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
+        let target = tx.store;
+        if (useIndex)
+            target = target.index(args.shift());
+        // Must reject if op rejects.
+        // If it's a write operation, must reject if tx.done rejects.
+        // Must reject with op rejection first.
+        // Must resolve with op value.
+        // Must handle both promises (no unhandled rejections)
+        return (await Promise.all([
+            target[targetFuncName](...args),
+            isWrite && tx.done,
+        ]))[0];
+    };
+    cachedMethods.set(prop, method);
+    return method;
+}
+replaceTraps((oldTraps) => ({
+    ...oldTraps,
+    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
+    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
+}));
+
+const advanceMethodProps = ['continue', 'continuePrimaryKey', 'advance'];
+const methodMap = {};
+const advanceResults = new WeakMap();
+const ittrProxiedCursorToOriginalProxy = new WeakMap();
+const cursorIteratorTraps = {
+    get(target, prop) {
+        if (!advanceMethodProps.includes(prop))
+            return target[prop];
+        let cachedFunc = methodMap[prop];
+        if (!cachedFunc) {
+            cachedFunc = methodMap[prop] = function (...args) {
+                advanceResults.set(this, ittrProxiedCursorToOriginalProxy.get(this)[prop](...args));
+            };
+        }
+        return cachedFunc;
+    },
+};
+async function* iterate(...args) {
+    // tslint:disable-next-line:no-this-assignment
+    let cursor = this;
+    if (!(cursor instanceof IDBCursor)) {
+        cursor = await cursor.openCursor(...args);
+    }
+    if (!cursor)
+        return;
+    cursor = cursor;
+    const proxiedCursor = new Proxy(cursor, cursorIteratorTraps);
+    ittrProxiedCursorToOriginalProxy.set(proxiedCursor, cursor);
+    // Map this double-proxy back to the original, so other cursor methods work.
+    reverseTransformCache.set(proxiedCursor, unwrap(cursor));
+    while (cursor) {
+        yield proxiedCursor;
+        // If one of the advancing methods was not called, call continue().
+        cursor = await (advanceResults.get(proxiedCursor) || cursor.continue());
+        advanceResults.delete(proxiedCursor);
+    }
+}
+function isIteratorProp(target, prop) {
+    return ((prop === Symbol.asyncIterator &&
+        instanceOfAny(target, [IDBIndex, IDBObjectStore, IDBCursor])) ||
+        (prop === 'iterate' && instanceOfAny(target, [IDBIndex, IDBObjectStore])));
+}
+replaceTraps((oldTraps) => ({
+    ...oldTraps,
+    get(target, prop, receiver) {
+        if (isIteratorProp(target, prop))
+            return iterate;
+        return oldTraps.get(target, prop, receiver);
+    },
+    has(target, prop) {
+        return isIteratorProp(target, prop) || oldTraps.has(target, prop);
+    },
+}));
+
+
+
+
+/***/ }),
+
+/***/ "./static/assets/js/apis/e7-API.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/apis/e7-API.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _e7_references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/references.js */ "./static/assets/js/e7/references.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+var HERO_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json";
+var ARTIFACT_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_artifact.json";
+function fetchE7Data(_x) {
+  return _fetchE7Data.apply(this, arguments);
+}
+function _fetchE7Data() {
+  _fetchE7Data = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+    var response, data, _t;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          _context.p = 0;
+          _context.n = 1;
+          return fetch(url);
+        case 1:
+          response = _context.v;
+          if (response.ok) {
+            _context.n = 2;
+            break;
+          }
+          throw new Error("HTTP error: status: ".concat(response.status));
+        case 2:
+          _context.n = 3;
+          return response.json();
+        case 3:
+          data = _context.v;
+          console.log("Fetched data from E7 Server; keys:", Object.keys(data));
+          return _context.a(2, data);
+        case 4:
+          _context.p = 4;
+          _t = _context.v;
+          console.error("Error fetching global user data:", _t);
+          return _context.a(2, null);
+      }
+    }, _callee, null, [[0, 4]]);
+  }));
+  return _fetchE7Data.apply(this, arguments);
+}
+function fetchHeroJSON() {
+  return _fetchHeroJSON.apply(this, arguments);
+}
+function _fetchHeroJSON() {
+  _fetchHeroJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+    var lang,
+      data,
+      _args2 = arguments;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          lang = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : null;
+          console.log("Fetching hero data (lang=".concat(lang !== null && lang !== void 0 ? lang : "all", ") from E7 Server..."));
+          _context2.n = 1;
+          return fetchE7Data(HERO_URL);
+        case 1:
+          data = _context2.v;
+          if (lang && data[lang]) {
+            data = data[lang];
+          } else if (lang && !data[lang]) {
+            console.error("Could not find hero data for language:", lang);
+            data = null;
+          }
+          return _context2.a(2, data);
+      }
+    }, _callee2);
+  }));
+  return _fetchHeroJSON.apply(this, arguments);
+}
+function fetchArtifactJSON() {
+  return _fetchArtifactJSON.apply(this, arguments);
+}
+function _fetchArtifactJSON() {
+  _fetchArtifactJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+    var lang,
+      data,
+      _args3 = arguments;
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
+        case 0:
+          lang = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : null;
+          console.log("Fetching hero data (lang=".concat(lang !== null && lang !== void 0 ? lang : "all", ") from E7 Server..."));
+          _context3.n = 1;
+          return fetchE7Data(ARTIFACT_URL);
+        case 1:
+          data = _context3.v;
+          if (lang && data[lang]) {
+            data = data[lang];
+          } else if (lang && !data[lang]) {
+            console.error("Could not find artifact data for language:", lang);
+            data = null;
+          }
+          return _context3.a(2, data);
+      }
+    }, _callee3);
+  }));
+  return _fetchArtifactJSON.apply(this, arguments);
+}
+function fetchUserJSON(_x2) {
+  return _fetchUserJSON.apply(this, arguments);
+}
+function _fetchUserJSON() {
+  _fetchUserJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(world_code) {
+    var url, data;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          world_code = world_code.replace("world_", "");
+          if (_toConsumableArray(_e7_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES).some(function (code) {
+            return code.replace("world_", "") === world_code;
+          })) {
+            _context4.n = 1;
+            break;
+          }
+          console.error("Could not find world code: ".concat(world_code));
+          return _context4.a(2, null);
+        case 1:
+          console.log("Fetching users for world code: ".concat(world_code, " from E7 Server..."));
+          url = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(world_code, ".json");
+          _context4.n = 2;
+          return fetchE7Data(url);
+        case 2:
+          data = _context4.v;
+          if (data) {
+            console.log("Got user data for world: ".concat(world_code, " ; Found ").concat(data.users.length, " users"));
+          }
+          return _context4.a(2, data);
+      }
+    }, _callee4);
+  }));
+  return _fetchUserJSON.apply(this, arguments);
+}
+var E7API = {
+  fetchHeroJSON: fetchHeroJSON,
+  fetchUserJSON: fetchUserJSON,
+  fetchArtifactJSON: fetchArtifactJSON
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (E7API);
+
+/***/ }),
+
+/***/ "./static/assets/js/apis/py-API.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/apis/py-API.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+var BATTLE_URL = '/api/get_battle_data';
+var RS_BATTLE_URL = '/api/rs_get_battle_data';
+var HERO_URL = '/api/get_hero_data';
+var USER_URL = '/api/get_user_data';
+var SEASON_URL = '/api/get_season_details';
+var PYAPI = {
+  test: function test(data) {
+    // test the fetching works properly
+    console.log('Got data in test:', data.rank_plot);
+  },
+  fetchFromPython: function () {
+    var _fetchFromPython = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+      var response, data;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return fetch(url);
+          case 1:
+            response = _context.v;
+            if (response.ok) {
+              _context.n = 3;
+              break;
+            }
+            console.log("Retrying Fetch...");
+            _context.n = 2;
+            return fetch(url);
+          case 2:
+            response = _context.v;
+          case 3:
+            _context.n = 4;
+            return response.json();
+          case 4:
+            data = _context.v;
+            return _context.a(2, data ? data : null);
+        }
+      }, _callee);
+    }));
+    function fetchFromPython(_x) {
+      return _fetchFromPython.apply(this, arguments);
+    }
+    return fetchFromPython;
+  }(),
+  fetchHeroData: function () {
+    var _fetchHeroData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return this.fetchFromPython(HERO_URL);
+          case 1:
+            return _context2.a(2, _context2.v);
+        }
+      }, _callee2, this);
+    }));
+    function fetchHeroData() {
+      return _fetchHeroData.apply(this, arguments);
+    }
+    return fetchHeroData;
+  }(),
+  fetchBattleData: function () {
+    var _fetchBattleData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(user) {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            if (user) {
+              _context3.n = 1;
+              break;
+            }
+            throw new Error("Must pass user to fetch battles data");
+          case 1:
+            _context3.n = 2;
+            return fetch(BATTLE_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                user: user
+              })
+            });
+          case 2:
+            return _context3.a(2, _context3.v);
+        }
+      }, _callee3);
+    }));
+    function fetchBattleData(_x2) {
+      return _fetchBattleData.apply(this, arguments);
+    }
+    return fetchBattleData;
+  }(),
+  // uses the new API endpoint that utilizes Rust for fetching and processing the battles
+  rsFetchBattleData: function () {
+    var _rsFetchBattleData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(user) {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            if (user) {
+              _context4.n = 1;
+              break;
+            }
+            throw new Error("Must pass user to fetch battles data");
+          case 1:
+            _context4.n = 2;
+            return fetch(RS_BATTLE_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                user: user
+              })
+            });
+          case 2:
+            return _context4.a(2, _context4.v);
+        }
+      }, _callee4);
+    }));
+    function rsFetchBattleData(_x3) {
+      return _rsFetchBattleData.apply(this, arguments);
+    }
+    return rsFetchBattleData;
+  }(),
+  fetchSeasonDetails: function () {
+    var _fetchSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      var response, data, seasonDetails;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return fetch(SEASON_URL);
+          case 1:
+            response = _context5.v;
+            _context5.n = 2;
+            return response.json();
+          case 2:
+            data = _context5.v;
+            if (!data.success) {
+              _context5.n = 3;
+              break;
+            }
+            seasonDetails = JSON.parse(data.seasonDetails);
+            return _context5.a(2, {
+              seasonDetails: seasonDetails,
+              error: false
+            });
+          case 3:
+            return _context5.a(2, {
+              seasonDetails: null,
+              error: data.error
+            });
+          case 4:
+            return _context5.a(2);
+        }
+      }, _callee5);
+    }));
+    function fetchSeasonDetails() {
+      return _fetchSeasonDetails.apply(this, arguments);
+    }
+    return fetchSeasonDetails;
+  }(),
+  fetchUser: function () {
+    var _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(userData) {
+      var response, data, worldCodeStr, user, _t;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            if (!((!userData.name || !userData.world_code) && !userData.id)) {
+              _context6.n = 1;
+              break;
+            }
+            throw new Error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");
+          case 1:
+            _context6.n = 2;
+            return fetch(USER_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                userData: userData
+              })
+            });
+          case 2:
+            response = _context6.v;
+            _context6.n = 3;
+            return response.json();
+          case 3:
+            data = _context6.v;
+            _context6.p = 4;
+            if (!response.ok) {
+              _context6.n = 9;
+              break;
+            }
+            if (data.foundUser) {
+              _context6.n = 7;
+              break;
+            }
+            if (!userData.name) {
+              _context6.n = 5;
+              break;
+            }
+            worldCodeStr = userData.world_code.replace("world_", "");
+            return _context6.a(2, {
+              user: null,
+              error: "Could not find user: \"".concat(userData.name, "\" in world_code: ").concat(worldCodeStr)
+            });
+          case 5:
+            if (!userData.id) {
+              _context6.n = 6;
+              break;
+            }
+            return _context6.a(2, {
+              user: null,
+              error: "Could not find user with ID: ".concat(userData.id)
+            });
+          case 6:
+            _context6.n = 8;
+            break;
+          case 7:
+            user = data.user;
+            console.log("Server communication successful; received response data for user");
+            console.log("Found user: ".concat(JSON.stringify(user)));
+            return _context6.a(2, {
+              user: user,
+              error: false
+            });
+          case 8:
+            _context6.n = 10;
+            break;
+          case 9:
+            console.log("Server communication unsuccessful");
+            return _context6.a(2, {
+              user: null,
+              error: data.error
+            });
+          case 10:
+            ;
+            _context6.n = 12;
+            break;
+          case 11:
+            _context6.p = 11;
+            _t = _context6.v;
+            console.error("Error fetching and caching user: ".concat(_t));
+            return _context6.a(2, {
+              user: null,
+              error: _t.message
+            });
+          case 12:
+            return _context6.a(2);
+        }
+      }, _callee6, null, [[4, 11]]);
+    }));
+    function fetchUser(_x4) {
+      return _fetchUser.apply(this, arguments);
+    }
+    return fetchUser;
+  }(),
+  //returns both user and battles
+  fetchDataFromID: function () {
+    var _fetchDataFromID = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(id) {
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            if (id) {
+              _context7.n = 1;
+              break;
+            }
+            throw new Error("Must pass ID to fetch user");
+          case 1:
+            _context7.n = 2;
+            return fetch('/api/get_battle_data_from_id', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                id: id
+              })
+            });
+          case 2:
+            return _context7.a(2, _context7.v);
+        }
+      }, _callee7);
+    }));
+    function fetchDataFromID(_x5) {
+      return _fetchDataFromID.apply(this, arguments);
+    }
+    return fetchDataFromID;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PYAPI);
+
+/***/ }),
+
+/***/ "./static/assets/js/cache-manager.js":
+/*!*******************************************!*\
+  !*** ./static/assets/js/cache-manager.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+// static/app.js
+
+function clearStore(_x, _x2) {
+  return _clearStore.apply(this, arguments);
+}
+function _clearStore() {
+  _clearStore = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17(db, storeName) {
+    var tx, store;
+    return _regenerator().w(function (_context17) {
+      while (1) switch (_context17.n) {
+        case 0:
+          tx = db.transaction(storeName, 'readwrite');
+          store = tx.objectStore(storeName);
+          store.clear();
+          _context17.n = 1;
+          return tx.done;
+        case 1:
+          return _context17.a(2);
+      }
+    }, _callee17);
+  }));
+  return _clearStore.apply(this, arguments);
+}
+;
+var Keys = {
+  USER: "current-user",
+  HERO_MANAGER: "hero-manager",
+  BATTLES: "battles",
+  UPLOADED_BATTLES: "uploaded-battles",
+  FILTERED_BATTLES: "filtered-battles",
+  FILTER_STR: "filter-str",
+  STATS: "stats",
+  SEASON_DETAILS: "season-details",
+  AUTO_ZOOM_FLAG: "auto-zoom",
+  AUTO_QUERY_FLAG: "auto-query",
+  GLOBAL_USERS: "global-users",
+  EU_USERS: "eu-users",
+  ASIA_USERS: "asia-users",
+  JPN_USERS: "jpn-users",
+  KOR_USERS: "kor-users",
+  ARTIFACTS: "artifacts",
+  HOME_PAGE_STATE: "home-page-state"
+};
+var FlagsToKeys = {
+  "autoZoom": Keys.AUTO_ZOOM_FLAG,
+  "autoQuery": Keys.AUTO_QUERY_FLAG
+};
+var ClientCache = {
+  consts: {
+    DB_NAME: 'E7ArenaStatsClientDB',
+    DB_VERSION: 1,
+    STORE_NAME: 'DataStore',
+    META_STORE_NAME: 'MetaStore',
+    CACHE_TIMEOUT: 1000 * 60 * 60 * 24 * 2 // 2 day cache timeout
+  },
+  Keys: _objectSpread({}, Keys),
+  MetaKeys: {
+    TIMESTAMP: "timestamp"
+  },
+  loaded_UM: new Set(),
+  openDB: function () {
+    var _openDB2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            return _context.a(2, (0,idb__WEBPACK_IMPORTED_MODULE_0__.openDB)(ClientCache.consts.DB_NAME, ClientCache.consts.DB_VERSION, {
+              upgrade: function upgrade(db) {
+                if (db.objectStoreNames.contains(ClientCache.consts.STORE_NAME)) {
+                  db.deleteObjectStore(ClientCache.consts.STORE_NAME); // 🧹 clear old store
+                  console.log('Old store deleted');
+                }
+                if (!db.objectStoreNames.contains(ClientCache.consts.STORE_NAME)) {
+                  console.log('Created data store');
+                  db.createObjectStore(ClientCache.consts.STORE_NAME);
+                }
+                if (!db.objectStoreNames.contains(ClientCache.consts.META_STORE_NAME)) {
+                  console.log('Created meta data store');
+                  db.createObjectStore(ClientCache.consts.META_STORE_NAME);
+                }
+              }
+            }));
+        }
+      }, _callee);
+    }));
+    function openDB() {
+      return _openDB2.apply(this, arguments);
+    }
+    return openDB;
+  }(),
+  get: function () {
+    var _get = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(id) {
+      var db, result, useCache;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context2.v;
+            _context2.n = 2;
+            return db.get(this.consts.STORE_NAME, id);
+          case 2:
+            result = _context2.v;
+            if (!(result !== null)) {
+              _context2.n = 3;
+              break;
+            }
+            console.log("Found ".concat(id, " in cache"));
+            _context2.n = 4;
+            break;
+          case 3:
+            console.log("".concat(id, " not found in cache; returning null"));
+            return _context2.a(2, null);
+          case 4:
+            _context2.n = 5;
+            return this.checkCacheTimeout(id);
+          case 5:
+            useCache = _context2.v;
+            if (!useCache) {
+              _context2.n = 6;
+              break;
+            }
+            console.log("Timeout not reached, using cache for ".concat(id));
+            return _context2.a(2, result);
+          case 6:
+            console.log("Timeout reached, returning null for ".concat(id));
+            return _context2.a(2, null);
+          case 7:
+            return _context2.a(2);
+        }
+      }, _callee2, this);
+    }));
+    function get(_x3) {
+      return _get.apply(this, arguments);
+    }
+    return get;
+  }(),
+  cache: function () {
+    var _cache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(id, data) {
+      var db;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            console.log("Caching ".concat(id, " with data: ").concat(data));
+            _context3.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context3.v;
+            _context3.n = 2;
+            return db.put(this.consts.STORE_NAME, data, id);
+          case 2:
+            _context3.n = 3;
+            return this.setTimestamp(id, Date.now());
+          case 3:
+            return _context3.a(2);
+        }
+      }, _callee3, this);
+    }));
+    function cache(_x4, _x5) {
+      return _cache.apply(this, arguments);
+    }
+    return cache;
+  }(),
+  "delete": function () {
+    var _delete2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(id) {
+      var db;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context4.v;
+            _context4.n = 2;
+            return db["delete"](this.consts.STORE_NAME, id);
+          case 2:
+            _context4.n = 3;
+            return this.deleteTimestamp(id);
+          case 3:
+            return _context4.a(2);
+        }
+      }, _callee4, this);
+    }));
+    function _delete(_x6) {
+      return _delete2.apply(this, arguments);
+    }
+    return _delete;
+  }(),
+  deleteDB: function () {
+    var _deleteDB = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return indexedDB.deleteDatabase(this.consts.DB_NAME);
+          case 1:
+            console.log('Database deleted');
+          case 2:
+            return _context5.a(2);
+        }
+      }, _callee5, this);
+    }));
+    function deleteDB() {
+      return _deleteDB.apply(this, arguments);
+    }
+    return deleteDB;
+  }(),
+  getTimestamp: function () {
+    var _getTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(id) {
+      var db, key, timestamp;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            _context6.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context6.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context6.n = 2;
+            return db.get(this.consts.META_STORE_NAME, key);
+          case 2:
+            timestamp = _context6.v;
+            return _context6.a(2, timestamp !== null && timestamp !== void 0 ? timestamp : null);
+        }
+      }, _callee6, this);
+    }));
+    function getTimestamp(_x7) {
+      return _getTimestamp.apply(this, arguments);
+    }
+    return getTimestamp;
+  }(),
+  setTimestamp: function () {
+    var _setTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(id, timestamp) {
+      var db, key, val;
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            _context7.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context7.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context7.n = 2;
+            return db.put(this.consts.META_STORE_NAME, timestamp, key);
+          case 2:
+            _context7.n = 3;
+            return db.get(this.consts.META_STORE_NAME, key);
+          case 3:
+            val = _context7.v;
+            console.log("Timestamp set: ".concat(val));
+          case 4:
+            return _context7.a(2);
+        }
+      }, _callee7, this);
+    }));
+    function setTimestamp(_x8, _x9) {
+      return _setTimestamp.apply(this, arguments);
+    }
+    return setTimestamp;
+  }(),
+  deleteTimestamp: function () {
+    var _deleteTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(id) {
+      var db, key;
+      return _regenerator().w(function (_context8) {
+        while (1) switch (_context8.n) {
+          case 0:
+            _context8.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context8.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context8.n = 2;
+            return db["delete"](this.consts.META_STORE_NAME, key);
+          case 2:
+            console.log("Timestamp deleted for <".concat(id, ">"));
+          case 3:
+            return _context8.a(2);
+        }
+      }, _callee8, this);
+    }));
+    function deleteTimestamp(_x0) {
+      return _deleteTimestamp.apply(this, arguments);
+    }
+    return deleteTimestamp;
+  }(),
+  clearData: function () {
+    var _clearData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9() {
+      var db;
+      return _regenerator().w(function (_context9) {
+        while (1) switch (_context9.n) {
+          case 0:
+            _context9.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context9.v;
+            _context9.n = 2;
+            return clearStore(db, this.consts.STORE_NAME);
+          case 2:
+            _context9.n = 3;
+            return clearStore(db, this.consts.META_STORE_NAME);
+          case 3:
+            console.log('All data cleared from data cache and meta data cache');
+          case 4:
+            return _context9.a(2);
+        }
+      }, _callee9, this);
+    }));
+    function clearData() {
+      return _clearData.apply(this, arguments);
+    }
+    return clearData;
+  }(),
+  clearUserData: function () {
+    var _clearUserData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
+      var _this = this;
+      var toDelete;
+      return _regenerator().w(function (_context0) {
+        while (1) switch (_context0.n) {
+          case 0:
+            toDelete = [Keys.USER, Keys.BATTLES, Keys.UPLOADED_BATTLES, Keys.FILTERED_BATTLES, Keys.FILTER_STR, Keys.STATS];
+            _context0.n = 1;
+            return Promise.all(toDelete.map(function (key) {
+              return _this["delete"](key);
+            }));
+          case 1:
+            console.log("User data cleared from data cache");
+          case 2:
+            return _context0.a(2);
+        }
+      }, _callee0);
+    }));
+    function clearUserData() {
+      return _clearUserData.apply(this, arguments);
+    }
+    return clearUserData;
+  }(),
+  clearSeasonData: function () {
+    var _clearSeasonData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
+      return _regenerator().w(function (_context1) {
+        while (1) switch (_context1.n) {
+          case 0:
+            _context1.n = 1;
+            return this["delete"](Keys.SEASON_DETAILS);
+          case 1:
+            console.log("Season data cleared from data cache");
+          case 2:
+            return _context1.a(2);
+        }
+      }, _callee1, this);
+    }));
+    function clearSeasonData() {
+      return _clearSeasonData.apply(this, arguments);
+    }
+    return clearSeasonData;
+  }(),
+  checkCacheTimeout: function () {
+    var _checkCacheTimeout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(id) {
+      var timestamp, currentTime;
+      return _regenerator().w(function (_context10) {
+        while (1) switch (_context10.n) {
+          case 0:
+            _context10.n = 1;
+            return this.getTimestamp(id);
+          case 1:
+            timestamp = _context10.v;
+            currentTime = Date.now();
+            console.log("Checking Timeout for <".concat(id, "> | Current time: ").concat(currentTime, ", cache timestamp: ").concat(timestamp, ", difference: ").concat(currentTime - timestamp, " ms"));
+            if (!(!timestamp || currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
+              _context10.n = 3;
+              break;
+            }
+            console.log("Cache timeout reached, clearing data from <".concat(id, ">"));
+            _context10.n = 2;
+            return this["delete"](id);
+          case 2:
+            return _context10.a(2, false);
+          case 3:
+            return _context10.a(2, true);
+        }
+      }, _callee10, this);
+    }));
+    function checkCacheTimeout(_x1) {
+      return _checkCacheTimeout.apply(this, arguments);
+    }
+    return checkCacheTimeout;
+  }(),
+  getFilterStr: function () {
+    var _getFilterStr = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11() {
+      return _regenerator().w(function (_context11) {
+        while (1) switch (_context11.n) {
+          case 0:
+            _context11.n = 1;
+            return this.get(ClientCache.Keys.FILTER_STR);
+          case 1:
+            return _context11.a(2, _context11.v);
+        }
+      }, _callee11, this);
+    }));
+    function getFilterStr() {
+      return _getFilterStr.apply(this, arguments);
+    }
+    return getFilterStr;
+  }(),
+  setFilterStr: function () {
+    var _setFilterStr = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(filterStr) {
+      return _regenerator().w(function (_context12) {
+        while (1) switch (_context12.n) {
+          case 0:
+            _context12.n = 1;
+            return this.cache(ClientCache.Keys.FILTER_STR, filterStr);
+          case 1:
+            return _context12.a(2);
+        }
+      }, _callee12, this);
+    }));
+    function setFilterStr(_x10) {
+      return _setFilterStr.apply(this, arguments);
+    }
+    return setFilterStr;
+  }(),
+  getStats: function () {
+    var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13() {
+      return _regenerator().w(function (_context13) {
+        while (1) switch (_context13.n) {
+          case 0:
+            _context13.n = 1;
+            return this.get(ClientCache.Keys.STATS);
+          case 1:
+            return _context13.a(2, _context13.v);
+        }
+      }, _callee13, this);
+    }));
+    function getStats() {
+      return _getStats.apply(this, arguments);
+    }
+    return getStats;
+  }(),
+  setStats: function () {
+    var _setStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(stats) {
+      return _regenerator().w(function (_context14) {
+        while (1) switch (_context14.n) {
+          case 0:
+            _context14.n = 1;
+            return this.cache(Keys.STATS, stats);
+          case 1:
+            return _context14.a(2);
+        }
+      }, _callee14, this);
+    }));
+    function setStats(_x11) {
+      return _setStats.apply(this, arguments);
+    }
+    return setStats;
+  }(),
+  getFlag: function () {
+    var _getFlag = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(flag) {
+      var key;
+      return _regenerator().w(function (_context15) {
+        while (1) switch (_context15.n) {
+          case 0:
+            key = FlagsToKeys[flag];
+            if (key) {
+              _context15.n = 1;
+              break;
+            }
+            throw new Error("No key found for flag <".concat(flag, ">"));
+          case 1:
+            _context15.n = 2;
+            return this.get(key);
+          case 2:
+            return _context15.a(2, _context15.v);
+        }
+      }, _callee15, this);
+    }));
+    function getFlag(_x12) {
+      return _getFlag.apply(this, arguments);
+    }
+    return getFlag;
+  }(),
+  setFlag: function () {
+    var _setFlag = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(flag, value) {
+      var key;
+      return _regenerator().w(function (_context16) {
+        while (1) switch (_context16.n) {
+          case 0:
+            key = FlagsToKeys[flag];
+            if (key) {
+              _context16.n = 1;
+              break;
+            }
+            throw new Error("No key found for flag <".concat(flag, ">"));
+          case 1:
+            _context16.n = 2;
+            return this.cache(key, value);
+          case 2:
+            return _context16.a(2);
+        }
+      }, _callee16, this);
+    }));
+    function setFlag(_x13, _x14) {
+      return _setFlag.apply(this, arguments);
+    }
+    return setFlag;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ClientCache);
+
+/***/ }),
+
+/***/ "./static/assets/js/content-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/content-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./e7/hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _e7_battle_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7/battle-manager.js */ "./static/assets/js/e7/battle-manager.js");
+/* harmony import */ var _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./e7/season-manager.js */ "./static/assets/js/e7/season-manager.js");
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./e7/filter-syntax-parser.js */ "./static/assets/js/e7/filter-syntax-parser.js");
+/* harmony import */ var _e7_user_manager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./e7/user-manager.js */ "./static/assets/js/e7/user-manager.js");
+/* harmony import */ var _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./e7/artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+
+
+var ContentManager = {
+  HeroManager: _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  BattleManager: _e7_battle_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  SeasonManager: _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"],
+  UserManager: _e7_user_manager_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+  ClientCache: _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+  ArtifactManager: _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__["default"],
+  getFilters: function () {
+    var _getFilters = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(HM) {
+      var filterStr, seasonDetails, parser;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__["default"].getFilterStr();
+          case 1:
+            filterStr = _context.v;
+            if (filterStr) {
+              _context.n = 2;
+              break;
+            }
+            return _context.a(2, _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__["default"].getEmptyFilters());
+          case 2:
+            _context.n = 3;
+            return _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].getSeasonDetails();
+          case 3:
+            seasonDetails = _context.v;
+            _context.n = 4;
+            return _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__["default"].createAndParse(filterStr, HM, seasonDetails);
+          case 4:
+            parser = _context.v;
+            return _context.a(2, parser.filters);
+        }
+      }, _callee);
+    }));
+    function getFilters(_x) {
+      return _getFilters.apply(this, arguments);
+    }
+    return getFilters;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ContentManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/artifact-manager.js":
+/*!*************************************************!*\
+  !*** ./static/assets/js/e7/artifact-manager.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+function getArtifactMapFromE7Server() {
+  return _getArtifactMapFromE7Server.apply(this, arguments);
+}
+function _getArtifactMapFromE7Server() {
+  _getArtifactMapFromE7Server = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+    var rawJSON;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          console.log("Getting artifact map from E7 server...");
+          _context4.n = 1;
+          return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].fetchArtifactJSON("en");
+        case 1:
+          rawJSON = _context4.v;
+          if (rawJSON) {
+            _context4.n = 2;
+            break;
+          }
+          console.error("Could not get user map from E7 server for world code: ".concat(world_code));
+          return _context4.a(2, null);
+        case 2:
+          console.log("Got artifact map from E7 server for language: 'en'");
+          return _context4.a(2, Object.fromEntries(rawJSON.map(function (artifact) {
+            return [artifact.code, artifact.name];
+          })));
+      }
+    }, _callee4);
+  }));
+  return _getArtifactMapFromE7Server.apply(this, arguments);
+}
+var ArtifactManager = {
+  getArtifacts: function () {
+    var _getArtifacts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 5;
+            break;
+          case 3:
+            _context.n = 4;
+            return this.fetchAndCacheArtifacts();
+          case 4:
+            _t3 = _context.v;
+          case 5:
+            return _context.a(2, _t3);
+        }
+      }, _callee, this);
+    }));
+    function getArtifacts() {
+      return _getArtifacts.apply(this, arguments);
+    }
+    return getArtifacts;
+  }(),
+  fetchAndCacheArtifacts: function () {
+    var _fetchAndCacheArtifacts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var artifactMap;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            console.log("ArtifactManager not found in cache, fetching from server and caching it");
+            _context2.n = 1;
+            return getArtifactMapFromE7Server();
+          case 1:
+            artifactMap = _context2.v;
+            _context2.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS, artifactMap);
+          case 2:
+            console.log("Cached ArtifactManager using raw data recieved from server");
+            return _context2.a(2, artifactMap);
+        }
+      }, _callee2);
+    }));
+    function fetchAndCacheArtifacts() {
+      return _fetchAndCacheArtifacts.apply(this, arguments);
+    }
+    return fetchAndCacheArtifacts;
+  }(),
+  clearArtifactData: function () {
+    var _clearArtifactData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS);
+          case 1:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function clearArtifactData() {
+      return _clearArtifactData.apply(this, arguments);
+    }
+    return clearArtifactData;
+  }(),
+  // will fall back to the code if the name is not found
+  convertCodeToName: function convertCodeToName(code, artifacts) {
+    return artifacts[code] || code;
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ArtifactManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/battle-manager.js":
+/*!***********************************************!*\
+  !*** ./static/assets/js/e7/battle-manager.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _plots_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./plots.js */ "./static/assets/js/e7/plots.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filter-syntax-parser.js */ "./static/assets/js/e7/filter-syntax-parser.js");
+/* harmony import */ var _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stats-builder.js */ "./static/assets/js/e7/stats-builder.js");
+/* harmony import */ var _battle_transform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./battle-transform.js */ "./static/assets/js/e7/battle-transform.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _regeneratorValues(e) { if (null != e) { var t = e["function" == typeof Symbol && Symbol.iterator || "@@iterator"], r = 0; if (t) return t.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) return { next: function next() { return e && r >= e.length && (e = void 0), { value: e && e[r++], done: !e }; } }; } throw new TypeError(_typeof(e) + " is not iterable"); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+
+
+
+
+
+
+var HERO_COLUMNS = _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS.filter(function (col) {
+  return col.includes(" Pick ") || col.includes("ban ");
+});
+function cleanUploadedBattle(battle) {
+  var _iterator = _createForOfIteratorHelper(HERO_COLUMNS),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var col = _step.value;
+      battle[col] = battle[col] ? battle[col] : "Empty";
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  battle["P1 Points"] = Number(battle["P1 Points"]) || battle["P1 Points"];
+  battle["P1 Picks"] = [battle["P1 Pick 1"], battle["P1 Pick 2"], battle["P1 Pick 3"], battle["P1 Pick 4"], battle["P1 Pick 5"]];
+  battle["P2 Picks"] = [battle["P2 Pick 1"], battle["P2 Pick 2"], battle["P2 Pick 3"], battle["P2 Pick 4"], battle["P2 Pick 5"]];
+  battle["P1 Prebans"] = [battle["P1 Preban 1"], battle["P1 Preban 2"]];
+  battle["P2 Prebans"] = [battle["P2 Preban 1"], battle["P2 Preban 2"]];
+  return battle;
+}
+var BattleManager = {
+  loaded_servers: new Set(),
+  // gets battles (upload and/or queried) and returns as list in clean format; used directly to populate battles table
+  getBattles: function () {
+    var _getBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            console.log("Getting battles");
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 4;
+            break;
+          case 3:
+            _t3 = null;
+          case 4:
+            return _context.a(2, _t3);
+        }
+      }, _callee);
+    }));
+    function getBattles() {
+      return _getBattles.apply(this, arguments);
+    }
+    return getBattles;
+  }(),
+  // Removes all user battle data from cache, should be called when user is switched out
+  removeBattles: function () {
+    var _removeBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _context2.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.UPLOADED_BATTLES);
+          case 2:
+            _context2.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES);
+          case 3:
+            console.log("Removed battle data from cache; cleared ['BATTLES', 'UPLOADED_BATTLES', 'FILTERED_BATTLES']");
+          case 4:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    function removeBattles() {
+      return _removeBattles.apply(this, arguments);
+    }
+    return removeBattles;
+  }(),
+  removeFilteredBattles: function () {
+    var _removeFilteredBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES);
+          case 1:
+            console.log("Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']");
+          case 2:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function removeFilteredBattles() {
+      return _removeFilteredBattles.apply(this, arguments);
+    }
+    return removeFilteredBattles;
+  }(),
+  /* after battles are set in cache, applies filters to the battles and stores filtered arr in cache under filtered 
+  battle key all battles are stored in their clean format, not numerical format; convert after to compute metrics */
+  applyFilter: function () {
+    var _applyFilter = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(filters) {
+      var battles, localFilterList, globalFilterList, battleList, _iterator2, _step2, filter, startLen, _iterator3, _step3, _loop, _t4;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return this.getBattles();
+          case 1:
+            battles = _context5.v;
+            localFilterList = filters.localFilters || [];
+            globalFilterList = filters.globalFilters || []; // apply global filters (filters that require context of all battles); these are always applied before local filters in order of appearance
+            battleList = Object.values(battles);
+            _iterator2 = _createForOfIteratorHelper(globalFilterList);
+            try {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                filter = _step2.value;
+                console.log("Applying global filter: ".concat(filter));
+                startLen = battleList.length;
+                battleList = filter.call(battleList);
+                battles = Object.fromEntries(battleList.map(function (b) {
+                  return [b["Seq Num"], b];
+                }));
+                console.log("Filtered ".concat(startLen - battleList.length, " out of ").concat(startLen, "; new total = ").concat(battleList.length));
+              }
+
+              // apply local filters (filters that can be resolved on each battle without context of other battles)
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
+            }
+            _iterator3 = _createForOfIteratorHelper(localFilterList);
+            _context5.p = 2;
+            _loop = /*#__PURE__*/_regenerator().m(function _loop() {
+              var filter, startLen;
+              return _regenerator().w(function (_context4) {
+                while (1) switch (_context4.n) {
+                  case 0:
+                    filter = _step3.value;
+                    console.log("Applying local filter: ".concat(filter));
+                    startLen = Object.keys(battles).length;
+                    battles = Object.fromEntries(Object.entries(battles).filter(function (_ref) {
+                      var _ref2 = _slicedToArray(_ref, 2),
+                        key = _ref2[0],
+                        battle = _ref2[1];
+                      var include = filter.call(battle);
+                      //console.log(`Filtering battle: ${key} ${include ? "included" : "excluded"}`);
+                      return include;
+                    }));
+                    console.log("Filtered ".concat(startLen - Object.keys(battles).length, " out of ").concat(startLen, "; new total = ").concat(Object.keys(battles).length));
+                  case 1:
+                    return _context4.a(2);
+                }
+              }, _loop);
+            });
+            _iterator3.s();
+          case 3:
+            if ((_step3 = _iterator3.n()).done) {
+              _context5.n = 5;
+              break;
+            }
+            return _context5.d(_regeneratorValues(_loop()), 4);
+          case 4:
+            _context5.n = 3;
+            break;
+          case 5:
+            _context5.n = 7;
+            break;
+          case 6:
+            _context5.p = 6;
+            _t4 = _context5.v;
+            _iterator3.e(_t4);
+          case 7:
+            _context5.p = 7;
+            _iterator3.f();
+            return _context5.f(7);
+          case 8:
+            console.log("Caching filtered battles ; total = ".concat(Object.keys(battles).length));
+            _context5.n = 9;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES, battles);
+          case 9:
+            console.log("Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <".concat(localFilterList.length + globalFilterList.length, "> filters"));
+            return _context5.a(2, battles);
+        }
+      }, _callee4, this, [[2, 6, 7, 8]]);
+    }));
+    function applyFilter(_x) {
+      return _applyFilter.apply(this, arguments);
+    }
+    return applyFilter;
+  }(),
+  // should be called when computing metrics
+  getNumericalBattles: function () {
+    var _getNumericalBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(battles, HM) {
+      var mapFn, numericalBattles;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            mapFn = function mapFn(key, battle) {
+              return [key, formatBattleNumerical(battle, HM)];
+            };
+            numericalBattles = Object.fromEntries(Object.entries(battles).map(function (_ref3) {
+              var _ref4 = _slicedToArray(_ref3, 2),
+                key = _ref4[0],
+                battle = _ref4[1];
+              return mapFn(key, battle);
+            })); //console.log("Converted filtered battles from cache to numerical format; returning:" + JSON.stringify(numericalBattles) + " battles"  );
+            return _context6.a(2, numericalBattles);
+        }
+      }, _callee5);
+    }));
+    function getNumericalBattles(_x2, _x3) {
+      return _getNumericalBattles.apply(this, arguments);
+    }
+    return getNumericalBattles;
+  }(),
+  //takes in list of battles then converts to dict and then adds to cached battles
+  extendBattles: function () {
+    var _extendBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(cleanBattleMap) {
+      var _yield$ClientCache$ge2;
+      var oldDict, newDict, _t5, _t6, _t7;
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            _context7.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _t6 = _yield$ClientCache$ge2 = _context7.v;
+            _t5 = _t6 !== null;
+            if (!_t5) {
+              _context7.n = 2;
+              break;
+            }
+            _t5 = _yield$ClientCache$ge2 !== void 0;
+          case 2:
+            if (!_t5) {
+              _context7.n = 3;
+              break;
+            }
+            _t7 = _yield$ClientCache$ge2;
+            _context7.n = 4;
+            break;
+          case 3:
+            _t7 = {};
+          case 4:
+            oldDict = _t7;
+            // new battles automatically overwrite old ones if they share same seq_num
+            newDict = _objectSpread(_objectSpread({}, oldDict), cleanBattleMap);
+            _context7.n = 5;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES, newDict);
+          case 5:
+            console.log("Extended user data in cache");
+            return _context7.a(2, newDict);
+        }
+      }, _callee6);
+    }));
+    function extendBattles(_x4) {
+      return _extendBattles.apply(this, arguments);
+    }
+    return extendBattles;
+  }(),
+  //Takes queried battles, clean format and extend in cache
+  cacheQuery: function () {
+    var _cacheQuery = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(battleList, HM, artifacts) {
+      var cleanBattleMap, battles;
+      return _regenerator().w(function (_context8) {
+        while (1) switch (_context8.n) {
+          case 0:
+            if (battleList) {
+              _context8.n = 1;
+              break;
+            }
+            console.log("No query battles provided to cacheQuery");
+            return _context8.a(2, []);
+          case 1:
+            console.log("Caching queried battles: ".concat(battleList.length, " battles; modified [BATTLES]"));
+            cleanBattleMap = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_5__.buildFormattedBattleMap)(battleList, HM, artifacts);
+            _context8.n = 2;
+            return this.extendBattles(cleanBattleMap);
+          case 2:
+            battles = _context8.v;
+            console.log("Cached queried battles in cache; modified [BATTLES]");
+            return _context8.a(2, battles);
+        }
+      }, _callee7, this);
+    }));
+    function cacheQuery(_x5, _x6, _x7) {
+      return _cacheQuery.apply(this, arguments);
+    }
+    return cacheQuery;
+  }(),
+  //Takes uploaded battles and sets as battles in cache, should be called before attempting to get battles if upload exists
+  cacheUpload: function () {
+    var _cacheUpload = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(rawParsedBattleList, HM) {
+      var cleanBattles, battles;
+      return _regenerator().w(function (_context9) {
+        while (1) switch (_context9.n) {
+          case 0:
+            if (rawParsedBattleList) {
+              _context9.n = 1;
+              break;
+            }
+            console.error("No uploaded battles provided to cacheUpload");
+            return _context9.a(2, {});
+          case 1:
+            cleanBattles = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_5__.parsedCSVToFormattedBattleMap)(rawParsedBattleList, HM);
+            _context9.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.UPLOADED_BATTLES, cleanBattles);
+          case 2:
+            _context9.n = 3;
+            return this.extendBattles(cleanBattles);
+          case 3:
+            battles = _context9.v;
+            console.log("Ingested uploaded battle data into cache; modified [BATTLES] and overwrote [UPLOADED_BATTLES]");
+            return _context9.a(2, battles);
+        }
+      }, _callee8, this);
+    }));
+    function cacheUpload(_x8, _x9) {
+      return _cacheUpload.apply(this, arguments);
+    }
+    return cacheUpload;
+  }(),
+  getStats: function () {
+    var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(battles, user, filters, HM, autoZoom) {
+      var numFilters, filteredBattles, battlesList, filteredBattlesList, plotContent, prebanStats, firstPickStats, generalStats, heroStats, serverStats;
+      return _regenerator().w(function (_context0) {
+        while (1) switch (_context0.n) {
+          case 0:
+            console.log("Getting stats");
+            numFilters = filters.localFilters.length + filters.globalFilters.length;
+            console.log("Applying ".concat(numFilters, " filters"));
+            _context0.n = 1;
+            return this.applyFilter(filters);
+          case 1:
+            filteredBattles = _context0.v;
+            battlesList = Object.values(battles);
+            filteredBattlesList = Object.values(filteredBattles);
+            plotContent = (0,_plots_js__WEBPACK_IMPORTED_MODULE_1__.generateRankPlot)(battlesList, user, numFilters > 0 ? filteredBattles : null, autoZoom);
+            console.log("Getting preban stats");
+            _context0.n = 2;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getPrebanStats(filteredBattles, HM);
+          case 2:
+            prebanStats = _context0.v;
+            console.log("Getting first pick stats");
+            _context0.n = 3;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getFirstPickStats(filteredBattles, HM);
+          case 3:
+            firstPickStats = _context0.v;
+            console.log("Getting general stats");
+            _context0.n = 4;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getGeneralStats(filteredBattles, HM);
+          case 4:
+            generalStats = _context0.v;
+            console.log("Getting hero stats");
+            _context0.n = 5;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getHeroStats(filteredBattles, HM);
+          case 5:
+            heroStats = _context0.v;
+            console.log("Getting server stats");
+            _context0.n = 6;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getServerStats(filteredBattlesList);
+          case 6:
+            serverStats = _context0.v;
+            console.log("Returning stats");
+            return _context0.a(2, {
+              battles: battlesList,
+              filteredBattles: filteredBattlesList,
+              plotContent: plotContent,
+              prebanStats: prebanStats,
+              generalStats: generalStats,
+              firstPickStats: firstPickStats,
+              playerHeroStats: heroStats.playerHeroStats,
+              enemyHeroStats: heroStats.enemyHeroStats,
+              serverStats: serverStats
+            });
+        }
+      }, _callee9, this);
+    }));
+    function getStats(_x0, _x1, _x10, _x11, _x12) {
+      return _getStats.apply(this, arguments);
+    }
+    return getStats;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BattleManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/battle-transform.js":
+/*!*************************************************!*\
+  !*** ./static/assets/js/e7/battle-transform.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   buildFormattedBattleMap: () => (/* binding */ buildFormattedBattleMap),
+/* harmony export */   parsedCSVToFormattedBattleMap: () => (/* binding */ parsedCSVToFormattedBattleMap)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+// takes in cleaned battle row (including from uploaded file or in formatBattleAsRow) 
+// and adds fields representing sets heroes as prime products
+function addPrimeFields(battle, HM) {
+  var getChampPrime = function getChampPrime(name) {
+    var _HeroManager$getHeroB, _HeroManager$getHeroB2;
+    return (_HeroManager$getHeroB = (_HeroManager$getHeroB2 = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName(name, HM)) === null || _HeroManager$getHeroB2 === void 0 ? void 0 : _HeroManager$getHeroB2.prime) !== null && _HeroManager$getHeroB !== void 0 ? _HeroManager$getHeroB : HM.Fodder.prime;
+  };
+  var product = function product(acc, prime) {
+    return acc * prime;
+  };
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIMES].reduce(product, 1);
+}
+
+// takes raw battle from array returned by rust battle array call to flask-server; formats into row to populate table
+function formatBattleAsRow(raw, HM, artifacts) {
+  var _battle;
+  // Make functions used to convert the identifier strings in the E7 data into human readable names
+
+  var getChampName = function getChampName(code) {
+    var _HeroManager$getHeroB3, _HeroManager$getHeroB4;
+    return (_HeroManager$getHeroB3 = (_HeroManager$getHeroB4 = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByCode(code, HM)) === null || _HeroManager$getHeroB4 === void 0 ? void 0 : _HeroManager$getHeroB4.name) !== null && _HeroManager$getHeroB3 !== void 0 ? _HeroManager$getHeroB3 : HM.Fodder.name;
+  };
+  var getArtifactName = function getArtifactName(code) {
+    return _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].convertCodeToName(code, artifacts) || "None";
+  };
+  var checkBanned = function checkBanned(index) {
+    return raw.p2_postban === raw.p1_picks[index];
+  }; // used to check if artifact is null because banned or because not equipped
+  var formatArtifacts = function formatArtifacts(artiArr) {
+    return artiArr.map(function (code, index) {
+      return code ? getArtifactName(code) : checkBanned(index) ? "N/A" : "None";
+    });
+  };
+  var formatCRBar = function formatCRBar(crBar) {
+    return crBar.map(function (entry) {
+      return entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["N/A", 0];
+    });
+  };
+
+  // Fall back to the code if the equipment set is not defined in references
+  var formatEquipment = function formatEquipment(equipArr) {
+    return equipArr.map(function (heroEquipList) {
+      return heroEquipList.map(function (equip) {
+        return _references_js__WEBPACK_IMPORTED_MODULE_2__.EQUIPMENT_SET_MAP[equip] || equip;
+      });
+    });
+  };
+  var firstTurnHero = raw.cr_bar.find(function (entry) {
+    return entry[1] === 100;
+  });
+  var p1TookFirstTurn = firstTurnHero ? raw.p1_picks.includes(firstTurnHero[0]) : false;
+  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, raw.p1_league || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, raw.p2_league || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
+
+  // finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
+  addPrimeFields(battle, HM);
+  return battle;
+}
+function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
+  artifacts = artifacts !== null && artifacts !== void 0 ? artifacts : _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getArtifacts();
+  return Object.fromEntries(rawBattles.map(function (rawBattle) {
+    var battle = formatBattleAsRow(rawBattle, HeroManager, artifacts);
+    return [battle["Seq Num"], battle];
+  }));
+}
+var ARRAY_COLUMNS = [_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS];
+var BOOLS_COLS = [_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN];
+var INT_COLUMNS = [_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN];
+
+// takes output of CSV parse and parses the list rows and ensures types are correct
+function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {
+  var rows = rawRowsArr.map(function (row) {
+    var _iterator = _createForOfIteratorHelper(ARRAY_COLUMNS),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var col = _step.value;
+        row[col] = JSON.parse(row[col]);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    var _iterator2 = _createForOfIteratorHelper(BOOLS_COLS),
+      _step2;
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _col = _step2.value;
+        row[_col] = row[_col].toLowerCase() === "true";
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+    var _iterator3 = _createForOfIteratorHelper(INT_COLUMNS),
+      _step3;
+    try {
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+        var _col2 = _step3.value;
+        row[_col2] = Number(row[_col2]);
+      }
+    } catch (err) {
+      _iterator3.e(err);
+    } finally {
+      _iterator3.f();
+    }
+    addPrimeFields(row, HM);
+    return row;
+  });
+  return Object.fromEntries(rows.map(function (row) {
+    return [row["Seq Num"], row];
+  }));
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/e7-utils.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/e7/e7-utils.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getJSON: () => (/* binding */ getJSON),
+/* harmony export */   getUsers: () => (/* binding */ getUsers),
+/* harmony export */   printObjStruct: () => (/* binding */ printObjStruct)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+function getJSON(_x) {
+  return _getJSON.apply(this, arguments);
+}
+function _getJSON() {
+  _getJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          console.log("Fetching");
+          return _context.a(2, fetch(url).then(function (response) {
+            console.log("Got response");
+            if (!response.ok) {
+              // Handle HTTP error responses (404, 500, etc.)
+              throw new Error("HTTP error! Status: ".concat(response.status));
+            }
+            return response.json(); // May also throw if not valid JSON
+          })["catch"](function (error) {
+            throw new E7APIError("Fetch error: ".concat(error.message));
+          }));
+      }
+    }, _callee);
+  }));
+  return _getJSON.apply(this, arguments);
+}
+function createUser(userJSON, world_code) {
+  return {
+    id: userJSON.nick_no,
+    name: userJSON.nick_nm.toLowerCase(),
+    code: userJSON.code,
+    rank: userJSON.rank,
+    world_code: world_code
+  };
+}
+function getUsers(_x2) {
+  return _getUsers.apply(this, arguments);
+}
+function _getUsers() {
+  _getUsers = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(world_code) {
+    var url, data, users;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          if (_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES.has(world_code)) {
+            _context2.n = 1;
+            break;
+          }
+          console.log("No Data returned: code ".concat(world_code, " not in ").concat(refs.WORLD_CODES));
+          return _context2.a(2);
+        case 1:
+          world_code = world_code.replace("world_", "");
+          url = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(world_code, ".json");
+          _context2.n = 2;
+          return getJSON(url);
+        case 2:
+          data = _context2.v;
+          users = new Object();
+          data.users.forEach(function (user) {
+            users[user.nick_nm] = createUser(user, world_code);
+          });
+          return _context2.a(2, users);
+      }
+    }, _callee2);
+  }));
+  return _getUsers.apply(this, arguments);
+}
+function printObjStruct(obj) {
+  var newObj = {};
+  for (var key in obj) {
+    if (Array.isArray(obj[key]) && obj[key].length > 0) {
+      newObj[key] = [obj[key][0], "Length: ".concat(obj[key].length)];
+    } else {
+      newObj[key] = obj[key];
+    }
+  }
+  console.log(newObj);
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-syntax-parser.js":
+/*!*****************************************************!*\
+  !*** ./static/assets/js/e7/filter-syntax-parser.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-utils.js");
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./regex.js */ "./static/assets/js/e7/regex.js");
+/* harmony import */ var _season_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./season-manager.js */ "./static/assets/js/e7/season-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+
+
+
+
+
+var ACCEPTED_CHARS = new Set("'\"(),-.=; ><!1234567890{}" + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+var PRINT_PREFIX = "   ";
+
+// must handle both regular sets and ranges
+function inOperatorFn(a, b) {
+  var bStr = _typeof(b) === "object" ? JSON.stringify(b) : "".concat(b);
+  if (b instanceof Set) {
+    return b.has(a);
+  }
+  // handle ranges
+  else if (_typeof(b) === "object" && b !== null && !Array.isArray(b) && ['start', 'end', 'endInclusive', 'type'].every(function (key) {
+    return b.hasOwnProperty(key);
+  })) {
+    return a >= b.start && (b.endInclusive ? a <= b.end : a < b.end);
+  }
+
+  // handles fields that are arrays (ie p1.picks)
+  else if (Array.isArray(b)) {
+    return b.includes(a);
+  } else {
+    throw new Error("Invalid match pattern for 'in' operators; got: '".concat(a, "' and '").concat(bStr, "' (").concat(b.constructor.name, ")"));
+  }
+}
+var OPERATOR_MAP = {
+  '>': function _(a, b) {
+    return a > b;
+  },
+  '<': function _(a, b) {
+    return a < b;
+  },
+  '=': function _(a, b) {
+    return a === b;
+  },
+  'in': function _in(a, b) {
+    return inOperatorFn(a, b);
+  },
+  '>=': function _(a, b) {
+    return a >= b;
+  },
+  '<=': function _(a, b) {
+    return a <= b;
+  },
+  '!=': function _(a, b) {
+    return a !== b;
+  },
+  '!in': function _in(a, b) {
+    return !inOperatorFn(a, b);
+  }
+};
+function validateChars(str, charSet, objName) {
+  var _iterator = _createForOfIteratorHelper(str),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _char = _step.value;
+      if (!charSet.has(_char)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid character within <".concat(objName, "> ; ' ").concat(_char, " ' is not allowed; got string: '").concat(str, "'"));
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+}
+function preParse(str) {
+  str = str.replace(/[\n\t\r]/g, " ").replace(/\s+/g, " "); // replace newlines with spaces and remove multiple spaces
+  validateChars(str, ACCEPTED_CHARS, "Main Filter String");
+  str = str.toLowerCase();
+  return str;
+}
+var INT_FIELDS = new Set(["victory-points"]);
+
+// Fields that will extract arrays and can be used with the 'in' operators
+var SET_FIELDS = new Set(["prebans", "p1.picks", "p2.picks", "p1.prebans", "p2.prebans"]);
+var FieldType = /*#__PURE__*/function () {
+  function FieldType(str) {
+    _classCallCheck(this, FieldType);
+    var fn = FieldType.FIELD_EXTRACT_FN_MAP[str];
+    if (!fn) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].ValidationError("Invalid field type: '".concat(str, "'; valid types are: ").concat(Object.keys(FieldType.FIELD_EXTRACT_FN_MAP).join(', ')));
+    } else {
+      console.log("Found valid field type: ", str);
+    }
+    this.str = str;
+    this.extractData = fn;
+  }
+  return _createClass(FieldType, [{
+    key: "toString",
+    value: function toString() {
+      return this.str;
+    }
+  }]);
+}();
+// FNS that take in a clean format battle and return the appropriate data
+_defineProperty(FieldType, "FIELD_EXTRACT_FN_MAP", {
+  'date': function date(battle) {
+    var _battle$DateTime;
+    return battle["Date/Time"] ? new Date("".concat((_battle$DateTime = battle["Date/Time"]) === null || _battle$DateTime === void 0 ? void 0 : _battle$DateTime.slice(0, 10), "T00:00:00")) : "N/A";
+  },
+  'is-first-pick': function isFirstPick(battle) {
+    return battle["First Pick"] ? 1 : 0;
+  },
+  'is-win': function isWin(battle) {
+    return battle["Win"] ? 1 : 0;
+  },
+  'victory-points': function victoryPoints(battle) {
+    return battle["P1 Points"];
+  },
+  'p1.picks': function p1Picks(battle) {
+    return battle["P1 Picks"];
+  },
+  'p2.picks': function p2Picks(battle) {
+    return battle["P2 Picks"];
+  },
+  'p1.prebans': function p1Prebans(battle) {
+    return battle["P1 Prebans"];
+  },
+  'p2.prebans': function p2Prebans(battle) {
+    return battle["P2 Prebans"];
+  },
+  'p1.postban': function p1Postban(battle) {
+    return battle["P1 Postban"];
+  },
+  'p2.postban': function p2Postban(battle) {
+    return battle["P2 Postban"];
+  },
+  'prebans': function prebans(battle) {
+    return [].concat(_toConsumableArray(battle["P1 Prebans"]), _toConsumableArray(battle["P2 Prebans"]));
+  },
+  'p1.pick1': function p1Pick1(battle) {
+    return battle["P1 Picks"][0];
+  },
+  'p1.pick2': function p1Pick2(battle) {
+    return battle["P1 Picks"][1];
+  },
+  'p1.pick3': function p1Pick3(battle) {
+    return battle["P1 Picks"][2];
+  },
+  'p1.pick4': function p1Pick4(battle) {
+    return battle["P1 Picks"][3];
+  },
+  'p1.pick5': function p1Pick5(battle) {
+    return battle["P1 Picks"][4];
+  },
+  'p2.pick1': function p2Pick1(battle) {
+    return battle["P2 Picks"][0];
+  },
+  'p2.pick2': function p2Pick2(battle) {
+    return battle["P2 Picks"][1];
+  },
+  'p2.pick3': function p2Pick3(battle) {
+    return battle["P2 Picks"][2];
+  },
+  'p2.pick4': function p2Pick4(battle) {
+    return battle["P2 Picks"][3];
+  },
+  'p2.pick5': function p2Pick5(battle) {
+    return battle["P2 Picks"][4];
+  },
+  'p1.league': function p1League(battle) {
+    return _references_js__WEBPACK_IMPORTED_MODULE_0__.LEAGUE_MAP[battle["P1 League"]];
+  },
+  'p2.league': function p2League(battle) {
+    return _references_js__WEBPACK_IMPORTED_MODULE_0__.LEAGUE_MAP[battle["P2 League"]];
+  },
+  'p1.server': function p1Server(battle) {
+    return battle["P1 Server"];
+  },
+  'p2.server': function p2Server(battle) {
+    return battle["P2 Server"];
+  }
+});
+var DataType = /*#__PURE__*/function () {
+  function DataType(str) {
+    var HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    _classCallCheck(this, DataType);
+    this.rawString = str;
+    this.data = this.getData(str, HM);
+  }
+  return _createClass(DataType, [{
+    key: "toString",
+    value: function toString() {
+      return "".concat(this.data);
+    }
+  }]);
+}();
+var StringType = /*#__PURE__*/function (_DataType) {
+  function StringType() {
+    _classCallCheck(this, StringType);
+    return _callSuper(this, StringType, arguments);
+  }
+  _inherits(StringType, _DataType);
+  return _createClass(StringType, [{
+    key: "getData",
+    value: function getData(str, HM) {
+      str = str.replace(/'/g, "").replace(/"/g, "");
+      str = str.trim();
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.source, " ); got: '").concat(str, "'"));
+      }
+      str = str.replace(/"|'/g, "");
+      var hero = _hero_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getHeroByName(str, HM);
+      var league = _references_js__WEBPACK_IMPORTED_MODULE_0__.LEAGUE_MAP[str];
+      var server = Object.values(_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_TO_CLEAN_STR).find(function (server) {
+        return server.toLowerCase() === str;
+      });
+      if (!(hero || league || server)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid string; All strings must either be a valid hero, league name, or server; got: '".concat(str, "'"));
+      }
+      return hero ? hero.name : league ? league : server;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "\"".concat(this.data, "\"");
+    }
+  }]);
+}(DataType);
+var DateType = /*#__PURE__*/function (_DataType2) {
+  function DateType() {
+    _classCallCheck(this, DateType);
+    return _callSuper(this, DateType, arguments);
+  }
+  _inherits(DateType, _DataType2);
+  return _createClass(DateType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      return _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].parseDate(str);
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "".concat(this.data);
+    }
+  }]);
+}(DataType);
+var IntType = /*#__PURE__*/function (_DataType3) {
+  function IntType() {
+    _classCallCheck(this, IntType);
+    return _callSuper(this, IntType, arguments);
+  }
+  _inherits(IntType, _DataType3);
+  return _createClass(IntType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid integer; must be a number; got: '".concat(str, "'"));
+      }
+      var parsedInt = parseInt(str);
+      if (isNaN(parsedInt)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid integer; must be a number; got: '".concat(str, "'"));
+      }
+      return parsedInt;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "".concat(this.data);
+    }
+  }]);
+}(DataType);
+var BoolType = /*#__PURE__*/function (_DataType4) {
+  function BoolType() {
+    _classCallCheck(this, BoolType);
+    return _callSuper(this, BoolType, arguments);
+  }
+  _inherits(BoolType, _DataType4);
+  return _createClass(BoolType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid boolean; must be 'true' or 'false'; got: '".concat(str, "'"));
+      }
+      return str === "true" ? 1 : 0;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "".concat(this.data ? "true" : "false");
+    }
+  }]);
+}(DataType);
+var RangeType = /*#__PURE__*/function (_DataType5) {
+  function RangeType() {
+    _classCallCheck(this, RangeType);
+    return _callSuper(this, RangeType, arguments);
+  }
+  _inherits(RangeType, _DataType5);
+  return _createClass(RangeType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var split = str.split("...");
+      if (split.length !== 2) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid range; ranges must be of the format x...y or x...=y ; got more than two values when splitting string: '".concat(str, "'"));
+      }
+      var _split = _slicedToArray(split, 2),
+        start = _split[0],
+        end = _split[1];
+      var endInclusive = false;
+      if (end.includes("=")) {
+        end = end.replace("=", "");
+        endInclusive = true;
+      }
+      var output = {
+        start: null,
+        end: null,
+        endInclusive: endInclusive
+      };
+      if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_DATE_LITERAL_RE.test(start)) {
+        output.start = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tryConvert(_filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].parseDate, "Date", start, "Could not convert '".concat(start, "' to Date in declared range: '").concat(str, "'"));
+        output.end = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tryConvert(_filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].parseDate, "Date", end, "Could not convert '".concat(end, "' to Date in declared range: '").concat(str, "' ; Ranges must have homogenous types"));
+        if (output.start > output.end) {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid range; start date must be on or before end date; ".concat(output.start, " > ").concat(output.end));
+        }
+        output.type = "Date";
+      } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(start)) {
+        output.start = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tryConvert(function (i) {
+          return new IntType(i);
+        }, "Int", start, "Could not convert '".concat(start, "' to Int in declared range: '").concat(str, "'")).data;
+        output.end = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tryConvert(function (i) {
+          return new IntType(i);
+        }, "Int", end, "Could not convert '".concat(end, "' to Int in declared range: '").concat(str, "' ; Ranges must have homogenous types")).data;
+        if (output.start > output.end) {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid range; start integer must be equal to or less than end integer; ".concat(output.start, " > ").concat(output.end));
+        }
+        output.type = "Int";
+      } else {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid range; must be of the format x...y or x...=y ; got: '".concat(str, "'"));
+      }
+      console.log("Built Range: ".concat(JSON.stringify(output)));
+      return output;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      var rangeSymb = this.data.endInclusive ? "...=" : "...";
+      if (this.data.type === "Date") {
+        return "".concat(this.data.start.toISOString()).concat(rangeSymb).concat(this.data.end.toISOString(), ")");
+      } else if (this.data.type === "Int") {
+        return "".concat(this.data.start, "...").concat(rangeSymb).concat(this.data.end);
+      } else {
+        return "Error Converting Range to String => < ".concat(this.data.start, "...").concat(rangeSymb).concat(this.data.end, " >");
+      }
+    }
+  }]);
+}(DataType);
+var SetType = /*#__PURE__*/function (_DataType6) {
+  function SetType() {
+    _classCallCheck(this, SetType);
+    return _callSuper(this, SetType, arguments);
+  }
+  _inherits(SetType, _DataType6);
+  return _createClass(SetType, [{
+    key: "getData",
+    value: function getData(str, HM) {
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_SET_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_SET_RE.source, " ) (Just chat gpt this one bro); got: '").concat(str, "'"));
+      }
+      var elements = str.replace(/^\{|\}$/g, "").split(",").map(function (e) {
+        return e.trim();
+      }).filter(function (e) {
+        return e !== "";
+      }).map(function (elt) {
+        if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_RE.test(elt)) {
+          return new StringType(elt, HM);
+        } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_DATE_LITERAL_RE.test(elt)) {
+          return new DateType(elt);
+        } else {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid set element; must be a string or date; got: '".concat(elt, "'"));
+        }
+      });
+      console.log("GOT ELEMENTS: ", elements);
+      var types = new Set();
+      var _iterator2 = _createForOfIteratorHelper(elements),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var element = _step2.value;
+          types.add(element.constructor.name);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+      types = _toConsumableArray(types);
+      console.log("GOT TYPES: ", types);
+      if (types.size > 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid set; all set elements must have the same data type; got: types: [".concat(types.join(", "), "]"));
+      }
+      this.Type = types[0];
+      return new Set(elements.map(function (data) {
+        return data.data;
+      }));
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "{".concat(this.data.map(function (data) {
+        return data.toString();
+      }).join(", "), "}");
+    }
+  }]);
+}(DataType);
+function parseKeywordAsDataType(str, sourceData) {
+  if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_SEASON_LITERAL_RE.test(str)) {
+    var toStr = function toStr(date) {
+      return date.toISOString().slice(0, 10);
+    };
+    if (sourceData.SeasonDetails.length < 1) {
+      throw new Error("Did not recieve any season details; failed on: '".concat(str, "'"));
+    } else if (str === "current-season") {
+      var _sourceData$SeasonDet = _slicedToArray(sourceData.SeasonDetails.find(function (season) {
+          return season["Status"] === "Active";
+        }).range, 2),
+        start = _sourceData$SeasonDet[0],
+        end = _sourceData$SeasonDet[1];
+      return new RangeType("".concat(toStr(start), "...=").concat(toStr(end === "N/A" ? new Date() : end)));
+    } else {
+      var seasonNum = Number(str.split("-")[1]);
+      var season = sourceData.SeasonDetails.find(function (season) {
+        return season["Season Number"] === seasonNum;
+      });
+      if (!season) {
+        throw new Error("Invalid season specified; ".concat(seasonNum, " is not a valid season number; failed on str: '").concat(str, "'"));
+      }
+      var _season$range = _slicedToArray(season.range, 2),
+        _start = _season$range[0],
+        _end = _season$range[1];
+      return new RangeType("".concat(toStr(_start), "...=").concat(toStr(_end)));
+    }
+  }
+}
+function parseDataType(str, HM, SeasonDetails) {
+  console.log("Trying to Parse DataType: ".concat(str));
+  if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test(str)) {
+    console.log("Parsing as StringType");
+    return new StringType(str, HM);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_DATE_LITERAL_RE.test(str)) {
+    console.log("Parsing as DateType");
+    return new DateType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(str)) {
+    console.log("Parsing as IntType");
+    return new IntType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
+    console.log("Parsing as BoolType");
+    return new BoolType(str);
+  } else if (/\{.*\}/.test(str)) {
+    console.log("Parsing as SetType");
+    return new SetType(str, HM);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_RANGE_LITERAL_RE.test(str)) {
+    console.log("Parsing as RangeType");
+    return new RangeType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_DATA_WORD_LITERAL_RE.test(str)) {
+    console.log("Parsing as DataWord");
+    return parseKeywordAsDataType(str, {
+      SeasonDetails: SeasonDetails
+    });
+  } else {
+    console.log("Failed to parse DataType");
+    if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test("'".concat(str, "'"))) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; did you forget to wrap string literals in double or single quotes?"));
+    } else if (str.includes("'") && str.includes('"')) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; did you encase in mismatching quote types?"));
+    } else if (str.includes('.=') || str.includes("..")) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only be int-int or date-date"));
+    }
+    throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid DataType declaration; could not parse to valid Field or Declared Data Type; got: '".concat(str, "'"));
+  }
+}
+var Fn = /*#__PURE__*/function () {
+  function Fn() {
+    _classCallCheck(this, Fn);
+  }
+  return _createClass(Fn, [{
+    key: "call",
+    value: function call(battle) {
+      throw new Error("Base class ".concat(this.constructor.name, " does not implement the 'call' method. Implement this method in a subclass."));
+    }
+  }]);
+}();
+var globalFilterFn = /*#__PURE__*/function (_Fn) {
+  function globalFilterFn() {
+    _classCallCheck(this, globalFilterFn);
+    return _callSuper(this, globalFilterFn);
+  }
+  _inherits(globalFilterFn, _Fn);
+  return _createClass(globalFilterFn, [{
+    key: "toString",
+    value: function toString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      return "".concat(prefix).concat(this.str);
+    }
+  }]);
+}(Fn);
+var lastN = /*#__PURE__*/function (_globalFilterFn) {
+  function lastN(args) {
+    var _this;
+    _classCallCheck(this, lastN);
+    _this = _callSuper(this, lastN);
+    _this.name = "last-N";
+    if (args.length !== 1) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("".concat(_this.name, " expects 1 argument, got ").concat(args.length));
+    }
+    var num = Number(args[0]);
+    if (!Number.isInteger(num)) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("".concat(_this.name, " expects an integer argument, could not parse '").concat(args[0], "' as integer"));
+    }
+    _this.str = "".concat(_this.name, "(").concat(num, ")");
+    _this.n = num;
+    return _this;
+  }
+  _inherits(lastN, _globalFilterFn);
+  return _createClass(lastN, [{
+    key: "call",
+    value: function call(battles) {
+      battles.sort(function (b1, b2) {
+        return b1["Seq Num"] - b2["Seq Num"];
+      });
+      return battles.slice(-this.n);
+    }
+  }]);
+}(globalFilterFn);
+var ClauseFn = /*#__PURE__*/function (_Fn2) {
+  function ClauseFn(fns) {
+    var _this2;
+    _classCallCheck(this, ClauseFn);
+    _this2 = _callSuper(this, ClauseFn);
+    _this2.fns = fns;
+    console.log("Clause Fn constructor got fns:", fns);
+    return _this2;
+  }
+  _inherits(ClauseFn, _Fn2);
+  return _createClass(ClauseFn, [{
+    key: "toString",
+    value: function toString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      var output = '';
+      var newPrefix = prefix + PRINT_PREFIX;
+      this.fns.localFilters.forEach(function (fn) {
+        return output += "".concat(fn.toString(newPrefix), ",\n");
+      });
+      console.log("Clause Fn toString got output:", output);
+      return "".concat(prefix).concat(this.str, "(\n").concat(output.trimEnd(), "\n").concat(prefix, ")");
+    }
+  }]);
+}(Fn);
+var AND = /*#__PURE__*/function (_ClauseFn) {
+  function AND(fns) {
+    var _this3;
+    _classCallCheck(this, AND);
+    _this3 = _callSuper(this, AND, [fns]);
+    _this3.str = "AND";
+    return _this3;
+  }
+  _inherits(AND, _ClauseFn);
+  return _createClass(AND, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fns.localFilters.every(function (fn) {
+        return fn.call(battle);
+      });
+    }
+  }]);
+}(ClauseFn);
+var OR = /*#__PURE__*/function (_ClauseFn2) {
+  function OR(fns) {
+    var _this4;
+    _classCallCheck(this, OR);
+    _this4 = _callSuper(this, OR, [fns]);
+    _this4.str = "OR";
+    return _this4;
+  }
+  _inherits(OR, _ClauseFn2);
+  return _createClass(OR, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fns.localFilters.some(function (fn) {
+        return fn.call(battle);
+      });
+    }
+  }]);
+}(ClauseFn);
+var XOR = /*#__PURE__*/function (_ClauseFn3) {
+  function XOR(fns) {
+    var _this5;
+    _classCallCheck(this, XOR);
+    _this5 = _callSuper(this, XOR, [fns]);
+    _this5.str = "XOR";
+    return _this5;
+  }
+  _inherits(XOR, _ClauseFn3);
+  return _createClass(XOR, [{
+    key: "call",
+    value: function call(battle) {
+      var result = false;
+      // Cascading XOR
+      var _iterator3 = _createForOfIteratorHelper(this.fns.localFilters),
+        _step3;
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var fn = _step3.value;
+          result = !result && fn.call(battle) || result && !fn.call(battle);
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
+      return result;
+    }
+  }]);
+}(ClauseFn);
+var NOT = /*#__PURE__*/function (_ClauseFn4) {
+  function NOT(fns) {
+    var _this6;
+    _classCallCheck(this, NOT);
+    _this6 = _callSuper(this, NOT, [fns]);
+    _this6.str = "NOT";
+    return _this6;
+  }
+  _inherits(NOT, _ClauseFn4);
+  return _createClass(NOT, [{
+    key: "call",
+    value: function call(battle) {
+      return !this.fns.localFilters[0].call(battle);
+    }
+  }]);
+}(ClauseFn);
+var FN_MAP = {
+  and: AND,
+  or: OR,
+  xor: XOR,
+  not: NOT,
+  "last-n": lastN
+};
+var CLAUSE_FNS = new Set([AND, OR, XOR, NOT]);
+var GLOBAL_FILTER_FNS = new Set([lastN]);
+var BaseFilter = /*#__PURE__*/function () {
+  function BaseFilter(str, fn) {
+    _classCallCheck(this, BaseFilter);
+    this.str = str;
+    this.fn = fn;
+  }
+  return _createClass(BaseFilter, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fn(battle);
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      return "".concat(prefix).concat(this.str);
+    }
+  }]);
+}();
+function tryParseFilterElement(leftOrRight, strValue, filterStr, HM, SeasonDetails) {
+  var parsedValue = null;
+  try {
+    if (strValue in FieldType.FIELD_EXTRACT_FN_MAP) {
+      parsedValue = new FieldType(strValue);
+    } else {
+      parsedValue = parseDataType(strValue, HM, SeasonDetails);
+    }
+  } catch (e) {
+    for (var key in FieldType.FIELD_EXTRACT_FN_MAP) {
+      if (strValue.includes(key) || key.includes(strValue)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Could not parse ".concat(leftOrRight, " side of filter; got: \"").concat(strValue, "\" from filter: [").concat(filterStr, "], did you mean to use '").concat(key, "' as a field instead?"));
+      }
+    }
+    console.error(e);
+    throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Could not parse ".concat(leftOrRight, " side of filter; got: \"").concat(strValue, "\" from filter: [").concat(filterStr, "]; error: ").concat(e.message));
+  }
+  return parsedValue;
+}
+var FilterSyntaxParser = /*#__PURE__*/function () {
+  function FilterSyntaxParser(key) {
+    _classCallCheck(this, FilterSyntaxParser);
+    if (key !== _INTERNAL_KEY._) {
+      throw new Error("Cannot instantiate FilterSyntaxParser directly; use createAndParse method instead.");
+    }
+  }
+  return _createClass(FilterSyntaxParser, [{
+    key: "toString",
+    value: function toString() {
+      var filters = _toConsumableArray(this.filters.localFilters);
+      filters.push.apply(filters, _toConsumableArray(this.filters.globalFilters));
+      return "[\n".concat(filters.map(function (filter) {
+        return filter.toString(PRINT_PREFIX);
+      }).join(";\n"), "\n]");
+    }
+  }, {
+    key: "parseGlobalFilterFn",
+    value: function parseGlobalFilterFn(globalFilterFn, str) {
+      var pattern = _regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.anchorExp(_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_GLOBAL_FILTER_RE);
+      if (!pattern.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid global filter format; must follow the case insensitive regex format \"".concat(pattern.source, "\" ; got: '").concat(str, "'"));
+      }
+      var delim = ",",
+        enclosureLevel = 1;
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
+      if (globalFilterFn === lastN) {
+        return {
+          localFilters: [],
+          globalFilters: [new lastN(args)]
+        };
+      } else {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Global filter function ".concat(globalFilterFn.str, " not mapped in parseGlobalFilterFn"));
+      }
+    }
+  }, {
+    key: "parseClauseFn",
+    value: function parseClauseFn(clauseFn, str) {
+      var _this7 = this;
+      console.log("Parsing clause fn:", clauseFn.name, str);
+      var delim = ",",
+        enclosureLevel = 1;
+      var argArr = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
+      console.log("Got argArr:", argArr);
+      if (clauseFn === XOR && argArr.length < 2) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("XOR clause must have at least two arguments; got: ".concat(argArr.length, " arguments from string: \"").concat(str, "\""));
+      } else if (clauseFn === NOT && argArr.length !== 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("NOT clause must have exactly one argument; got: ".concat(argArr.length, " arguments from string: \"").concat(str, "\""));
+      }
+      var fns = argArr.reduce(function (acc, arg) {
+        var _acc$localFilters, _acc$globalFilters;
+        (_acc$localFilters = acc.localFilters).push.apply(_acc$localFilters, _toConsumableArray(_this7.parseFilters(arg).localFilters));
+        (_acc$globalFilters = acc.globalFilters).push.apply(_acc$globalFilters, _toConsumableArray(_this7.parseFilters(arg).globalFilters));
+        return acc;
+      }, FilterSyntaxParser.getEmptyFilters());
+      if (fns.globalFilters.length > 0) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Global filters not allowed in clause functions; got: ".concat(fns.globalFilters, " from string: \"").concat(str, "\""));
+      }
+      if (clauseFn === NOT && fns.localFilters.length !== 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("NOT clause must have exactly one argument; got: ".concat(fns.length, " arguments from string: \"").concat(str, "\""));
+      }
+      return {
+        localFilters: [new clauseFn(fns)],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "parseBaseFilter",
+    value: function parseBaseFilter(str) {
+      console.log("Parsing base filter:", str);
+      var HM = this.HM;
+      var delim = " ",
+        enclosureLevel = 0,
+        trim = true;
+      var tokens = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel, trim);
+      console.log("Got tokens: ", tokens, "; Length: ".concat(tokens.length));
+
+      // must be of form ['X', operator, 'Y']
+      if (!(tokens.length === 3)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid base filter format; all filters must be of the form: ['X', operator, 'Y']; got tokens: [".concat(tokens.join(", "), "]"));
+      }
+      var _tokens = _slicedToArray(tokens, 3),
+        left = _tokens[0],
+        operator = _tokens[1],
+        right = _tokens[2];
+
+      // Validate operator
+      if (!OPERATOR_MAP[operator]) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid operator in base filter; got: \"".concat(operator, "\" as the operator in filter: [").concat(str, "]"));
+      }
+      var opFn = OPERATOR_MAP[operator];
+
+      // try to converty to field types and data types
+      left = tryParseFilterElement("left", left, str, HM, this.SeasonDetails);
+      right = tryParseFilterElement("right", right, str, HM, this.SeasonDetails);
+
+      // validate filter
+      if (operator === "in" || operator === "!in") {
+        if (!(right instanceof SetType || right instanceof RangeType)) {
+          if (!(right instanceof FieldType) || !SET_FIELDS.has(right.str)) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '".concat(str, "'"));
+          }
+        }
+      }
+      if (right instanceof RangeType) {
+        if (right.data.type === "Date") {
+          if (!left.str.includes('date')) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("When using a Date Range, the left side of the operator must be a date field; ".concat(left.str, " is not a date field; error found in filter: '").concat(str, "'"));
+          }
+        } else if (right.data.type === "Int") {
+          if (!INT_FIELDS.has(left.str)) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("When using an Int Range, the left side of the operator must be an integer field; ".concat(left.str, " is not an integer field; error found in filter: '").concat(str, "'"));
+          }
+        }
+      }
+      if (right instanceof DataType && left instanceof DataType) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Either left or right side of filter must be a data field (a property of a battle); both ".concat(left, " and ").concat(right, " are user declared data types in filter: \"").concat(str, "\""));
+      }
+
+      // make filter
+      var filterFn = null;
+      if (left instanceof DataType) {
+        filterFn = function filterFn(battle) {
+          return opFn(left.data, right.extractData(battle));
+        };
+      } else if (right instanceof DataType) {
+        filterFn = function filterFn(battle) {
+          return opFn(left.extractData(battle), right.data);
+        };
+      } else {
+        filterFn = function filterFn(battle) {
+          return opFn(left.extractData(battle), right.extractData(battle));
+        };
+      }
+      console.log("Returning base local filter", [new BaseFilter(str, filterFn).toString()]);
+      return {
+        localFilters: [new BaseFilter(str, filterFn)],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "parseFilters",
+    value: function parseFilters(str) {
+      var _this8 = this;
+      console.log("Parsing filter string: \"".concat(str || this.preParsedString, "\""));
+      if (str === "") {
+        console.log("Empty filter string; Returning empty filters");
+        return FilterSyntaxParser.getEmptyFilters();
+      }
+      str = str.trim();
+      var split = str.split(";").filter(function (s) {
+        return s.length > 0;
+      });
+      var _iterator4 = _createForOfIteratorHelper(split),
+        _step4;
+      try {
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var splitStr = _step4.value;
+          var charCounts = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].getCharCounts(splitStr);
+          if (charCounts["("] !== charCounts[")"]) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Imbalanced parentheses in following string: \"".concat(splitStr, "\""));
+          } else if (charCounts["{"] !== charCounts["}"]) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Imbalanced braces ('{', '}') in following string: \"".concat(splitStr, "\""));
+          } else if ((charCounts["\""] || 0) % 2 !== 0) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Imbalanced double quotes in following string: \"".concat(splitStr, "\""));
+          } else if ((charCounts["'"] || 0) % 2 !== 0) {
+            console.log("Imbalanced single quotes in following string:", splitStr, "; got:", charCounts["'"]);
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Imbalanced single quotes in following string: \"".concat(splitStr, "\""));
+          }
+        }
+      } catch (err) {
+        _iterator4.e(err);
+      } finally {
+        _iterator4.f();
+      }
+      if (split.length > 1) {
+        console.log("Processing <".concat(split.length, "> filters; filters: ").concat(split));
+        return split.reduce(function (acc, arg) {
+          var _acc$localFilters2, _acc$globalFilters2;
+          (_acc$localFilters2 = acc.localFilters).push.apply(_acc$localFilters2, _toConsumableArray(_this8.parseFilters(arg).localFilters));
+          (_acc$globalFilters2 = acc.globalFilters).push.apply(_acc$globalFilters2, _toConsumableArray(_this8.parseFilters(arg).globalFilters));
+          return acc;
+        }, FilterSyntaxParser.getEmptyFilters());
+      }
+      var filterString = split[0];
+      if (filterString.length < 4) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Filter string cannot be valid (less than 4 characters); got filter string: [".concat(filterString, "]"));
+      }
+      var splitFilterString = filterString.split("(");
+      var fn = FN_MAP[splitFilterString[0]];
+      console.log("Trying to look for Fn ; got:", splitFilterString[0], "from string:", filterString);
+      if (!fn) {
+        console.log("Did not find Fn; dispatching to base filter parser");
+        return this.parseBaseFilter(filterString);
+      } else if (CLAUSE_FNS.has(fn)) {
+        console.log("Found clause fn; dispatching to clause fn parser");
+        return this.parseClauseFn(fn, filterString);
+      } else if (GLOBAL_FILTER_FNS.has(fn)) {
+        console.log("Found global filter fn; dispatching to global filter fn parser");
+        return this.parseGlobalFilterFn(fn, filterString);
+      } else {
+        throw new Error("could not parse filter string as Fn: \"".concat(str, "\" ; did not map to any defined pattern"));
+      }
+    }
+  }], [{
+    key: "getEmptyFilters",
+    value: function getEmptyFilters() {
+      return {
+        localFilters: [],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "createAndParse",
+    value: function () {
+      var _createAndParse = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(string) {
+        var HM,
+          SeasonDetails,
+          parser,
+          _args = arguments,
+          _t,
+          _t2;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              HM = _args.length > 1 && _args[1] !== undefined ? _args[1] : null;
+              SeasonDetails = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
+              console.log("Initialized parsing of string:", string);
+              parser = new FilterSyntaxParser(_INTERNAL_KEY._);
+              _t = HM;
+              if (_t) {
+                _context.n = 2;
+                break;
+              }
+              _context.n = 1;
+              return _hero_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getHeroManager();
+            case 1:
+              _t = _context.v;
+            case 2:
+              HM = _t;
+              _t2 = SeasonDetails;
+              if (_t2) {
+                _context.n = 4;
+                break;
+              }
+              _context.n = 3;
+              return _season_manager_js__WEBPACK_IMPORTED_MODULE_4__["default"].getSeasonDetails();
+            case 3:
+              _t2 = _context.v;
+            case 4:
+              SeasonDetails = _t2;
+              parser.rawString = string;
+              parser.HM = HM;
+              parser.SeasonDetails = SeasonDetails;
+              parser.preParsedString = preParse(string);
+              parser.globalFilters = [];
+              parser.filters = parser.parseFilters(parser.preParsedString);
+              console.log("Got Filters\n");
+              console.log(parser.toString());
+              return _context.a(2, parser);
+          }
+        }, _callee);
+      }));
+      function createAndParse(_x) {
+        return _createAndParse.apply(this, arguments);
+      }
+      return createAndParse;
+    }()
+  }]);
+}();
+var _INTERNAL_KEY = {
+  _: Symbol("internal")
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FilterSyntaxParser);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-utils.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/e7/filter-utils.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ "./static/assets/js/e7/regex.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _wrapNativeSuper(t) { var r = "function" == typeof Map ? new Map() : void 0; return _wrapNativeSuper = function _wrapNativeSuper(t) { if (null === t || !_isNativeFunction(t)) return t; if ("function" != typeof t) throw new TypeError("Super expression must either be null or a function"); if (void 0 !== r) { if (r.has(t)) return r.get(t); r.set(t, Wrapper); } function Wrapper() { return _construct(t, arguments, _getPrototypeOf(this).constructor); } return Wrapper.prototype = Object.create(t.prototype, { constructor: { value: Wrapper, enumerable: !1, writable: !0, configurable: !0 } }), _setPrototypeOf(Wrapper, t); }, _wrapNativeSuper(t); }
+function _construct(t, e, r) { if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments); var o = [null]; o.push.apply(o, e); var p = new (t.bind.apply(t, o))(); return r && _setPrototypeOf(p, r.prototype), p; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _isNativeFunction(t) { try { return -1 !== Function.toString.call(t).indexOf("[native code]"); } catch (n) { return "function" == typeof t; } }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+
+var SyntaxException = /*#__PURE__*/function (_Error) {
+  function SyntaxException(message) {
+    var _this;
+    _classCallCheck(this, SyntaxException);
+    _this = _callSuper(this, SyntaxException, [message]); // Pass message to base Error
+    _this.name = "Filter Syntax Exception"; // Set error name
+    return _this;
+  }
+  _inherits(SyntaxException, _Error);
+  return _createClass(SyntaxException);
+}(/*#__PURE__*/_wrapNativeSuper(Error));
+var TypeException = /*#__PURE__*/function (_Error2) {
+  function TypeException(message) {
+    var _this2;
+    _classCallCheck(this, TypeException);
+    _this2 = _callSuper(this, TypeException, [message]); // Pass message to base Error
+    _this2.name = "Filter Type Exception"; // Set error name
+    return _this2;
+  }
+  _inherits(TypeException, _Error2);
+  return _createClass(TypeException);
+}(/*#__PURE__*/_wrapNativeSuper(Error));
+var ValidationError = /*#__PURE__*/function (_Error3) {
+  function ValidationError(message) {
+    var _this3;
+    _classCallCheck(this, ValidationError);
+    _this3 = _callSuper(this, ValidationError, [message]); // Pass message to base Error
+    _this3.name = "Filter Validation Error"; // Set error name
+    return _this3;
+  }
+  _inherits(ValidationError, _Error3);
+  return _createClass(ValidationError);
+}(/*#__PURE__*/_wrapNativeSuper(Error)); //should only be called on strings of the form 'str(...)' or 'num(...)' etc. the string must end with the enclosure char, otherwise it will throw a SyntaxException.
+function retrieveEnclosure(string) {
+  var open_char = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '(';
+  var close_char = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ')';
+  if (open_char === close_char) {
+    throw new Error("Enclosure characters must be different: ".concat(open_char, " = ").concat(close_char));
+  }
+  var started = false;
+  var count = 0;
+  var output = "";
+  var _iterator = _createForOfIteratorHelper(_toConsumableArray(string).entries()),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _step$value = _slicedToArray(_step.value, 2),
+        index = _step$value[0],
+        _char = _step$value[1];
+      if (_char === open_char) {
+        count += 1;
+        if (!started) {
+          started = true;
+          continue;
+        }
+      } else if (_char === close_char) {
+        count -= 1;
+      }
+      if (count === 0 && started) {
+        if (index != string.length - 1) {
+          throw new SyntaxException("Enclosure should not be resolved before end of string; resolved at index: ".concat(index, "; input string: ").concat(string));
+        }
+        return output;
+      } else if (count < 0) {
+        throw new SyntaxException("Unbalanced enclosure at index: ".concat(index, " of input string: ").concat(string, "; balance of \"").concat(open_char, "...").concat(close_char, "\" enclosures became negative."));
+      } else if (started) {
+        output += _char;
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  ;
+  if (!started) {
+    throw new SyntaxException("Enclosure of type ".concat(open_char, "...").concat(close_char, " not found in string; input string: ").concat(string));
+  } else if (count > 0) {
+    throw new SyntaxException("Enclosure could not be resolved; too many '".concat(close_char, "'; balance = +{count}; input string {string}"));
+  }
+}
+
+// retrieves comma separated arguments from a string; used for clause operators; input should be of the form 'fn(arg1, arg2,...)' where fn is a clause fn
+function retrieveArgs(string) {
+  var open_parenthese_count = 0;
+  var args = [];
+  var arg = "";
+  var _iterator2 = _createForOfIteratorHelper(string),
+    _step2;
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var _char2 = _step2.value;
+      if (_char2 === '(') {
+        open_parenthese_count += 1;
+        if (open_parenthese_count === 1) {
+          continue;
+        }
+      } else if (_char2 === ')') {
+        open_parenthese_count -= 1;
+      }
+      if (open_parenthese_count === 1 && _char2 === ',') {
+        args.push(arg.trim());
+        arg = "";
+      } else if (open_parenthese_count >= 1) {
+        arg += _char2;
+      }
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+  if (arg.trim()) {
+    args.push(arg.trim());
+  }
+  return args;
+}
+var ENCLOSURE_MAP = {
+  '(': ')',
+  '{': '}',
+  '"': '"',
+  "'": "'"
+};
+var REVERSE_ENCLOSURE_MAP = Object.fromEntries(Object.entries(ENCLOSURE_MAP).filter(function (_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+    k = _ref2[0],
+    v = _ref2[1];
+  return k !== v;
+}).map(function (_ref3) {
+  var _ref4 = _slicedToArray(_ref3, 2),
+    k = _ref4[0],
+    v = _ref4[1];
+  return [v, k];
+}));
+function tokenizeWithNestedEnclosures(input) {
+  var splitChars = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : " ";
+  var enclosureLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var trim = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+  var tokens = [];
+  var current = '';
+  var stack = [];
+  for (var i = 0; i < input.length; i++) {
+    var _char3 = input[i];
+
+    //console.log(`Processing char ${char} at position ${i}; current string: ${current}; tokens: ${tokens}`);
+
+    if (splitChars.includes(_char3) && stack.length === enclosureLevel) {
+      if (current) {
+        tokens.push(trim ? current.trim() : current);
+        current = '';
+      }
+    } else {
+      if (REVERSE_ENCLOSURE_MAP[_char3]) {
+        var expected = REVERSE_ENCLOSURE_MAP[_char3];
+        if (stack.length > enclosureLevel) {
+          current += _char3;
+        }
+        if (stack[stack.length - 1] === expected) {
+          stack.pop();
+        } else {
+          throw new Error("Unbalanced closing bracket at position ".concat(i));
+        }
+      } else {
+        if (stack.length >= enclosureLevel) {
+          current += _char3;
+        }
+        if (ENCLOSURE_MAP[_char3]) {
+          if (stack[stack.length - 1] === ENCLOSURE_MAP[_char3] && _char3 === ENCLOSURE_MAP[_char3]) {
+            stack.pop();
+          } else {
+            stack.push(_char3);
+          }
+        }
+      }
+    }
+  }
+  if (stack.length > 0) {
+    throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: ", stack);
+  }
+  if (current) {
+    tokens.push(trim ? current.trim() : current);
+  }
+  return tokens;
+}
+function getCharCounts(str) {
+  var counts = {};
+  var _iterator3 = _createForOfIteratorHelper(str),
+    _step3;
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var _char4 = _step3.value;
+      counts[_char4] = (counts[_char4] || 0) + 1;
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+  return counts;
+}
+function parseDate(dateStr) {
+  if (!_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.test(dateStr)) {
+    throw new SyntaxException("Invalid date; must be in the format: YYYY-MM-DD ( regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.source, " ); got: '").concat(dateStr, "'"));
+  }
+  var isoDateStr = dateStr.split(" ")[0];
+  var date = new Date("".concat(isoDateStr, "T00:00:00"));
+
+  // Check if valid date
+  if (isNaN(date.getTime())) {
+    throw new SyntaxException("Invalid date; could not be parsed as a valid date; got: '".concat(dateStr, "'"));
+  }
+
+  // Check if parsed date matches passed in string
+  var dateString = date.toISOString().split('T')[0];
+  var _dateString$split$map = dateString.split('-').map(Number),
+    _dateString$split$map2 = _slicedToArray(_dateString$split$map, 3),
+    year = _dateString$split$map2[0],
+    month = _dateString$split$map2[1],
+    day = _dateString$split$map2[2];
+  if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+    throw new SyntaxException("Invalid date; parsed date: ".concat(date.toISOString(), " does not match passed in string: ").concat(isoDateStr));
+  }
+  console.log("Parsed date: ".concat(date.toISOString(), " ; ").concat(date.constructor.name));
+  return date;
+}
+function tryConvert(convertFnc, typeName, value) {
+  var errMSG = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  if (errMSG === null) {
+    errMSG = "Could not convert ".concat(value, " to ").concat(typeName);
+  }
+  try {
+    return convertFnc(value);
+  } catch (err) {
+    throw new TypeException("".concat(errMSG, ": ").concat(err.message));
+  }
+}
+var Futils = {
+  SyntaxException: SyntaxException,
+  TypeException: TypeException,
+  ValidationError: ValidationError,
+  retrieveEnclosure: retrieveEnclosure,
+  retrieveArgs: retrieveArgs,
+  getCharCounts: getCharCounts,
+  tokenizeWithNestedEnclosures: tokenizeWithNestedEnclosures,
+  parseDate: parseDate,
+  tryConvert: tryConvert
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Futils);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/hero-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/e7/hero-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _e7_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7-utils.js */ "./static/assets/js/e7/e7-utils.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+var FODDER_NAME = "Fodder";
+var EMPTY_NAME = "Empty";
+
+// This function adds two heroes to the Hero Manager to account for fodder champions and empty picks/prebans
+function addNonHeroes(HM) {
+  var next_index = HM.heroes.length;
+  var Empty = {
+    attribute_cd: "N/A",
+    code: "N/A",
+    grade: "N/A",
+    job_cd: "N/A",
+    name: EMPTY_NAME,
+    prime: 1
+  };
+  var Fodder = {
+    attribute_cd: "N/A",
+    code: "N/A",
+    grade: "2/3",
+    job_cd: "N/A",
+    name: FODDER_NAME,
+    prime: _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[next_index]
+  };
+  HM.heroes.push(Empty);
+  HM.heroes.push(Fodder);
+  HM.Fodder = Fodder;
+  HM.Empty = Empty;
+  return HM;
+}
+
+// add lookup dicts to the hero manager so that we can perform efficient lookups
+function addDicts(HM) {
+  console.log("Adding Lookup Dicts");
+  console.log("\tAdding name lookup");
+  HM.name_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.name.toLowerCase().replace(/\s+/g, "")] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding prime lookup");
+  HM.prime_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.prime] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding code lookup");
+  HM.code_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.code] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding prime pair lookup");
+  var prime_pair_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.prime] = hero.name;
+    return acc;
+  }, {});
+  var numKeys = Object.keys(HM.prime_lookup).length - 1; // subtract 1 since we don't consider Empty hero
+  console.log("\tAdding prime pair lookup; primes to process", numKeys);
+  for (var i = 0; i < numKeys - 1; i++) {
+    var prime = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[i];
+    for (var j = i + 1; j < numKeys; j++) {
+      var prime2 = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[j];
+      var product = prime * prime2;
+      var name1 = HM.prime_lookup[prime].name;
+      var name2 = HM.prime_lookup[prime2].name;
+      prime_pair_lookup[product] = [name1, name2].sort().join(", ");
+    }
+  }
+  //capture case where two fodder heroes
+  prime_pair_lookup[HM.Fodder.prime * HM.Fodder.prime] = [HM.Fodder.name, HM.Fodder.prime];
+
+  //set prime pair lookup dict in HM and return
+  HM.prime_pair_lookup = prime_pair_lookup;
+  return HM;
+}
+var HeroManager = {
+  getHeroManager: function () {
+    var _getHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 4;
+            break;
+          case 3:
+            _t3 = this.fetchAndCacheHeroManager();
+          case 4:
+            return _context.a(2, _t3);
+        }
+      }, _callee, this);
+    }));
+    function getHeroManager() {
+      return _getHeroManager.apply(this, arguments);
+    }
+    return getHeroManager;
+  }(),
+  createHeroManager: function createHeroManager(rawHeroList) {
+    // add prime identifier to each hero so that we can represent a set as a product of primes
+    var _iterator = _createForOfIteratorHelper(rawHeroList.entries()),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var _step$value = _slicedToArray(_step.value, 2),
+          index = _step$value[0],
+          heroData = _step$value[1];
+        var prime = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[index];
+        heroData.prime = prime;
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    var HM = {
+      heroes: rawHeroList
+    };
+    HM = addNonHeroes(HM); //should not be called again
+    HM = addDicts(HM); // Must come after addNonHeroes so that empty/fodder are added to the dicts
+    return HM;
+  },
+  fetchHeroManager: function () {
+    var _fetchHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var _yield$E7API$fetchHer;
+      var heroJSON, enHeroList, HM, _t4, _t5, _t6;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_4__["default"].fetchHeroJSON();
+          case 1:
+            _t5 = _yield$E7API$fetchHer = _context2.v;
+            _t4 = _t5 !== null;
+            if (!_t4) {
+              _context2.n = 2;
+              break;
+            }
+            _t4 = _yield$E7API$fetchHer !== void 0;
+          case 2:
+            if (!_t4) {
+              _context2.n = 3;
+              break;
+            }
+            _t6 = _yield$E7API$fetchHer;
+            _context2.n = 5;
+            break;
+          case 3:
+            _context2.n = 4;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__["default"].fetchHeroData();
+          case 4:
+            _t6 = _context2.v;
+          case 5:
+            heroJSON = _t6;
+            enHeroList = heroJSON.en; //get english hero list
+            HM = this.createHeroManager(enHeroList);
+            console.log("Created HeroManager using raw data received from server");
+            return _context2.a(2, HM);
+        }
+      }, _callee2, this);
+    }));
+    function fetchHeroManager() {
+      return _fetchHeroManager.apply(this, arguments);
+    }
+    return fetchHeroManager;
+  }(),
+  fetchAndCacheHeroManager: function () {
+    var _fetchAndCacheHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      var HM;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            console.log("HeroManager not found in cache, fetching from server and caching it");
+            _context3.n = 1;
+            return this.fetchHeroManager();
+          case 1:
+            HM = _context3.v;
+            _context3.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER, HM);
+          case 2:
+            console.log("Cached HeroManager using raw data recieved from server");
+            (0,_e7_utils_js__WEBPACK_IMPORTED_MODULE_1__.printObjStruct)(HM);
+            return _context3.a(2, HM);
+        }
+      }, _callee3, this);
+    }));
+    function fetchAndCacheHeroManager() {
+      return _fetchAndCacheHeroManager.apply(this, arguments);
+    }
+    return fetchAndCacheHeroManager;
+  }(),
+  deleteHeroManager: function () {
+    var _deleteHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER);
+          case 1:
+            console.log("Removed hero manager from cache");
+          case 2:
+            return _context4.a(2);
+        }
+      }, _callee4);
+    }));
+    function deleteHeroManager() {
+      return _deleteHeroManager.apply(this, arguments);
+    }
+    return deleteHeroManager;
+  }(),
+  getHeroByName: function getHeroByName(name, HM) {
+    var _HM$name_lookup$norma;
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    } else if (!name) {
+      return HM.Empty;
+    }
+    var normalizedName = name.toLowerCase().replace(/\s+/g, "");
+    return (_HM$name_lookup$norma = HM.name_lookup[normalizedName]) !== null && _HM$name_lookup$norma !== void 0 ? _HM$name_lookup$norma : null;
+  },
+  getHeroByPrime: function getHeroByPrime(prime, HM) {
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    }
+    return HM.prime_lookup[prime];
+  },
+  getHeroByCode: function getHeroByCode(code, HM) {
+    var _HM$code_lookup$code;
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    } else if (!code) {
+      return HM.Empty;
+    }
+    return (_HM$code_lookup$code = HM.code_lookup[code]) !== null && _HM$code_lookup$code !== void 0 ? _HM$code_lookup$code : null;
+  },
+  getPairNamesByProduct: function getPairNamesByProduct(product, HM) {
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    }
+    return HM.prime_pair_lookup[product];
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HeroManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/plots.js":
+/*!**************************************!*\
+  !*** ./static/assets/js/e7/plots.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   generateRankPlot: () => (/* binding */ generateRankPlot)
+/* harmony export */ });
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function generateRankPlot(battles, user) {
+  var filteredBattles = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var zoomFiltered = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+  // Sort battles chronologically by time
+  // console.log("Creating plot HTML for:", JSON.stringify(battles));
+  // console.log("received Filtered Battles:", JSON.stringify(filteredBattles));
+  battles.sort(function (a, b) {
+    return new Date(a["Date/Time"]) - new Date(b["Date/Time"]);
+  });
+
+  // if the user is not passed, default the username to the ID of the player
+  if (!user) {
+    user = {
+      name: "UID: ".concat(battles[0]["P1 ID"])
+    };
+  }
+  var markerDefaultColor = '#0df8fd';
+  var markerFilteredColor = '#ff9900';
+  var x = battles.map(function (_, i) {
+    return i;
+  });
+  var y = battles.map(function (b) {
+    return b["P1 Points"];
+  });
+  var markerMask = [];
+  var zoom = {
+    startX: null,
+    endX: null,
+    startY: null,
+    endY: null
+  };
+  var zoomYPadding = 50;
+  var zoomXPadding = 0.5;
+
+  // iterate through battles and build list to color filtered battles distinctly 
+  // and determine the area to zoom on if needed
+  var _iterator = _createForOfIteratorHelper(battles.entries()),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _step$value = _slicedToArray(_step.value, 2),
+        idx = _step$value[0],
+        battle = _step$value[1];
+      if (filteredBattles && battle["Seq Num"] in filteredBattles) {
+        if (zoomFiltered === true) {
+          zoom.startX = idx < zoom.startX || zoom.startX === null ? idx - zoomXPadding : zoom.startX;
+          zoom.startY = battle["P1 Points"] < zoom.startY + zoomYPadding || zoom.startY === null ? battle["P1 Points"] - zoomYPadding : zoom.startY;
+          zoom.endX = idx > zoom.endX || zoom.endX === null ? idx + zoomXPadding : zoom.endX;
+          zoom.endY = battle["P1 Points"] > zoom.endY - zoomYPadding || zoom.endY === null ? battle["P1 Points"] + zoomYPadding : zoom.endY;
+        }
+        markerMask.push(markerFilteredColor);
+      } else {
+        markerMask.push(markerDefaultColor);
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  ;
+  var customdata = battles.map(function (b) {
+    return [b["Date/Time"].slice(0, 10),
+    // date
+    b["P1 League"] // league
+    ];
+  });
+  var trace = {
+    x: x,
+    y: y,
+    mode: 'lines+markers',
+    line: {
+      color: '#4f9293',
+      width: 2
+    },
+    marker: {
+      symbol: 'circle',
+      size: 4,
+      color: markerMask
+    },
+    customdata: customdata,
+    hovertemplate: 'Points: %{y}<br>' + 'Date: %{customdata[0]}<br>' + 'League: %{customdata[1]}<extra></extra>'
+  };
+  var layout = {
+    autosize: true,
+    font: {
+      family: 'Roboto, Open Sans'
+    },
+    title: {
+      text: "".concat(user.name, "'s RTA Point Plot"),
+      font: {
+        size: 24,
+        color: '#dddddd'
+      },
+      xanchor: 'center',
+      yanchor: 'top',
+      y: 0.95,
+      x: 0.5
+    },
+    xaxis: {
+      title: {
+        text: 'Battle Number (Chronological)',
+        font: {
+          size: 18,
+          color: '#dddddd'
+        }
+      },
+      showgrid: true,
+      gridcolor: '#8d8d8d',
+      zeroline: false,
+      tickfont: {
+        size: 12,
+        color: '#dddddd'
+      },
+      range: zoom.startX ? [zoom.startX, zoom.endX] : null
+    },
+    yaxis: {
+      title: {
+        text: 'Victory Points',
+        font: {
+          size: 18,
+          color: '#dddddd'
+        }
+      },
+      showgrid: true,
+      gridcolor: '#8d8d8d',
+      zeroline: true,
+      zerolinecolor: '#dddddd',
+      zerolinewidth: 2,
+      tickfont: {
+        size: 12,
+        color: '#dddddd'
+      },
+      range: zoom.startY ? [zoom.startY, zoom.endY] : null
+    },
+    plot_bgcolor: '#1e222d',
+    paper_bgcolor: '#1e222d'
+  };
+  var config = {
+    responsive: true
+  };
+
+  // Generate HTML string
+  var divId = "rank-plot-container";
+  var containerDiv = "<div id=\"".concat(divId, "\"></div>");
+  var plotScript = "\n<script>\n    Plotly.newPlot('".concat(divId, "', [").concat(JSON.stringify(trace), "], ").concat(JSON.stringify(layout), ", ").concat(JSON.stringify(config), ");\n</script>\n");
+  return containerDiv + plotScript;
+}
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/references.js":
+/*!*******************************************!*\
+  !*** ./static/assets/js/e7/references.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   COLUMNS: () => (/* binding */ COLUMNS),
+/* harmony export */   COLUMNS_EXPANDED: () => (/* binding */ COLUMNS_EXPANDED),
+/* harmony export */   COLUMNS_MAP: () => (/* binding */ COLUMNS_MAP),
+/* harmony export */   EQUIPMENT_SET_MAP: () => (/* binding */ EQUIPMENT_SET_MAP),
+/* harmony export */   LEAGUE_MAP: () => (/* binding */ LEAGUE_MAP),
+/* harmony export */   ONE_DAY: () => (/* binding */ ONE_DAY),
+/* harmony export */   PRIMES: () => (/* binding */ PRIMES),
+/* harmony export */   WORLD_CODES: () => (/* binding */ WORLD_CODES),
+/* harmony export */   WORLD_CODE_ENUM: () => (/* binding */ WORLD_CODE_ENUM),
+/* harmony export */   WORLD_CODE_TO_CLEAN_STR: () => (/* binding */ WORLD_CODE_TO_CLEAN_STR)
+/* harmony export */ });
+var WORLD_CODES = new Set(["world_kor", "world_global", "world_jpn", "world_asia", "world_eu"]);
+var WORLD_CODE_ENUM = {
+  GLOBAL: "world_global",
+  KOR: "world_kor",
+  JPN: "world_jpn",
+  ASIA: "world_asia",
+  EU: "world_eu"
+};
+var WORLD_CODE_TO_CLEAN_STR = {
+  "world_global": "Global",
+  "world_kor": "Korea",
+  "world_jpn": "Japan",
+  "world_asia": "Asia",
+  "world_eu": "Europe"
+};
+var EQUIPMENT_SET_MAP = {
+  "set_speed": "Speed",
+  "set_acc": "Hit",
+  "set_cri": "Crit",
+  "set_res": "Resist",
+  "set_def": "Defense",
+  "set_att": "Attack",
+  "set_max_hp": "HP",
+  "set_cri_dmg": "Crit DMG",
+  "set_coop": "Unity",
+  "set_immune": "Immunity",
+  "set_rage": "Rage",
+  "set_vampire": "Lifesteal",
+  "set_shield": "Protection",
+  "set_revenge": "Revenge",
+  "set_penetrate": "Penetration",
+  "set_torrent": "Torrent",
+  "set_counter": "Counter",
+  "set_scar": "Injury"
+};
+var ONE_DAY = 1000 * 60 * 60 * 24;
+var LEAGUE_MAP = {
+  "bronze": 0,
+  "silver": 1,
+  "gold": 2,
+  "master": 3,
+  "challenger": 4,
+  "champion": 5,
+  "warlord": 6,
+  "emperor": 7,
+  "legend": 8
+};
+var COLUMNS = ["Date/Time", "Seq Num", "P1 ID", "P1 Server", "P1 League", "P1 Points", "P2 ID", "P2 Server", "P2 League", "Win", "First Pick", "P1 Preban 1", "P1 Preban 2", "P2 Preban 1", "P2 Preban 2", "P1 Pick 1", "P1 Pick 2", "P1 Pick 3", "P1 Pick 4", "P1 Pick 5", "P2 Pick 1", "P2 Pick 2", "P2 Pick 3", "P2 Pick 4", "P2 Pick 5", "P1 Postban", "P2 Postban"];
+var COLUMNS_EXPANDED = ["Season", "Date/Time", "Seconds", "Turns", "Seq Num", "P1 ID", "P1 Server", "P2 ID", "P2 Server", "P1 League", "P2 League", "P1 Points", "Point Gain", "Win", "First Pick", "CR Bar", "First Turn", "First Turn Hero", "P1 Prebans", "P2 Prebans", "P1 Picks", "P2 Picks", "P1 Postban", "P2 Postban", "P1 Equipment", "P2 Equipment", "P1 Artifacts", "P2 Artifacts", "P1 MVP", "P2 MVP"];
+var COLUMNS_MAP = {
+  SEASON: "Season",
+  DATE_TIME: "Date/Time",
+  SECONDS: "Seconds",
+  TURNS: "Turns",
+  SEQ_NUM: "Seq Num",
+  P1_ID: "P1 ID",
+  P1_SERVER: "P1 Server",
+  P2_ID: "P2 ID",
+  P2_SERVER: "P2 Server",
+  P1_LEAGUE: "P1 League",
+  P2_LEAGUE: "P2 League",
+  P1_POINTS: "P1 Points",
+  POINT_GAIN: "Point Gain",
+  WIN: "Win",
+  FIRST_PICK: "First Pick",
+  CR_BAR: "CR Bar",
+  FIRST_TURN: "First Turn",
+  FIRST_TURN_HERO: "First Turn Hero",
+  P1_PREBANS: "P1 Prebans",
+  P2_PREBANS: "P2 Prebans",
+  P1_PICKS: "P1 Picks",
+  P2_PICKS: "P2 Picks",
+  P1_POSTBAN: "P1 Postban",
+  P2_POSTBAN: "P2 Postban",
+  P1_EQUIPMENT: "P1 Equipment",
+  P2_EQUIPMENT: "P2 Equipment",
+  P1_ARTIFACTS: "P1 Artifacts",
+  P2_ARTIFACTS: "P2 Artifacts",
+  P1_MVP: "P1 MVP",
+  P2_MVP: "P2 MVP",
+  P1_PICKS_PRIMES: "P1 Picks Primes",
+  P1_PICKS_PRIME_PRODUCT: "P1 Picks Prime Product",
+  P2_PICKS_PRIMES: "P2 Picks Primes",
+  P2_PICKS_PRIME_PRODUCT: "P2 Picks Prime Product",
+  P1_PREBANS_PRIMES: "P1 Prebans Primes",
+  P1_PREBANS_PRIME_PRODUCT: "P1 Prebans Prime Product",
+  P2_PREBANS_PRIMES: "P2 Prebans Primes",
+  P2_PREBANS_PRIME_PRODUCT: "P2 Prebans Prime Product"
+};
+
+/**
+ * Generates a list of all prime numbers up to and including the given limit.
+ *
+ * Uses the Sieve of Eratosthenes algorithm to generate the list.
+ * 
+ * Primes are used to represent as prime identifier allowing us to represent a set as a product of primes
+ *
+ * @param {number} limit - The upper limit of the prime numbers to generate. Must be a positive integer.
+ * @returns {number[]} - A list of all prime numbers up to and including the given limit.
+ */
+function getPrimes(limit) {
+  var sieve = new Uint8Array(limit + 1);
+  var primes = [];
+  for (var i = 2; i <= limit; i++) {
+    if (!sieve[i]) {
+      primes.push(i);
+      for (var j = i * i; j <= limit; j += i) {
+        sieve[j] = 1;
+      }
+    }
+  }
+  return primes;
+}
+var PRIMES = getPrimes(30000);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/regex.js":
+/*!**************************************!*\
+  !*** ./static/assets/js/e7/regex.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RegExps: () => (/* binding */ RegExps)
+/* harmony export */ });
+function padRegex(pattern) {
+  var flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "i";
+  return new RegExp("^(?:".concat(pattern.source, ")(?=[,)\\s;]|$)"), flags);
+}
+function anchorExp(pattern) {
+  var flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "i";
+  return new RegExp("^(?:".concat(pattern.source, ")$"), flags);
+}
+var VALID_STRING_RE = /[a-z][a-z0-9.\s]*/i;
+var VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
+var EMPTY_SET_RE = /\{\s*\}/;
+var VALID_INT_RE = /\d+/;
+var VALID_SEASON_RE = /season-[1-9]+[0-9]*(\.[1-9]*)?|current-season/i;
+var VALID_GLOBAL_FILTER_RE = /last-n\(\d+\)/i;
+var VALID_DATE_LITERAL_RE = new RegExp("^".concat(VALID_DATE_RE.source, "$"), "i");
+var VALID_INT_LITERAL_RE = /^\d+$/;
+var VALID_BOOL_LITERAL_RE = /^(true|false)$/i;
+var VALID_DATA_WORD_RE = new RegExp("(?:".concat(VALID_SEASON_RE.source, ")"), "i");
+var VALID_FIELD_WORD_RE = /(?:date|is-first-pick|is-win|victory-points|p1.picks|p1.prebans|p2.prebans|prebans|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league|p1.postban|p2.postban|p1.server|p2.server)/i;
+
+//consts without RE are used for injecting into regex patterns
+var STR = VALID_STRING_RE.source;
+var INT = VALID_INT_RE.source;
+var DATE = VALID_DATE_RE.source;
+var FIELD_WORD = VALID_FIELD_WORD_RE.source;
+var DATA_WORD = VALID_DATA_WORD_RE.source;
+var VALID_QUOTED_STRING_RE = new RegExp("\"(".concat(STR, ")\"|'(").concat(STR, ")'"), "i");
+var VALID_STRING_LITERAL_RE = new RegExp(anchorExp(VALID_QUOTED_STRING_RE), "i");
+var QUOTED_STR = VALID_QUOTED_STRING_RE.source;
+var SET_ELEMENT_RE = new RegExp("(?:".concat(QUOTED_STR, "|").concat(STR, "|").concat(DATE, ")"), "i");
+var VALID_DATAFIELD_RE = new RegExp("(?:".concat(FIELD_WORD, "|").concat(DATA_WORD, ")"), "i");
+var SETELT = SET_ELEMENT_RE.source;
+var VALID_SET_RE = new RegExp("\\{\\s*(?:".concat(SETELT, "\\s*)(?:,\\s*").concat(SETELT, "\\s*)*,?\\s*\\}|").concat(EMPTY_SET_RE.source), "i");
+var VALID_RANGE_RE = new RegExp("".concat(INT, "\\.\\.\\.").concat(INT, "|").concat(DATE, "\\.\\.\\.").concat(DATE, "|").concat(INT, "\\.\\.\\.=").concat(INT, "|").concat(DATE, "\\.\\.\\.=").concat(DATE));
+var VALID_RANGE_LITERAL_RE = new RegExp("^".concat(VALID_RANGE_RE.source, "$"));
+function tokenMatch(stream) {
+  if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()|LAST-N(?=\()/i)) {
+    console.log("Matched stream as clause:", stream);
+    return "keyword";
+  }
+  if (stream.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)) {
+    console.log("Matched stream as operator:", stream);
+    return "operator";
+  }
+  if (stream.match(new RegExp("[a-z0-9.\"'}=)-]".concat(VALID_DATAFIELD_RE.source, "(?=[,)\\s;]|$)"), "i"))) {
+    console.log("Matched stream as field with preceding fragment:", stream);
+    return null;
+  }
+  if (stream.match(padRegex(VALID_DATAFIELD_RE))) {
+    console.log("Matched stream as Data Field:", stream);
+    return "datafield";
+  }
+  if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
+    console.log("Matched stream as non-num null");
+    return null;
+  }
+  if (stream.match(padRegex(VALID_RANGE_RE))) {
+    console.log("Matched stream as range:", stream);
+    return "range";
+  }
+  if (stream.match(padRegex(VALID_INT_RE))) {
+    console.log("Matched stream as number:", stream);
+    return "number";
+  }
+  if (stream.match(padRegex(VALID_DATE_RE))) {
+    console.log("Matched stream as date:", stream);
+    return "date";
+  }
+  if (stream.match(padRegex(VALID_SET_RE))) {
+    console.log("Matched stream as set:", stream);
+    return "set";
+  }
+  if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
+    console.log("Matched stream as bool:", stream);
+    return "bool";
+  }
+  if (stream.match(padRegex(VALID_QUOTED_STRING_RE))) {
+    console.log("Matched stream as string:", stream);
+    return "string";
+  }
+  if (stream.match(/[\(\)\{\}\;\,]/)) {
+    console.log("Matched stream as bracket:", stream);
+    return "bracket";
+  }
+  stream.next();
+  console.log("Matched stream as null:", stream);
+  return null;
+}
+var RegExps = {
+  VALID_STRING_RE: VALID_STRING_RE,
+  VALID_DATE_RE: VALID_DATE_RE,
+  VALID_INT_RE: VALID_INT_RE,
+  EMPTY_SET_RE: EMPTY_SET_RE,
+  SET_ELEMENT_RE: SET_ELEMENT_RE,
+  VALID_SET_RE: VALID_SET_RE,
+  VALID_STRING_LITERAL_RE: VALID_STRING_LITERAL_RE,
+  VALID_DATE_LITERAL_RE: VALID_DATE_LITERAL_RE,
+  VALID_INT_LITERAL_RE: VALID_INT_LITERAL_RE,
+  VALID_BOOL_LITERAL_RE: VALID_BOOL_LITERAL_RE,
+  VALID_RANGE_RE: VALID_RANGE_RE,
+  VALID_RANGE_LITERAL_RE: VALID_RANGE_LITERAL_RE,
+  VALID_SEASON_RE: VALID_SEASON_RE,
+  VALID_SEASON_LITERAL_RE: anchorExp(VALID_SEASON_RE),
+  VALID_DATA_WORD_RE: VALID_DATA_WORD_RE,
+  VALID_DATA_WORD_LITERAL_RE: anchorExp(VALID_DATA_WORD_RE),
+  VALID_FIELD_WORD_RE: VALID_FIELD_WORD_RE,
+  VALID_DATAFIELD_RE: VALID_DATAFIELD_RE,
+  VALID_GLOBAL_FILTER_RE: VALID_GLOBAL_FILTER_RE,
+  ANCHORED_STR_LITERAL_RE: anchorExp(VALID_STRING_LITERAL_RE),
+  padRegex: padRegex,
+  anchorExp: anchorExp,
+  tokenMatch: tokenMatch
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/season-manager.js":
+/*!***********************************************!*\
+  !*** ./static/assets/js/e7/season-manager.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+// a Season record has the following fields: "Season Number", "Code", "Season", "Start", "End", "Status"
+
+var SeasonManager = {
+  fetchAndCacheSeasonDetails: function () {
+    var _fetchAndCacheSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var result, seasonDetails, preSeasonFilled, lastSeason, start, preSeason;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].fetchSeasonDetails();
+          case 1:
+            result = _context.v;
+            if (!result.error) {
+              _context.n = 2;
+              break;
+            }
+            throw new Error("Could not fetch season details: ".concat(result.error));
+          case 2:
+            seasonDetails = result.seasonDetails;
+            seasonDetails.forEach(function (season) {
+              season.range = [season["Start"], season["End"]].map(function (d) {
+                return new Date("".concat(d.split(" ")[0], "T00:00:00"));
+              });
+            });
+            seasonDetails.sort(function (a, b) {
+              return a["Season Number"] - b["Season Number"];
+            });
+
+            // add pre seasons
+            preSeasonFilled = [seasonDetails[0]];
+            lastSeason = seasonDetails[0];
+            seasonDetails.slice(1).forEach(function (season) {
+              var start = new Date(+lastSeason.range[1] + _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY),
+                end = new Date(+season.range[0] - _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY);
+              var preSeason = {
+                "Season Number": lastSeason["Season Number"] + 0.5,
+                Code: null,
+                Season: "Pre-Season: ".concat(season["Season"]),
+                Start: start.toISOString().slice(0, 10),
+                End: end.toISOString().slice(0, 10),
+                Status: "Complete",
+                range: [start, end]
+              };
+              preSeasonFilled.push(preSeason);
+              preSeasonFilled.push(season);
+              lastSeason = season;
+            });
+
+            // add another pre season if current season is complete
+            if (lastSeason.range[1] < new Date()) {
+              start = new Date(+preSeasonFilled.at(-1).range[1] + _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY);
+              preSeason = {
+                "Season Number": lastSeason["Season Number"] + 0.5,
+                Code: null,
+                Season: "Pre-Season: ".concat(season["Season"]),
+                Start: start.toISOString().slice(0, 10),
+                End: "N/A",
+                Status: "Active",
+                range: [start, new Date()]
+              };
+              preSeasonFilled.push(preSeason);
+            }
+            preSeasonFilled.reverse();
+            _context.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS, preSeasonFilled);
+          case 3:
+            return _context.a(2, preSeasonFilled);
+        }
+      }, _callee);
+    }));
+    function fetchAndCacheSeasonDetails() {
+      return _fetchAndCacheSeasonDetails.apply(this, arguments);
+    }
+    return fetchAndCacheSeasonDetails;
+  }(),
+  getSeasonDetails: function () {
+    var _getSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context2.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context2.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context2.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context2.n = 5;
+            break;
+          case 3:
+            _context2.n = 4;
+            return SeasonManager.fetchAndCacheSeasonDetails();
+          case 4:
+            _t3 = _context2.v;
+          case 5:
+            return _context2.a(2, _t3);
+        }
+      }, _callee2);
+    }));
+    function getSeasonDetails() {
+      return _getSeasonDetails.apply(this, arguments);
+    }
+    return getSeasonDetails;
+  }(),
+  clearSeasonDetails: function () {
+    var _clearSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS);
+          case 1:
+            console.log("Season details cleared from data cache");
+          case 2:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function clearSeasonDetails() {
+      return _clearSeasonDetails.apply(this, arguments);
+    }
+    return clearSeasonDetails;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SeasonManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/stats-builder.js":
+/*!**********************************************!*\
+  !*** ./static/assets/js/e7/stats-builder.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+
+
+var getWins = function getWins(battleList) {
+  return battleList.filter(function (b) {
+    return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN];
+  });
+};
+var getFirstPickSubset = function getFirstPickSubset(battleList) {
+  return battleList.filter(function (b) {
+    return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK];
+  });
+};
+var getSecondPickSubset = function getSecondPickSubset(battleList) {
+  return battleList.filter(function (b) {
+    return !b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK];
+  });
+};
+var isIncomplete = function isIncomplete(b) {
+  return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS] === 0;
+};
+function toPercent(value) {
+  return (value * 100).toFixed(2) + '%';
+}
+function queryStats(battleList, totalBattles) {
+  var gamesWon = getWins(battleList).length;
+  var gamesAppeared = battleList.length;
+  var appearanceRate = totalBattles !== 0 ? gamesAppeared / totalBattles : 0;
+  var winRate = gamesAppeared !== 0 ? gamesWon / gamesAppeared : 0;
+  return {
+    games_won: gamesWon,
+    games_appeared: gamesAppeared,
+    total_games: totalBattles,
+    appearance_rate: toPercent(appearanceRate),
+    win_rate: toPercent(winRate),
+    '+/-': 2 * gamesWon - gamesAppeared
+  };
+}
+function getHeroStats(battles, HM) {
+  var heroes = HM.heroes;
+  var battleList = Object.values(battles);
+  if (battleList.length === 0) {
+    return {
+      playerHeroStats: [],
+      enemyHeroStats: []
+    };
+  }
+  var totalBattles = battleList.length;
+  var playerHeroStats = [];
+  var enemyHeroStats = [];
+  var _iterator = _createForOfIteratorHelper(heroes),
+    _step;
+  try {
+    var _loop = function _loop() {
+      var hero = _step.value;
+      if (hero.name === HM.Empty.name) {
+        return 1; // continue
+      }
+      var prime = hero.prime;
+      var playerSubset = battleList.filter(function (b) {
+        return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] % prime === 0;
+      });
+      var enemySubset = battleList.filter(function (b) {
+        return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] % prime === 0;
+      });
+      if (playerSubset.length > 0) {
+        playerHeroStats.push(_objectSpread(_objectSpread({}, queryStats(playerSubset, totalBattles)), {}, {
+          hero: hero.name
+        }));
+      }
+      if (enemySubset.length > 0) {
+        enemyHeroStats.push(_objectSpread(_objectSpread({}, queryStats(enemySubset, totalBattles)), {}, {
+          hero: hero.name
+        }));
+      }
+    };
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      if (_loop()) continue;
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  return {
+    playerHeroStats: playerHeroStats.sort(function (b1, b2) {
+      return b1.hero.localeCompare(b2.hero);
+    }),
+    enemyHeroStats: enemyHeroStats.sort(function (b1, b2) {
+      return b1.hero.localeCompare(b2.hero);
+    })
+  };
+}
+function getFirstPickStats(battles, HM) {
+  var battleList = getFirstPickSubset(Object.values(battles));
+  console.log(battles);
+  console.log(battleList);
+  if (battleList.length === 0) {
+    return [];
+  }
+  var totalBattles = battleList.length;
+  var grouped = {};
+  var _iterator2 = _createForOfIteratorHelper(battleList),
+    _step2;
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var b = _step2.value;
+      if (b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES].length === 0) continue; // skip any battle where player didn't get to pick a first unit
+      var hero = b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES][0];
+      if (!(hero in grouped)) grouped[hero] = {
+        wins: 0,
+        appearances: 0
+      };
+      grouped[hero].wins += b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN];
+      grouped[hero].appearances += 1;
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+  var result = Object.entries(grouped).map(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+      prime = _ref2[0],
+      stats = _ref2[1];
+    console.log("prime", prime);
+    var name = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM).name;
+    return {
+      hero: name,
+      wins: stats.wins,
+      appearances: stats.appearances,
+      win_rate: toPercent(stats.wins / stats.appearances),
+      appearance_rate: toPercent(stats.appearances / totalBattles),
+      '+/-': 2 * stats.wins - stats.appearances
+    };
+  });
+  result.sort(function (a, b) {
+    return b.appearances - a.appearances;
+  });
+  return result;
+}
+function getPrebanStats(battles, HM) {
+  //console.log(`Got HM: ${HM}`);
+
+  console.log(battles);
+  var emptyPrime = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName('Empty', HM).prime;
+  var battleList = Object.values(battles);
+  if (battleList.length === 0) {
+    return [];
+  }
+  var getValidPrimes = function getValidPrimes(col, index) {
+    return _toConsumableArray(new Set(battleList.map(function (b) {
+      return b[col][index];
+    }).filter(function (p) {
+      return p && p !== emptyPrime;
+    })));
+  };
+  var preban1Set = getValidPrimes(_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES, 0);
+  var preban2Set = getValidPrimes(_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES, 1);
+  var prebanSet = new Set([].concat(_toConsumableArray(preban1Set), _toConsumableArray(preban2Set)));
+  var prebans = [];
+  var _iterator3 = _createForOfIteratorHelper(prebanSet),
+    _step3;
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var prime = _step3.value;
+      prebans.push(prime);
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+  var _iterator4 = _createForOfIteratorHelper(prebanSet),
+    _step4;
+  try {
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var a = _step4.value;
+      var _iterator5 = _createForOfIteratorHelper(prebanSet),
+        _step5;
+      try {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var b = _step5.value;
+          if (a < b) prebans.push(a * b);
+        }
+      } catch (err) {
+        _iterator5.e(err);
+      } finally {
+        _iterator5.f();
+      }
+    }
+  } catch (err) {
+    _iterator4.e(err);
+  } finally {
+    _iterator4.f();
+  }
+  console.log("Prebans:", prebans);
+  var totalBattles = battleList.length;
+  var output = [];
+  var _loop2 = function _loop2() {
+    var preban = _prebans[_i];
+    var filtered = battleList.filter(function (b) {
+      return b["P1 Prebans Prime Product"] % preban === 0;
+    });
+    var appearances = filtered.length;
+    if (appearances < 1) {
+      return 1; // continue
+    }
+    var wins = filtered.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var appearanceRate = totalBattles > 0 ? appearances / totalBattles : 0;
+    var winRate = appearances > 0 ? wins / appearances : 0;
+    var plusMinus = 2 * wins - appearances;
+    output.push({
+      preban: HM.prime_pair_lookup[preban],
+      wins: wins,
+      appearances: appearances,
+      appearance_rate: toPercent(appearanceRate),
+      win_rate: toPercent(winRate),
+      '+/-': plusMinus
+    });
+  };
+  for (var _i = 0, _prebans = prebans; _i < _prebans.length; _i++) {
+    if (_loop2()) continue;
+  }
+  output.sort(function (a, b) {
+    return b.appearances - a.appearances;
+  });
+  return output;
+}
+function getGeneralStats(battles, HM) {
+  var battleList = Object.values(battles);
+  battleList.sort(function (b1, b2) {
+    return new Date(b1["Date/Time"]) - new Date(b2["Date/Time"]);
+  });
+  var totalBattles = battleList.length;
+  var totalGain = battleList.reduce(function (acc, b) {
+    return acc + b["Point Gain"];
+  }, 0);
+  var avgPPG = totalBattles > 0 ? totalGain / totalBattles : 0;
+
+  // create subsets for first pick and second pick battles
+  var fpBattles = getFirstPickSubset(battleList);
+  var spBattles = getSecondPickSubset(battleList);
+
+  // get counts for first pick and second pick battles
+  var fpCount = fpBattles.length;
+  var spCount = spBattles.length;
+
+  // calculate wins for first pick and second pick battles
+  var fpWins = fpBattles.reduce(function (acc, b) {
+    return acc + b.Win;
+  }, 0);
+  var spWins = spBattles.reduce(function (acc, b) {
+    return acc + b.Win;
+  }, 0);
+
+  // calculate rate of occurrence for first pick and second pick battles
+  var fpR = totalBattles ? fpCount / totalBattles : 0;
+  var spR = totalBattles ? spCount / totalBattles : 0;
+
+  // calculate win rate for first pick and second pick battles
+  var fpWR = fpCount ? fpWins / fpCount : 0;
+  var spWR = spCount ? spWins / spCount : 0;
+
+  // calculate total win rate
+  var winRate = totalBattles ? (fpWins + spWins) / totalBattles : 0;
+
+  // iterate through battles and calculate longest win/loss streaks
+  var maxWinStreak = 0,
+    maxLossStreak = 0,
+    winStreak = 0,
+    lossStreak = 0;
+  for (var _i2 = 0, _battleList = battleList; _i2 < _battleList.length; _i2++) {
+    var b = _battleList[_i2];
+    if (b.Win) {
+      winStreak += 1;
+      maxWinStreak = Math.max(maxWinStreak, winStreak);
+      lossStreak = 0;
+    } else {
+      winStreak = 0;
+      lossStreak += 1;
+      maxLossStreak = Math.max(maxLossStreak, lossStreak);
+    }
+  }
+  var NA = "N/A";
+  return {
+    "first_pick_count": fpCount,
+    "second_pick_count": spCount,
+    "first_pick_rate": fpCount ? toPercent(fpR) : NA,
+    "second_pick_rate": spCount ? toPercent(spR) : NA,
+    "first_pick_winrate": fpCount ? toPercent(fpWR) : NA,
+    "second_pick_winrate": spCount ? toPercent(spWR) : NA,
+    "total_winrate": totalBattles ? toPercent(winRate) : NA,
+    "total_battles": totalBattles,
+    "total_wins": fpWins + spWins,
+    "max_win_streak": maxWinStreak,
+    "max_loss_streak": maxLossStreak,
+    "avg_ppg": avgPPG.toFixed(2)
+  };
+}
+function getServerStats(battlesList) {
+  var allServerStats = [];
+  var totalBattles = battlesList.length;
+  var _loop3 = function _loop3() {
+    var server = _Object$values[_i3];
+    var subset = battlesList.filter(function (b) {
+      return b["P2 Server"] === server;
+    });
+    var count = subset.length;
+    var wins = subset.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var winRate = count > 0 ? wins / count : "N/A";
+    var frequency = totalBattles > 0 ? count / totalBattles : "N/A";
+    var firstPickGames = subset.filter(function (b) {
+      return b["First Pick"];
+    });
+    var fpWins = firstPickGames.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var secondPickGames = subset.filter(function (b) {
+      return !b["First Pick"];
+    });
+    var spWins = secondPickGames.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    allServerStats.push({
+      server: server,
+      count: count,
+      wins: wins,
+      win_rate: toPercent(winRate),
+      frequency: toPercent(frequency),
+      "+/-": 2 * wins - count,
+      fp_games: firstPickGames.length,
+      sp_games: secondPickGames.length,
+      fp_wr: firstPickGames.length > 0 ? toPercent(fpWins / firstPickGames.length) : "N/A",
+      sp_wr: secondPickGames.length > 0 ? toPercent(spWins / secondPickGames.length) : "N/A"
+    });
+  };
+  for (var _i3 = 0, _Object$values = Object.values(_references_js__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR); _i3 < _Object$values.length; _i3++) {
+    _loop3();
+  }
+  allServerStats.sort(function (a, b) {
+    return a.server.localeCompare(b.server);
+  });
+  return allServerStats;
+}
+var StatsBuilder = {
+  getHeroStats: getHeroStats,
+  getFirstPickStats: getFirstPickStats,
+  getPrebanStats: getPrebanStats,
+  getServerStats: getServerStats,
+  getGeneralStats: getGeneralStats
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StatsBuilder);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/user-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/e7/user-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+var userMapCacheKeyMap = {
+  world_global: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.GLOBAL_USERS,
+  world_eu: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.EU_USERS,
+  world_asia: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.ASIA_USERS,
+  world_jpn: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.JPN_USERS,
+  world_kor: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.KOR_USERS
+};
+function createUser(userJSON, world_code) {
+  return {
+    id: userJSON.nick_no,
+    name: userJSON.nick_nm.toLowerCase(),
+    code: userJSON.code,
+    rank: userJSON.rank,
+    world_code: world_code
+  };
+}
+function getUserMapFromE7Server(_x) {
+  return _getUserMapFromE7Server.apply(this, arguments);
+}
+function _getUserMapFromE7Server() {
+  _getUserMapFromE7Server = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(world_code) {
+    var rawUserJSON;
+    return _regenerator().w(function (_context8) {
+      while (1) switch (_context8.n) {
+        case 0:
+          console.log("Getting user map for world code from E7 server: ".concat(world_code));
+          _context8.n = 1;
+          return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_2__["default"].fetchUserJSON(world_code);
+        case 1:
+          rawUserJSON = _context8.v;
+          if (rawUserJSON) {
+            _context8.n = 2;
+            break;
+          }
+          console.log("Could not get user map from E7 server for world code: ".concat(world_code));
+          return _context8.a(2, null);
+        case 2:
+          console.log("Got user map from E7 server for world code: ".concat(world_code));
+          return _context8.a(2, Object.fromEntries(rawUserJSON.users.map(function (user) {
+            return [user.nick_no, createUser(user, world_code)];
+          })));
+      }
+    }, _callee8);
+  }));
+  return _getUserMapFromE7Server.apply(this, arguments);
+}
+var UserManager = {
+  getUserMap: function () {
+    var _getUserMap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(world_code) {
+      var cachedUserMap, fetchedUserMap;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            console.log("Getting user map for world code: ".concat(world_code));
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].get(userMapCacheKeyMap[world_code]);
+          case 1:
+            cachedUserMap = _context.v;
+            if (!(cachedUserMap !== null)) {
+              _context.n = 2;
+              break;
+            }
+            console.log("Got user map from cache");
+            return _context.a(2, cachedUserMap);
+          case 2:
+            _context.n = 3;
+            return getUserMapFromE7Server(world_code);
+          case 3:
+            fetchedUserMap = _context.v;
+            _context.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].cache(userMapCacheKeyMap[world_code], fetchedUserMap);
+          case 4:
+            return _context.a(2, fetchedUserMap);
+        }
+      }, _callee);
+    }));
+    function getUserMap(_x2) {
+      return _getUserMap.apply(this, arguments);
+    }
+    return getUserMap;
+  }(),
+  findUser: function () {
+    var _findUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(userData) {
+      var useFlaskServer, _iterator, _step, world_code, userMap, users, user, _ref, name, _world_code, _userMap, _users, lowerCaseName, _user, flaskServerResponse, _t;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            useFlaskServer = false; // attempt to find user through client-side means
+            // try to find user by ID
+            if (!userData.id) {
+              _context2.n = 10;
+              break;
+            }
+            _iterator = _createForOfIteratorHelper(_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES);
+            _context2.p = 1;
+            _iterator.s();
+          case 2:
+            if ((_step = _iterator.n()).done) {
+              _context2.n = 6;
+              break;
+            }
+            world_code = _step.value;
+            _context2.n = 3;
+            return this.getUserMap(world_code);
+          case 3:
+            userMap = _context2.v;
+            users = Object.values(userMap);
+            if (!(users.length > 0)) {
+              console.log("User map had no users, falling back to flask server for world code: ".concat(world_code));
+              useFlaskServer = true;
+            }
+            user = users.find(function (user) {
+              return user.id === userData.id;
+            });
+            if (!user) {
+              _context2.n = 4;
+              break;
+            }
+            console.log("Found user: ".concat(JSON.stringify(user), " in world code: ").concat(world_code));
+            return _context2.a(2, {
+              user: user,
+              error: false
+            });
+          case 4:
+            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(world_code, " from client-side means"));
+          case 5:
+            _context2.n = 2;
+            break;
+          case 6:
+            _context2.n = 8;
+            break;
+          case 7:
+            _context2.p = 7;
+            _t = _context2.v;
+            _iterator.e(_t);
+          case 8:
+            _context2.p = 8;
+            _iterator.f();
+            return _context2.f(8);
+          case 9:
+            _context2.n = 15;
+            break;
+          case 10:
+            if (!(userData.name && userData.world_code)) {
+              _context2.n = 14;
+              break;
+            }
+            _ref = [userData.name, userData.world_code], name = _ref[0], _world_code = _ref[1];
+            _context2.n = 11;
+            return this.getUserMap(_world_code);
+          case 11:
+            _userMap = _context2.v;
+            _users = Object.values(_userMap);
+            if (!(_users.length > 0)) {
+              console.log("User map had no users, falling back to flask server for world code: ".concat(_world_code));
+              useFlaskServer = true;
+            }
+            lowerCaseName = name.toLowerCase();
+            _user = _users.find(function (user) {
+              return lowerCaseName === user.name.toLowerCase();
+            });
+            if (!_user) {
+              _context2.n = 12;
+              break;
+            }
+            console.log("Found user: ".concat(JSON.stringify(_user), " in world code: ").concat(_world_code));
+            return _context2.a(2, {
+              user: _user,
+              error: false
+            });
+          case 12:
+            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(_world_code, " from client-side means"));
+          case 13:
+            _context2.n = 15;
+            break;
+          case 14:
+            console.error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");
+            return _context2.a(2, {
+              user: null,
+              error: "Must pass a user object with either user.name and user.world_code or user.id to fetch user"
+            });
+          case 15:
+            if (!useFlaskServer) {
+              _context2.n = 18;
+              break;
+            }
+            console.log("Failed to find user through client-side means; falling back to flask server");
+            // failed to find user through client-side means; make request to flask server
+            _context2.n = 16;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__["default"].fetchUser(userData);
+          case 16:
+            flaskServerResponse = _context2.v;
+            if (!flaskServerResponse.error) {
+              _context2.n = 17;
+              break;
+            }
+            return _context2.a(2, {
+              user: null,
+              error: flaskServerResponse.error
+            });
+          case 17:
+            return _context2.a(2, {
+              user: flaskServerResponse.user,
+              error: false
+            });
+          case 18:
+            return _context2.a(2, {
+              user: null,
+              error: "Could not find user"
+            });
+          case 19:
+            return _context2.a(2);
+        }
+      }, _callee2, this, [[1, 7, 8, 9]]);
+    }));
+    function findUser(_x3) {
+      return _findUser.apply(this, arguments);
+    }
+    return findUser;
+  }(),
+  addP2ServersByID: function () {
+    var _addP2ServersByID = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(battles) {
+      var _this = this;
+      var battleList, userMaps, _t2;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            console.log("Adding P2 servers by ID...");
+            battleList = Object.values(battles);
+            userMaps = [];
+            _context3.p = 1;
+            _context3.n = 2;
+            return Promise.all(_toConsumableArray(_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES).map(function (world_code) {
+              return _this.getUserMap(world_code);
+            }));
+          case 2:
+            userMaps = _context3.v;
+            _context3.n = 4;
+            break;
+          case 3:
+            _context3.p = 3;
+            _t2 = _context3.v;
+            console.error(_t2);
+            battleList.forEach(function (battle) {
+              return battle["P2 Server"] = "Not Found";
+            });
+            return _context3.a(2);
+          case 4:
+            if (!(userMaps.length === 0)) {
+              _context3.n = 5;
+              break;
+            }
+            console.error("Failed to get any user maps");
+            battleList.forEach(function (battle) {
+              return battle["P2 Server"] = "Not Found";
+            });
+            return _context3.a(2);
+          case 5:
+            battleList.forEach(function (battle) {
+              var _userMaps$find;
+              var world_code = (_userMaps$find = userMaps.find(function (userMap) {
+                return userMap[battle["P2 ID"]];
+              })) === null || _userMaps$find === void 0 ? void 0 : _userMaps$find[battle["P2 ID"]].world_code;
+              if (world_code) {
+                battle["P2 Server"] = _this.convertServerStr(world_code);
+              } else {
+                console.log("Could not find user with ID: ".concat(battle["P2 ID"], " in client-side means ; typeof: ").concat(_typeof(battle["P2 ID"]), ", id type: ").concat(_typeof(Object.keys(USER_MAPS[0])[0])));
+                battle["P2 Server"] = "Not Found";
+              }
+            });
+          case 6:
+            return _context3.a(2);
+        }
+      }, _callee3, null, [[1, 3]]);
+    }));
+    function addP2ServersByID(_x4) {
+      return _addP2ServersByID.apply(this, arguments);
+    }
+    return addP2ServersByID;
+  }(),
+  setUser: function () {
+    var _setUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(userData) {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER, userData);
+          case 1:
+            return _context4.a(2);
+        }
+      }, _callee4);
+    }));
+    function setUser(_x5) {
+      return _setUser.apply(this, arguments);
+    }
+    return setUser;
+  }(),
+  getUser: function () {
+    var _getUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
+          case 1:
+            return _context5.a(2, _context5.v);
+        }
+      }, _callee5);
+    }));
+    function getUser() {
+      return _getUser.apply(this, arguments);
+    }
+    return getUser;
+  }(),
+  clearUserData: function () {
+    var _clearUserData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            _context6.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].clearUserData();
+          case 1:
+            return _context6.a(2);
+        }
+      }, _callee6);
+    }));
+    function clearUserData() {
+      return _clearUserData.apply(this, arguments);
+    }
+    return clearUserData;
+  }(),
+  clearUserDataLists: function () {
+    var _clearUserDataLists = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            _context7.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.GLOBAL_USERS);
+          case 1:
+            _context7.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.EU_USERS);
+          case 2:
+            _context7.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.ASIA_USERS);
+          case 3:
+            _context7.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.JPN_USERS);
+          case 4:
+            _context7.n = 5;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.KOR_USERS);
+          case 5:
+            return _context7.a(2);
+        }
+      }, _callee7);
+    }));
+    function clearUserDataLists() {
+      return _clearUserDataLists.apply(this, arguments);
+    }
+    return clearUserDataLists;
+  }(),
+  convertServerStr: function convertServerStr(serverStr) {
+    return _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_TO_CLEAN_STR[serverStr];
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserManager);
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!****************************************!*\
+  !*** ./static/assets/js/pages/test.js ***!
+  \****************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _content_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../content-manager.js */ "./static/assets/js/content-manager.js");
+/* harmony import */ var _e7_battle_transform_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../e7/battle-transform.js */ "./static/assets/js/e7/battle-transform.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+  var global_users, first_ten, user, response, HM, artifacts, data, rawBattles, formattedBattles;
+  return _regenerator().w(function (_context) {
+    while (1) switch (_context.n) {
+      case 0:
+        _context.n = 1;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].ClientCache.clearUserData();
+      case 1:
+        _context.n = 2;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].UserManager.getUserMap("world_global");
+      case 2:
+        global_users = _context.v;
+        first_ten = Object.values(global_users).slice(0, 10);
+        console.log(first_ten);
+        _context.n = 3;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].UserManager.findUser({
+          id: "195863691"
+        });
+      case 3:
+        user = _context.v;
+        _context.n = 4;
+        return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].rsFetchBattleData(user.user);
+      case 4:
+        response = _context.v;
+        _context.n = 5;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].HeroManager.getHeroManager();
+      case 5:
+        HM = _context.v;
+        _context.n = 6;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].ArtifactManager.getArtifacts();
+      case 6:
+        artifacts = _context.v;
+        console.log("Got artifacts: ".concat(JSON.stringify(artifacts)));
+        if (!response.ok) {
+          _context.n = 8;
+          break;
+        }
+        _context.n = 7;
+        return response.json();
+      case 7:
+        data = _context.v;
+        console.log(data);
+        rawBattles = data.battles;
+        formattedBattles = (0,_e7_battle_transform_js__WEBPACK_IMPORTED_MODULE_3__.buildFormattedBattleMap)(rawBattles, HM, artifacts);
+        console.log(formattedBattles);
+        _context.n = 9;
+        break;
+      case 8:
+        console.error("Error:", response.error);
+      case 9:
+        return _context.a(2);
+    }
+  }, _callee);
+})));
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=test.bundle.js.map

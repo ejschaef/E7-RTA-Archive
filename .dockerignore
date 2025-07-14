@@ -10,6 +10,7 @@ node_modules/
 .gitignore
 .vscode
 test.py
+commits.txt
 
 apps/static/assets/node_modules
 apps/static/assets/yarn.lock

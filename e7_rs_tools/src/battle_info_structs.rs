@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use pyo3::{ffi::PyAsyncGen_CheckExact, prelude::*, types::PyDict};
+use pyo3::{prelude::*, types::PyDict};
 use crate::deserializers::{wrap_and_deserialize, from_str};
 
 
@@ -82,8 +82,8 @@ pub struct BattleStatsBundle {
     pub p2_picks: Vec<String>,
     pub p1_mvp: Option<String>,
     pub p2_mvp: Option<String>,
-    pub p1_postbanned: Option<String>,
-    pub p2_postbanned: Option<String>,
+    pub p1_postban: Option<String>,
+    pub p2_postban: Option<String>,
     pub p1_equipment: Vec<Vec<String>>,
     pub p2_equipment: Vec<Vec<String>>,
     pub cr_bar: Vec<(String, i8)>,
@@ -109,7 +109,7 @@ impl BattleStatsBundle {
             date_time: entry.battle_day,
             season_name: entry.season_name,
             seq_num: entry.battle_seq,
-            win: entry.iswin, // will be either 1 or 2 so we will always check for 1 to align with normal bool behavior
+            win: if entry.iswin == 1 {1} else {0},
             first_pick: first_pick,
             turns: entry.turn,
             seconds: entry.battle_time,
@@ -125,8 +125,8 @@ impl BattleStatsBundle {
             p2_picks: p2_picks,
             p1_mvp: p1_mvp,
             p2_mvp: p2_mvp,
-            p1_postbanned: p1_postban,
-            p2_postbanned: p2_postban,
+            p1_postban: p1_postban,
+            p2_postban: p2_postban,
             p1_equipment: p1_equipment,
             p2_equipment: p2_equipment,
             cr_bar: cr_bar,
@@ -152,6 +152,7 @@ impl IntoPy<PyObject> for BattleStatsBundle {
         dict.set_item("seconds", self.seconds).unwrap();
         dict.set_item("p1_id", self.p1_id).unwrap();
         dict.set_item("p2_id", self.p2_id).unwrap();
+        dict.set_item("p1_server", self.p1_server).unwrap();
         dict.set_item("p2_server", self.p2_server).unwrap();
         dict.set_item("p1_league", self.p1_league).unwrap();
         dict.set_item("p2_league", self.p2_league).unwrap();
@@ -161,8 +162,8 @@ impl IntoPy<PyObject> for BattleStatsBundle {
         dict.set_item("p2_picks", self.p2_picks).unwrap();
         dict.set_item("p1_mvp", self.p1_mvp).unwrap();
         dict.set_item("p2_mvp", self.p2_mvp).unwrap();
-        dict.set_item("p1_postbanned", self.p1_postbanned).unwrap();
-        dict.set_item("p2_postbanned", self.p2_postbanned).unwrap();
+        dict.set_item("p1_postban", self.p1_postban).unwrap();
+        dict.set_item("p2_postban", self.p2_postban).unwrap();
         dict.set_item("p1_equipment", self.p1_equipment).unwrap();
         dict.set_item("p2_equipment", self.p2_equipment).unwrap();
         dict.set_item("cr_bar", self.cr_bar).unwrap();
@@ -178,7 +179,7 @@ impl IntoPy<PyObject> for BattleStatsBundle {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #[derive(Debug, Deserialize, Serialize)]
-struct Deck {
+pub struct Deck {
     pub hero_list: Vec<HeroPick>,
     pub preban_list: Vec<String>,
 }
@@ -189,11 +190,7 @@ impl Deck {
     }
 }
 
-struct DeckStatsBundle {
-    pub mvp: Option<String>,
-    pub post_banned: Option<String>,
-    pub prebans: Vec<String>,
-}
+struct DeckStatsBundle {}
 
 impl DeckStatsBundle {
 
@@ -218,13 +215,13 @@ impl DeckStatsBundle {
 
 
 #[derive(Debug, Deserialize, Serialize)]
-struct PrebanList {
+pub struct PrebanList {
     pub preban_list: Vec<String>
 }
 
 
 #[derive(Debug, Deserialize, Serialize)]
-struct HeroPick {
+pub struct HeroPick {
     pub ban: u8,
     pub first_pick: u8,
     pub hero_code: String,
@@ -236,16 +233,13 @@ struct HeroPick {
 
 
 #[derive(Debug, Deserialize, Serialize)]
-struct MyScoreInfo {
+pub struct MyScoreInfo {
     pub up_down_score: i16,
     pub up_down_type: i16,
     pub win_score: i16,
 }
 
-struct ScoreInfoStatsBundle {
-    pub point_delta: i16,
-    pub win_score: i16
-}
+struct ScoreInfoStatsBundle {}
 
 impl ScoreInfoStatsBundle {
     
@@ -265,17 +259,11 @@ impl ScoreInfoStatsBundle {
 
 
 #[derive(Debug, Deserialize, Serialize)]
-struct Team {
+pub struct Team {
     pub my_team: Vec<HeroBattleInfo>,
 }
 
-struct TeamStatsBundle {
-    pub heroes: Vec<String>,
-    pub mvp: Option<String>,
-    pub post_banned: Option<String>,
-    pub equipment: Vec<String>,
-    pub artifacts: Vec<String>,
-}
+struct TeamStatsBundle {}
 
 impl TeamStatsBundle {
 
@@ -309,7 +297,7 @@ impl TeamStatsBundle {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-struct HeroBattleInfo {
+pub struct HeroBattleInfo {
     pub artifact: String,
     pub attack_damage: i64,
     pub attribute_cd: String,
@@ -334,11 +322,11 @@ struct HeroBattleInfo {
 
 
 #[derive(Debug, Deserialize, Serialize)]
-struct EnergyGauge {
+pub struct EnergyGauge {
     pub energy_gauge: Vec<HeroEnergyGaugeInfo>
 }
 
-pub fn get_cr_bar(gauge: EnergyGauge) -> Vec<(String, i8)> {
+fn get_cr_bar(gauge: EnergyGauge) -> Vec<(String, i8)> {
     return gauge.energy_gauge.into_iter()
         .map(|h| (h.hero_code, h.energy))
         .filter(|(_, energy)| *energy != 0)
@@ -348,7 +336,7 @@ pub fn get_cr_bar(gauge: EnergyGauge) -> Vec<(String, i8)> {
 
 // energy gauge is in order of CR bar ascending - last hero takes first turn
 #[derive(Debug, Deserialize, Serialize)]
-struct HeroEnergyGaugeInfo {
+pub struct HeroEnergyGaugeInfo {
     pub energy: i8,
     pub hero_code: String,
     

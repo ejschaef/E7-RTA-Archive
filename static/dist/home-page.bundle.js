@@ -5706,6 +5706,703 @@ var PageUtils = {
 
 /***/ }),
 
+/***/ "./static/assets/js/pages/page-view-logic/load-data-logic.js":
+/*!*******************************************************************!*\
+  !*** ./static/assets/js/pages/page-view-logic/load-data-logic.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   runLoadDataLogic: () => (/* binding */ runLoadDataLogic)
+/* harmony export */ });
+/* harmony import */ var _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../page-utilities/context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../page-utilities/page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
+/* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../exports.js */ "./static/assets/js/exports.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+function runLoadDataLogic(_x, _x2) {
+  return _runLoadDataLogic.apply(this, arguments);
+}
+function _runLoadDataLogic() {
+  _runLoadDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(stateDispatcher, contextFlags) {
+    var HM, user, autoZoom, battles, filters, stats, sourceState, source, _t;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          (0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.homePageSetView)(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA);
+          _context.p = 1;
+          _context.n = 2;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.HeroManager.getHeroManager();
+        case 2:
+          HM = _context.v;
+          _context.n = 3;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.UserManager.getUser();
+        case 3:
+          user = _context.v;
+          if (!contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.QUERY]) {
+            _context.n = 4;
+            break;
+          }
+          contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.QUERY] = false;
+          console.log("querying and caching user battles for user: ", JSON.stringify(user));
+          _context.n = 4;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.PageUtils.queryAndCacheBattles(user, stateDispatcher, contextFlags, HM);
+        case 4:
+          autoZoom = contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.AUTO_ZOOM];
+          contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.AUTO_ZOOM] = false;
+
+          // retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
+          console.log("Getting Battles From Cache");
+          _context.n = 5;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.BattleManager.getBattles();
+        case 5:
+          battles = _context.v;
+          console.log("BATTLES DURING LOAD");
+          console.log(battles);
+          console.log("Getting Filters From Cache");
+          _context.n = 6;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.getFilters(HM);
+        case 6:
+          filters = _context.v;
+          console.log("Received Filters: ".concat(JSON.stringify(filters)));
+          _context.n = 7;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.BattleManager.getStats(battles, user, filters, HM, autoZoom);
+        case 7:
+          stats = _context.v;
+          _context.n = 8;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.ClientCache.setStats(stats);
+        case 8:
+          stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.SHOW_STATS, contextFlags);
+          _context.n = 14;
+          break;
+        case 9:
+          _context.p = 9;
+          _t = _context.v;
+          source = contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.SOURCE];
+          if (!(source === _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.QUERY || source === _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.UPLOAD)) {
+            _context.n = 10;
+            break;
+          }
+          sourceState = _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.SELECT_DATA;
+          _context.n = 12;
+          break;
+        case 10:
+          if (!(source === _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.STATS)) {
+            _context.n = 11;
+            break;
+          }
+          sourceState = _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.SHOW_STATS;
+          _context.n = 12;
+          break;
+        case 11:
+          throw new Error("Invalid source: ".concat(source));
+        case 12:
+          console.error(_t);
+          _context.n = 13;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.UserManager.clearUserData();
+        case 13:
+          contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.ERROR_MSG] = "Failed to load data: ".concat(_t.message);
+          stateDispatcher(sourceState, contextFlags);
+        case 14:
+          return _context.a(2);
+      }
+    }, _callee, null, [[1, 9]]);
+  }));
+  return _runLoadDataLogic.apply(this, arguments);
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-view-logic/select-data-logic.js":
+/*!*********************************************************************!*\
+  !*** ./static/assets/js/pages/page-view-logic/select-data-logic.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   initializeSelectDataLogic: () => (/* binding */ initializeSelectDataLogic),
+/* harmony export */   runSelectDataLogic: () => (/* binding */ runSelectDataLogic)
+/* harmony export */ });
+/* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../exports.js */ "./static/assets/js/exports.js");
+/* harmony import */ var _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../page-utilities/page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
+/* harmony import */ var _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../page-utilities/context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+function addUserFormListener(_x, _x2) {
+  return _addUserFormListener.apply(this, arguments);
+}
+function _addUserFormListener() {
+  _addUserFormListener = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(stateDispatcher, contextFlags) {
+    var form;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          form = document.getElementById("userForm"); // Intercept form submission
+          form.addEventListener("submit", /*#__PURE__*/function () {
+            var _ref = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(event) {
+              var data, name, world_code, result, _t;
+              return _regenerator().w(function (_context) {
+                while (1) switch (_context.n) {
+                  case 0:
+                    console.log("Processing User Submission");
+                    event.preventDefault(); // Prevent actual form submission to server
+                    data = new FormData(form);
+                    name = data.get("username");
+                    world_code = data.get("server");
+                    if (name) {
+                      _context.n = 1;
+                      break;
+                    }
+                    document.getElementById("errorMSG").textContent = "Must enter username";
+                    _context.n = 7;
+                    break;
+                  case 1:
+                    _context.p = 1;
+                    console.log("Finding User");
+                    _context.n = 2;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.findUser({
+                      name: name,
+                      world_code: world_code
+                    });
+                  case 2:
+                    result = _context.v;
+                    console.log("Got data:", JSON.stringify(result));
+                    if (result.error) {
+                      _context.n = 4;
+                      break;
+                    }
+                    _context.n = 3;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.setUser(result.user);
+                  case 3:
+                    contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.QUERY] = true;
+                    contextFlags.SOURCE = _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.VALUES.SOURCE.QUERY;
+                    stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA, contextFlags);
+                    _context.n = 5;
+                    break;
+                  case 4:
+                    console.log("User Not Found:", result.error);
+                    document.getElementById("errorMSG").textContent = "Could not find user: ".concat(name, " in server: ").concat(world_code);
+                  case 5:
+                    _context.n = 7;
+                    break;
+                  case 6:
+                    _context.p = 6;
+                    _t = _context.v;
+                    // You can now store the data, process it, or update your app state
+                    console.error("Caught Error:", _t);
+                    document.getElementById("errorMSG").textcontent = "Error encountered: ".concat(_t.message);
+                  case 7:
+                    return _context.a(2);
+                }
+              }, _callee, null, [[1, 6]]);
+            }));
+            return function (_x9) {
+              return _ref.apply(this, arguments);
+            };
+          }());
+        case 1:
+          return _context2.a(2);
+      }
+    }, _callee2);
+  }));
+  return _addUserFormListener.apply(this, arguments);
+}
+function addUploadFormListener(_x3, _x4) {
+  return _addUploadFormListener.apply(this, arguments);
+}
+function _addUploadFormListener() {
+  _addUploadFormListener = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(stateDispatcher, contextFlags) {
+    var checkbox, selectedFile;
+    return _regenerator().w(function (_context5) {
+      while (1) switch (_context5.n) {
+        case 0:
+          checkbox = document.getElementById("auto-query-flag");
+          _context5.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFlag("autoQuery");
+        case 1:
+          checkbox.checked = _context5.v;
+          checkbox.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+            return _regenerator().w(function (_context3) {
+              while (1) switch (_context3.n) {
+                case 0:
+                  _context3.n = 1;
+                  return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFlag("autoQuery", checkbox.checked);
+                case 1:
+                  return _context3.a(2);
+              }
+            }, _callee3);
+          })));
+          selectedFile = null; // Capture file when selected
+          document.getElementById("csvFile").addEventListener("change", function (event) {
+            selectedFile = event.target.files[0];
+          });
+
+          // Intercept form submission
+          document.getElementById("uploadForm").addEventListener("submit", /*#__PURE__*/function () {
+            var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(event) {
+              var autoQueryFlag, battleArr, HM, playerID, data, _t2;
+              return _regenerator().w(function (_context4) {
+                while (1) switch (_context4.n) {
+                  case 0:
+                    console.log("Processing File Submission");
+                    event.preventDefault(); // Prevent actual form submission to server
+
+                    // Get its state of auto-query checkbox
+                    autoQueryFlag = checkbox.checked;
+                    _context4.p = 1;
+                    _context4.n = 2;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.CSVParse.parseUpload(selectedFile);
+                  case 2:
+                    battleArr = _context4.v;
+                    _context4.n = 3;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.HeroManager.getHeroManager();
+                  case 3:
+                    HM = _context4.v;
+                    _context4.n = 4;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.clearUserData();
+                  case 4:
+                    _context4.n = 5;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.cacheUpload(battleArr, HM);
+                  case 5:
+                    playerID = battleArr[0]["P1 ID"];
+                    _context4.n = 6;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.findUser({
+                      id: playerID
+                    });
+                  case 6:
+                    data = _context4.v;
+                    console.log("Got data:", JSON.stringify(data));
+                    if (data.error) {
+                      _context4.n = 8;
+                      break;
+                    }
+                    _context4.n = 7;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.setUser(data.user);
+                  case 7:
+                    contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.QUERY] = autoQueryFlag;
+                    contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.SOURCE] = _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.VALUES.SOURCE.UPLOAD;
+                    stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA, contextFlags);
+                    _context4.n = 9;
+                    break;
+                  case 8:
+                    console.log("Setting Error Message:", data.error);
+                    document.getElementById("errorMSG").textContent = data.error;
+                    console.log("Error Message is now:", document.getElementById("errorMSG").textContent);
+                  case 9:
+                    _context4.n = 11;
+                    break;
+                  case 10:
+                    _context4.p = 10;
+                    _t2 = _context4.v;
+                    console.error("Caught Error:", _t2);
+                    document.getElementById("errorMSG").textContent = _t2.message;
+                  case 11:
+                    return _context4.a(2);
+                }
+              }, _callee4, null, [[1, 10]]);
+            }));
+            return function (_x0) {
+              return _ref3.apply(this, arguments);
+            };
+          }());
+        case 2:
+          return _context5.a(2);
+      }
+    }, _callee5);
+  }));
+  return _addUploadFormListener.apply(this, arguments);
+}
+function initializeSelectDataLogic(_x5, _x6) {
+  return _initializeSelectDataLogic.apply(this, arguments);
+}
+function _initializeSelectDataLogic() {
+  _initializeSelectDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(stateDispatcher, contextFlags) {
+    return _regenerator().w(function (_context6) {
+      while (1) switch (_context6.n) {
+        case 0:
+          addUserFormListener(stateDispatcher, contextFlags);
+          addUploadFormListener(stateDispatcher, contextFlags);
+        case 1:
+          return _context6.a(2);
+      }
+    }, _callee6);
+  }));
+  return _initializeSelectDataLogic.apply(this, arguments);
+}
+function runSelectDataLogic(_x7, _x8) {
+  return _runSelectDataLogic.apply(this, arguments);
+}
+function _runSelectDataLogic() {
+  _runSelectDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(stateDispatcher, contextFlags) {
+    var checkbox, errorMSG;
+    return _regenerator().w(function (_context7) {
+      while (1) switch (_context7.n) {
+        case 0:
+          checkbox = document.getElementById("auto-query-flag");
+          _context7.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFlag("autoQuery");
+        case 1:
+          checkbox.checked = _context7.v;
+          document.getElementById("errorMSG").textContent = "";
+          if (contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.ERROR_MSG]) {
+            errorMSG = contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.ERROR_MSG];
+            console.log("Setting Error Message:", errorMSG);
+            document.getElementById("errorMSG").textContent = errorMSG;
+            contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.ERROR_MSG] = null;
+          }
+        case 2:
+          return _context7.a(2);
+      }
+    }, _callee7);
+  }));
+  return _runSelectDataLogic.apply(this, arguments);
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-view-logic/stats-logic.js":
+/*!***************************************************************!*\
+  !*** ./static/assets/js/pages/page-view-logic/stats-logic.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addCodeMirror: () => (/* binding */ addCodeMirror),
+/* harmony export */   initializeStatsLogic: () => (/* binding */ initializeStatsLogic),
+/* harmony export */   runStatsLogic: () => (/* binding */ runStatsLogic)
+/* harmony export */ });
+/* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../exports.js */ "./static/assets/js/exports.js");
+/* harmony import */ var _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../page-utilities/context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../page-utilities/page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+function populateContent() {
+  return _populateContent.apply(this, arguments);
+}
+function _populateContent() {
+  _populateContent = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+    var user, seasonDetails, stats, battleTable, filterBattleTableCheckbox, _t;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          _context4.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.getUser();
+        case 1:
+          user = _context4.v;
+          if (user) {
+            _context4.n = 2;
+            break;
+          }
+          console.log("Skipping populate tables: user not found");
+          return _context4.a(2);
+        case 2:
+          ;
+          console.log("POPULATING DATA PROCESS INITIATED");
+          _context4.p = 3;
+          console.log("Getting Season Details");
+          _context4.n = 4;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.SeasonManager.getSeasonDetails();
+        case 4:
+          seasonDetails = _context4.v;
+          console.log("Got season details:", seasonDetails, _typeof(seasonDetails));
+          console.log("Getting Stats");
+          _context4.n = 5;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getStats();
+        case 5:
+          stats = _context4.v;
+          //console.log("GOT STATS: ", JSON.stringify(stats));
+
+          console.time("populateTables");
+          console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS");
+          _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateSeasonDetailsTable("SeasonDetails", seasonDetails);
+          _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateHeroStatsTable("PlayerTable", stats.playerHeroStats);
+          _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateHeroStatsTable("OpponentTable", stats.enemyHeroStats);
+          _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populatePlayerFirstPickTable("FirstPickStats", stats.firstPickStats);
+          _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populatePlayerPrebansTable("PrebanStats", stats.prebanStats);
+          _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateServerStatsTable("server-stats", stats.serverStats);
+          battleTable = _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateFullBattlesTable("BattlesTable", stats.battles, user);
+          _exports_js__WEBPACK_IMPORTED_MODULE_0__.CardContent.functions.populateGeneralStats(stats.generalStats);
+          _exports_js__WEBPACK_IMPORTED_MODULE_0__.CardContent.functions.populateRankPlot(stats.plotContent);
+          console.log("FINISHED POPULATING");
+          console.timeEnd("populateTables");
+          console.log("Setting listener for filter-battle-table checkbox");
+          filterBattleTableCheckbox = document.getElementById("filter-battle-table");
+          filterBattleTableCheckbox.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+            return _regenerator().w(function (_context3) {
+              while (1) switch (_context3.n) {
+                case 0:
+                  if (!filterBattleTableCheckbox.checked) {
+                    _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.replaceDatatableData(battleTable, stats.battles);
+                  } else {
+                    _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.replaceDatatableData(battleTable, stats.filteredBattles);
+                  }
+                case 1:
+                  return _context3.a(2);
+              }
+            }, _callee3);
+          })));
+          _context4.n = 7;
+          break;
+        case 6:
+          _context4.p = 6;
+          _t = _context4.v;
+          console.error("Error loading data:", _t);
+        case 7:
+          return _context4.a(2);
+      }
+    }, _callee4, null, [[3, 6]]);
+  }));
+  return _populateContent.apply(this, arguments);
+}
+function addAutoZoomListener() {
+  var autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+  autoZoomCheckbox.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          _context.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFlag("autoZoom", autoZoomCheckbox.checked);
+        case 1:
+          return _context.a(2);
+      }
+    }, _callee);
+  })));
+}
+function addPremadeFilterButtonListener(editor) {
+  // Logic for adding premade filters to filter pane
+  document.getElementById("premade-filters").addEventListener("click", function (event) {
+    console.log("Attempting to add a premade filter");
+    event.preventDefault();
+    var target = event.target.closest(".dropdown-item");
+    if (!target) return;
+    var filterName = target.textContent.trim();
+    console.log("Target found:", filterName);
+    var currStr = editor.getValue();
+    var newStr = _exports_js__WEBPACK_IMPORTED_MODULE_0__.SavedFilters.extendFilters(currStr, filterName);
+    editor.setValue(newStr);
+  });
+}
+function addFilterButtonListeners(editor, stateDispatcher, context) {
+  // Logic for submit buttons on filter pane
+  var filterForm = document.getElementById("filterForm");
+  filterForm.addEventListener("submit", /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(event) {
+      var clickedButton, action, syntaxStr, appliedFilter, validFilter, _autoZoomCheckbox;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            event.preventDefault(); // Prevent actual form submission to server
+
+            // Ensure value is synced back to textarea before submit ; not strictly necessary since processed client-side
+            document.getElementById("codeArea").value = editor.getValue();
+            console.log("Processing Filter Action");
+            clickedButton = event.submitter;
+            action = clickedButton === null || clickedButton === void 0 ? void 0 : clickedButton.value;
+            syntaxStr = editor.getValue();
+            _context2.n = 1;
+            return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFilterStr();
+          case 1:
+            appliedFilter = _context2.v;
+            if (!(action === "apply")) {
+              _context2.n = 5;
+              break;
+            }
+            _context2.n = 2;
+            return _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.validateFilterSyntax(syntaxStr);
+          case 2:
+            validFilter = _context2.v;
+            if (!validFilter) {
+              _context2.n = 4;
+              break;
+            }
+            _context2.n = 3;
+            return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFilterStr(syntaxStr);
+          case 3:
+            _autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.AUTO_ZOOM] = _autoZoomCheckbox.checked;
+            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.QUERY] = false;
+            stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.LOAD_DATA, context);
+          case 4:
+            _context2.n = 9;
+            break;
+          case 5:
+            if (!(action === "check")) {
+              _context2.n = 7;
+              break;
+            }
+            console.log("Checking Str", syntaxStr);
+            _context2.n = 6;
+            return _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.validateFilterSyntax(syntaxStr);
+          case 6:
+            _context2.n = 9;
+            break;
+          case 7:
+            if (!(action === "clear")) {
+              _context2.n = 9;
+              break;
+            }
+            editor.setValue("");
+            console.log("Found applied filter", appliedFilter, "when clearing");
+            if (!appliedFilter) {
+              _context2.n = 9;
+              break;
+            }
+            console.log("Found filter str", appliedFilter);
+            _context2.n = 8;
+            return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFilterStr("");
+          case 8:
+            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.AUTO_ZOOM] = autoZoomCheckbox.checked;
+            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.QUERY] = false;
+            stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.LOAD_DATA, context);
+          case 9:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    return function (_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
+}
+function addCodeMirror(_x2, _x3) {
+  return _addCodeMirror.apply(this, arguments);
+}
+function _addCodeMirror() {
+  _addCodeMirror = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(stateDispatcher, context) {
+    var autoZoomCheckbox, textarea, editor, appliedFilter;
+    return _regenerator().w(function (_context5) {
+      while (1) switch (_context5.n) {
+        case 0:
+          autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+          CodeMirror.defineMode("filterSyntax", function () {
+            return {
+              token: function token(stream, state) {
+                return _exports_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.tokenMatch(stream);
+              }
+            };
+          });
+          textarea = document.getElementById("codeArea");
+          editor = CodeMirror.fromTextArea(textarea, {
+            mode: "filterSyntax",
+            lineNumbers: true,
+            theme: "default"
+          });
+          context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.EDITOR_INITIALIZED] = true;
+          editor.setSize(null, 185);
+          _context5.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFilterStr();
+        case 1:
+          appliedFilter = _context5.v;
+          if (appliedFilter) {
+            editor.setValue(appliedFilter);
+          }
+
+          // Optional: sync changes back to textarea if needed
+          editor.on("change", function () {
+            editor.save(); // Updates the hidden textarea for form submit
+          });
+
+          // Show the editor after it's initialized
+          textarea.classList.remove("codemirror-hidden");
+          addPremadeFilterButtonListener(editor);
+          addFilterButtonListeners(editor, stateDispatcher, context);
+        case 2:
+          return _context5.a(2);
+      }
+    }, _callee5);
+  }));
+  return _addCodeMirror.apply(this, arguments);
+}
+function initializeStatsLogic() {
+  return _initializeStatsLogic.apply(this, arguments);
+}
+function _initializeStatsLogic() {
+  _initializeStatsLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+    return _regenerator().w(function (_context6) {
+      while (1) switch (_context6.n) {
+        case 0:
+          _context6.n = 1;
+          return populateContent();
+        case 1:
+          addAutoZoomListener();
+        case 2:
+          return _context6.a(2);
+      }
+    }, _callee6);
+  }));
+  return _initializeStatsLogic.apply(this, arguments);
+}
+function runStatsLogic(_x4, _x5) {
+  return _runStatsLogic.apply(this, arguments);
+}
+function _runStatsLogic() {
+  _runStatsLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(stateDispatcher, context) {
+    var autoZoomCheckbox, user, filterMSG;
+    return _regenerator().w(function (_context7) {
+      while (1) switch (_context7.n) {
+        case 0:
+          autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+          _context7.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFlag("autoZoom");
+        case 1:
+          autoZoomCheckbox.checked = _context7.v;
+          _context7.n = 2;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.getUser();
+        case 2:
+          user = _context7.v;
+          if (!user) {
+            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG] = "User not found; Must either query a valid user or upload battles to view hero stats";
+            console.error(context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG]);
+            stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.SELECT_DATA, context);
+          } else {
+            console.log("User found:", user);
+          }
+          _context7.n = 3;
+          return populateContent();
+        case 3:
+          filterMSG = document.getElementById("filterMSG");
+          if (context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG]) {
+            filterMSG.textContent = context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG];
+            filterMSG.classList.remove("text-safe");
+            filterMSG.classList.add("text-danger");
+            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG] = null;
+          }
+        case 4:
+          return _context7.a(2);
+      }
+    }, _callee7);
+  }));
+  return _runStatsLogic.apply(this, arguments);
+}
+
+
+/***/ }),
+
 /***/ "./static/assets/js/populate_content.js":
 /*!**********************************************!*\
   !*** ./static/assets/js/populate_content.js ***!
@@ -6032,84 +6729,229 @@ var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
-/*!************************************************!*\
-  !*** ./static/assets/js/pages/loading-data.js ***!
-  \************************************************/
+/*!*********************************************!*\
+  !*** ./static/assets/js/pages/home-page.js ***!
+  \*********************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../exports.js */ "./static/assets/js/exports.js");
+/* harmony import */ var _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./page-utilities/page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
+/* harmony import */ var _page_view_logic_select_data_logic_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./page-view-logic/select-data-logic.js */ "./static/assets/js/pages/page-view-logic/select-data-logic.js");
+/* harmony import */ var _page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-view-logic/stats-logic.js */ "./static/assets/js/pages/page-view-logic/stats-logic.js");
+/* harmony import */ var _page_view_logic_load_data_logic_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./page-view-logic/load-data-logic.js */ "./static/assets/js/pages/page-view-logic/load-data-logic.js");
+/* harmony import */ var _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./page-utilities/context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../exports.js */ "./static/assets/js/exports.js");
+/* harmony import */ var _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./page-utilities/page-utils.js */ "./static/assets/js/pages/page-utilities/page-utils.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
-document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-  var params, paramObj, HM, user, autoZoom, battles, filters, stats, _params$get, errURL, source, _t;
-  return _regenerator().w(function (_context) {
-    while (1) switch (_context.n) {
-      case 0:
-        params = new URLSearchParams(window.location.search);
-        paramObj = Object.fromEntries(params.entries());
-        console.log("GOT PARAMS:", paramObj);
-        _context.p = 1;
-        _context.n = 2;
-        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.HeroManager.getHeroManager();
-      case 2:
-        HM = _context.v;
-        _context.n = 3;
-        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.getUser();
-      case 3:
-        user = _context.v;
-        if (!(params.get("query") === "true")) {
-          _context.n = 4;
+
+
+
+
+
+
+var SCROLL_PERCENTS = _defineProperty(_defineProperty(_defineProperty({}, _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, 0), _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS, 0), _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.LOAD_DATA, 0);
+function stateDispatcher(_x, _x2) {
+  return _stateDispatcher.apply(this, arguments);
+}
+function _stateDispatcher() {
+  _stateDispatcher = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(state, context) {
+    var scrollPercent, _t;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          console.log("Switching to state: ".concat(state));
+          if ((0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.validateState)(state)) {
+            _context2.n = 1;
+            break;
+          }
+          return _context2.a(2);
+        case 1:
+          scrollPercent = SCROLL_PERCENTS[state];
+          _context2.n = 2;
+          return _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(state);
+        case 2:
+          console.log("Error Message while in dispatch: ", document.getElementById("errorMSG").textContent);
+          _t = state;
+          _context2.n = _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA ? 3 : _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS ? 6 : _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.LOAD_DATA ? 10 : 12;
           break;
-        }
-        console.log("querying and caching user battles for user: ", JSON.stringify(user));
-        _context.n = 4;
-        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.queryAndCacheBattles(user, params, HM);
-      case 4:
-        autoZoom = params.get("autoZoom") === "true" ? true : false; // retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
-        console.log("Getting Battles From Cache");
-        _context.n = 5;
-        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.getBattles();
-      case 5:
-        battles = _context.v;
-        console.log("Getting Filters From Cache");
-        _context.n = 6;
-        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.getFilters(HM);
-      case 6:
-        filters = _context.v;
-        console.log("Received Filters: ".concat(JSON.stringify(filters)));
-        _context.n = 7;
-        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.getStats(battles, user, filters, HM, autoZoom);
-      case 7:
-        stats = _context.v;
-        _context.n = 8;
-        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setStats(stats);
-      case 8:
-        //send user from loading page to hero stats page
-        window.location.replace(URLS.statsURL);
-        _context.n = 10;
-        break;
-      case 9:
-        _context.p = 9;
-        _t = _context.v;
-        source = (_params$get = params.get("source")) === null || _params$get === void 0 ? void 0 : _params$get.toLowerCase();
-        if (source === "upload") {
-          errURL = URLS.uploadURL;
-        } else if (source === "query") {
-          errURL = URLS.userQueryURL;
-        } else if (source === "stats") {
-          errURLS = URLS.statsURLS;
-        }
-        console.error("Failed to load data: ".concat(_t.message));
-        window.location.replace(URLS.addStrParam(errURL, "errorMSG", "Failed to load data: ".concat(_t.message)));
-      case 10:
-        return _context.a(2);
-    }
-  }, _callee, null, [[1, 9]]);
-})));
+        case 3:
+          _context2.n = 4;
+          return (0,_page_view_logic_select_data_logic_js__WEBPACK_IMPORTED_MODULE_1__.runSelectDataLogic)(stateDispatcher, context);
+        case 4:
+          _context2.n = 5;
+          return (0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.homePageSetView)(state);
+        case 5:
+          return _context2.a(3, 13);
+        case 6:
+          _context2.n = 7;
+          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.runStatsLogic)(stateDispatcher, context);
+        case 7:
+          _context2.n = 8;
+          return (0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.homePageSetView)(state);
+        case 8:
+          if (context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.EDITOR_INITIALIZED]) {
+            _context2.n = 9;
+            break;
+          }
+          _context2.n = 9;
+          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.addCodeMirror)(stateDispatcher, context);
+        case 9:
+          return _context2.a(3, 13);
+        case 10:
+          _context2.n = 11;
+          return (0,_page_view_logic_load_data_logic_js__WEBPACK_IMPORTED_MODULE_3__.runLoadDataLogic)(stateDispatcher, context);
+        case 11:
+          return _context2.a(3, 13);
+        case 12:
+          console.error("Invalid page state: ".concat(state));
+        case 13:
+          if (scrollPercent) {
+            setTimeout(function () {
+              _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].setScrollPercent(scrollPercent);
+            }, 0);
+          }
+        case 14:
+          return _context2.a(2);
+      }
+    }, _callee2);
+  }));
+  return _stateDispatcher.apply(this, arguments);
+}
+function addNavListeners(context) {
+  document.querySelectorAll(".nav-link").forEach(function (link) {
+    link.addEventListener("click", /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(event) {
+        var navType, currentState, user;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              navType = this.dataset.nav;
+              console.log("Clicked nav item:", navType);
+              _context.n = 1;
+              return _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.getState();
+            case 1:
+              currentState = _context.v;
+              if (!Object.values(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES).includes(navType)) {
+                _context.n = 6;
+                break;
+              }
+              if (!(currentState === navType)) {
+                _context.n = 2;
+                break;
+              }
+              console.log("Already in state: ".concat(currentState, " ; returning"));
+              return _context.a(2);
+            case 2:
+              ;
+              SCROLL_PERCENTS[currentState] = _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].getScrollPercent();
+              if (!(navType === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA)) {
+                _context.n = 3;
+                break;
+              }
+              stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, context);
+              _context.n = 5;
+              break;
+            case 3:
+              if (!(navType === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS)) {
+                _context.n = 5;
+                break;
+              }
+              _context.n = 4;
+              return _exports_js__WEBPACK_IMPORTED_MODULE_5__.ContentManager.UserManager.getUser();
+            case 4:
+              user = _context.v;
+              // Stats will not show if there is no active user ; will redirect to select data view with error
+              if (!user) {
+                context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.ERROR_MSG] = "User not found; Must either query a valid user or upload battles to view hero stats";
+                console.error(context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.ERROR_MSG]);
+                stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, context);
+              } else {
+                stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS, context);
+              }
+            case 5:
+              _context.n = 7;
+              break;
+            case 6:
+              // Default behavior continues as normal
+              console.log("Navigating to: ".concat(this.href));
+            case 7:
+              return _context.a(2);
+          }
+        }, _callee, this);
+      }));
+      return function (_x3) {
+        return _ref.apply(this, arguments);
+      };
+    }());
+  });
+}
+function homePageLogic() {
+  return _homePageLogic.apply(this, arguments);
+}
+function _homePageLogic() {
+  _homePageLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+    var context, state;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          context = _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({}, _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.ERROR_MSG, null), _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.AUTO_ZOOM, false), _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.SOURCE, null), _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.QUERY, null), "SCROLL_PERCENTS", SCROLL_PERCENTS);
+          console.log("Initialized context flags: ".concat(JSON.stringify(context)));
+          addNavListeners(context);
+          _context4.n = 1;
+          return (0,_page_view_logic_select_data_logic_js__WEBPACK_IMPORTED_MODULE_1__.initializeSelectDataLogic)(stateDispatcher, context);
+        case 1:
+          _context4.n = 2;
+          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.initializeStatsLogic)(stateDispatcher, context);
+        case 2:
+          _context4.n = 3;
+          return _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.getState();
+        case 3:
+          state = _context4.v;
+          if (state) {
+            stateDispatcher(state, context);
+          }
+        case 4:
+          return _context4.a(2);
+      }
+    }, _callee3);
+  }));
+  return _homePageLogic.apply(this, arguments);
+}
+function main() {
+  return _main.apply(this, arguments);
+}
+function _main() {
+  _main = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+    return _regenerator().w(function (_context6) {
+      while (1) switch (_context6.n) {
+        case 0:
+          document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+            return _regenerator().w(function (_context5) {
+              while (1) switch (_context5.n) {
+                case 0:
+                  _context5.n = 1;
+                  return homePageLogic();
+                case 1:
+                  return _context5.a(2);
+              }
+            }, _callee4);
+          })));
+        case 1:
+          return _context6.a(2);
+      }
+    }, _callee5);
+  }));
+  return _main.apply(this, arguments);
+}
+main();
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=loading-data.bundle.js.map
+//# sourceMappingURL=home-page.bundle.js.map

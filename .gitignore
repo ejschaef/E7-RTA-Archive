@@ -44,6 +44,7 @@ apps/static/assets/.temp
 # misc
 features.txt
 TODO.txt
+commits.txt
 
 
 #migrations

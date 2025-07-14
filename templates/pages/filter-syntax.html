@@ -19,15 +19,14 @@
               <div class="card-header">
                 <h3>General Overview</h3>
                 <p>
-                  This page details the rules for writing filters within the Hero Stats page. Examples will be shown below 
+                  This page details the rules for writing filters within the Hero Stats page. Examples will be shown below
                   along with space to practice writing and validating filters.
                 </p>
               </div>
               <div class="card-body pc-component">
                 <h4>Filter Usage</h4>
-                <p>Filters are primarily used to adjust which battles the user wants to include 
-                  when calculating stats like win rate and pick rate. They can also be used to 
-                  automatically adjust the chart to the filtered subset if desired. EveAlmost all columns listed
+                <p>Filters are primarily used to adjust which battles the user wants to include
+                  when calculating stats like win rate and pick rate. They can also be used to                   automatically adjust the chart to the filtered subset if desired. EveAlmost all columns listed
                   in the full table of battles at the bottom of the stats page can filtered on using the custom syntax.
                   The rest of this page will detail the exact syntax and rules for writing filters.
                 </p>
@@ -36,18 +35,18 @@
                 <h4>Object Types</h4>
                 <p>There are 5 main syntactic objects:</p>
                 <ol class="text-sm">
-                  <li>Fields: keywords corresponding to data from each of the battles, 
-                    such as if the battle is a win, the victory points the player ended the battle at, 
+                  <li>Fields: keywords corresponding to data from each of the battles,
+                    such as if the battle is a win, the victory points the player ended the battle at,
                     the first hero the player picked, etc.</li>
-                  <li>Declared Data: data values the user defines to filter the data on. They include integers, 
-                    dates, strings, sets, booleans, and ranges. There are also some keywords like "current-season" that allow the user to conveniently 
+                  <li>Declared Data: data values the user defines to filter the data on. They include integers,
+                    dates, strings, sets, booleans, and ranges. There are also some keywords like "current-season" that allow the user to conveniently
                     utilize declared data based on predifined logic (in this case, the keyword would translate to a range of dates capturing the current season).
                   </li>
                   <li>Operators: the operations that allow the comparison of Fields to
-                     Declared Data and are the core of the filters (includes operations like >, <, =, set membership, etc.). </li>
+                     Declared Data and are the core of the filters (includes operations like &gt;, &lt;, =, set membership, etc.). </li>
                   <li>Functions: higher level operators that may allow the combination of filters in a logical manner or correspond to complex predefined filters.</li>
                   <li>Pure Syntax Elements: characters like brackets, quotes, commas, and semicolons that define how the filters are broken up and parsed.</li>
-                  <li>Some operations require specific data types; 
+                  <li>Some operations require specific data types;
                     if this is the case, an error will be thrown specifiying the necessary data type.</li>
                 </ol>
                 <div class="clearfix"></div>
@@ -60,12 +59,12 @@
                   <li>Every filter must either be a function call or a base filter of the form: X operator Y</li>
                   <li>Functions and sets will have their constituent arguments separated by commas ( , ) not semicolons ( ; )</li>
                   <li>Clause functions like And(...), OR(...), etc. can take nested clause functions as arguments but must ultimately terminate as base filters.</li>
-                  <li>Certain functions, like last-N(), are global filters that must take into account all 
-                    battles when filtering (last-N captures only the N most recent battles). Since these filters are affected by other filters, 
+                  <li>Certain functions, like last-N(), are global filters that must take into account all
+                    battles when filtering (last-N captures only the N most recent battles). Since these filters are affected by other filters,
                     to regulate the logic, all global filters will be hoisted to the top and executed in the order they were written. </li>
                   <li>Apart from global filter hoisting, all filters will execute in the order they are written.</li>
                   <li>Some filters or sets of filters are valid but will never return true. For instance, comparing different data types
-                    or using two filters which together specify a hero must be picked by both the player and the opponent. 
+                    or using two filters which together specify a hero must be picked by both the player and the opponent.
                     These filters will pass validation, and the resulting stats will be empty.
                   </li>
                 </ol>

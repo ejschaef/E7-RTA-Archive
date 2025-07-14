@@ -1,2 +1,6284 @@
-/*! For license information please see stats.bundle.js.LICENSE.txt */
-(()=>{var t={809:function(t,e){var n,r;n=function t(){var e,n="undefined"!=typeof self?self:"undefined"!=typeof window?window:void 0!==n?n:{},r=!n.document&&!!n.postMessage,o=n.IS_PAPA_WORKER||!1,a={},i=0,c={};function s(t){this._handle=null,this._finished=!1,this._completed=!1,this._halted=!1,this._input=null,this._baseIndex=0,this._partialLine="",this._rowCount=0,this._start=0,this._nextChunk=null,this.isFirstChunk=!0,this._completeResults={data:[],errors:[],meta:{}},function(t){var e=b(t);e.chunkSize=parseInt(e.chunkSize),t.step||t.chunk||(e.chunkSize=null),this._handle=new p(e),(this._handle.streamer=this)._config=e}.call(this,t),this.parseChunk=function(t,e){var r=parseInt(this._config.skipFirstNLines)||0;if(this.isFirstChunk&&0<r){let e=this._config.newline;e||(a=this._config.quoteChar||'"',e=this._handle.guessLineEndings(t,a)),t=[...t.split(e).slice(r)].join(e)}this.isFirstChunk&&S(this._config.beforeFirstChunk)&&void 0!==(a=this._config.beforeFirstChunk(t))&&(t=a),this.isFirstChunk=!1,this._halted=!1,r=this._partialLine+t;var a=(this._partialLine="",this._handle.parse(r,this._baseIndex,!this._finished));if(!this._handle.paused()&&!this._handle.aborted()){if(t=a.meta.cursor,this._finished||(this._partialLine=r.substring(t-this._baseIndex),this._baseIndex=t),a&&a.data&&(this._rowCount+=a.data.length),r=this._finished||this._config.preview&&this._rowCount>=this._config.preview,o)n.postMessage({results:a,workerId:c.WORKER_ID,finished:r});else if(S(this._config.chunk)&&!e){if(this._config.chunk(a,this._handle),this._handle.paused()||this._handle.aborted())return void(this._halted=!0);this._completeResults=a=void 0}return this._config.step||this._config.chunk||(this._completeResults.data=this._completeResults.data.concat(a.data),this._completeResults.errors=this._completeResults.errors.concat(a.errors),this._completeResults.meta=a.meta),this._completed||!r||!S(this._config.complete)||a&&a.meta.aborted||(this._config.complete(this._completeResults,this._input),this._completed=!0),r||a&&a.meta.paused||this._nextChunk(),a}this._halted=!0},this._sendError=function(t){S(this._config.error)?this._config.error(t):o&&this._config.error&&n.postMessage({workerId:c.WORKER_ID,error:t,finished:!1})}}function u(t){var e;(t=t||{}).chunkSize||(t.chunkSize=c.RemoteChunkSize),s.call(this,t),this._nextChunk=r?function(){this._readChunk(),this._chunkLoaded()}:function(){this._readChunk()},this.stream=function(t){this._input=t,this._nextChunk()},this._readChunk=function(){if(this._finished)this._chunkLoaded();else{if(e=new XMLHttpRequest,this._config.withCredentials&&(e.withCredentials=this._config.withCredentials),r||(e.onload=w(this._chunkLoaded,this),e.onerror=w(this._chunkError,this)),e.open(this._config.downloadRequestBody?"POST":"GET",this._input,!r),this._config.downloadRequestHeaders){var t,n=this._config.downloadRequestHeaders;for(t in n)e.setRequestHeader(t,n[t])}var o;this._config.chunkSize&&(o=this._start+this._config.chunkSize-1,e.setRequestHeader("Range","bytes="+this._start+"-"+o));try{e.send(this._config.downloadRequestBody)}catch(t){this._chunkError(t.message)}r&&0===e.status&&this._chunkError()}},this._chunkLoaded=function(){4===e.readyState&&(e.status<200||400<=e.status?this._chunkError():(this._start+=this._config.chunkSize||e.responseText.length,this._finished=!this._config.chunkSize||this._start>=(t=>null!==(t=t.getResponseHeader("Content-Range"))?parseInt(t.substring(t.lastIndexOf("/")+1)):-1)(e),this.parseChunk(e.responseText)))},this._chunkError=function(t){t=e.statusText||t,this._sendError(new Error(t))}}function l(t){(t=t||{}).chunkSize||(t.chunkSize=c.LocalChunkSize),s.call(this,t);var e,n,r="undefined"!=typeof FileReader;this.stream=function(t){this._input=t,n=t.slice||t.webkitSlice||t.mozSlice,r?((e=new FileReader).onload=w(this._chunkLoaded,this),e.onerror=w(this._chunkError,this)):e=new FileReaderSync,this._nextChunk()},this._nextChunk=function(){this._finished||this._config.preview&&!(this._rowCount<this._config.preview)||this._readChunk()},this._readChunk=function(){var t=this._input,o=(this._config.chunkSize&&(o=Math.min(this._start+this._config.chunkSize,this._input.size),t=n.call(t,this._start,o)),e.readAsText(t,this._config.encoding));r||this._chunkLoaded({target:{result:o}})},this._chunkLoaded=function(t){this._start+=this._config.chunkSize,this._finished=!this._config.chunkSize||this._start>=this._input.size,this.parseChunk(t.target.result)},this._chunkError=function(){this._sendError(e.error)}}function f(t){var e;s.call(this,t=t||{}),this.stream=function(t){return e=t,this._nextChunk()},this._nextChunk=function(){var t,n;if(!this._finished)return t=this._config.chunkSize,e=t?(n=e.substring(0,t),e.substring(t)):(n=e,""),this._finished=!e,this.parseChunk(n)}}function d(t){s.call(this,t=t||{});var e=[],n=!0,r=!1;this.pause=function(){s.prototype.pause.apply(this,arguments),this._input.pause()},this.resume=function(){s.prototype.resume.apply(this,arguments),this._input.resume()},this.stream=function(t){this._input=t,this._input.on("data",this._streamData),this._input.on("end",this._streamEnd),this._input.on("error",this._streamError)},this._checkIsFinished=function(){r&&1===e.length&&(this._finished=!0)},this._nextChunk=function(){this._checkIsFinished(),e.length?this.parseChunk(e.shift()):n=!0},this._streamData=w(function(t){try{e.push("string"==typeof t?t:t.toString(this._config.encoding)),n&&(n=!1,this._checkIsFinished(),this.parseChunk(e.shift()))}catch(t){this._streamError(t)}},this),this._streamError=w(function(t){this._streamCleanUp(),this._sendError(t)},this),this._streamEnd=w(function(){this._streamCleanUp(),r=!0,this._streamData("")},this),this._streamCleanUp=w(function(){this._input.removeListener("data",this._streamData),this._input.removeListener("end",this._streamEnd),this._input.removeListener("error",this._streamError)},this)}function p(t){var e,n,r,o,a=Math.pow(2,53),i=-a,s=/^\s*-?(\d+\.?|\.\d+|\d+\.\d+)([eE][-+]?\d+)?\s*$/,u=/^((\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z)))$/,l=this,f=0,d=0,p=!1,g=!1,m=[],v={data:[],errors:[],meta:{}};function w(e){return"greedy"===t.skipEmptyLines?""===e.join("").trim():1===e.length&&0===e[0].length}function P(){if(v&&r&&(E("Delimiter","UndetectableDelimiter","Unable to auto-detect delimiting character; defaulted to '"+c.DefaultDelimiter+"'"),r=!1),t.skipEmptyLines&&(v.data=v.data.filter(function(t){return!w(t)})),_()){if(v)if(Array.isArray(v.data[0])){for(var e=0;_()&&e<v.data.length;e++)v.data[e].forEach(n);v.data.splice(0,1)}else v.data.forEach(n);function n(e,n){S(t.transformHeader)&&(e=t.transformHeader(e,n)),m.push(e)}}function o(e,n){for(var r=t.header?{}:[],o=0;o<e.length;o++){var c=o,l=e[o];l=((e,n)=>(e=>(t.dynamicTypingFunction&&void 0===t.dynamicTyping[e]&&(t.dynamicTyping[e]=t.dynamicTypingFunction(e)),!0===(t.dynamicTyping[e]||t.dynamicTyping)))(e)?"true"===n||"TRUE"===n||"false"!==n&&"FALSE"!==n&&((t=>{if(s.test(t)&&(t=parseFloat(t),i<t&&t<a))return 1})(n)?parseFloat(n):u.test(n)?new Date(n):""===n?null:n):n)(c=t.header?o>=m.length?"__parsed_extra":m[o]:c,l=t.transform?t.transform(l,c):l),"__parsed_extra"===c?(r[c]=r[c]||[],r[c].push(l)):r[c]=l}return t.header&&(o>m.length?E("FieldMismatch","TooManyFields","Too many fields: expected "+m.length+" fields but parsed "+o,d+n):o<m.length&&E("FieldMismatch","TooFewFields","Too few fields: expected "+m.length+" fields but parsed "+o,d+n)),r}var l;v&&(t.header||t.dynamicTyping||t.transform)&&(l=1,!v.data.length||Array.isArray(v.data[0])?(v.data=v.data.map(o),l=v.data.length):v.data=o(v.data,0),t.header&&v.meta&&(v.meta.fields=m),d+=l)}function _(){return t.header&&0===m.length}function E(t,e,n,r){t={type:t,code:e,message:n},void 0!==r&&(t.row=r),v.errors.push(t)}S(t.step)&&(o=t.step,t.step=function(e){v=e,_()?P():(P(),0!==v.data.length&&(f+=e.data.length,t.preview&&f>t.preview?n.abort():(v.data=v.data[0],o(v,l))))}),this.parse=function(o,a,i){var s=t.quoteChar||'"';return t.newline||(t.newline=this.guessLineEndings(o,s)),r=!1,t.delimiter?S(t.delimiter)&&(t.delimiter=t.delimiter(o),v.meta.delimiter=t.delimiter):((s=((e,n,r,o,a)=>{var i,s,u,l;a=a||[",","\t","|",";",c.RECORD_SEP,c.UNIT_SEP];for(var f=0;f<a.length;f++){for(var d,p=a[f],h=0,g=0,m=0,v=(u=void 0,new y({comments:o,delimiter:p,newline:n,preview:10}).parse(e)),b=0;b<v.data.length;b++)r&&w(v.data[b])?m++:(g+=d=v.data[b].length,void 0===u?u=d:0<d&&(h+=Math.abs(d-u),u=d));0<v.data.length&&(g/=v.data.length-m),(void 0===s||h<=s)&&(void 0===l||l<g)&&1.99<g&&(s=h,i=p,l=g)}return{successful:!!(t.delimiter=i),bestDelimiter:i}})(o,t.newline,t.skipEmptyLines,t.comments,t.delimitersToGuess)).successful?t.delimiter=s.bestDelimiter:(r=!0,t.delimiter=c.DefaultDelimiter),v.meta.delimiter=t.delimiter),s=b(t),t.preview&&t.header&&s.preview++,e=o,n=new y(s),v=n.parse(e,a,i),P(),p?{meta:{paused:!0}}:v||{meta:{paused:!1}}},this.paused=function(){return p},this.pause=function(){p=!0,n.abort(),e=S(t.chunk)?"":e.substring(n.getCharIndex())},this.resume=function(){l.streamer._halted?(p=!1,l.streamer.parseChunk(e,!0)):setTimeout(l.resume,3)},this.aborted=function(){return g},this.abort=function(){g=!0,n.abort(),v.meta.aborted=!0,S(t.complete)&&t.complete(v),e=""},this.guessLineEndings=function(t,e){t=t.substring(0,1048576),e=new RegExp(h(e)+"([^]*?)"+h(e),"gm");var n=(t=t.replace(e,"")).split("\r");if(t=1<(e=t.split("\n")).length&&e[0].length<n[0].length,1===n.length||t)return"\n";for(var r=0,o=0;o<n.length;o++)"\n"===n[o][0]&&r++;return r>=n.length/2?"\r\n":"\r"}}function h(t){return t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}function y(t){var e=(t=t||{}).delimiter,n=t.newline,r=t.comments,o=t.step,a=t.preview,i=t.fastMode,s=null,u=!1,l=null==t.quoteChar?'"':t.quoteChar,f=l;if(void 0!==t.escapeChar&&(f=t.escapeChar),("string"!=typeof e||-1<c.BAD_DELIMITERS.indexOf(e))&&(e=","),r===e)throw new Error("Comment character same as delimiter");!0===r?r="#":("string"!=typeof r||-1<c.BAD_DELIMITERS.indexOf(r))&&(r=!1),"\n"!==n&&"\r"!==n&&"\r\n"!==n&&(n="\n");var d=0,p=!1;this.parse=function(c,y,g){if("string"!=typeof c)throw new Error("Input must be a string");var m=c.length,v=e.length,b=n.length,w=r.length,P=S(o),_=[],E=[],k=[],T=d=0;if(!c)return M();if(i||!1!==i&&-1===c.indexOf(l)){for(var O=c.split(n),A=0;A<O.length;A++){if(k=O[A],d+=k.length,A!==O.length-1)d+=n.length;else if(g)return M();if(!r||k.substring(0,w)!==r){if(P){if(_=[],j(k.split(e)),B(),p)return M()}else j(k.split(e));if(a&&a<=A)return _=_.slice(0,a),M(!0)}}return M()}for(var I=c.indexOf(e,d),D=c.indexOf(n,d),x=new RegExp(h(f)+h(l),"g"),L=c.indexOf(l,d);;)if(c[d]===l)for(L=d,d++;;){if(-1===(L=c.indexOf(l,L+1)))return g||E.push({type:"Quotes",code:"MissingQuotes",message:"Quoted field unterminated",row:_.length,index:d}),C();if(L===m-1)return C(c.substring(d,L).replace(x,l));if(l===f&&c[L+1]===f)L++;else if(l===f||0===L||c[L-1]!==f){-1!==I&&I<L+1&&(I=c.indexOf(e,L+1));var R=F(-1===(D=-1!==D&&D<L+1?c.indexOf(n,L+1):D)?I:Math.min(I,D));if(c.substr(L+1+R,v)===e){k.push(c.substring(d,L).replace(x,l)),c[d=L+1+R+v]!==l&&(L=c.indexOf(l,d)),I=c.indexOf(e,d),D=c.indexOf(n,d);break}if(R=F(D),c.substring(L+1+R,L+1+R+b)===n){if(k.push(c.substring(d,L).replace(x,l)),N(L+1+R+b),I=c.indexOf(e,d),L=c.indexOf(l,d),P&&(B(),p))return M();if(a&&_.length>=a)return M(!0);break}E.push({type:"Quotes",code:"InvalidQuotes",message:"Trailing quote on quoted field is malformed",row:_.length,index:d}),L++}}else if(r&&0===k.length&&c.substring(d,d+w)===r){if(-1===D)return M();d=D+b,D=c.indexOf(n,d),I=c.indexOf(e,d)}else if(-1!==I&&(I<D||-1===D))k.push(c.substring(d,I)),d=I+v,I=c.indexOf(e,d);else{if(-1===D)break;if(k.push(c.substring(d,D)),N(D+b),P&&(B(),p))return M();if(a&&_.length>=a)return M(!0)}return C();function j(t){_.push(t),T=d}function F(t){return-1!==t&&(t=c.substring(L+1,t))&&""===t.trim()?t.length:0}function C(t){return g||(void 0===t&&(t=c.substring(d)),k.push(t),d=m,j(k),P&&B()),M()}function N(t){d=t,j(k),k=[],D=c.indexOf(n,d)}function M(r){if(t.header&&!y&&_.length&&!u){var o=_[0],a=Object.create(null),i=new Set(o);let e=!1;for(let n=0;n<o.length;n++){let r=o[n];if(a[r=S(t.transformHeader)?t.transformHeader(r,n):r]){let t,c=a[r];for(;t=r+"_"+c,c++,i.has(t););i.add(t),o[n]=t,a[r]++,e=!0,(s=null===s?{}:s)[t]=r}else a[r]=1,o[n]=r;i.add(r)}e&&console.warn("Duplicate headers found and renamed."),u=!0}return{data:_,errors:E,meta:{delimiter:e,linebreak:n,aborted:p,truncated:!!r,cursor:T+(y||0),renamedHeaders:s}}}function B(){o(M()),_=[],E=[]}},this.abort=function(){p=!0},this.getCharIndex=function(){return d}}function g(t){var e=t.data,n=a[e.workerId],r=!1;if(e.error)n.userError(e.error,e.file);else if(e.results&&e.results.data){var o={abort:function(){r=!0,m(e.workerId,{data:[],errors:[],meta:{aborted:!0}})},pause:v,resume:v};if(S(n.userStep)){for(var i=0;i<e.results.data.length&&(n.userStep({data:e.results.data[i],errors:e.results.errors,meta:e.results.meta},o),!r);i++);delete e.results}else S(n.userChunk)&&(n.userChunk(e.results,o,e.file),delete e.results)}e.finished&&!r&&m(e.workerId,e.results)}function m(t,e){var n=a[t];S(n.userComplete)&&n.userComplete(e),n.terminate(),delete a[t]}function v(){throw new Error("Not implemented.")}function b(t){if("object"!=typeof t||null===t)return t;var e,n=Array.isArray(t)?[]:{};for(e in t)n[e]=b(t[e]);return n}function w(t,e){return function(){t.apply(e,arguments)}}function S(t){return"function"==typeof t}return c.parse=function(e,r){var o=(r=r||{}).dynamicTyping||!1;if(S(o)&&(r.dynamicTypingFunction=o,o={}),r.dynamicTyping=o,r.transform=!!S(r.transform)&&r.transform,!r.worker||!c.WORKERS_SUPPORTED)return o=null,c.NODE_STREAM_INPUT,"string"==typeof e?(e=(t=>65279!==t.charCodeAt(0)?t:t.slice(1))(e),o=new(r.download?u:f)(r)):!0===e.readable&&S(e.read)&&S(e.on)?o=new d(r):(n.File&&e instanceof File||e instanceof Object)&&(o=new l(r)),o.stream(e);(o=(()=>{var e;return!!c.WORKERS_SUPPORTED&&(e=(()=>{var e=n.URL||n.webkitURL||null,r=t.toString();return c.BLOB_URL||(c.BLOB_URL=e.createObjectURL(new Blob(["var global = (function() { if (typeof self !== 'undefined') { return self; } if (typeof window !== 'undefined') { return window; } if (typeof global !== 'undefined') { return global; } return {}; })(); global.IS_PAPA_WORKER=true; ","(",r,")();"],{type:"text/javascript"})))})(),(e=new n.Worker(e)).onmessage=g,e.id=i++,a[e.id]=e)})()).userStep=r.step,o.userChunk=r.chunk,o.userComplete=r.complete,o.userError=r.error,r.step=S(r.step),r.chunk=S(r.chunk),r.complete=S(r.complete),r.error=S(r.error),delete r.worker,o.postMessage({input:e,config:r,workerId:o.id})},c.unparse=function(t,e){var n=!1,r=!0,o=",",a="\r\n",i='"',s=i+i,u=!1,l=null,f=!1,d=((()=>{if("object"==typeof e){if("string"!=typeof e.delimiter||c.BAD_DELIMITERS.filter(function(t){return-1!==e.delimiter.indexOf(t)}).length||(o=e.delimiter),"boolean"!=typeof e.quotes&&"function"!=typeof e.quotes&&!Array.isArray(e.quotes)||(n=e.quotes),"boolean"!=typeof e.skipEmptyLines&&"string"!=typeof e.skipEmptyLines||(u=e.skipEmptyLines),"string"==typeof e.newline&&(a=e.newline),"string"==typeof e.quoteChar&&(i=e.quoteChar),"boolean"==typeof e.header&&(r=e.header),Array.isArray(e.columns)){if(0===e.columns.length)throw new Error("Option columns is empty");l=e.columns}void 0!==e.escapeChar&&(s=e.escapeChar+i),e.escapeFormulae instanceof RegExp?f=e.escapeFormulae:"boolean"==typeof e.escapeFormulae&&e.escapeFormulae&&(f=/^[=+\-@\t\r].*$/)}})(),new RegExp(h(i),"g"));if("string"==typeof t&&(t=JSON.parse(t)),Array.isArray(t)){if(!t.length||Array.isArray(t[0]))return p(null,t,u);if("object"==typeof t[0])return p(l||Object.keys(t[0]),t,u)}else if("object"==typeof t)return"string"==typeof t.data&&(t.data=JSON.parse(t.data)),Array.isArray(t.data)&&(t.fields||(t.fields=t.meta&&t.meta.fields||l),t.fields||(t.fields=Array.isArray(t.data[0])?t.fields:"object"==typeof t.data[0]?Object.keys(t.data[0]):[]),Array.isArray(t.data[0])||"object"==typeof t.data[0]||(t.data=[t.data])),p(t.fields||[],t.data||[],u);throw new Error("Unable to serialize unrecognized input");function p(t,e,n){var i="",c=("string"==typeof t&&(t=JSON.parse(t)),"string"==typeof e&&(e=JSON.parse(e)),Array.isArray(t)&&0<t.length),s=!Array.isArray(e[0]);if(c&&r){for(var u=0;u<t.length;u++)0<u&&(i+=o),i+=y(t[u],u);0<e.length&&(i+=a)}for(var l=0;l<e.length;l++){var f=(c?t:e[l]).length,d=!1,p=c?0===Object.keys(e[l]).length:0===e[l].length;if(n&&!c&&(d="greedy"===n?""===e[l].join("").trim():1===e[l].length&&0===e[l][0].length),"greedy"===n&&c){for(var h=[],g=0;g<f;g++){var m=s?t[g]:g;h.push(e[l][m])}d=""===h.join("").trim()}if(!d){for(var v=0;v<f;v++){0<v&&!p&&(i+=o);var b=c&&s?t[v]:v;i+=y(e[l][b],v)}l<e.length-1&&(!n||0<f&&!p)&&(i+=a)}}return i}function y(t,e){var r,a;return null==t?"":t.constructor===Date?JSON.stringify(t).slice(1,25):(a=!1,f&&"string"==typeof t&&f.test(t)&&(t="'"+t,a=!0),r=t.toString().replace(d,s),(a=a||!0===n||"function"==typeof n&&n(t,e)||Array.isArray(n)&&n[e]||((t,e)=>{for(var n=0;n<e.length;n++)if(-1<t.indexOf(e[n]))return!0;return!1})(r,c.BAD_DELIMITERS)||-1<r.indexOf(o)||" "===r.charAt(0)||" "===r.charAt(r.length-1))?i+r+i:r)}},c.RECORD_SEP=String.fromCharCode(30),c.UNIT_SEP=String.fromCharCode(31),c.BYTE_ORDER_MARK="\ufeff",c.BAD_DELIMITERS=["\r","\n",'"',c.BYTE_ORDER_MARK],c.WORKERS_SUPPORTED=!r&&!!n.Worker,c.NODE_STREAM_INPUT=1,c.LocalChunkSize=10485760,c.RemoteChunkSize=5242880,c.DefaultDelimiter=",",c.Parser=y,c.ParserHandle=p,c.NetworkStreamer=u,c.FileStreamer=l,c.StringStreamer=f,c.ReadableStreamStreamer=d,n.jQuery&&((e=n.jQuery).fn.parse=function(t){var r=t.config||{},o=[];return this.each(function(t){if("INPUT"!==e(this).prop("tagName").toUpperCase()||"file"!==e(this).attr("type").toLowerCase()||!n.FileReader||!this.files||0===this.files.length)return!0;for(var a=0;a<this.files.length;a++)o.push({file:this.files[a],inputElem:this,instanceConfig:e.extend({},r)})}),a(),this;function a(){if(0===o.length)S(t.complete)&&t.complete();else{var n,r,a,s=o[0];if(S(t.before)){var u=t.before(s.file,s.inputElem);if("object"==typeof u){if("abort"===u.action)return n=s.file,r=s.inputElem,a=u.reason,void(S(t.error)&&t.error({name:"AbortError"},n,r,a));if("skip"===u.action)return void i();"object"==typeof u.config&&(s.instanceConfig=e.extend(s.instanceConfig,u.config))}else if("skip"===u)return void i()}var l=s.instanceConfig.complete;s.instanceConfig.complete=function(t){S(l)&&l(t,s.file,s.inputElem),i()},c.parse(s.file,s.instanceConfig)}}function i(){o.splice(0,1),a()}}),o&&(n.onmessage=function(t){t=t.data,void 0===c.WORKER_ID&&t&&(c.WORKER_ID=t.workerId),"string"==typeof t.input?n.postMessage({workerId:c.WORKER_ID,results:c.parse(t.input,t.config),finished:!0}):(n.File&&t.input instanceof File||t.input instanceof Object)&&(t=c.parse(t.input,t.config))&&n.postMessage({workerId:c.WORKER_ID,results:t,finished:!0})}),(u.prototype=Object.create(s.prototype)).constructor=u,(l.prototype=Object.create(s.prototype)).constructor=l,(f.prototype=Object.create(f.prototype)).constructor=f,(d.prototype=Object.create(s.prototype)).constructor=d,c},void 0===(r=n.apply(e,[]))||(t.exports=r)}},e={};function n(r){var o=e[r];if(void 0!==o)return o.exports;var a=e[r]={exports:{}};return t[r].call(a.exports,a,a.exports,n),a.exports}n.n=t=>{var e=t&&t.__esModule?()=>t.default:()=>t;return n.d(e,{a:e}),e},n.d=(t,e)=>{for(var r in e)n.o(e,r)&&!n.o(t,r)&&Object.defineProperty(t,r,{enumerable:!0,get:e[r]})},n.o=(t,e)=>Object.prototype.hasOwnProperty.call(t,e),(()=>{"use strict";function t(){var n,r,o="function"==typeof Symbol?Symbol:{},a=o.iterator||"@@iterator",i=o.toStringTag||"@@toStringTag";function c(t,o,a,i){var c=o&&o.prototype instanceof u?o:u,l=Object.create(c.prototype);return e(l,"_invoke",function(t,e,o){var a,i,c,u=0,l=o||[],f=!1,d={p:0,n:0,v:n,a:p,f:p.bind(n,4),d:function(t,e){return a=t,i=0,c=n,d.n=e,s}};function p(t,e){for(i=t,c=e,r=0;!f&&u&&!o&&r<l.length;r++){var o,a=l[r],p=d.p,h=a[2];t>3?(o=h===e)&&(c=a[(i=a[4])?5:(i=3,3)],a[4]=a[5]=n):a[0]<=p&&((o=t<2&&p<a[1])?(i=0,d.v=e,d.n=a[1]):p<h&&(o=t<3||a[0]>e||e>h)&&(a[4]=t,a[5]=e,d.n=h,i=0))}if(o||t>1)return s;throw f=!0,e}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),i=l,c=h;(r=i<2?n:c)||!f;){a||(i?i<3?(i>1&&(d.n=-1),p(i,c)):d.n=c:d.v=c);try{if(u=2,a){if(i||(o="next"),r=a[o]){if(!(r=r.call(a,c)))throw TypeError("iterator result is not an object");if(!r.done)return r;c=r.value,i<2&&(i=0)}else 1===i&&(r=a.return)&&r.call(a),i<2&&(c=TypeError("The iterator does not provide a '"+o+"' method"),i=1);a=n}else if((r=(f=d.n<0)?c:t.call(e,d))!==s)break}catch(t){a=n,i=1,c=t}finally{u=1}}return{value:r,done:f}}}(t,a,i),!0),l}var s={};function u(){}function l(){}function f(){}r=Object.getPrototypeOf;var d=[][a]?r(r([][a]())):(e(r={},a,function(){return this}),r),p=f.prototype=u.prototype=Object.create(d);function h(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,f):(t.__proto__=f,e(t,i,"GeneratorFunction")),t.prototype=Object.create(p),t}return l.prototype=f,e(p,"constructor",f),e(f,"constructor",l),l.displayName="GeneratorFunction",e(f,i,"GeneratorFunction"),e(p),e(p,i,"Generator"),e(p,a,function(){return this}),e(p,"toString",function(){return"[object Generator]"}),(t=function(){return{w:c,m:h}})()}function e(t,n,r,o){var a=Object.defineProperty;try{a({},"",{})}catch(t){a=0}e=function(t,n,r,o){if(n)a?a(t,n,{value:r,enumerable:!o,configurable:!o,writable:!o}):t[n]=r;else{var i=function(n,r){e(t,n,function(t){return this._invoke(n,r,t)})};i("next",0),i("throw",1),i("return",2)}},e(t,n,r,o)}function r(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function o(t){return function(){var e=this,n=arguments;return new Promise(function(o,a){var i=t.apply(e,n);function c(t){r(i,o,a,c,s,"next",t)}function s(t){r(i,o,a,c,s,"throw",t)}c(void 0)})}}var a,i,c,s,u,l,f;const d={test:function(t){console.log("Got data in test:",t.rank_plot)},fetchFromPython:(f=o(t().m(function e(n){var r,o;return t().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,fetch(n);case 1:if((r=t.v).ok){t.n=3;break}return console.log("Retrying Fetch..."),t.n=2,fetch(n);case 2:r=t.v;case 3:return t.n=4,r.json();case 4:return o=t.v,t.a(2,o||null)}},e)})),function(t){return f.apply(this,arguments)}),fetchHeroData:(l=o(t().m(function e(){return t().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.fetchFromPython("/api/get_hero_data");case 1:return t.a(2,t.v)}},e,this)})),function(){return l.apply(this,arguments)}),fetchBattleData:(u=o(t().m(function e(n){return t().w(function(t){for(;;)switch(t.n){case 0:if(n){t.n=1;break}throw new Error("Must pass user to fetch battles data");case 1:return t.n=2,fetch("/api/get_battle_data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:n})});case 2:return t.a(2,t.v)}},e)})),function(t){return u.apply(this,arguments)}),rsFetchBattleData:(s=o(t().m(function e(n){return t().w(function(t){for(;;)switch(t.n){case 0:if(n){t.n=1;break}throw new Error("Must pass user to fetch battles data");case 1:return t.n=2,fetch("/api/rs_get_battle_data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:n})});case 2:return t.a(2,t.v)}},e)})),function(t){return s.apply(this,arguments)}),fetchSeasonDetails:(c=o(t().m(function e(){var n,r,o;return t().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,fetch("/api/get_season_details");case 1:return n=t.v,t.n=2,n.json();case 2:if(!(r=t.v).success){t.n=3;break}return o=JSON.parse(r.seasonDetails),t.a(2,{seasonDetails:o,error:!1});case 3:return t.a(2,{seasonDetails:null,error:r.error});case 4:return t.a(2)}},e)})),function(){return c.apply(this,arguments)}),fetchUser:(i=o(t().m(function e(n){var r,o,a,i,c;return t().w(function(t){for(;;)switch(t.n){case 0:if(n.name&&n.world_code||n.id){t.n=1;break}throw new Error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");case 1:return t.n=2,fetch("/api/get_user_data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({userData:n})});case 2:return r=t.v,t.n=3,r.json();case 3:if(o=t.v,t.p=4,!r.ok){t.n=9;break}if(o.foundUser){t.n=7;break}if(!n.name){t.n=5;break}return a=n.world_code.replace("world_",""),t.a(2,{user:null,error:'Could not find user: "'.concat(n.name,'" in world_code: ').concat(a)});case 5:if(!n.id){t.n=6;break}return t.a(2,{user:null,error:"Could not find user with ID: ".concat(n.id)});case 6:t.n=8;break;case 7:return i=o.user,console.log("Server communication successful; received response data for user"),console.log("Found user: ".concat(JSON.stringify(i))),t.a(2,{user:i,error:!1});case 8:t.n=10;break;case 9:return console.log("Server communication unsuccessful"),t.a(2,{user:null,error:o.error});case 10:t.n=12;break;case 11:return t.p=11,c=t.v,console.error("Error fetching and caching user: ".concat(c)),t.a(2,{user:null,error:c.message});case 12:return t.a(2)}},e,null,[[4,11]])})),function(t){return i.apply(this,arguments)}),fetchDataFromID:(a=o(t().m(function e(n){return t().w(function(t){for(;;)switch(t.n){case 0:if(n){t.n=1;break}throw new Error("Must pass ID to fetch user");case 1:return t.n=2,fetch("/api/get_battle_data_from_id",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:n})});case 2:return t.a(2,t.v)}},e)})),function(t){return a.apply(this,arguments)})};var p={};function h(t){var e=Number(t.replace("%",""));return e>50?"text-over50":e<50?"text-below50":""}p.functions={populateHeroStatsTable:function(t,e){var n=document.getElementById("".concat(t,"Body"));n.innerHTML="",e.forEach(function(t){var e=document.createElement("tr");e.innerHTML="\n            <td>".concat(t.hero,"</td>\n            <td>").concat(t.games_won,"</td>\n            <td>").concat(t.games_appeared,"</td>\n            <td>").concat(t.appearance_rate,"</td>\n            <td>").concat(t.win_rate,"</td>\n            <td>").concat(t["+/-"],"</td>\n            "),n.appendChild(e)});var r=t.includes("Player")?"Player":"Enemy";$("#"+t).DataTable({layout:{topStart:"buttons"},language:{info:"Total rows: _TOTAL_"},order:[[3,"desc"]],buttons:{name:"primary",buttons:["copy",{extend:"csv",text:"CSV",filename:r+" Hero Stats"},{extend:"excel",text:"Excel",filename:r+" Hero Stats"}]},columnDefs:[{targets:"_all",className:"nowrap"},{targets:4,createdCell:function(t,e){var n=Number(e.replace("%",""));n<50?t.style.color="red":n>50&&(t.style.color="mediumspringgreen")}}],pageLength:50,scrollY:"300px",deferRender:!0,scroller:!0,scrollCollapse:!1})},populateSeasonDetailsTable:function(t,e){var n=document.getElementById("".concat(t,"Body"));n.innerHTML="",e.forEach(function(t){var e=document.createElement("tr");e.innerHTML="\n            <td>".concat(t["Season Number"],"</td>\n            <td>").concat(t.Season,"</td>\n            <td>").concat(t.Start,"</td>\n            <td>").concat(t.End,"</td>\n            <td>").concat(t.Status,"</td>\n            "),n.appendChild(e)})},populateServerStatsTable:function(t,e){var n=document.getElementById("".concat(t,"-body"));n.innerHTML="",e.forEach(function(t){var e=document.createElement("tr");e.innerHTML="\n            <td>".concat(t.server,"</td>\n            <td>").concat(t.count,"</td>\n            <td>").concat(t.frequency,"</td>\n            <td>").concat(t.wins,'</td>\n            <td class="').concat(h(t.win_rate),'">').concat(t.win_rate,"</td>\n            <td>").concat(t["+/-"],'</td>\n            <td class="').concat(h(t.fp_wr),'">').concat(t.fp_wr,'</td>\n            <td class="').concat(h(t.sp_wr),'">').concat(t.sp_wr,"</td>\n            "),n.appendChild(e)})},populatePlayerPrebansTable:function(t,e){var n=document.getElementById("".concat(t,"Body"));n.innerHTML="",e.forEach(function(t){var e=document.createElement("tr");e.innerHTML="\n            <td>".concat(t.preban,"</td>\n            <td>").concat(t.appearances,"</td>\n            <td>").concat(t.appearance_rate,'</td>\n            <td class="').concat(h(t.win_rate),'">').concat(t.win_rate,"</td>\n            <td>").concat(t["+/-"],"</td>\n            "),n.appendChild(e)})},populatePlayerFirstPickTable:function(t,e){var n=document.getElementById("".concat(t,"Body"));n.innerHTML="",e.forEach(function(t){var e=document.createElement("tr");e.innerHTML="\n            <td>".concat(t.hero,"</td>\n            <td>").concat(t.appearances,"</td>\n            <td>").concat(t.appearance_rate,'</td>\n            <td class="').concat(h(t.win_rate),'">').concat(t.win_rate,"</td>\n            <td>").concat(t["+/-"],"</td>\n            "),n.appendChild(e)})},populateFullBattlesTable:function(t,e,n){var r,o=document.getElementById("".concat(t,"Body"));o.innerHTML="",r=n?n.name:0===e.length?"Empty":"UID(".concat(e[0]["P1 ID"],")"),e.forEach(function(t){var e=document.createElement("tr");e.innerHTML="\n            <td>".concat(t["Date/Time"],"</td>\n            <td>").concat(t["Seq Num"],"</td>\n            <td>").concat(t["P1 ID"],"</td>\n            <td>").concat(t["P1 Server"],"</td>\n            <td>").concat(t["P1 League"],"</td>\n            <td>").concat(t["P1 Points"],"</td>\n            <td>").concat(t["P2 ID"],"</td>\n            <td>").concat(t["P2 Server"],"</td>\n            <td>").concat(t["P2 League"],"</td>\n            <td>").concat(t.Win,"</td>\n            <td>").concat(t["First Pick"],"</td>\n            <td>").concat(t["P1 Preban 1"],"</td>\n            <td>").concat(t["P1 Preban 2"],"</td>\n            <td>").concat(t["P2 Preban 1"],"</td>\n            <td>").concat(t["P2 Preban 2"],"</td>\n            <td>").concat(t["P1 Pick 1"],"</td>\n            <td>").concat(t["P1 Pick 2"],"</td>\n            <td>").concat(t["P1 Pick 3"],"</td>\n            <td>").concat(t["P1 Pick 4"],"</td>\n            <td>").concat(t["P1 Pick 5"],"</td>\n            <td>").concat(t["P2 Pick 1"],"</td>\n            <td>").concat(t["P2 Pick 2"],"</td>\n            <td>").concat(t["P2 Pick 3"],"</td>\n            <td>").concat(t["P2 Pick 4"],"</td>\n            <td>").concat(t["P2 Pick 5"],"</td>\n            <td>").concat(t["P1 Postban"],"</td>\n            <td>").concat(t["P2 Postban"],"</td>\n            "),o.appendChild(e)});var a="".concat(r," Battle Data");return $("#BattlesTable").DataTable({layout:{topStart:"buttons"},language:{info:"Total rows: _TOTAL_"},order:[[0,"desc"]],columnDefs:[{targets:"_all",className:"nowrap"},{targets:9,createdCell:function(t,e){"W"===e?t.style.color="mediumspringgreen":"L"===e&&(t.style.color="red")}},{targets:10,createdCell:function(t,e){"True"===e&&(t.style.color="deepskyblue")}}],buttons:{name:"primary",buttons:["copy",{extend:"csv",text:"CSV",filename:a},{extend:"excel",text:"Excel",filename:a}]},pageLength:50,scrollY:"300px",deferRender:!0,scroller:!0,scrollCollapse:!1,columns:[{data:"Date/Time"},{data:"Seq Num"},{data:"P1 ID"},{data:"P1 Server"},{data:"P1 League"},{data:"P1 Points"},{data:"P2 ID"},{data:"P2 Server"},{data:"P2 League"},{data:"Win"},{data:"First Pick"},{data:"P1 Preban 1"},{data:"P1 Preban 2"},{data:"P2 Preban 1"},{data:"P2 Preban 2"},{data:"P1 Pick 1"},{data:"P1 Pick 2"},{data:"P1 Pick 3"},{data:"P1 Pick 4"},{data:"P1 Pick 5"},{data:"P2 Pick 1"},{data:"P2 Pick 2"},{data:"P2 Pick 3"},{data:"P2 Pick 4"},{data:"P2 Pick 5"},{data:"P1 Postban"},{data:"P2 Postban"}]})},replaceDatatableData:function(t,e){t.clear().rows.add(e).draw()}};var y={};y.functions={populateGeneralStats:function(t){document.getElementById("total-battles").textContent=t.total_battles,document.getElementById("first-pick-count").textContent=t.first_pick_count,document.getElementById("first-pick-rate").textContent=" (".concat(t.first_pick_rate,")"),document.getElementById("second-pick-count").textContent=t.second_pick_count,document.getElementById("second-pick-rate").textContent=" (".concat(t.second_pick_rate,")"),document.getElementById("total-winrate").textContent=t.total_winrate,document.getElementById("first-pick-winrate").textContent=t.first_pick_winrate,document.getElementById("second-pick-winrate").textContent=t.second_pick_winrate,document.getElementById("total-wins").textContent=t.total_wins,document.getElementById("max-win-streak").textContent=t.max_win_streak,document.getElementById("max-loss-streak").textContent=t.max_loss_streak,document.getElementById("avg-ppg").textContent=t.avg_ppg},populateRankPlot:function(t){var e=document.getElementById("rank-plot-container");e.innerHTML=t,e.querySelectorAll("script").forEach(function(t){var e=document.createElement("script");t.src?e.src=t.src:e.textContent=t.textContent,document.body.appendChild(e)}),setTimeout(function(){window.dispatchEvent(new Event("resize"))},10)}};var g,m=n(809),v=n.n(m),b=new Set(["world_kor","world_global","world_jpn","world_asia","world_eu"]),w={world_global:"Global",world_kor:"Korea",world_jpn:"Japan",world_asia:"Asia",world_eu:"Europe"},S=864e5,P={bronze:0,silver:1,gold:2,master:3,challenger:4,champion:5,warlord:6,emperor:7,legend:8},_=["Date/Time","Seq Num","P1 ID","P1 Server","P1 League","P1 Points","P2 ID","P2 Server","P2 League","Win","First Pick","P1 Preban 1","P1 Preban 2","P2 Preban 1","P2 Preban 2","P1 Pick 1","P1 Pick 2","P1 Pick 3","P1 Pick 4","P1 Pick 5","P2 Pick 1","P2 Pick 2","P2 Pick 3","P2 Pick 4","P2 Pick 5","P1 Postban","P2 Postban"],E=function(t){for(var e=new Uint8Array(30001),n=[],r=2;r<=t;r++)if(!e[r]){n.push(r);for(var o=r*r;o<=t;o+=r)e[o]=1}return n}(3e4);function k(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return T(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(T(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,T(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,T(f,"constructor",u),T(u,"constructor",s),s.displayName="GeneratorFunction",T(u,o,"GeneratorFunction"),T(f),T(f,o,"Generator"),T(f,r,function(){return this}),T(f,"toString",function(){return"[object Generator]"}),(k=function(){return{w:a,m:d}})()}function T(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}T=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){T(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},T(t,e,n,r)}function O(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}g=k().m(function t(e){var n,r,o;return k().w(function(t){for(;;)switch(t.n){case 0:return this.validateCSV(e),t.n=1,e.text();case 1:if(n=t.v,(r=v().parse(n,{header:!0,skipEmptyLines:!0,quoteChar:'"',dynamicTyping:!1})).meta.fields.forEach(function(t,e){var n=t.trim().replace(/"/g,"");if(n!==_[e])throw new Error("Header ".concat(n," does not match expected column ").concat(_[e]," at index ").concat(e))}),!(r.errors.length>0)){t.n=2;break}throw o=r.errors[0],new Error("Failed to parse CSV: Row ".concat(o.row,", ").concat(o.message));case 2:return t.a(2,r.data)}},t,this)});const A=(t,e)=>e.some(e=>t instanceof e);let I,D;const x=new WeakMap,L=new WeakMap,R=new WeakMap;let j={get(t,e,n){if(t instanceof IDBTransaction){if("done"===e)return x.get(t);if("store"===e)return n.objectStoreNames[1]?void 0:n.objectStore(n.objectStoreNames[0])}return N(t[e])},set:(t,e,n)=>(t[e]=n,!0),has:(t,e)=>t instanceof IDBTransaction&&("done"===e||"store"===e)||e in t};function F(t){j=t(j)}function C(t){return"function"==typeof t?(e=t,(D||(D=[IDBCursor.prototype.advance,IDBCursor.prototype.continue,IDBCursor.prototype.continuePrimaryKey])).includes(e)?function(...t){return e.apply(M(this),t),N(this.request)}:function(...t){return N(e.apply(M(this),t))}):(t instanceof IDBTransaction&&function(t){if(x.has(t))return;const e=new Promise((e,n)=>{const r=()=>{t.removeEventListener("complete",o),t.removeEventListener("error",a),t.removeEventListener("abort",a)},o=()=>{e(),r()},a=()=>{n(t.error||new DOMException("AbortError","AbortError")),r()};t.addEventListener("complete",o),t.addEventListener("error",a),t.addEventListener("abort",a)});x.set(t,e)}(t),A(t,I||(I=[IDBDatabase,IDBObjectStore,IDBIndex,IDBCursor,IDBTransaction]))?new Proxy(t,j):t);var e}function N(t){if(t instanceof IDBRequest)return function(t){const e=new Promise((e,n)=>{const r=()=>{t.removeEventListener("success",o),t.removeEventListener("error",a)},o=()=>{e(N(t.result)),r()},a=()=>{n(t.error),r()};t.addEventListener("success",o),t.addEventListener("error",a)});return R.set(e,t),e}(t);if(L.has(t))return L.get(t);const e=C(t);return e!==t&&(L.set(t,e),R.set(e,t)),e}const M=t=>R.get(t);function B(t,e,{blocked:n,upgrade:r,blocking:o,terminated:a}={}){const i=indexedDB.open(t,e),c=N(i);return r&&i.addEventListener("upgradeneeded",t=>{r(N(i.result),t.oldVersion,t.newVersion,N(i.transaction),t)}),n&&i.addEventListener("blocked",t=>n(t.oldVersion,t.newVersion,t)),c.then(t=>{a&&t.addEventListener("close",()=>a()),o&&t.addEventListener("versionchange",t=>o(t.oldVersion,t.newVersion,t))}).catch(()=>{}),c}const G=["get","getKey","getAll","getAllKeys","count"],U=["put","add","delete","clear"],H=new Map;function V(t,e){if(!(t instanceof IDBDatabase)||e in t||"string"!=typeof e)return;if(H.get(e))return H.get(e);const n=e.replace(/FromIndex$/,""),r=e!==n,o=U.includes(n);if(!(n in(r?IDBIndex:IDBObjectStore).prototype)||!o&&!G.includes(n))return;const a=async function(t,...e){const a=this.transaction(t,o?"readwrite":"readonly");let i=a.store;return r&&(i=i.index(e.shift())),(await Promise.all([i[n](...e),o&&a.done]))[0]};return H.set(e,a),a}F(t=>({...t,get:(e,n,r)=>V(e,n)||t.get(e,n,r),has:(e,n)=>!!V(e,n)||t.has(e,n)}));const K=["continue","continuePrimaryKey","advance"],W={},q=new WeakMap,z=new WeakMap,J={get(t,e){if(!K.includes(e))return t[e];let n=W[e];return n||(n=W[e]=function(...t){q.set(this,z.get(this)[e](...t))}),n}};async function*Y(...t){let e=this;if(e instanceof IDBCursor||(e=await e.openCursor(...t)),!e)return;const n=new Proxy(e,J);for(z.set(n,e),R.set(n,M(e));e;)yield n,e=await(q.get(n)||e.continue()),q.delete(n)}function X(t,e){return e===Symbol.asyncIterator&&A(t,[IDBIndex,IDBObjectStore,IDBCursor])||"iterate"===e&&A(t,[IDBIndex,IDBObjectStore])}function Q(t){return Q="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Q(t)}function Z(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return tt(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(tt(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,tt(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,tt(f,"constructor",u),tt(u,"constructor",s),s.displayName="GeneratorFunction",tt(u,o,"GeneratorFunction"),tt(f),tt(f,o,"Generator"),tt(f,r,function(){return this}),tt(f,"toString",function(){return"[object Generator]"}),(Z=function(){return{w:a,m:d}})()}function tt(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}tt=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){tt(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},tt(t,e,n,r)}function et(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),n.push.apply(n,r)}return n}function nt(t,e,n){return(e=function(t){var e=function(t){if("object"!=Q(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=Q(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==Q(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function rt(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function ot(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){rt(a,r,o,i,c,"next",t)}function c(t){rt(a,r,o,i,c,"throw",t)}i(void 0)})}}function at(t,e){return it.apply(this,arguments)}function it(){return(it=ot(Z().m(function t(e,n){var r;return Z().w(function(t){for(;;)switch(t.n){case 0:return(r=e.transaction(n,"readwrite")).objectStore(n).clear(),t.n=1,r.done;case 1:return t.a(2)}},t)}))).apply(this,arguments)}F(t=>({...t,get:(e,n,r)=>X(e,n)?Y:t.get(e,n,r),has:(e,n)=>X(e,n)||t.has(e,n)}));var ct,st,ut,lt,ft,dt,pt,ht,yt,gt,mt,vt,bt,wt,St,Pt,_t,Et,kt={USER:"current-user",HERO_MANAGER:"hero-manager",BATTLES:"battles",UPLOADED_BATTLES:"uploaded-battles",FILTERED_BATTLES:"filtered-battles",FILTER_STR:"filter-str",STATS:"stats",SEASON_DETAILS:"season-details",AUTO_ZOOM_FLAG:"auto-zoom",AUTO_QUERY_FLAG:"auto-query",GLOBAL_USERS:"global-users",EU_USERS:"eu-users",ASIA_USERS:"asia-users",JPN_USERS:"jpn-users",KOR_USERS:"kor-users"},Tt={autoZoom:kt.AUTO_ZOOM_FLAG,autoQuery:kt.AUTO_QUERY_FLAG},Ot={consts:{DB_NAME:"E7ArenaStatsClientDB",DB_VERSION:1,STORE_NAME:"DataStore",META_STORE_NAME:"MetaStore",CACHE_TIMEOUT:1728e5},Keys:function(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?et(Object(n),!0).forEach(function(e){nt(t,e,n[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):et(Object(n)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))})}return t}({},kt),MetaKeys:{TIMESTAMP:"timestamp"},loaded_UM:new Set,openDB:(Et=ot(Z().m(function t(){return Z().w(function(t){for(;;)if(0===t.n)return t.a(2,B(Ot.consts.DB_NAME,Ot.consts.DB_VERSION,{upgrade:function(t){t.objectStoreNames.contains(Ot.consts.STORE_NAME)&&(t.deleteObjectStore(Ot.consts.STORE_NAME),console.log("Old store deleted")),t.objectStoreNames.contains(Ot.consts.STORE_NAME)||(console.log("Created data store"),t.createObjectStore(Ot.consts.STORE_NAME)),t.objectStoreNames.contains(Ot.consts.META_STORE_NAME)||(console.log("Created meta data store"),t.createObjectStore(Ot.consts.META_STORE_NAME))}}))},t)})),function(){return Et.apply(this,arguments)}),get:(_t=ot(Z().m(function t(e){var n,r;return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,t.n=2,n.get(this.consts.STORE_NAME,e);case 2:if(null===(r=t.v)){t.n=3;break}console.log("Found ".concat(e," in cache")),t.n=4;break;case 3:return console.log("".concat(e," not found in cache; returning null")),t.a(2,null);case 4:return t.n=5,this.checkCacheTimeout(e);case 5:if(!t.v){t.n=6;break}return console.log("Timeout not reached, using cache for ".concat(e)),t.a(2,r);case 6:return console.log("Timeout reached, returning null for ".concat(e)),t.a(2,null);case 7:return t.a(2)}},t,this)})),function(t){return _t.apply(this,arguments)}),cache:(Pt=ot(Z().m(function t(e,n){var r;return Z().w(function(t){for(;;)switch(t.n){case 0:return console.log("Caching ".concat(e," with data: ").concat(n)),t.n=1,this.openDB();case 1:return r=t.v,t.n=2,r.put(this.consts.STORE_NAME,n,e);case 2:return t.n=3,this.setTimestamp(e,Date.now());case 3:return t.a(2)}},t,this)})),function(t,e){return Pt.apply(this,arguments)}),delete:(St=ot(Z().m(function t(e){var n;return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,t.n=2,n.delete(this.consts.STORE_NAME,e);case 2:return t.n=3,this.deleteTimestamp(e);case 3:return t.a(2)}},t,this)})),function(t){return St.apply(this,arguments)}),deleteDB:(wt=ot(Z().m(function t(){return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,indexedDB.deleteDatabase(this.consts.DB_NAME);case 1:console.log("Database deleted");case 2:return t.a(2)}},t,this)})),function(){return wt.apply(this,arguments)}),getTimestamp:(bt=ot(Z().m(function t(e){var n,r,o;return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,r="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,n.get(this.consts.META_STORE_NAME,r);case 2:return o=t.v,t.a(2,null!=o?o:null)}},t,this)})),function(t){return bt.apply(this,arguments)}),setTimestamp:(vt=ot(Z().m(function t(e,n){var r,o,a;return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return r=t.v,o="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,r.put(this.consts.META_STORE_NAME,n,o);case 2:return t.n=3,r.get(this.consts.META_STORE_NAME,o);case 3:a=t.v,console.log("Timestamp set: ".concat(a));case 4:return t.a(2)}},t,this)})),function(t,e){return vt.apply(this,arguments)}),deleteTimestamp:(mt=ot(Z().m(function t(e){var n,r;return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,r="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,n.delete(this.consts.META_STORE_NAME,r);case 2:console.log("Timestamp deleted for <".concat(e,">"));case 3:return t.a(2)}},t,this)})),function(t){return mt.apply(this,arguments)}),clearData:(gt=ot(Z().m(function t(){var e;return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return e=t.v,t.n=2,at(e,this.consts.STORE_NAME);case 2:return t.n=3,at(e,this.consts.META_STORE_NAME);case 3:console.log("All data cleared from data cache and meta data cache");case 4:return t.a(2)}},t,this)})),function(){return gt.apply(this,arguments)}),clearUserData:(yt=ot(Z().m(function t(){var e,n=this;return Z().w(function(t){for(;;)switch(t.n){case 0:return e=[kt.USER,kt.BATTLES,kt.UPLOADED_BATTLES,kt.FILTERED_BATTLES,kt.FILTER_STR,kt.STATS],t.n=1,Promise.all(e.map(function(t){return n.delete(t)}));case 1:console.log("User data cleared from data cache");case 2:return t.a(2)}},t)})),function(){return yt.apply(this,arguments)}),clearSeasonData:(ht=ot(Z().m(function t(){return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.delete(kt.SEASON_DETAILS);case 1:console.log("Season data cleared from data cache");case 2:return t.a(2)}},t,this)})),function(){return ht.apply(this,arguments)}),checkCacheTimeout:(pt=ot(Z().m(function t(e){var n,r;return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.getTimestamp(e);case 1:if(n=t.v,r=Date.now(),console.log("Checking Timeout for <".concat(e,"> | Current time: ").concat(r,", cache timestamp: ").concat(n,", difference: ").concat(r-n," ms")),n&&!(r-n>Ot.consts.CACHE_TIMEOUT)){t.n=3;break}return console.log("Cache timeout reached, clearing data from <".concat(e,">")),t.n=2,this.delete(e);case 2:return t.a(2,!1);case 3:return t.a(2,!0)}},t,this)})),function(t){return pt.apply(this,arguments)}),getFilterStr:(dt=ot(Z().m(function t(){return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.get(Ot.Keys.FILTER_STR);case 1:return t.a(2,t.v)}},t,this)})),function(){return dt.apply(this,arguments)}),setFilterStr:(ft=ot(Z().m(function t(e){return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.cache(Ot.Keys.FILTER_STR,e);case 1:return t.a(2)}},t,this)})),function(t){return ft.apply(this,arguments)}),getStats:(lt=ot(Z().m(function t(){return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.get(Ot.Keys.STATS);case 1:return t.a(2,t.v)}},t,this)})),function(){return lt.apply(this,arguments)}),setStats:(ut=ot(Z().m(function t(e){return Z().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.cache(kt.STATS,e);case 1:return t.a(2)}},t,this)})),function(t){return ut.apply(this,arguments)}),getFlag:(st=ot(Z().m(function t(e){var n;return Z().w(function(t){for(;;)switch(t.n){case 0:if(n=Tt[e]){t.n=1;break}throw new Error("No key found for flag <".concat(e,">"));case 1:return t.n=2,this.get(n);case 2:return t.a(2,t.v)}},t,this)})),function(t){return st.apply(this,arguments)}),setFlag:(ct=ot(Z().m(function t(e,n){var r;return Z().w(function(t){for(;;)switch(t.n){case 0:if(r=Tt[e]){t.n=1;break}throw new Error("No key found for flag <".concat(e,">"));case 1:return t.n=2,this.cache(r,n);case 2:return t.a(2)}},t,this)})),function(t,e){return ct.apply(this,arguments)})};const At=Ot;function It(t){var e={};for(var n in t)Array.isArray(t[n])&&t[n].length>0?e[n]=[t[n][0],"Length: ".concat(t[n].length)]:e[n]=t[n];console.log(e)}function Dt(t){return function(t){if(Array.isArray(t))return xt(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||function(t,e){if(t){if("string"==typeof t)return xt(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?xt(t,e):void 0}}(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function xt(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Lt(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return Rt(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Rt(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,Rt(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,Rt(f,"constructor",u),Rt(u,"constructor",s),s.displayName="GeneratorFunction",Rt(u,o,"GeneratorFunction"),Rt(f),Rt(f,o,"Generator"),Rt(f,r,function(){return this}),Rt(f,"toString",function(){return"[object Generator]"}),(Lt=function(){return{w:a,m:d}})()}function Rt(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Rt=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Rt(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Rt(t,e,n,r)}function jt(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function Ft(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){jt(a,r,o,i,c,"next",t)}function c(t){jt(a,r,o,i,c,"throw",t)}i(void 0)})}}function Ct(t){return Nt.apply(this,arguments)}function Nt(){return(Nt=Ft(Lt().m(function t(e){var n,r,o;return Lt().w(function(t){for(;;)switch(t.n){case 0:return t.p=0,t.n=1,fetch(e);case 1:if((n=t.v).ok){t.n=2;break}throw new Error("HTTP error: status: ".concat(n.status));case 2:return t.n=3,n.json();case 3:return r=t.v,console.log("Fetched data from E7 Server; keys:",Object.keys(r)),t.a(2,r);case 4:return t.p=4,o=t.v,console.error("Error fetching global user data:",o),t.a(2,null)}},t,null,[[0,4]])}))).apply(this,arguments)}function Mt(){return Mt=Ft(Lt().m(function t(){var e,n,r=arguments;return Lt().w(function(t){for(;;)switch(t.n){case 0:return e=r.length>0&&void 0!==r[0]?r[0]:null,console.log("Fetching hero data (lang=".concat(null!=e?e:"all",") from E7 Server...")),t.n=1,Ct("https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json");case 1:return n=t.v,e&&n[e]?n=n[e]:e&&!n[e]&&(console.error("Could not find hero data for language:",e),n=null),t.a(2,n)}},t)})),Mt.apply(this,arguments)}function Bt(){return(Bt=Ft(Lt().m(function t(e){var n,r;return Lt().w(function(t){for(;;)switch(t.n){case 0:if(e=e.replace("world_",""),Dt(b).some(function(t){return t.replace("world_","")===e})){t.n=1;break}return console.error("Could not find world code: ".concat(e)),t.a(2,null);case 1:return console.log("Fetching users for world code: ".concat(e," from E7 Server...")),n="https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(e,".json"),t.n=2,Ct(n);case 2:return(r=t.v)&&console.log("Got user data for world: ".concat(e," ; Found ").concat(r.users.length," users")),t.a(2,r)}},t)}))).apply(this,arguments)}const Gt={fetchHeroJSON:function(){return Mt.apply(this,arguments)},fetchUserJSON:function(t){return Bt.apply(this,arguments)}};function Ut(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],s=!0,u=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;s=!1}else for(;!(s=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);s=!0);}catch(t){u=!0,o=t}finally{try{if(!s&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(u)throw o}}return c}}(t,e)||Ht(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function Ht(t,e){if(t){if("string"==typeof t)return Vt(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Vt(t,e):void 0}}function Vt(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Kt(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return Wt(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Wt(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,Wt(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,Wt(f,"constructor",u),Wt(u,"constructor",s),s.displayName="GeneratorFunction",Wt(u,o,"GeneratorFunction"),Wt(f),Wt(f,o,"Generator"),Wt(f,r,function(){return this}),Wt(f,"toString",function(){return"[object Generator]"}),(Kt=function(){return{w:a,m:d}})()}function Wt(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Wt=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Wt(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Wt(t,e,n,r)}function qt(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function zt(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){qt(a,r,o,i,c,"next",t)}function c(t){qt(a,r,o,i,c,"throw",t)}i(void 0)})}}var Jt,Yt,$t,Xt,Qt={getHeroManager:(Xt=zt(Kt().m(function t(){var e,n,r,o;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.get(At.Keys.HERO_MANAGER);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=4;break;case 3:o=this.fetchAndCacheHeroManager();case 4:return t.a(2,o)}},t,this)})),function(){return Xt.apply(this,arguments)}),createHeroManager:function(t){var e,n=function(t){var e="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!e){if(Array.isArray(t)||(e=Ht(t))){e&&(t=e);var n=0,r=function(){};return{s:r,n:function(){return n>=t.length?{done:!0}:{done:!1,value:t[n++]}},e:function(t){throw t},f:r}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,a=!0,i=!1;return{s:function(){e=e.call(t)},n:function(){var t=e.next();return a=t.done,t},e:function(t){i=!0,o=t},f:function(){try{a||null==e.return||e.return()}finally{if(i)throw o}}}}(t.entries());try{for(n.s();!(e=n.n()).done;){var r=Ut(e.value,2),o=r[0],a=r[1],i=E[o];a.prime=i}}catch(t){n.e(t)}finally{n.f()}var c={heroes:t};return c=function(t){console.log("Adding Lookup Dicts"),console.log("\tAdding name lookup"),t.name_lookup=t.heroes.reduce(function(t,e){return t[e.name.toLowerCase().replace(/\s+/g,"")]=e,t},{}),console.log("\tAdding prime lookup"),t.prime_lookup=t.heroes.reduce(function(t,e){return t[e.prime]=e,t},{}),console.log("\tAdding code lookup"),t.code_lookup=t.heroes.reduce(function(t,e){return t[e.code]=e,t},{}),console.log("\tAdding prime pair lookup");var e=t.heroes.reduce(function(t,e){return t[e.prime]=e.name,t},{}),n=Object.keys(t.prime_lookup).length-1;console.log("\tAdding prime pair lookup; primes to process",n);for(var r=0;r<n-1;r++)for(var o=E[r],a=r+1;a<n;a++){var i=E[a],c=o*i,s=t.prime_lookup[o].name,u=t.prime_lookup[i].name;e[c]=[s,u].sort().join(", ")}return e[t.Fodder.prime*t.Fodder.prime]=[t.Fodder.name,t.Fodder.prime],t.prime_pair_lookup=e,t}(c=function(t){var e=t.heroes.length,n={attribute_cd:"N/A",code:"N/A",grade:"N/A",job_cd:"N/A",name:"Empty",prime:1},r={attribute_cd:"N/A",code:"N/A",grade:"2/3",job_cd:"N/A",name:"Fodder",prime:E[e]};return t.heroes.push(n),t.heroes.push(r),t.Fodder=r,t.Empty=n,t}(c)),c},fetchHeroManager:($t=zt(Kt().m(function t(){var e,n,r,o,a,i;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Gt.fetchHeroJSON();case 1:if(a=e=t.v,!(o=null!==a)){t.n=2;break}o=void 0!==e;case 2:if(!o){t.n=3;break}i=e,t.n=5;break;case 3:return t.n=4,d.fetchHeroData();case 4:i=t.v;case 5:return n=i.en,r=this.createHeroManager(n),console.log("Created HeroManager using raw data received from server"),t.a(2,r)}},t,this)})),function(){return $t.apply(this,arguments)}),fetchAndCacheHeroManager:(Yt=zt(Kt().m(function t(){var e;return Kt().w(function(t){for(;;)switch(t.n){case 0:return console.log("HeroManager not found in cache, fetching from server and caching it"),t.n=1,this.fetchHeroManager();case 1:return e=t.v,t.n=2,At.cache(At.Keys.HERO_MANAGER,e);case 2:return console.log("Cached HeroManager using raw data recieved from server"),It(e),t.a(2,e)}},t,this)})),function(){return Yt.apply(this,arguments)}),deleteHeroManager:(Jt=zt(Kt().m(function t(){return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.delete(At.Keys.HERO_MANAGER);case 1:console.log("Removed hero manager from cache");case 2:return t.a(2)}},t)})),function(){return Jt.apply(this,arguments)}),getHeroByName:function(t,e){var n;if(!e)throw new Error("HeroManager instance must be passed to lookup functions");if(!t)return e.Empty;var r=t.toLowerCase().replace(/\s+/g,"");return null!==(n=e.name_lookup[r])&&void 0!==n?n:null},getHeroByPrime:function(t,e){if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return e.prime_lookup[t]},getHeroByCode:function(t,e){var n;if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return t?null!==(n=e.code_lookup[t])&&void 0!==n?n:null:e.Empty},getPairNamesByProduct:function(t,e){if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return e.prime_pair_lookup[t]}};const Zt=Qt;function te(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],s=!0,u=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;s=!1}else for(;!(s=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);s=!0);}catch(t){u=!0,o=t}finally{try{if(!s&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(u)throw o}}return c}}(t,e)||ee(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function ee(t,e){if(t){if("string"==typeof t)return ne(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?ne(t,e):void 0}}function ne(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function re(t,e){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null,r=arguments.length>3&&void 0!==arguments[3]&&arguments[3];t.sort(function(t,e){return new Date(t["Date/Time"])-new Date(e["Date/Time"])}),e||(e={name:"UID: ".concat(t[0]["P1 ID"])});var o,a=t.map(function(t,e){return e}),i=t.map(function(t){return t["P1 Points"]}),c=[],s={startX:null,endX:null,startY:null,endY:null},u=function(t){var e="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!e){if(Array.isArray(t)||(e=ee(t))){e&&(t=e);var n=0,r=function(){};return{s:r,n:function(){return n>=t.length?{done:!0}:{done:!1,value:t[n++]}},e:function(t){throw t},f:r}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,a=!0,i=!1;return{s:function(){e=e.call(t)},n:function(){var t=e.next();return a=t.done,t},e:function(t){i=!0,o=t},f:function(){try{a||null==e.return||e.return()}finally{if(i)throw o}}}}(t.entries());try{for(u.s();!(o=u.n()).done;){var l=te(o.value,2),f=l[0],d=l[1];n&&d["Seq Num"]in n?(!0===r&&(s.startX=f<s.startX||null===s.startX?f-.5:s.startX,s.startY=d["P1 Points"]<s.startY+50||null===s.startY?d["P1 Points"]-50:s.startY,s.endX=f>s.endX||null===s.endX?f+.5:s.endX,s.endY=d["P1 Points"]>s.endY-50||null===s.endY?d["P1 Points"]+50:s.endY),c.push("#ff9900")):c.push("#0df8fd")}}catch(t){u.e(t)}finally{u.f()}var p={x:a,y:i,mode:"lines+markers",line:{color:"#4f9293",width:2},marker:{symbol:"circle",size:4,color:c},customdata:t.map(function(t){return[t["Date/Time"].slice(0,10),t["P1 League"]]}),hovertemplate:"Points: %{y}<br>Date: %{customdata[0]}<br>League: %{customdata[1]}<extra></extra>"},h={autosize:!0,font:{family:"Roboto, Open Sans"},title:{text:"".concat(e.name,"'s RTA Point Plot"),font:{size:24,color:"#dddddd"},xanchor:"center",yanchor:"top",y:.95,x:.5},xaxis:{title:{text:"Battle Number (Chronological)",font:{size:18,color:"#dddddd"}},showgrid:!0,gridcolor:"#8d8d8d",zeroline:!1,tickfont:{size:12,color:"#dddddd"},range:s.startX?[s.startX,s.endX]:null},yaxis:{title:{text:"Victory Points",font:{size:18,color:"#dddddd"}},showgrid:!0,gridcolor:"#8d8d8d",zeroline:!0,zerolinecolor:"#dddddd",zerolinewidth:2,tickfont:{size:12,color:"#dddddd"},range:s.startY?[s.startY,s.endY]:null},plot_bgcolor:"#1e222d",paper_bgcolor:"#1e222d"},y="plot-".concat(Math.random().toString(36).substr(2,9));return'<div id="'.concat(y,'"></div>')+"\n<script>\n    Plotly.newPlot('".concat(y,"', [").concat(JSON.stringify(p),"], ").concat(JSON.stringify(h),", ").concat(JSON.stringify({responsive:!0}),");\n<\/script>\n")}function oe(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"i";return new RegExp("^(?:".concat(t.source,")(?=[,)\\s;]|$)"),e)}function ae(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"i";return new RegExp("^(?:".concat(t.source,")$"),e)}var ie=/[a-z][a-z0-9.\s]*/i,ce=/\d{4}-\d{2}-\d{2}/,se=/\{\s*\}/,ue=/\d+/,le=/season-[1-9]+[0-9]*(\.[1-9]*)?|current-season/i,fe=new RegExp("^".concat(ce.source,"$"),"i"),de=new RegExp("(?:".concat(le.source,")"),"i"),pe=/(?:date|is-first-pick|is-win|victory-points|p1.picks|p1.prebans|p2.prebans|prebans|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league|p1.postban|p2.postban|p1.server|p2.server)/i,he=ie.source,ye=ue.source,ge=ce.source,me=pe.source,ve=de.source,be=new RegExp('"('.concat(he,")\"|'(").concat(he,")'"),"i"),we=new RegExp(ae(be),"i"),Se=be.source,Pe=new RegExp("(?:".concat(Se,"|").concat(he,"|").concat(ge,")"),"i"),_e=new RegExp("(?:".concat(me,"|").concat(ve,")"),"i"),Ee=Pe.source,ke=new RegExp("\\{\\s*(?:".concat(Ee,"\\s*)(?:,\\s*").concat(Ee,"\\s*)*,?\\s*\\}|").concat(se.source),"i"),Te=new RegExp("".concat(ye,"\\.\\.\\.").concat(ye,"|").concat(ge,"\\.\\.\\.").concat(ge,"|").concat(ye,"\\.\\.\\.=").concat(ye,"|").concat(ge,"\\.\\.\\.=").concat(ge)),Oe=new RegExp("^".concat(Te.source,"$")),Ae={VALID_STRING_RE:ie,VALID_DATE_RE:ce,VALID_INT_RE:ue,EMPTY_SET_RE:se,SET_ELEMENT_RE:Pe,VALID_SET_RE:ke,VALID_STRING_LITERAL_RE:we,VALID_DATE_LITERAL_RE:fe,VALID_INT_LITERAL_RE:/^\d+$/,VALID_BOOL_LITERAL_RE:/^(true|false)$/i,VALID_RANGE_RE:Te,VALID_RANGE_LITERAL_RE:Oe,VALID_SEASON_RE:le,VALID_SEASON_LITERAL_RE:ae(le),VALID_DATA_WORD_RE:de,VALID_DATA_WORD_LITERAL_RE:ae(de),VALID_FIELD_WORD_RE:pe,VALID_DATAFIELD_RE:_e,VALID_GLOBAL_FILTER_RE:/last-n\(\d+\)/i,ANCHORED_STR_LITERAL_RE:ae(we),padRegex:oe,anchorExp:ae,tokenMatch:function(t){return t.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()|LAST-N(?=\()/i)?(console.log("Matched stream as clause:",t),"keyword"):t.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)?(console.log("Matched stream as operator:",t),"operator"):t.match(new RegExp("[a-z0-9.\"'}=)-]".concat(_e.source,"(?=[,)\\s;]|$)"),"i"))?(console.log("Matched stream as field with preceding fragment:",t),null):t.match(oe(_e))?(console.log("Matched stream as Data Field:",t),"datafield"):t.match(/[^(,\s;.=0-9]+\d+/i)?(console.log("Matched stream as non-num null"),null):t.match(oe(Te))?(console.log("Matched stream as range:",t),"range"):t.match(oe(ue))?(console.log("Matched stream as number:",t),"number"):t.match(oe(ce))?(console.log("Matched stream as date:",t),"date"):t.match(oe(ke))?(console.log("Matched stream as set:",t),"set"):t.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)?(console.log("Matched stream as bool:",t),"bool"):t.match(oe(be))?(console.log("Matched stream as string:",t),"string"):t.match(/[\(\)\{\}\;\,]/)?(console.log("Matched stream as bracket:",t),"bracket"):(t.next(),console.log("Matched stream as null:",t),null)}};function Ie(t){return Ie="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Ie(t)}function De(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],s=!0,u=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;s=!1}else for(;!(s=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);s=!0);}catch(t){u=!0,o=t}finally{try{if(!s&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(u)throw o}}return c}}(t,e)||Le(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function xe(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=Le(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var a,i=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return i=t.done,t},e:function(t){c=!0,a=t},f:function(){try{i||null==n.return||n.return()}finally{if(c)throw a}}}}function Le(t,e){if(t){if("string"==typeof t)return Re(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Re(t,e):void 0}}function Re(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function je(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,Ce(r.key),r)}}function Fe(t,e,n){return e&&je(t.prototype,e),n&&je(t,n),Object.defineProperty(t,"prototype",{writable:!1}),t}function Ce(t){var e=function(t){if("object"!=Ie(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=Ie(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==Ie(e)?e:e+""}function Ne(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function Me(t,e,n){return e=Ve(e),function(t,e){if(e&&("object"==Ie(e)||"function"==typeof e))return e;if(void 0!==e)throw new TypeError("Derived constructors may only return object or undefined");return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(t,Ue()?Reflect.construct(e,n||[],Ve(t).constructor):e.apply(t,n))}function Be(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),Object.defineProperty(t,"prototype",{writable:!1}),e&&He(t,e)}function Ge(t){var e="function"==typeof Map?new Map:void 0;return Ge=function(t){if(null===t||!function(t){try{return-1!==Function.toString.call(t).indexOf("[native code]")}catch(e){return"function"==typeof t}}(t))return t;if("function"!=typeof t)throw new TypeError("Super expression must either be null or a function");if(void 0!==e){if(e.has(t))return e.get(t);e.set(t,n)}function n(){return function(t,e,n){if(Ue())return Reflect.construct.apply(null,arguments);var r=[null];r.push.apply(r,e);var o=new(t.bind.apply(t,r));return n&&He(o,n.prototype),o}(t,arguments,Ve(this).constructor)}return n.prototype=Object.create(t.prototype,{constructor:{value:n,enumerable:!1,writable:!0,configurable:!0}}),He(n,t)},Ge(t)}function Ue(){try{var t=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(t){}return(Ue=function(){return!!t})()}function He(t,e){return He=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(t,e){return t.__proto__=e,t},He(t,e)}function Ve(t){return Ve=Object.setPrototypeOf?Object.getPrototypeOf.bind():function(t){return t.__proto__||Object.getPrototypeOf(t)},Ve(t)}var Ke=function(t){function e(t){var n;return Ne(this,e),(n=Me(this,e,[t])).name="Filter Syntax Exception",n}return Be(e,t),Fe(e)}(Ge(Error)),We=function(t){function e(t){var n;return Ne(this,e),(n=Me(this,e,[t])).name="Filter Type Exception",n}return Be(e,t),Fe(e)}(Ge(Error)),qe=function(t){function e(t){var n;return Ne(this,e),(n=Me(this,e,[t])).name="Filter Validation Error",n}return Be(e,t),Fe(e)}(Ge(Error)),ze={"(":")","{":"}",'"':'"',"'":"'"},Je=Object.fromEntries(Object.entries(ze).filter(function(t){var e=De(t,2);return e[0]!==e[1]}).map(function(t){var e=De(t,2),n=e[0];return[e[1],n]}));const Ye={SyntaxException:Ke,TypeException:We,ValidationError:qe,retrieveEnclosure:function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"(",n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:")";if(e===n)throw new Error("Enclosure characters must be different: ".concat(e," = ").concat(n));var r,o=!1,a=0,i="",c=xe(function(t){return function(t){if(Array.isArray(t))return Re(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||Le(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}(t).entries());try{for(c.s();!(r=c.n()).done;){var s=De(r.value,2),u=s[0],l=s[1];if(l===e){if(a+=1,!o){o=!0;continue}}else l===n&&(a-=1);if(0===a&&o){if(u!=t.length-1)throw new Ke("Enclosure should not be resolved before end of string; resolved at index: ".concat(u,"; input string: ").concat(t));return i}if(a<0)throw new Ke("Unbalanced enclosure at index: ".concat(u," of input string: ").concat(t,'; balance of "').concat(e,"...").concat(n,'" enclosures became negative.'));o&&(i+=l)}}catch(t){c.e(t)}finally{c.f()}if(!o)throw new Ke("Enclosure of type ".concat(e,"...").concat(n," not found in string; input string: ").concat(t));if(a>0)throw new Ke("Enclosure could not be resolved; too many '".concat(n,"'; balance = +{count}; input string {string}"))},retrieveArgs:function(t){var e,n=0,r=[],o="",a=xe(t);try{for(a.s();!(e=a.n()).done;){var i=e.value;if("("===i){if(1===(n+=1))continue}else")"===i&&(n-=1);1===n&&","===i?(r.push(o.trim()),o=""):n>=1&&(o+=i)}}catch(t){a.e(t)}finally{a.f()}return o.trim()&&r.push(o.trim()),r},getCharCounts:function(t){var e,n={},r=xe(t);try{for(r.s();!(e=r.n()).done;){var o=e.value;n[o]=(n[o]||0)+1}}catch(t){r.e(t)}finally{r.f()}return n},tokenizeWithNestedEnclosures:function(t){for(var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:" ",n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0,r=!(arguments.length>3&&void 0!==arguments[3])||arguments[3],o=[],a="",i=[],c=0;c<t.length;c++){var s=t[c];if(e.includes(s)&&i.length===n)a&&(o.push(r?a.trim():a),a="");else if(Je[s]){var u=Je[s];if(i.length>n&&(a+=s),i[i.length-1]!==u)throw new Error("Unbalanced closing bracket at position ".concat(c));i.pop()}else i.length>=n&&(a+=s),ze[s]&&(i[i.length-1]===ze[s]&&s===ze[s]?i.pop():i.push(s))}if(i.length>0)throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: ",i);return a&&o.push(r?a.trim():a),o},parseDate:function(t){if(!Ae.VALID_DATE_LITERAL_RE.test(t))throw new Ke("Invalid date; must be in the format: YYYY-MM-DD ( regex: ".concat(Ae.VALID_DATE_LITERAL_RE.source," ); got: '").concat(t,"'"));var e=t.split(" ")[0],n=new Date("".concat(e,"T00:00:00"));if(isNaN(n.getTime()))throw new Ke("Invalid date; could not be parsed as a valid date; got: '".concat(t,"'"));var r=De(n.toISOString().split("T")[0].split("-").map(Number),3),o=r[0],a=r[1],i=r[2];if(n.getFullYear()!==o||n.getMonth()+1!==a||n.getDate()!==i)throw new Ke("Invalid date; parsed date: ".concat(n.toISOString()," does not match passed in string: ").concat(e));return console.log("Parsed date: ".concat(n.toISOString()," ; ").concat(n.constructor.name)),n},tryConvert:function(t,e,n){var r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:null;null===r&&(r="Could not convert ".concat(n," to ").concat(e));try{return t(n)}catch(t){throw new We("".concat(r,": ").concat(t.message))}}};function $e(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return Xe(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Xe(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,Xe(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,Xe(f,"constructor",u),Xe(u,"constructor",s),s.displayName="GeneratorFunction",Xe(u,o,"GeneratorFunction"),Xe(f),Xe(f,o,"Generator"),Xe(f,r,function(){return this}),Xe(f,"toString",function(){return"[object Generator]"}),($e=function(){return{w:a,m:d}})()}function Xe(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Xe=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Xe(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Xe(t,e,n,r)}function Qe(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function Ze(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){Qe(a,r,o,i,c,"next",t)}function c(t){Qe(a,r,o,i,c,"throw",t)}i(void 0)})}}var tn,en,nn,rn={fetchAndCacheSeasonDetails:(nn=Ze($e().m(function t(){var e,n,r,o,a,i;return $e().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,d.fetchSeasonDetails();case 1:if(!(e=t.v).error){t.n=2;break}throw new Error("Could not fetch season details: ".concat(e.error));case 2:return(n=e.seasonDetails).forEach(function(t){t.range=[t.Start,t.End].map(function(t){return new Date("".concat(t.split(" ")[0],"T00:00:00"))})}),n.sort(function(t,e){return t["Season Number"]-e["Season Number"]}),r=[n[0]],o=n[0],n.slice(1).forEach(function(t){var e=new Date(+o.range[1]+S),n=new Date(+t.range[0]-S),a={"Season Number":o["Season Number"]+.5,Code:null,Season:"Pre-Season: ".concat(t.Season),Start:e.toISOString().slice(0,10),End:n.toISOString().slice(0,10),Status:"Complete",range:[e,n]};r.push(a),r.push(t),o=t}),o.range[1]<new Date&&(a=new Date(+r.at(-1).range[1]+S),i={"Season Number":o["Season Number"]+.5,Code:null,Season:"Pre-Season: ".concat(season.Season),Start:a.toISOString().slice(0,10),End:"N/A",Status:"Active",range:[a,new Date]},r.push(i)),r.reverse(),t.n=3,At.cache(At.Keys.SEASON_DETAILS,r);case 3:return t.a(2,r)}},t)})),function(){return nn.apply(this,arguments)}),getSeasonDetails:(en=Ze($e().m(function t(){var e,n,r,o;return $e().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.get(At.Keys.SEASON_DETAILS);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=5;break;case 3:return t.n=4,rn.fetchAndCacheSeasonDetails();case 4:o=t.v;case 5:return t.a(2,o)}},t)})),function(){return en.apply(this,arguments)}),clearSeasonDetails:(tn=Ze($e().m(function t(){return $e().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.delete(At.Keys.SEASON_DETAILS);case 1:console.log("Season details cleared from data cache");case 2:return t.a(2)}},t)})),function(){return tn.apply(this,arguments)})};const on=rn;function an(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return cn(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(cn(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,cn(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,cn(f,"constructor",u),cn(u,"constructor",s),s.displayName="GeneratorFunction",cn(u,o,"GeneratorFunction"),cn(f),cn(f,o,"Generator"),cn(f,r,function(){return this}),cn(f,"toString",function(){return"[object Generator]"}),(an=function(){return{w:a,m:d}})()}function cn(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}cn=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){cn(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},cn(t,e,n,r)}function sn(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function un(t){return function(t){if(Array.isArray(t))return Pn(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||Sn(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function ln(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],s=!0,u=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;s=!1}else for(;!(s=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);s=!0);}catch(t){u=!0,o=t}finally{try{if(!s&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(u)throw o}}return c}}(t,e)||Sn(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function fn(t,e,n){return e=pn(e),function(t,e){if(e&&("object"==_n(e)||"function"==typeof e))return e;if(void 0!==e)throw new TypeError("Derived constructors may only return object or undefined");return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(t,dn()?Reflect.construct(e,n||[],pn(t).constructor):e.apply(t,n))}function dn(){try{var t=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(t){}return(dn=function(){return!!t})()}function pn(t){return pn=Object.setPrototypeOf?Object.getPrototypeOf.bind():function(t){return t.__proto__||Object.getPrototypeOf(t)},pn(t)}function hn(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),Object.defineProperty(t,"prototype",{writable:!1}),e&&yn(t,e)}function yn(t,e){return yn=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(t,e){return t.__proto__=e,t},yn(t,e)}function gn(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function mn(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,bn(r.key),r)}}function vn(t,e,n){return e&&mn(t.prototype,e),n&&mn(t,n),Object.defineProperty(t,"prototype",{writable:!1}),t}function bn(t){var e=function(t){if("object"!=_n(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=_n(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==_n(e)?e:e+""}function wn(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=Sn(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var a,i=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return i=t.done,t},e:function(t){c=!0,a=t},f:function(){try{i||null==n.return||n.return()}finally{if(c)throw a}}}}function Sn(t,e){if(t){if("string"==typeof t)return Pn(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Pn(t,e):void 0}}function Pn(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function _n(t){return _n="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},_n(t)}var En=new Set("'\"(),-.=; ><!1234567890{}abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");function kn(t,e){var n="object"===_n(e)?JSON.stringify(e):"".concat(e);if(e instanceof Set)return e.has(t);if("object"===_n(e)&&null!==e&&!Array.isArray(e)&&["start","end","endInclusive","type"].every(function(t){return e.hasOwnProperty(t)}))return t>=e.start&&(e.endInclusive?t<=e.end:t<e.end);if(Array.isArray(e))return e.includes(t);throw new Error("Invalid match pattern for 'in' operators; got: '".concat(t,"' and '").concat(n,"' (").concat(e.constructor.name,")"))}var Tn={">":function(t,e){return t>e},"<":function(t,e){return t<e},"=":function(t,e){return t===e},in:function(t,e){return kn(t,e)},">=":function(t,e){return t>=e},"<=":function(t,e){return t<=e},"!=":function(t,e){return t!==e},"!in":function(t,e){return!kn(t,e)}};function On(t){return function(t,e){var n,r=wn(t);try{for(r.s();!(n=r.n()).done;){var o=n.value;if(!e.has(o))throw new Ye.SyntaxException("Invalid character within <".concat("Main Filter String","> ; ' ").concat(o," ' is not allowed; got string: '").concat(t,"'"))}}catch(t){r.e(t)}finally{r.f()}}(t=t.replace(/[\n\t\r]/g," ").replace(/\s+/g," "),En),t.toLowerCase()}var An,In,Dn,xn=new Set(["victory-points"]),Ln=new Set(["prebans","p1.picks","p2.picks","p1.prebans","p2.prebans"]),Rn=function(){return vn(function t(e){gn(this,t);var n=t.FIELD_EXTRACT_FN_MAP[e];if(!n)throw new Ye.ValidationError("Invalid field type: '".concat(e,"'; valid types are: ").concat(Object.keys(t.FIELD_EXTRACT_FN_MAP).join(", ")));console.log("Found valid field type: ",e),this.str=e,this.extractData=n},[{key:"toString",value:function(){return this.str}}])}();An=Rn,Dn={date:function(t){var e;return t["Date/Time"]?new Date("".concat(null===(e=t["Date/Time"])||void 0===e?void 0:e.slice(0,10),"T00:00:00")):"N/A"},"is-first-pick":function(t){return"True"===t["First Pick"]?1:0},"is-win":function(t){return"W"===t.Win?1:0},"victory-points":function(t){return t["P1 Points"]},"p1.picks":function(t){return t["P1 Picks"]},"p2.picks":function(t){return t["P2 Picks"]},"p1.prebans":function(t){return t["P1 Prebans"]},"p2.prebans":function(t){return t["P2 Prebans"]},"p1.postban":function(t){return t["P1 Postban"]},"p2.postban":function(t){return t["P2 Postban"]},prebans:function(t){return[].concat(un(t["P1 Prebans"]),un(t["P2 Prebans"]))},"p1.pick1":function(t){return t["P1 Pick 1"]},"p1.pick2":function(t){return t["P1 Pick 2"]},"p1.pick3":function(t){return t["P1 Pick 3"]},"p1.pick4":function(t){return t["P1 Pick 4"]},"p1.pick5":function(t){return t["P1 Pick 5"]},"p2.pick1":function(t){return t["P2 Pick 1"]},"p2.pick2":function(t){return t["P2 Pick 2"]},"p2.pick3":function(t){return t["P2 Pick 3"]},"p2.pick4":function(t){return t["P2 Pick 4"]},"p2.pick5":function(t){return t["P2 Pick 5"]},"p1.league":function(t){return P[t["P1 League"]]},"p2.league":function(t){return P[t["P2 League"]]},"p1.server":function(t){return t["P1 Server"]},"p2.server":function(t){return t["P2 Server"]}},(In=bn(In="FIELD_EXTRACT_FN_MAP"))in An?Object.defineProperty(An,In,{value:Dn,enumerable:!0,configurable:!0,writable:!0}):An[In]=Dn;var jn=function(){return vn(function t(e){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null;gn(this,t),this.rawString=e,this.data=this.getData(e,n)},[{key:"toString",value:function(){return"".concat(this.data)}}])}(),Fn=function(t){function e(){return gn(this,e),fn(this,e,arguments)}return hn(e,t),vn(e,[{key:"getData",value:function(t,e){if(t=(t=t.replace(/'/g,"").replace(/"/g,"")).trim(),!Ae.VALID_STRING_RE.test(t))throw new Ye.SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(Ae.VALID_STRING_LITERAL_RE.source," ); got: '").concat(t,"'"));t=t.replace(/"|'/g,"");var n=Zt.getHeroByName(t,e),r=P[t],o=Object.values(w).find(function(e){return e.toLowerCase()===t});if(!(n||r||o))throw new Ye.SyntaxException("Invalid string; All strings must either be a valid hero, league name, or server; got: '".concat(t,"'"));return n?n.name:r||o}},{key:"toString",value:function(){return'"'.concat(this.data,'"')}}])}(jn),Cn=function(t){function e(){return gn(this,e),fn(this,e,arguments)}return hn(e,t),vn(e,[{key:"getData",value:function(t){return Ye.parseDate(t)}},{key:"toString",value:function(){return"".concat(this.data)}}])}(jn),Nn=function(t){function e(){return gn(this,e),fn(this,e,arguments)}return hn(e,t),vn(e,[{key:"getData",value:function(t){if(!Ae.VALID_INT_LITERAL_RE.test(t))throw new Ye.SyntaxException("Invalid integer; must be a number; got: '".concat(t,"'"));var e=parseInt(t);if(isNaN(e))throw new Ye.SyntaxException("Invalid integer; must be a number; got: '".concat(t,"'"));return e}},{key:"toString",value:function(){return"".concat(this.data)}}])}(jn),Mn=function(t){function e(){return gn(this,e),fn(this,e,arguments)}return hn(e,t),vn(e,[{key:"getData",value:function(t){if(!Ae.VALID_BOOL_LITERAL_RE.test(t))throw new Ye.SyntaxException("Invalid boolean; must be 'true' or 'false'; got: '".concat(t,"'"));return"true"===t?1:0}},{key:"toString",value:function(){return"".concat(this.data?"true":"false")}}])}(jn),Bn=function(t){function e(){return gn(this,e),fn(this,e,arguments)}return hn(e,t),vn(e,[{key:"getData",value:function(t){var e=t.split("...");if(2!==e.length)throw new Ye.SyntaxException("Invalid range; ranges must be of the format x...y or x...=y ; got more than two values when splitting string: '".concat(t,"'"));var n=ln(e,2),r=n[0],o=n[1],a=!1;o.includes("=")&&(o=o.replace("=",""),a=!0);var i={start:null,end:null,endInclusive:a};if(Ae.VALID_DATE_LITERAL_RE.test(r)){if(i.start=Ye.tryConvert(Ye.parseDate,"Date",r,"Could not convert '".concat(r,"' to Date in declared range: '").concat(t,"'")),i.end=Ye.tryConvert(Ye.parseDate,"Date",o,"Could not convert '".concat(o,"' to Date in declared range: '").concat(t,"' ; Ranges must have homogenous types")),i.start>i.end)throw new Ye.SyntaxException("Invalid range; start date must be on or before end date; ".concat(i.start," > ").concat(i.end));i.type="Date"}else{if(!Ae.VALID_INT_LITERAL_RE.test(r))throw new Ye.SyntaxException("Invalid range; must be of the format x...y or x...=y ; got: '".concat(t,"'"));if(i.start=Ye.tryConvert(function(t){return new Nn(t)},"Int",r,"Could not convert '".concat(r,"' to Int in declared range: '").concat(t,"'")).data,i.end=Ye.tryConvert(function(t){return new Nn(t)},"Int",o,"Could not convert '".concat(o,"' to Int in declared range: '").concat(t,"' ; Ranges must have homogenous types")).data,i.start>i.end)throw new Ye.SyntaxException("Invalid range; start integer must be equal to or less than end integer; ".concat(i.start," > ").concat(i.end));i.type="Int"}return console.log("Built Range: ".concat(JSON.stringify(i))),i}},{key:"toString",value:function(){var t=this.data.endInclusive?"...=":"...";return"Date"===this.data.type?"".concat(this.data.start.toISOString()).concat(t).concat(this.data.end.toISOString(),")"):"Int"===this.data.type?"".concat(this.data.start,"...").concat(t).concat(this.data.end):"Error Converting Range to String => < ".concat(this.data.start,"...").concat(t).concat(this.data.end," >")}}])}(jn),Gn=function(t){function e(){return gn(this,e),fn(this,e,arguments)}return hn(e,t),vn(e,[{key:"getData",value:function(t,e){if(!Ae.VALID_SET_RE.test(t))throw new Ye.SyntaxException("Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ".concat(Ae.VALID_SET_RE.source," ) (Just chat gpt this one bro); got: '").concat(t,"'"));var n=t.replace(/^\{|\}$/g,"").split(",").map(function(t){return t.trim()}).filter(function(t){return""!==t}).map(function(t){if(Ae.VALID_STRING_RE.test(t))return new Fn(t,e);if(Ae.VALID_DATE_LITERAL_RE.test(t))return new Cn(t);throw new Ye.SyntaxException("Invalid set element; must be a string or date; got: '".concat(t,"'"))});console.log("GOT ELEMENTS: ",n);var r,o=new Set,a=wn(n);try{for(a.s();!(r=a.n()).done;){var i=r.value;o.add(i.constructor.name)}}catch(t){a.e(t)}finally{a.f()}if(o=un(o),console.log("GOT TYPES: ",o),o.size>1)throw new Ye.SyntaxException("Invalid set; all set elements must have the same data type; got: types: [".concat(o.join(", "),"]"));return this.Type=o[0],new Set(n.map(function(t){return t.data}))}},{key:"toString",value:function(){return"{".concat(this.data.map(function(t){return t.toString()}).join(", "),"}")}}])}(jn);var Un=function(){return vn(function t(){gn(this,t)},[{key:"call",value:function(t){throw new Error("Base class ".concat(this.constructor.name," does not implement the 'call' method. Implement this method in a subclass."))}}])}(),Hn=function(t){function e(t){var n;if(gn(this,e),(n=fn(this,e)).name="last-N",1!==t.length)throw new Ye.SyntaxException("".concat(n.name," expects 1 argument, got ").concat(t.length));var r=Number(t[0]);if(!Number.isInteger(r))throw new Ye.TypeException("".concat(n.name," expects an integer argument, could not parse '").concat(t[0],"' as integer"));return n.str="".concat(n.name,"(").concat(r,")"),n.n=r,n}return hn(e,t),vn(e,[{key:"call",value:function(t){return t.sort(function(t,e){return t["Seq Num"]-e["Seq Num"]}),t.slice(-this.n)}}])}(function(t){function e(){return gn(this,e),fn(this,e)}return hn(e,t),vn(e,[{key:"toString",value:function(){return"".concat(arguments.length>0&&void 0!==arguments[0]?arguments[0]:"").concat(this.str)}}])}(Un)),Vn=function(t){function e(t){var n;return gn(this,e),(n=fn(this,e)).fns=t,console.log("Clause Fn constructor got fns:",t),n}return hn(e,t),vn(e,[{key:"toString",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",e="",n=t+"   ";return this.fns.localFilters.forEach(function(t){return e+="".concat(t.toString(n),",\n")}),console.log("Clause Fn toString got output:",e),"".concat(t).concat(this.str,"(\n").concat(e.trimEnd(),"\n").concat(t,")")}}])}(Un),Kn=function(t){function e(t){var n;return gn(this,e),(n=fn(this,e,[t])).str="AND",n}return hn(e,t),vn(e,[{key:"call",value:function(t){return this.fns.localFilters.every(function(e){return e.call(t)})}}])}(Vn),Wn=function(t){function e(t){var n;return gn(this,e),(n=fn(this,e,[t])).str="OR",n}return hn(e,t),vn(e,[{key:"call",value:function(t){return this.fns.localFilters.some(function(e){return e.call(t)})}}])}(Vn),qn=function(t){function e(t){var n;return gn(this,e),(n=fn(this,e,[t])).str="XOR",n}return hn(e,t),vn(e,[{key:"call",value:function(t){var e,n=!1,r=wn(this.fns.localFilters);try{for(r.s();!(e=r.n()).done;){var o=e.value;n=!n&&o.call(t)||n&&!o.call(t)}}catch(t){r.e(t)}finally{r.f()}return n}}])}(Vn),zn=function(t){function e(t){var n;return gn(this,e),(n=fn(this,e,[t])).str="NOT",n}return hn(e,t),vn(e,[{key:"call",value:function(t){return!this.fns.localFilters[0].call(t)}}])}(Vn),Jn={and:Kn,or:Wn,xor:qn,not:zn,"last-n":Hn},Yn=new Set([Kn,Wn,qn,zn]),$n=new Set([Hn]),Xn=function(){return vn(function t(e,n){gn(this,t),this.str=e,this.fn=n},[{key:"call",value:function(t){return this.fn(t)}},{key:"toString",value:function(){return"".concat(arguments.length>0&&void 0!==arguments[0]?arguments[0]:"").concat(this.str)}}])}();function Qn(t,e,n,r,o){var a=null;try{a=e in Rn.FIELD_EXTRACT_FN_MAP?new Rn(e):function(t,e,n){if(console.log("Trying to Parse DataType: ".concat(t)),Ae.VALID_STRING_LITERAL_RE.test(t))return console.log("Parsing as StringType"),new Fn(t,e);if(Ae.VALID_DATE_LITERAL_RE.test(t))return console.log("Parsing as DateType"),new Cn(t);if(Ae.VALID_INT_LITERAL_RE.test(t))return console.log("Parsing as IntType"),new Nn(t);if(Ae.VALID_BOOL_LITERAL_RE.test(t))return console.log("Parsing as BoolType"),new Mn(t);if(/\{.*\}/.test(t))return console.log("Parsing as SetType"),new Gn(t,e);if(Ae.VALID_RANGE_LITERAL_RE.test(t))return console.log("Parsing as RangeType"),new Bn(t);if(Ae.VALID_DATA_WORD_LITERAL_RE.test(t))return console.log("Parsing as DataWord"),function(t,e){if(Ae.VALID_SEASON_LITERAL_RE.test(t)){var n=function(t){return t.toISOString().slice(0,10)};if(e.SeasonDetails.length<1)throw new Error("Did not recieve any season details; failed on: '".concat(t,"'"));if("current-season"===t){var r=ln(e.SeasonDetails.find(function(t){return"Active"===t.Status}).range,2),o=r[0],a=r[1];return new Bn("".concat(n(o),"...=").concat(n("N/A"===a?new Date:a)))}var i=Number(t.split("-")[1]),c=e.SeasonDetails.find(function(t){return t["Season Number"]===i});if(!c)throw new Error("Invalid season specified; ".concat(i," is not a valid season number; failed on str: '").concat(t,"'"));var s=ln(c.range,2),u=s[0],l=s[1];return new Bn("".concat(n(u),"...=").concat(n(l)))}}(t,{SeasonDetails:n});if(console.log("Failed to parse DataType"),Ae.VALID_STRING_LITERAL_RE.test("'".concat(t,"'")))throw new Ye.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; did you forget to wrap string literals in double or single quotes?"));if(t.includes("'")&&t.includes('"'))throw new Ye.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; did you encase in mismatching quote types?"));if(t.includes(".=")||t.includes(".."))throw new Ye.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only be int-int or date-date"));throw new Ye.SyntaxException("Invalid DataType declaration; could not parse to valid Field or Declared Data Type; got: '".concat(t,"'"))}(e,r,o)}catch(r){for(var i in Rn.FIELD_EXTRACT_FN_MAP)if(e.includes(i)||i.includes(e))throw new Ye.SyntaxException("Could not parse ".concat(t,' side of filter; got: "').concat(e,'" from filter: [').concat(n,"], did you mean to use '").concat(i,"' as a field instead?"));throw console.error(r),new Ye.SyntaxException("Could not parse ".concat(t,' side of filter; got: "').concat(e,'" from filter: [').concat(n,"]; error: ").concat(r.message))}return a}var Zn=function(){function t(e){if(gn(this,t),e!==tr._)throw new Error("Cannot instantiate FilterSyntaxParser directly; use createAndParse method instead.")}return vn(t,[{key:"toString",value:function(){var t=un(this.filters.localFilters);return t.push.apply(t,un(this.filters.globalFilters)),"[\n".concat(t.map(function(t){return t.toString("   ")}).join(";\n"),"\n]")}},{key:"parseGlobalFilterFn",value:function(t,e){var n=Ae.anchorExp(Ae.VALID_GLOBAL_FILTER_RE);if(!n.test(e))throw new Ye.SyntaxException('Invalid global filter format; must follow the case insensitive regex format "'.concat(n.source,"\" ; got: '").concat(e,"'"));var r=Ye.tokenizeWithNestedEnclosures(e,",",1);if(t===Hn)return{localFilters:[],globalFilters:[new Hn(r)]};throw new Ye.SyntaxException("Global filter function ".concat(t.str," not mapped in parseGlobalFilterFn"))}},{key:"parseClauseFn",value:function(e,n){var r=this;console.log("Parsing clause fn:",e.name,n);var o=Ye.tokenizeWithNestedEnclosures(n,",",1);if(console.log("Got argArr:",o),e===qn&&o.length<2)throw new Ye.SyntaxException("XOR clause must have at least two arguments; got: ".concat(o.length,' arguments from string: "').concat(n,'"'));if(e===zn&&1!==o.length)throw new Ye.SyntaxException("NOT clause must have exactly one argument; got: ".concat(o.length,' arguments from string: "').concat(n,'"'));var a=o.reduce(function(t,e){var n,o;return(n=t.localFilters).push.apply(n,un(r.parseFilters(e).localFilters)),(o=t.globalFilters).push.apply(o,un(r.parseFilters(e).globalFilters)),t},t.getEmptyFilters());if(a.globalFilters.length>0)throw new Ye.SyntaxException("Global filters not allowed in clause functions; got: ".concat(a.globalFilters,' from string: "').concat(n,'"'));if(e===zn&&1!==a.localFilters.length)throw new Ye.SyntaxException("NOT clause must have exactly one argument; got: ".concat(a.length,' arguments from string: "').concat(n,'"'));return{localFilters:[new e(a)],globalFilters:[]}}},{key:"parseBaseFilter",value:function(t){console.log("Parsing base filter:",t);var e=this.HM,n=Ye.tokenizeWithNestedEnclosures(t," ",0,!0);if(console.log("Got tokens: ",n,"; Length: ".concat(n.length)),3!==n.length)throw new Ye.SyntaxException("Invalid base filter format; all filters must be of the form: ['X', operator, 'Y']; got tokens: [".concat(n.join(", "),"]"));var r=ln(n,3),o=r[0],a=r[1],i=r[2];if(!Tn[a])throw new Ye.SyntaxException('Invalid operator in base filter; got: "'.concat(a,'" as the operator in filter: [').concat(t,"]"));var c=Tn[a];if(o=Qn("left",o,t,e,this.SeasonDetails),i=Qn("right",i,t,e,this.SeasonDetails),("in"===a||"!in"===a)&&!(i instanceof Gn||i instanceof Bn||i instanceof Rn&&Ln.has(i.str)))throw new Ye.TypeException("When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '".concat(t,"'"));if(i instanceof Bn)if("Date"===i.data.type){if(!o.str.includes("date"))throw new Ye.TypeException("When using a Date Range, the left side of the operator must be a date field; ".concat(o.str," is not a date field; error found in filter: '").concat(t,"'"))}else if("Int"===i.data.type&&!xn.has(o.str))throw new Ye.TypeException("When using an Int Range, the left side of the operator must be an integer field; ".concat(o.str," is not an integer field; error found in filter: '").concat(t,"'"));if(i instanceof jn&&o instanceof jn)throw new Ye.SyntaxException("Either left or right side of filter must be a data field (a property of a battle); both ".concat(o," and ").concat(i,' are user declared data types in filter: "').concat(t,'"'));var s;return s=o instanceof jn?function(t){return c(o.data,i.extractData(t))}:i instanceof jn?function(t){return c(o.extractData(t),i.data)}:function(t){return c(o.extractData(t),i.extractData(t))},console.log("Returning base local filter",[new Xn(t,s).toString()]),{localFilters:[new Xn(t,s)],globalFilters:[]}}},{key:"parseFilters",value:function(e){var n=this;if(console.log('Parsing filter string: "'.concat(e||this.preParsedString,'"')),""===e)return console.log("Empty filter string; Returning empty filters"),t.getEmptyFilters();var r,o=(e=e.trim()).split(";").filter(function(t){return t.length>0}),a=wn(o);try{for(a.s();!(r=a.n()).done;){var i=r.value,c=Ye.getCharCounts(i);if(c["("]!==c[")"])throw new Ye.SyntaxException('Imbalanced parentheses in following string: "'.concat(i,'"'));if(c["{"]!==c["}"])throw new Ye.SyntaxException("Imbalanced braces ('{', '}') in following string: \"".concat(i,'"'));if((c['"']||0)%2!=0)throw new Ye.SyntaxException('Imbalanced double quotes in following string: "'.concat(i,'"'));if((c["'"]||0)%2!=0)throw console.log("Imbalanced single quotes in following string:",i,"; got:",c["'"]),new Ye.SyntaxException('Imbalanced single quotes in following string: "'.concat(i,'"'))}}catch(t){a.e(t)}finally{a.f()}if(o.length>1)return console.log("Processing <".concat(o.length,"> filters; filters: ").concat(o)),o.reduce(function(t,e){var r,o;return(r=t.localFilters).push.apply(r,un(n.parseFilters(e).localFilters)),(o=t.globalFilters).push.apply(o,un(n.parseFilters(e).globalFilters)),t},t.getEmptyFilters());var s=o[0];if(s.length<4)throw new Ye.SyntaxException("Filter string cannot be valid (less than 4 characters); got filter string: [".concat(s,"]"));var u=s.split("("),l=Jn[u[0]];if(console.log("Trying to look for Fn ; got:",u[0],"from string:",s),l){if(Yn.has(l))return console.log("Found clause fn; dispatching to clause fn parser"),this.parseClauseFn(l,s);if($n.has(l))return console.log("Found global filter fn; dispatching to global filter fn parser"),this.parseGlobalFilterFn(l,s);throw new Error('could not parse filter string as Fn: "'.concat(e,'" ; did not map to any defined pattern'))}return console.log("Did not find Fn; dispatching to base filter parser"),this.parseBaseFilter(s)}}],[{key:"getEmptyFilters",value:function(){return{localFilters:[],globalFilters:[]}}},{key:"createAndParse",value:(e=function(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){sn(a,r,o,i,c,"next",t)}function c(t){sn(a,r,o,i,c,"throw",t)}i(void 0)})}}(an().m(function e(n){var r,o,a,i,c,s=arguments;return an().w(function(e){for(;;)switch(e.n){case 0:if(r=s.length>1&&void 0!==s[1]?s[1]:null,o=s.length>2&&void 0!==s[2]?s[2]:null,console.log("Initialized parsing of string:",n),a=new t(tr._),i=r){e.n=2;break}return e.n=1,Zt.getHeroManager();case 1:i=e.v;case 2:if(r=i,c=o){e.n=4;break}return e.n=3,on.getSeasonDetails();case 3:c=e.v;case 4:return o=c,a.rawString=n,a.HM=r,a.SeasonDetails=o,a.preParsedString=On(n),a.globalFilters=[],a.filters=a.parseFilters(a.preParsedString),console.log("Got Filters\n"),console.log(a.toString()),e.a(2,a)}},e)})),function(t){return e.apply(this,arguments)})}]);var e}(),tr={_:Symbol("internal")};const er=Zn;function nr(t){return nr="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},nr(t)}function rr(t){return function(t){if(Array.isArray(t))return ir(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||ar(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function or(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=ar(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var a,i=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return i=t.done,t},e:function(t){c=!0,a=t},f:function(){try{i||null==n.return||n.return()}finally{if(c)throw a}}}}function ar(t,e){if(t){if("string"==typeof t)return ir(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?ir(t,e):void 0}}function ir(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function cr(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return sr(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(sr(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,sr(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,sr(f,"constructor",u),sr(u,"constructor",s),s.displayName="GeneratorFunction",sr(u,o,"GeneratorFunction"),sr(f),sr(f,o,"Generator"),sr(f,r,function(){return this}),sr(f,"toString",function(){return"[object Generator]"}),(cr=function(){return{w:a,m:d}})()}function sr(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}sr=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){sr(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},sr(t,e,n,r)}function ur(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function lr(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){ur(a,r,o,i,c,"next",t)}function c(t){ur(a,r,o,i,c,"throw",t)}i(void 0)})}}var fr={world_global:At.Keys.GLOBAL_USERS,world_eu:At.Keys.EU_USERS,world_asia:At.Keys.ASIA_USERS,world_jpn:At.Keys.JPN_USERS,world_kor:At.Keys.KOR_USERS};function dr(t,e){return{id:t.nick_no,name:t.nick_nm.toLowerCase(),code:t.code,rank:t.rank,world_code:e}}function pr(t){return hr.apply(this,arguments)}function hr(){return(hr=lr(cr().m(function t(e){var n;return cr().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting user map for world code from E7 server: ".concat(e)),t.n=1,Gt.fetchUserJSON(e);case 1:if(n=t.v){t.n=2;break}return console.log("Could not get user map from E7 server for world code: ".concat(e)),t.a(2,null);case 2:return console.log("Got user map from E7 server for world code: ".concat(e)),t.a(2,Object.fromEntries(n.users.map(function(t){return[t.nick_no,dr(t,e)]})))}},t)}))).apply(this,arguments)}var yr,gr,mr,vr,br,wr,Sr={getUserMap:(wr=lr(cr().m(function t(e){var n,r;return cr().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting user map for world code: ".concat(e)),t.n=1,At.get(fr[e]);case 1:if(null===(n=t.v)){t.n=2;break}return console.log("Got user map from cache"),t.a(2,n);case 2:return t.n=3,pr(e);case 3:return r=t.v,t.n=4,At.cache(fr[e],r);case 4:return t.a(2,r)}},t)})),function(t){return wr.apply(this,arguments)}),findUser:(br=lr(cr().m(function t(e){var n,r,o,a,i,c,s,u,l,f,p,h,y;return cr().w(function(t){for(;;)switch(t.n){case 0:if(!e.id){t.n=10;break}n=or(b),t.p=1,n.s();case 2:if((r=n.n()).done){t.n=6;break}return o=r.value,t.n=3,this.getUserMap(o);case 3:if(a=t.v,!(i=Object.values(a).find(function(t){return t.id===e.id}))){t.n=4;break}return console.log("Found user: ".concat(JSON.stringify(i)," in world code: ").concat(o)),t.a(2,{user:i,error:!1});case 4:console.log("Could not find user with ID: ".concat(e.id," in world code: ").concat(o," from client-side means"));case 5:t.n=2;break;case 6:t.n=8;break;case 7:t.p=7,y=t.v,n.e(y);case 8:return t.p=8,n.f(),t.f(8);case 9:t.n=15;break;case 10:if(!e.name||!e.world_code){t.n=14;break}return c=[e.name,e.world_code],s=c[0],u=c[1],t.n=11,this.getUserMap(u);case 11:if(l=t.v,f=s.toLowerCase(),p=Object.values(l).find(function(t){return f===t.name.toLowerCase()}),!p){t.n=12;break}return console.log("Found user: ".concat(JSON.stringify(p)," in world code: ").concat(u)),t.a(2,{user:p,error:!1});case 12:console.log("Could not find user with ID: ".concat(e.id," in world code: ").concat(u," from client-side means"));case 13:t.n=15;break;case 14:return console.error("Must pass a user object with either user.name and user.world_code or user.id to fetch user"),t.a(2,{user:null,error:"Must pass a user object with either user.name and user.world_code or user.id to fetch user"});case 15:return t.n=16,d.fetchUser(e);case 16:if(!(h=t.v).error){t.n=17;break}return t.a(2,{user:null,error:h.error});case 17:return t.a(2,{user:h.user,error:!1})}},t,this,[[1,7,8,9]])})),function(t){return br.apply(this,arguments)}),addP2ServersByID:(vr=lr(cr().m(function t(e){var n,r,o,a=this;return cr().w(function(t){for(;;)switch(t.n){case 0:return console.log("Adding P2 servers by ID..."),n=Object.values(e),r=[],t.p=1,t.n=2,Promise.all(rr(b).map(function(t){return a.getUserMap(t)}));case 2:r=t.v,t.n=4;break;case 3:return t.p=3,o=t.v,console.error(o),n.forEach(function(t){return t["P2 Server"]="Not Found"}),t.a(2);case 4:if(0!==r.length){t.n=5;break}return console.error("Failed to get any user maps"),n.forEach(function(t){return t["P2 Server"]="Not Found"}),t.a(2);case 5:n.forEach(function(t){var e,n=null===(e=r.find(function(e){return e[t["P2 ID"]]}))||void 0===e?void 0:e[t["P2 ID"]].world_code;n?t["P2 Server"]=a.convertServerStr(n):(console.log("Could not find user with ID: ".concat(t["P2 ID"]," in client-side means ; typeof: ").concat(nr(t["P2 ID"]),", id type: ").concat(nr(Object.keys(USER_MAPS[0])[0]))),t["P2 Server"]="Not Found")});case 6:return t.a(2)}},t,null,[[1,3]])})),function(t){return vr.apply(this,arguments)}),setUser:(mr=lr(cr().m(function t(e){return cr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.cache(At.Keys.USER,e);case 1:return t.a(2)}},t)})),function(t){return mr.apply(this,arguments)}),getUser:(gr=lr(cr().m(function t(){return cr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.get(At.Keys.USER);case 1:return t.a(2,t.v)}},t)})),function(){return gr.apply(this,arguments)}),clearUserData:function(){var t=lr(cr().m(function t(){return cr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.clearUserData();case 1:return t.a(2)}},t)}));return function(){return t.apply(this,arguments)}}(),clearUserDataLists:(yr=lr(cr().m(function t(){return cr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.delete(At.Keys.GLOBAL_USERS);case 1:return t.n=2,At.delete(At.Keys.EU_USERS);case 2:return t.n=3,At.delete(At.Keys.ASIA_USERS);case 3:return t.n=4,At.delete(At.Keys.JPN_USERS);case 4:return t.n=5,At.delete(At.Keys.KOR_USERS);case 5:return t.a(2)}},t)})),function(){return yr.apply(this,arguments)}),convertServerStr:function(t){return w[t]}};const Pr=Sr;function _r(t){return _r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},_r(t)}function Er(t){if(null!=t){var e=t["function"==typeof Symbol&&Symbol.iterator||"@@iterator"],n=0;if(e)return e.call(t);if("function"==typeof t.next)return t;if(!isNaN(t.length))return{next:function(){return t&&n>=t.length&&(t=void 0),{value:t&&t[n++],done:!t}}}}throw new TypeError(_r(t)+" is not iterable")}function kr(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return Tr(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Tr(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,Tr(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,Tr(f,"constructor",u),Tr(u,"constructor",s),s.displayName="GeneratorFunction",Tr(u,o,"GeneratorFunction"),Tr(f),Tr(f,o,"Generator"),Tr(f,r,function(){return this}),Tr(f,"toString",function(){return"[object Generator]"}),(kr=function(){return{w:a,m:d}})()}function Tr(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Tr=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){Tr(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},Tr(t,e,n,r)}function Or(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function Ar(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){Or(a,r,o,i,c,"next",t)}function c(t){Or(a,r,o,i,c,"throw",t)}i(void 0)})}}function Ir(t){return function(t){if(Array.isArray(t))return Cr(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||Fr(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function Dr(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,a,i,c=[],s=!0,u=!1;try{if(a=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;s=!1}else for(;!(s=(r=a.call(n)).done)&&(c.push(r.value),c.length!==e);s=!0);}catch(t){u=!0,o=t}finally{try{if(!s&&null!=n.return&&(i=n.return(),Object(i)!==i))return}finally{if(u)throw o}}return c}}(t,e)||Fr(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function xr(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),n.push.apply(n,r)}return n}function Lr(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?xr(Object(n),!0).forEach(function(e){Rr(t,e,n[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):xr(Object(n)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))})}return t}function Rr(t,e,n){return(e=function(t){var e=function(t){if("object"!=_r(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=_r(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==_r(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function jr(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=Fr(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var a,i=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return i=t.done,t},e:function(t){c=!0,a=t},f:function(){try{i||null==n.return||n.return()}finally{if(c)throw a}}}}function Fr(t,e){if(t){if("string"==typeof t)return Cr(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Cr(t,e):void 0}}function Cr(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}var Nr=_.filter(function(t){return t.includes(" Pick ")||t.includes("ban ")});function Mr(t){var e={};console.log("Processing ".concat(t.length," battles into dict..."));var n,r=jr(t);try{for(r.s();!(n=r.n()).done;){var o=n.value;console.log("Processing battle: ".concat(o)),e[o["Seq Num"]]=o}}catch(t){r.e(t)}finally{r.f()}return e}function Br(t,e){var n,r,o,a=function(t){var n,r;return null!==(n=null===(r=Zt.getHeroByCode(t,e))||void 0===r?void 0:r.name)&&void 0!==n?n:e.Fodder.name},i={"Date/Time":t.time,"Seq Num":t.seq_num,"P1 ID":t.p1_id.toString(),"P2 ID":t.p2_id.toString(),"P1 League":null!==(n=t.grades[0])&&void 0!==n?n:"","P2 League":null!==(r=t.grades[1])&&void 0!==r?r:"","P1 Points":null!==(o=t.scores[0])&&void 0!==o?o:null,Win:1===t.winner?"W":"L","First Pick":1===t.first_pick?"True":"False","P1 Preban 1":a(t.p1_preban[0]),"P1 Preban 2":a(t.p1_preban[1]),"P2 Preban 1":a(t.p2_preban[0]),"P2 Preban 2":a(t.p2_preban[1]),"P1 Pick 1":a(t.p1_picks[0]),"P1 Pick 2":a(t.p1_picks[1]),"P1 Pick 3":a(t.p1_picks[2]),"P1 Pick 4":a(t.p1_picks[3]),"P1 Pick 5":a(t.p1_picks[4]),"P2 Pick 1":a(t.p2_picks[0]),"P2 Pick 2":a(t.p2_picks[1]),"P2 Pick 3":a(t.p2_picks[2]),"P2 Pick 4":a(t.p2_picks[3]),"P2 Pick 5":a(t.p2_picks[4]),"P1 Postban":a(t.postbans[1]),"P2 Postban":a(t.postbans[0])};return i["P1 Picks"]=[i["P1 Pick 1"],i["P1 Pick 2"],i["P1 Pick 3"],i["P1 Pick 4"],i["P1 Pick 5"]],i["P2 Picks"]=[i["P2 Pick 1"],i["P2 Pick 2"],i["P2 Pick 3"],i["P2 Pick 4"],i["P2 Pick 5"]],i["P1 Prebans"]=[i["P1 Preban 1"],i["P1 Preban 2"]],i["P2 Prebans"]=[i["P2 Preban 1"],i["P2 Preban 2"]],i}function Gr(t){var e,n=jr(Nr);try{for(n.s();!(e=n.n()).done;){var r=e.value;t[r]=t[r]?t[r]:"Empty"}}catch(t){n.e(t)}finally{n.f()}return t["P1 Points"]=Number(t["P1 Points"])||t["P1 Points"],t["P1 Picks"]=[t["P1 Pick 1"],t["P1 Pick 2"],t["P1 Pick 3"],t["P1 Pick 4"],t["P1 Pick 5"]],t["P2 Picks"]=[t["P2 Pick 1"],t["P2 Pick 2"],t["P2 Pick 3"],t["P2 Pick 4"],t["P2 Pick 5"]],t["P1 Prebans"]=[t["P1 Preban 1"],t["P1 Preban 2"]],t["P2 Prebans"]=[t["P2 Preban 1"],t["P2 Preban 2"]],t}function Ur(t,e){var n,r,o=function(t){return Zt.getHeroByName(t,e).prime};return{"Date/Time":t["Date/Time"],"Seq Num":t["Seq Num"],"P1 ID":t["P1 ID"],"P2 ID":t["P2 ID"],"P1 League":null!==(n=P[t["P1 League"]])&&void 0!==n?n:"","P2 League":null!==(r=P[t["P2 League"]])&&void 0!==r?r:"","P1 Points":t["P1 Points"],Win:"W"===t.Win?1:0,"First Pick":"True"===t["First Pick"]?1:0,"P1 Preban 1":o(t["P1 Preban 1"]),"P1 Preban 2":o(t["P1 Preban 2"]),"P2 Preban 1":o(t["P2 Preban 1"]),"P2 Preban 2":o(t["P2 Preban 2"]),"P1 Pick 1":o(t["P1 Pick 1"]),"P1 Pick 2":o(t["P1 Pick 2"]),"P1 Pick 3":o(t["P1 Pick 3"]),"P1 Pick 4":o(t["P1 Pick 4"]),"P1 Pick 5":o(t["P1 Pick 5"]),"P2 Pick 1":o(t["P2 Pick 1"]),"P2 Pick 2":o(t["P2 Pick 2"]),"P2 Pick 3":o(t["P2 Pick 3"]),"P2 Pick 4":o(t["P2 Pick 4"]),"P2 Pick 5":o(t["P2 Pick 5"]),"P1 Postban":o(t["P1 Postban"]),"P2 Postban":o(t["P2 Postban"]),"P1 Picks":t["P1 Picks"].map(o).reduce(function(t,e){return t*e},1),"P2 Picks":t["P2 Picks"].map(o).reduce(function(t,e){return t*e},1),"P1 Prebans":t["P1 Prebans"].map(o).reduce(function(t,e){return t*e},1),"P2 Prebans":t["P2 Prebans"].map(o).reduce(function(t,e){return t*e},1)}}function Hr(t){return(100*t).toFixed(2)+"%"}function Vr(t,e){var n=t.filter(function(t){return t.Win}).length,r=t.length,o=0!==r?n/r:0;return{games_won:n,games_appeared:r,total_games:e,appearance_rate:Hr(0!==e?r/e:0),win_rate:Hr(o),"+/-":2*n-r}}var Kr,Wr,qr,zr,Jr,Yr,$r,Xr,Qr={loaded_servers:new Set,getBattles:(Xr=Ar(kr().m(function t(){var e,n,r,o;return kr().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting battles"),t.n=1,At.get(At.Keys.BATTLES);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=4;break;case 3:o=null;case 4:return t.a(2,o)}},t)})),function(){return Xr.apply(this,arguments)}),removeBattles:($r=Ar(kr().m(function t(){return kr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.delete(At.Keys.BATTLES);case 1:return t.n=2,At.delete(At.Keys.UPLOADED_BATTLES);case 2:return t.n=3,At.delete(At.Keys.FILTERED_BATTLES);case 3:console.log("Removed battle data from cache; cleared ['BATTLES', 'UPLOADED_BATTLES', 'FILTERED_BATTLES']");case 4:return t.a(2)}},t)})),function(){return $r.apply(this,arguments)}),removeFilteredBattles:(Yr=Ar(kr().m(function t(){return kr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.delete(At.Keys.FILTERED_BATTLES);case 1:console.log("Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']");case 2:return t.a(2)}},t)})),function(){return Yr.apply(this,arguments)}),applyFilter:(Jr=Ar(kr().m(function t(e){var n,r,o,a,i,c,s,u,l,f,d,p;return kr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.getBattles();case 1:n=t.v,r=e.localFilters||[],o=e.globalFilters||[],a=Object.values(n),i=jr(o);try{for(i.s();!(c=i.n()).done;)s=c.value,console.log("Applying global filter: ".concat(s)),u=a.length,a=s.call(a),n=Object.fromEntries(a.map(function(t){return[t["Seq Num"],t]})),console.log("Filtered ".concat(u-a.length," out of ").concat(u,"; new total = ").concat(a.length))}catch(t){i.e(t)}finally{i.f()}l=jr(r),t.p=2,d=kr().m(function t(){var e,r;return kr().w(function(t){for(;;)switch(t.n){case 0:e=f.value,console.log("Applying local filter: ".concat(e)),r=Object.keys(n).length,n=Object.fromEntries(Object.entries(n).filter(function(t){var n=Dr(t,2),r=(n[0],n[1]);return e.call(r)})),console.log("Filtered ".concat(r-Object.keys(n).length," out of ").concat(r,"; new total = ").concat(Object.keys(n).length));case 1:return t.a(2)}},t)}),l.s();case 3:if((f=l.n()).done){t.n=5;break}return t.d(Er(d()),4);case 4:t.n=3;break;case 5:t.n=7;break;case 6:t.p=6,p=t.v,l.e(p);case 7:return t.p=7,l.f(),t.f(7);case 8:return console.log("Caching filtered battles ; total = ".concat(Object.keys(n).length)),t.n=9,At.cache(At.Keys.FILTERED_BATTLES,n);case 9:return console.log("Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <".concat(r.length+o.length,"> filters")),t.a(2,n)}},t,this,[[2,6,7,8]])})),function(t){return Jr.apply(this,arguments)}),getNumericalBattles:(zr=Ar(kr().m(function t(e,n){var r,o;return kr().w(function(t){for(;;)if(0===t.n)return r=function(t,e){return[t,Ur(e,n)]},o=Object.fromEntries(Object.entries(e).map(function(t){var e=Dr(t,2),n=e[0],o=e[1];return r(n,o)})),t.a(2,o)},t)})),function(t,e){return zr.apply(this,arguments)}),extendBattles:(qr=Ar(kr().m(function t(e){var n,r,o,a,i;return kr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.get(At.Keys.BATTLES);case 1:if(a=n=t.v,!(o=null!==a)){t.n=2;break}o=void 0!==n;case 2:if(!o){t.n=3;break}i=n,t.n=4;break;case 3:i={};case 4:return r=Lr(Lr({},i),Mr(e)),t.n=5,At.cache(At.Keys.BATTLES,r);case 5:return console.log("Extended user data in cache"),t.a(2,r)}},t)})),function(t){return qr.apply(this,arguments)}),cacheQuery:(Wr=Ar(kr().m(function t(e,n,r){var o,a,i,c;return kr().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}return console.log("No query battles provided to cacheQuery"),t.a(2,[]);case 1:return console.log("Caching queried battles: ".concat(e," battles; modified [BATTLES]")),o=function(t){return Br(t,r)},a=e.map(o),i=Pr.convertServerStr(n.world_code),a.map(function(t){t["P1 Server"]=i}),t.n=2,Pr.addP2ServersByID(a);case 2:return t.n=3,this.extendBattles(a);case 3:return c=t.v,console.log("Cached queried battles in cache; modified [BATTLES]"),t.a(2,c)}},t,this)})),function(t,e,n){return Wr.apply(this,arguments)}),cacheUpload:(Kr=Ar(kr().m(function t(e){var n,r;return kr().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}return console.log("No uploaded battles provided to cacheUpload"),t.a(2,er.emptyFilters());case 1:return n=e.map(Gr),t.n=2,At.cache(At.Keys.UPLOADED_BATTLES,n);case 2:return t.n=3,this.extendBattles(n);case 3:return r=t.v,console.log("Ingested uploaded battle data into cache; modified [BATTLES] and overwrote [UPLOADED_BATTLES]"),t.a(2,r)}},t,this)})),function(t){return Kr.apply(this,arguments)}),getStats:function(){var t=Ar(kr().m(function t(e,n,r,o,a){var i,c,s,u,l,f,d,p,h,y,g;return kr().w(function(t){for(;;)switch(t.n){case 0:return i=r.localFilters.length+r.globalFilters.length,t.n=1,this.applyFilter(r);case 1:return c=t.v,s=Object.values(e),u=Object.values(c),t.n=2,this.getNumericalBattles(c,o);case 2:return l=t.v,f=re(s,n,i>0?l:null,a),t.n=3,this.getPrebanStats(l,o);case 3:return d=t.v,t.n=4,this.getFirstPickStats(l,o);case 4:return p=t.v,t.n=5,this.getGeneralStats(l,o);case 5:return h=t.v,t.n=6,this.getHeroStats(l,o);case 6:return y=t.v,t.n=7,this.getServerStats(u);case 7:return g=t.v,t.a(2,{battles:s,filteredBattles:u,plotContent:f,prebanStats:d,generalStats:h,firstPickStats:p,playerHeroStats:y.playerHeroStats,enemyHeroStats:y.enemyHeroStats,serverStats:g})}},t,this)}));return function(e,n,r,o,a){return t.apply(this,arguments)}}(),getPrebanStats:function(t,e){var n=Zt.getHeroByName("Empty",e).prime,r=Object.values(t);if(0===r.length)return[];var o,a=function(t){return Ir(new Set(r)).map(function(e){return e[t]}).filter(function(t){return t&&t!==n})},i=a("P1 Preban 1"),c=a("P1 Preban 2"),s=new Set([].concat(Ir(i),Ir(c))),u=[],l=jr(s);try{for(l.s();!(o=l.n()).done;){var f=o.value;u.push(f)}}catch(t){l.e(t)}finally{l.f()}var d,p=jr(s);try{for(p.s();!(d=p.n()).done;){var h,y=d.value,g=jr(s);try{for(g.s();!(h=g.n()).done;){var m=h.value;y<m&&u.push(y*m)}}catch(t){g.e(t)}finally{g.f()}}}catch(t){p.e(t)}finally{p.f()}for(var v=r.length,b=[],w=function(){var t=P[S],n=r.filter(function(e){return e["P1 Prebans"]%t===0}),o=n.length;if(o<1)return 1;var a=n.reduce(function(t,e){return t+e.Win},0),i=v>0?o/v:0,c=o>0?a/o:0,s=2*a-o;b.push({preban:e.prime_pair_lookup[t],wins:a,appearances:o,appearance_rate:Hr(i),win_rate:Hr(c),"+/-":s})},S=0,P=u;S<P.length;S++)w();return b.sort(function(t,e){return e.appearances-t.appearances}),b},getFirstPickStats:function(t,e){var n=Object.values(t).filter(function(t){return t["First Pick"]});if(0===n.length)return[];var r,o=n.length,a={},i=jr(n);try{for(i.s();!(r=i.n()).done;){var c=r.value,s=c["P1 Pick 1"];s in a||(a[s]={wins:0,appearances:0}),a[s].wins+=c.Win?1:0,a[s].appearances+=1}}catch(t){i.e(t)}finally{i.f()}var u=Object.entries(a).map(function(t){var n=Dr(t,2),r=n[0],a=n[1];return{hero:Zt.getHeroByPrime(r,e).name,wins:a.wins,appearances:a.appearances,win_rate:Hr(a.wins/a.appearances),appearance_rate:Hr(a.appearances/o),"+/-":2*a.wins-a.appearances}});return u.sort(function(t,e){return e.appearances-t.appearances}),u},getGeneralStats:function(t,e){var n=Object.values(t);n.sort(function(t,e){return new Date(t["Date/Time"])-new Date(e["Date/Time"])});var r=0,o=0;if(n.length>1)for(var a=0;a<n.length-1;a++){var i=[n[a],n[a+1]],c=i[0],s=i[1]["P1 Points"]-c["P1 Points"];s<-40||(r+=s,o+=1)}for(var u=o>0?r/o:0,l=n.length,f=n.filter(function(t){return 1===t["First Pick"]}),d=n.filter(function(t){return 1!==t["First Pick"]}),p=f.length,h=d.length,y=f.reduce(function(t,e){return t+e.Win},0),g=d.reduce(function(t,e){return t+e.Win},0),m=l?p/l:0,v=l?h/l:0,b=p?y/p:0,w=h?g/h:0,S=l?(y+g)/l:0,P=0,_=0,E=0,k=0,T=0,O=n;T<O.length;T++)1===O[T].Win?(E+=1,P=Math.max(P,E),k=0):(E=0,k+=1,_=Math.max(_,k));var A="N/A";return{first_pick_count:p,second_pick_count:h,first_pick_rate:p?Hr(m):A,second_pick_rate:h?Hr(v):A,first_pick_winrate:p?Hr(b):A,second_pick_winrate:h?Hr(w):A,total_winrate:l?Hr(S):A,total_battles:l,total_wins:y+g,max_win_streak:P,max_loss_streak:_,avg_ppg:u.toFixed(2)}},getHeroStats:function(t,e){var n=e.heroes,r=Object.values(t);if(0===r.length)return{playerHeroStats:[],enemyHeroStats:[]};var o,a=r.length,i=[],c=[],s=jr(n);try{var u=function(){var t=o.value;if(t.name===e.Empty.name)return 1;var n=t.prime,s=r.filter(function(t){return t["P1 Picks"]%n===0}),u=r.filter(function(t){return t["P2 Picks"]%n===0});s.length>0&&i.push(Lr(Lr({},Vr(s,a)),{},{hero:t.name})),u.length>0&&c.push(Lr(Lr({},Vr(u,a)),{},{hero:t.name}))};for(s.s();!(o=s.n()).done;)u()}catch(t){s.e(t)}finally{s.f()}return{playerHeroStats:i.sort(function(t,e){return t.hero.localeCompare(e.hero)}),enemyHeroStats:c.sort(function(t,e){return t.hero.localeCompare(e.hero)})}},getServerStats:function(t){for(var e=[],n=t.length,r=function(){var r=a[o],i=t.filter(function(t){return t["P2 Server"]===r}),c=i.length,s=i.reduce(function(t,e){return t+("W"===e.Win?1:0)},0),u=c>0?s/c:"N/A",l=n>0?c/n:"N/A",f=i.filter(function(t){return"True"===t["First Pick"]}),d=f.reduce(function(t,e){return t+("W"===e.Win?1:0)},0),p=f.length>0?d/f.length:"N/A",h=i.filter(function(t){return"False"===t["First Pick"]}),y=h.reduce(function(t,e){return t+("W"===e.Win?1:0)},0),g=h.length>0?y/h.length:"N/A";e.push({server:r,count:c,wins:s,win_rate:Hr(u),frequency:Hr(l),"+/-":2*s-c,fp_games:f.length,sp_games:h.length,fp_wr:Hr(p),sp_wr:Hr(g)})},o=0,a=Object.values(w);o<a.length;o++)r();return e.sort(function(t,e){return t.server.localeCompare(e.server)}),e}};const Zr=Qr;function to(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return eo(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(eo(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,eo(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,eo(f,"constructor",u),eo(u,"constructor",s),s.displayName="GeneratorFunction",eo(u,o,"GeneratorFunction"),eo(f),eo(f,o,"Generator"),eo(f,r,function(){return this}),eo(f,"toString",function(){return"[object Generator]"}),(to=function(){return{w:a,m:d}})()}function eo(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}eo=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){eo(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},eo(t,e,n,r)}function no(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function ro(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){no(a,r,o,i,c,"next",t)}function c(t){no(a,r,o,i,c,"throw",t)}i(void 0)})}}var oo,ao,io,co,so;const uo={updateSidebar:(so=ro(to().m(function t(e){var n,r,o,a;return to().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.getUser();case 1:n=t.v,r=document.getElementById("heroStatsOrQuery"),n?(console.log("Found user: ".concat(n,"; showing hero stats in sidebar")),o=e.heroStatsURL,r.innerHTML="\n            <a href=".concat(o,' class="pc-link">\n                <span class="pc-micon"><i data-feather="bar-chart-2"></i></span>\n                <span class="pc-mtext">Hero Stats</span>\n            </a>\n            ')):(console.log("Found user: ".concat(n,"; showing user query in sidebar")),a=e.userQueryURL,r.innerHTML="\n            <a href=".concat(a,' class="pc-link">\n                <span class="pc-micon"><i data-feather="download"></i></span>\n                <span class="pc-mtext">Query User Data</span>\n            </a>\n            ')),feather.replace();case 2:return t.a(2)}},t)})),function(t){return so.apply(this,arguments)}),updateSwitchUserBtn:(co=ro(to().m(function t(e){var n;return to().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.getUser();case 1:n=t.v,document.getElementById("user-options").innerHTML=n?'\n            <button name="switch_user" class="btn btn-primary" type="submit" action="switch-user" id="switch-user-btn">\n                Switch User\n            </button>\n            ':"";case 2:return t.a(2)}},t)})),function(t){return co.apply(this,arguments)}),queryAndCacheBattles:(io=ro(to().m(function t(e,n,r){var o=this;return to().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,d.fetchBattleData(e).then(function(t){return t.json()}).then(function(){var t=ro(to().m(function t(a){var i,c,s;return to().w(function(t){for(;;)switch(t.n){case 0:if(!a.success){t.n=2;break}return i=a.battles,t.n=1,Zr.cacheQuery(i,e,r);case 1:console.log("Cached queried battles"),t.n=3;break;case 2:c=null,"upload"===n.get("source")?c='{{ url_for("home_blueprint.upload_battle_data")}}':(s="Error while fetching data: ".concat(a.error),c=o.addStrParam('{{ url_for("home_blueprint.user_query") }}',"errorMSG",s)),window.location.replace(c);case 3:return t.a(2)}},t)}));return function(e){return t.apply(this,arguments)}}());case 1:return t.a(2)}},t)})),function(t,e,n){return io.apply(this,arguments)}),addStrParam:function(t,e,n){var r=encodeURIComponent(n);return"".concat(t,"?").concat(e,"=").concat(r)},addStrParams:function(t,e){for(var n in e)t=this.addStrParam(t,n,e[n]);return t},validateFilterSyntax:(ao=ro(to().m(function t(e){var n,r,o;return to().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Zt.getHeroManager();case 1:return n=t.v,r=document.getElementById("filterMSG"),t.p=2,t.n=3,er.createAndParse(e,n);case 3:return t.v,r.textContent="Validation Passed",r.classList.remove("text-danger"),r.classList.add("text-safe"),t.a(2,!0);case 4:return t.p=4,o=t.v,console.error(o),r.textContent="Validation Failed: ".concat(o.message),r.classList.remove("text-safe"),r.classList.add("text-danger"),t.a(2,!1)}},t,null,[[2,4]])})),function(t){return ao.apply(this,arguments)}),validateFilterSyntaxNoCatch:(oo=ro(to().m(function t(e){var n,r;return to().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Zt.getHeroManager();case 1:return n=t.v,r=document.getElementById("filterMSG"),t.n=2,er.createAndParse(e,n);case 2:return r.textContent="Validation Passed",r.classList.remove("text-danger"),r.classList.add("text-safe"),t.a(2,!0)}},t)})),function(t){return oo.apply(this,arguments)})};function lo(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return fo(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(fo(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,fo(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,fo(f,"constructor",u),fo(u,"constructor",s),s.displayName="GeneratorFunction",fo(u,o,"GeneratorFunction"),fo(f),fo(f,o,"Generator"),fo(f,r,function(){return this}),fo(f,"toString",function(){return"[object Generator]"}),(lo=function(){return{w:a,m:d}})()}function fo(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}fo=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){fo(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},fo(t,e,n,r)}function po(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}var ho,yo={HeroManager:Zt,BattleManager:Zr,SeasonManager:on,UserManager:Pr,ClientCache:At,getFilters:(ho=function(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){po(a,r,o,i,c,"next",t)}function c(t){po(a,r,o,i,c,"throw",t)}i(void 0)})}}(lo().m(function t(e){var n,r,o;return lo().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,At.getFilterStr();case 1:if(n=t.v){t.n=2;break}return t.a(2,er.getEmptyFilters());case 2:return t.n=3,on.getSeasonDetails();case 3:return r=t.v,t.n=4,er.createAndParse(n,e,r);case 4:return o=t.v,t.a(2,o.filters)}},t)})),function(t){return ho.apply(this,arguments)})};const go=yo;var mo={"Current Season":"date in current-season",Wins:"is-win = true",Losses:"is-win = false","First Pick":"is-first-pick = true","Second Pick":"is-first-pick = false","Champion+ Opponent":"p2.league in {champion, warlord, emperor, legend}","Warlord+ Opponent":"p2.league in {warlord, emperor, legend}","Emperor+ Opponent":"p2.league in {emperor, legend}","Legend Opponent":"p2.league = 'legend'",extendFilters:function(t,e){var n=mo[e];return";"!==(t=t.replace(/\s+$/,"")).slice(-1)&&t.length>0?t+=";\n":";"===t.slice(-1)&&(t+="\n"),"".concat(t).concat(n,";")}};const vo=mo;function bo(t){return bo="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},bo(t)}function wo(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function a(n,r,o,a){var s=r&&r.prototype instanceof c?r:c,u=Object.create(s.prototype);return So(u,"_invoke",function(n,r,o){var a,c,s,u=0,l=o||[],f=!1,d={p:0,n:0,v:t,a:p,f:p.bind(t,4),d:function(e,n){return a=e,c=0,s=t,d.n=n,i}};function p(n,r){for(c=n,s=r,e=0;!f&&u&&!o&&e<l.length;e++){var o,a=l[e],p=d.p,h=a[2];n>3?(o=h===r)&&(s=a[(c=a[4])?5:(c=3,3)],a[4]=a[5]=t):a[0]<=p&&((o=n<2&&p<a[1])?(c=0,d.v=r,d.n=a[1]):p<h&&(o=n<3||a[0]>r||r>h)&&(a[4]=n,a[5]=r,d.n=h,c=0))}if(o||n>1)return i;throw f=!0,r}return function(o,l,h){if(u>1)throw TypeError("Generator is already running");for(f&&1===l&&p(l,h),c=l,s=h;(e=c<2?t:s)||!f;){a||(c?c<3?(c>1&&(d.n=-1),p(c,s)):d.n=s:d.v=s);try{if(u=2,a){if(c||(o="next"),e=a[o]){if(!(e=e.call(a,s)))throw TypeError("iterator result is not an object");if(!e.done)return e;s=e.value,c<2&&(c=0)}else 1===c&&(e=a.return)&&e.call(a),c<2&&(s=TypeError("The iterator does not provide a '"+o+"' method"),c=1);a=t}else if((e=(f=d.n<0)?s:n.call(r,d))!==i)break}catch(e){a=t,c=1,s=e}finally{u=1}}return{value:e,done:f}}}(n,o,a),!0),u}var i={};function c(){}function s(){}function u(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(So(e={},r,function(){return this}),e),f=u.prototype=c.prototype=Object.create(l);function d(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,u):(t.__proto__=u,So(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return s.prototype=u,So(f,"constructor",u),So(u,"constructor",s),s.displayName="GeneratorFunction",So(u,o,"GeneratorFunction"),So(f),So(f,o,"Generator"),So(f,r,function(){return this}),So(f,"toString",function(){return"[object Generator]"}),(wo=function(){return{w:a,m:d}})()}function So(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}So=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var a=function(e,n){So(t,e,function(t){return this._invoke(e,n,t)})};a("next",0),a("throw",1),a("return",2)}},So(t,e,n,r)}function Po(t,e,n,r,o,a,i){try{var c=t[a](i),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}function _o(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var a=t.apply(e,n);function i(t){Po(a,r,o,i,c,"next",t)}function c(t){Po(a,r,o,i,c,"throw",t)}i(void 0)})}}console.log("Attaching DOMContentLoaded listener"),document.addEventListener("DOMContentLoaded",_o(wo().m(function t(){var e,n,r,o,a,i,c,s,u,l,f,d,h;return wo().w(function(t){for(;;)switch(t.n){case 0:return e=new URLSearchParams(window.location.search),n=Object.fromEntries(e.entries()),console.log("GOT PARAMS:",n),r=document.getElementById("auto-zoom-flag"),t.n=1,go.ClientCache.getFlag("autoZoom");case 1:return r.checked=t.v,r.addEventListener("click",_o(wo().m(function t(){return wo().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,go.ClientCache.setFlag("autoZoom",r.checked);case 1:return t.a(2)}},t)}))),t.n=2,go.UserManager.getUser();case 2:return(o=t.v)||(window.location.href=URLS.addStrParam(URLS.userQueryURL,"errorMSG","Type1: no user")),e.get("errorMSG")&&((a=document.getElementById("filterMSG")).textContent=e.get("errorMSG"),a.classList.remove("text-safe"),a.classList.add("text-danger")),document.getElementById("switch-user-btn").addEventListener("click",_o(wo().m(function t(){return wo().w(function(t){for(;;)switch(t.n){case 0:return console.log("Clearing User Data"),t.n=1,go.ClientCache.clearUserData();case 1:window.location.href=URLS.userQueryURL;case 2:return t.a(2)}},t)}))),console.log("POPULATING DATA PROCESS INITIATED"),t.p=3,console.log("Getting Season Details"),t.n=4,go.SeasonManager.getSeasonDetails();case 4:return i=t.v,console.log("Got season details:",i,bo(i)),console.log("Getting Stats"),t.n=5,go.ClientCache.getStats();case 5:c=t.v,console.time("populateTables"),console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS"),p.functions.populateSeasonDetailsTable("SeasonDetails",i),p.functions.populateHeroStatsTable("PlayerTable",c.playerHeroStats),p.functions.populateHeroStatsTable("OpponentTable",c.enemyHeroStats),p.functions.populatePlayerFirstPickTable("FirstPickStats",c.firstPickStats),p.functions.populatePlayerPrebansTable("PrebanStats",c.prebanStats),p.functions.populateServerStatsTable("server-stats",c.serverStats),s=p.functions.populateFullBattlesTable("BattlesTable",c.battles,o),y.functions.populateGeneralStats(c.generalStats),y.functions.populateRankPlot(c.plotContent),console.log("FINISHED POPULATING"),console.timeEnd("populateTables"),console.log("Setting listener for filter-battle-table checkbox"),(u=document.getElementById("filter-battle-table")).addEventListener("click",_o(wo().m(function t(){return wo().w(function(t){for(;;)switch(t.n){case 0:u.checked?p.functions.replaceDatatableData(s,c.filteredBattles):p.functions.replaceDatatableData(s,c.battles);case 1:return t.a(2)}},t)}))),t.n=7;break;case 6:t.p=6,h=t.v,console.error("Error loading data:",h);case 7:return document.getElementById("content-body").classList.remove("d-none"),CodeMirror.defineMode("filterSyntax",function(){return{token:function(t,e){return Ae.tokenMatch(t)}}}),l=document.getElementById("codeArea"),(f=CodeMirror.fromTextArea(l,{mode:"filterSyntax",lineNumbers:!0,theme:"default"})).setSize(null,185),t.n=8,go.ClientCache.getFilterStr();case 8:(d=t.v)&&f.setValue(d),document.getElementById("premade-filters").addEventListener("click",function(t){console.log("Attempting to add a premade filter"),t.preventDefault();var e=t.target.closest(".dropdown-item");if(e){var n=e.textContent.trim();console.log("Target found:",n);var r=f.getValue(),o=vo.extendFilters(r,n);f.setValue(o)}}),document.getElementById("filterForm").addEventListener("submit",function(){var t=_o(wo().m(function t(e){var n,o,a,i,c,s,u;return wo().w(function(t){for(;;)switch(t.n){case 0:if(e.preventDefault(),document.getElementById("codeArea").value=f.getValue(),console.log("Processing Filter Action"),n=e.submitter,o=null==n?void 0:n.value,a=f.getValue(),"apply"!==o){t.n=4;break}return t.n=1,uo.validateFilterSyntax(a);case 1:if(!t.v){t.n=3;break}return t.n=2,go.ClientCache.setFilterStr(a);case 2:i=document.getElementById("auto-zoom-flag"),c=i.checked,s={autoZoom:c,query:"false"},window.location.href=URLS.addStrParams(URLS.loadData,s);case 3:t.n=8;break;case 4:if("check"!==o){t.n=6;break}return console.log("Checking Str",a),t.n=5,uo.validateFilterSyntax(a);case 5:t.n=8;break;case 6:if("clear"!==o){t.n=8;break}if(f.setValue(""),console.log("Found applied filter",d,"when clearing"),!d){t.n=8;break}return console.log("Found filter str",d),t.n=7,go.ClientCache.setFilterStr("");case 7:u={autoZoom:r.checked,query:"false"},window.location.href=URLS.addStrParams(URLS.loadData,u);case 8:return t.a(2)}},t)}));return function(e){return t.apply(this,arguments)}}()),f.on("change",function(){f.save()}),l.classList.remove("codemirror-hidden");case 9:return t.a(2)}},t,null,[[3,6]])})))})()})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/idb/build/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/idb/build/index.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
+/* harmony export */   openDB: () => (/* binding */ openDB),
+/* harmony export */   unwrap: () => (/* binding */ unwrap),
+/* harmony export */   wrap: () => (/* binding */ wrap)
+/* harmony export */ });
+const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
+
+let idbProxyableTypes;
+let cursorAdvanceMethods;
+// This is a function to prevent it throwing up in node environments.
+function getIdbProxyableTypes() {
+    return (idbProxyableTypes ||
+        (idbProxyableTypes = [
+            IDBDatabase,
+            IDBObjectStore,
+            IDBIndex,
+            IDBCursor,
+            IDBTransaction,
+        ]));
+}
+// This is a function to prevent it throwing up in node environments.
+function getCursorAdvanceMethods() {
+    return (cursorAdvanceMethods ||
+        (cursorAdvanceMethods = [
+            IDBCursor.prototype.advance,
+            IDBCursor.prototype.continue,
+            IDBCursor.prototype.continuePrimaryKey,
+        ]));
+}
+const transactionDoneMap = new WeakMap();
+const transformCache = new WeakMap();
+const reverseTransformCache = new WeakMap();
+function promisifyRequest(request) {
+    const promise = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            request.removeEventListener('success', success);
+            request.removeEventListener('error', error);
+        };
+        const success = () => {
+            resolve(wrap(request.result));
+            unlisten();
+        };
+        const error = () => {
+            reject(request.error);
+            unlisten();
+        };
+        request.addEventListener('success', success);
+        request.addEventListener('error', error);
+    });
+    // This mapping exists in reverseTransformCache but doesn't exist in transformCache. This
+    // is because we create many promises from a single IDBRequest.
+    reverseTransformCache.set(promise, request);
+    return promise;
+}
+function cacheDonePromiseForTransaction(tx) {
+    // Early bail if we've already created a done promise for this transaction.
+    if (transactionDoneMap.has(tx))
+        return;
+    const done = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            tx.removeEventListener('complete', complete);
+            tx.removeEventListener('error', error);
+            tx.removeEventListener('abort', error);
+        };
+        const complete = () => {
+            resolve();
+            unlisten();
+        };
+        const error = () => {
+            reject(tx.error || new DOMException('AbortError', 'AbortError'));
+            unlisten();
+        };
+        tx.addEventListener('complete', complete);
+        tx.addEventListener('error', error);
+        tx.addEventListener('abort', error);
+    });
+    // Cache it for later retrieval.
+    transactionDoneMap.set(tx, done);
+}
+let idbProxyTraps = {
+    get(target, prop, receiver) {
+        if (target instanceof IDBTransaction) {
+            // Special handling for transaction.done.
+            if (prop === 'done')
+                return transactionDoneMap.get(target);
+            // Make tx.store return the only store in the transaction, or undefined if there are many.
+            if (prop === 'store') {
+                return receiver.objectStoreNames[1]
+                    ? undefined
+                    : receiver.objectStore(receiver.objectStoreNames[0]);
+            }
+        }
+        // Else transform whatever we get back.
+        return wrap(target[prop]);
+    },
+    set(target, prop, value) {
+        target[prop] = value;
+        return true;
+    },
+    has(target, prop) {
+        if (target instanceof IDBTransaction &&
+            (prop === 'done' || prop === 'store')) {
+            return true;
+        }
+        return prop in target;
+    },
+};
+function replaceTraps(callback) {
+    idbProxyTraps = callback(idbProxyTraps);
+}
+function wrapFunction(func) {
+    // Due to expected object equality (which is enforced by the caching in `wrap`), we
+    // only create one new func per func.
+    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
+    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
+    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
+    // with real promises, so each advance methods returns a new promise for the cursor object, or
+    // undefined if the end of the cursor has been reached.
+    if (getCursorAdvanceMethods().includes(func)) {
+        return function (...args) {
+            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+            // the original object.
+            func.apply(unwrap(this), args);
+            return wrap(this.request);
+        };
+    }
+    return function (...args) {
+        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+        // the original object.
+        return wrap(func.apply(unwrap(this), args));
+    };
+}
+function transformCachableValue(value) {
+    if (typeof value === 'function')
+        return wrapFunction(value);
+    // This doesn't return, it just creates a 'done' promise for the transaction,
+    // which is later returned for transaction.done (see idbObjectHandler).
+    if (value instanceof IDBTransaction)
+        cacheDonePromiseForTransaction(value);
+    if (instanceOfAny(value, getIdbProxyableTypes()))
+        return new Proxy(value, idbProxyTraps);
+    // Return the same value back if we're not going to transform it.
+    return value;
+}
+function wrap(value) {
+    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
+    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
+    if (value instanceof IDBRequest)
+        return promisifyRequest(value);
+    // If we've already transformed this value before, reuse the transformed value.
+    // This is faster, but it also provides object equality.
+    if (transformCache.has(value))
+        return transformCache.get(value);
+    const newValue = transformCachableValue(value);
+    // Not all types are transformed.
+    // These may be primitive types, so they can't be WeakMap keys.
+    if (newValue !== value) {
+        transformCache.set(value, newValue);
+        reverseTransformCache.set(newValue, value);
+    }
+    return newValue;
+}
+const unwrap = (value) => reverseTransformCache.get(value);
+
+/**
+ * Open a database.
+ *
+ * @param name Name of the database.
+ * @param version Schema version.
+ * @param callbacks Additional callbacks.
+ */
+function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
+    const request = indexedDB.open(name, version);
+    const openPromise = wrap(request);
+    if (upgrade) {
+        request.addEventListener('upgradeneeded', (event) => {
+            upgrade(wrap(request.result), event.oldVersion, event.newVersion, wrap(request.transaction), event);
+        });
+    }
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event.newVersion, event));
+    }
+    openPromise
+        .then((db) => {
+        if (terminated)
+            db.addEventListener('close', () => terminated());
+        if (blocking) {
+            db.addEventListener('versionchange', (event) => blocking(event.oldVersion, event.newVersion, event));
+        }
+    })
+        .catch(() => { });
+    return openPromise;
+}
+/**
+ * Delete a database.
+ *
+ * @param name Name of the database.
+ */
+function deleteDB(name, { blocked } = {}) {
+    const request = indexedDB.deleteDatabase(name);
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event));
+    }
+    return wrap(request).then(() => undefined);
+}
+
+const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
+const writeMethods = ['put', 'add', 'delete', 'clear'];
+const cachedMethods = new Map();
+function getMethod(target, prop) {
+    if (!(target instanceof IDBDatabase &&
+        !(prop in target) &&
+        typeof prop === 'string')) {
+        return;
+    }
+    if (cachedMethods.get(prop))
+        return cachedMethods.get(prop);
+    const targetFuncName = prop.replace(/FromIndex$/, '');
+    const useIndex = prop !== targetFuncName;
+    const isWrite = writeMethods.includes(targetFuncName);
+    if (
+    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
+    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
+        !(isWrite || readMethods.includes(targetFuncName))) {
+        return;
+    }
+    const method = async function (storeName, ...args) {
+        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
+        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
+        let target = tx.store;
+        if (useIndex)
+            target = target.index(args.shift());
+        // Must reject if op rejects.
+        // If it's a write operation, must reject if tx.done rejects.
+        // Must reject with op rejection first.
+        // Must resolve with op value.
+        // Must handle both promises (no unhandled rejections)
+        return (await Promise.all([
+            target[targetFuncName](...args),
+            isWrite && tx.done,
+        ]))[0];
+    };
+    cachedMethods.set(prop, method);
+    return method;
+}
+replaceTraps((oldTraps) => ({
+    ...oldTraps,
+    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
+    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
+}));
+
+const advanceMethodProps = ['continue', 'continuePrimaryKey', 'advance'];
+const methodMap = {};
+const advanceResults = new WeakMap();
+const ittrProxiedCursorToOriginalProxy = new WeakMap();
+const cursorIteratorTraps = {
+    get(target, prop) {
+        if (!advanceMethodProps.includes(prop))
+            return target[prop];
+        let cachedFunc = methodMap[prop];
+        if (!cachedFunc) {
+            cachedFunc = methodMap[prop] = function (...args) {
+                advanceResults.set(this, ittrProxiedCursorToOriginalProxy.get(this)[prop](...args));
+            };
+        }
+        return cachedFunc;
+    },
+};
+async function* iterate(...args) {
+    // tslint:disable-next-line:no-this-assignment
+    let cursor = this;
+    if (!(cursor instanceof IDBCursor)) {
+        cursor = await cursor.openCursor(...args);
+    }
+    if (!cursor)
+        return;
+    cursor = cursor;
+    const proxiedCursor = new Proxy(cursor, cursorIteratorTraps);
+    ittrProxiedCursorToOriginalProxy.set(proxiedCursor, cursor);
+    // Map this double-proxy back to the original, so other cursor methods work.
+    reverseTransformCache.set(proxiedCursor, unwrap(cursor));
+    while (cursor) {
+        yield proxiedCursor;
+        // If one of the advancing methods was not called, call continue().
+        cursor = await (advanceResults.get(proxiedCursor) || cursor.continue());
+        advanceResults.delete(proxiedCursor);
+    }
+}
+function isIteratorProp(target, prop) {
+    return ((prop === Symbol.asyncIterator &&
+        instanceOfAny(target, [IDBIndex, IDBObjectStore, IDBCursor])) ||
+        (prop === 'iterate' && instanceOfAny(target, [IDBIndex, IDBObjectStore])));
+}
+replaceTraps((oldTraps) => ({
+    ...oldTraps,
+    get(target, prop, receiver) {
+        if (isIteratorProp(target, prop))
+            return iterate;
+        return oldTraps.get(target, prop, receiver);
+    },
+    has(target, prop) {
+        return isIteratorProp(target, prop) || oldTraps.has(target, prop);
+    },
+}));
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/papaparse/papaparse.min.js":
+/*!*************************************************!*\
+  !*** ./node_modules/papaparse/papaparse.min.js ***!
+  \*************************************************/
+/***/ (function(module, exports) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* @license
+Papa Parse
+v5.5.3
+https://github.com/mholt/PapaParse
+License: MIT
+*/
+((e,t)=>{ true?!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (t),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):0})(this,function r(){var n="undefined"!=typeof self?self:"undefined"!=typeof window?window:void 0!==n?n:{};var d,s=!n.document&&!!n.postMessage,a=n.IS_PAPA_WORKER||!1,o={},h=0,v={};function u(e){this._handle=null,this._finished=!1,this._completed=!1,this._halted=!1,this._input=null,this._baseIndex=0,this._partialLine="",this._rowCount=0,this._start=0,this._nextChunk=null,this.isFirstChunk=!0,this._completeResults={data:[],errors:[],meta:{}},function(e){var t=b(e);t.chunkSize=parseInt(t.chunkSize),e.step||e.chunk||(t.chunkSize=null);this._handle=new i(t),(this._handle.streamer=this)._config=t}.call(this,e),this.parseChunk=function(t,e){var i=parseInt(this._config.skipFirstNLines)||0;if(this.isFirstChunk&&0<i){let e=this._config.newline;e||(r=this._config.quoteChar||'"',e=this._handle.guessLineEndings(t,r)),t=[...t.split(e).slice(i)].join(e)}this.isFirstChunk&&U(this._config.beforeFirstChunk)&&void 0!==(r=this._config.beforeFirstChunk(t))&&(t=r),this.isFirstChunk=!1,this._halted=!1;var i=this._partialLine+t,r=(this._partialLine="",this._handle.parse(i,this._baseIndex,!this._finished));if(!this._handle.paused()&&!this._handle.aborted()){t=r.meta.cursor,i=(this._finished||(this._partialLine=i.substring(t-this._baseIndex),this._baseIndex=t),r&&r.data&&(this._rowCount+=r.data.length),this._finished||this._config.preview&&this._rowCount>=this._config.preview);if(a)n.postMessage({results:r,workerId:v.WORKER_ID,finished:i});else if(U(this._config.chunk)&&!e){if(this._config.chunk(r,this._handle),this._handle.paused()||this._handle.aborted())return void(this._halted=!0);this._completeResults=r=void 0}return this._config.step||this._config.chunk||(this._completeResults.data=this._completeResults.data.concat(r.data),this._completeResults.errors=this._completeResults.errors.concat(r.errors),this._completeResults.meta=r.meta),this._completed||!i||!U(this._config.complete)||r&&r.meta.aborted||(this._config.complete(this._completeResults,this._input),this._completed=!0),i||r&&r.meta.paused||this._nextChunk(),r}this._halted=!0},this._sendError=function(e){U(this._config.error)?this._config.error(e):a&&this._config.error&&n.postMessage({workerId:v.WORKER_ID,error:e,finished:!1})}}function f(e){var r;(e=e||{}).chunkSize||(e.chunkSize=v.RemoteChunkSize),u.call(this,e),this._nextChunk=s?function(){this._readChunk(),this._chunkLoaded()}:function(){this._readChunk()},this.stream=function(e){this._input=e,this._nextChunk()},this._readChunk=function(){if(this._finished)this._chunkLoaded();else{if(r=new XMLHttpRequest,this._config.withCredentials&&(r.withCredentials=this._config.withCredentials),s||(r.onload=y(this._chunkLoaded,this),r.onerror=y(this._chunkError,this)),r.open(this._config.downloadRequestBody?"POST":"GET",this._input,!s),this._config.downloadRequestHeaders){var e,t=this._config.downloadRequestHeaders;for(e in t)r.setRequestHeader(e,t[e])}var i;this._config.chunkSize&&(i=this._start+this._config.chunkSize-1,r.setRequestHeader("Range","bytes="+this._start+"-"+i));try{r.send(this._config.downloadRequestBody)}catch(e){this._chunkError(e.message)}s&&0===r.status&&this._chunkError()}},this._chunkLoaded=function(){4===r.readyState&&(r.status<200||400<=r.status?this._chunkError():(this._start+=this._config.chunkSize||r.responseText.length,this._finished=!this._config.chunkSize||this._start>=(e=>null!==(e=e.getResponseHeader("Content-Range"))?parseInt(e.substring(e.lastIndexOf("/")+1)):-1)(r),this.parseChunk(r.responseText)))},this._chunkError=function(e){e=r.statusText||e;this._sendError(new Error(e))}}function l(e){(e=e||{}).chunkSize||(e.chunkSize=v.LocalChunkSize),u.call(this,e);var i,r,n="undefined"!=typeof FileReader;this.stream=function(e){this._input=e,r=e.slice||e.webkitSlice||e.mozSlice,n?((i=new FileReader).onload=y(this._chunkLoaded,this),i.onerror=y(this._chunkError,this)):i=new FileReaderSync,this._nextChunk()},this._nextChunk=function(){this._finished||this._config.preview&&!(this._rowCount<this._config.preview)||this._readChunk()},this._readChunk=function(){var e=this._input,t=(this._config.chunkSize&&(t=Math.min(this._start+this._config.chunkSize,this._input.size),e=r.call(e,this._start,t)),i.readAsText(e,this._config.encoding));n||this._chunkLoaded({target:{result:t}})},this._chunkLoaded=function(e){this._start+=this._config.chunkSize,this._finished=!this._config.chunkSize||this._start>=this._input.size,this.parseChunk(e.target.result)},this._chunkError=function(){this._sendError(i.error)}}function c(e){var i;u.call(this,e=e||{}),this.stream=function(e){return i=e,this._nextChunk()},this._nextChunk=function(){var e,t;if(!this._finished)return e=this._config.chunkSize,i=e?(t=i.substring(0,e),i.substring(e)):(t=i,""),this._finished=!i,this.parseChunk(t)}}function p(e){u.call(this,e=e||{});var t=[],i=!0,r=!1;this.pause=function(){u.prototype.pause.apply(this,arguments),this._input.pause()},this.resume=function(){u.prototype.resume.apply(this,arguments),this._input.resume()},this.stream=function(e){this._input=e,this._input.on("data",this._streamData),this._input.on("end",this._streamEnd),this._input.on("error",this._streamError)},this._checkIsFinished=function(){r&&1===t.length&&(this._finished=!0)},this._nextChunk=function(){this._checkIsFinished(),t.length?this.parseChunk(t.shift()):i=!0},this._streamData=y(function(e){try{t.push("string"==typeof e?e:e.toString(this._config.encoding)),i&&(i=!1,this._checkIsFinished(),this.parseChunk(t.shift()))}catch(e){this._streamError(e)}},this),this._streamError=y(function(e){this._streamCleanUp(),this._sendError(e)},this),this._streamEnd=y(function(){this._streamCleanUp(),r=!0,this._streamData("")},this),this._streamCleanUp=y(function(){this._input.removeListener("data",this._streamData),this._input.removeListener("end",this._streamEnd),this._input.removeListener("error",this._streamError)},this)}function i(m){var n,s,a,t,o=Math.pow(2,53),h=-o,u=/^\s*-?(\d+\.?|\.\d+|\d+\.\d+)([eE][-+]?\d+)?\s*$/,d=/^((\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z)))$/,i=this,r=0,f=0,l=!1,e=!1,c=[],p={data:[],errors:[],meta:{}};function y(e){return"greedy"===m.skipEmptyLines?""===e.join("").trim():1===e.length&&0===e[0].length}function g(){if(p&&a&&(k("Delimiter","UndetectableDelimiter","Unable to auto-detect delimiting character; defaulted to '"+v.DefaultDelimiter+"'"),a=!1),m.skipEmptyLines&&(p.data=p.data.filter(function(e){return!y(e)})),_()){if(p)if(Array.isArray(p.data[0])){for(var e=0;_()&&e<p.data.length;e++)p.data[e].forEach(t);p.data.splice(0,1)}else p.data.forEach(t);function t(e,t){U(m.transformHeader)&&(e=m.transformHeader(e,t)),c.push(e)}}function i(e,t){for(var i=m.header?{}:[],r=0;r<e.length;r++){var n=r,s=e[r],s=((e,t)=>(e=>(m.dynamicTypingFunction&&void 0===m.dynamicTyping[e]&&(m.dynamicTyping[e]=m.dynamicTypingFunction(e)),!0===(m.dynamicTyping[e]||m.dynamicTyping)))(e)?"true"===t||"TRUE"===t||"false"!==t&&"FALSE"!==t&&((e=>{if(u.test(e)){e=parseFloat(e);if(h<e&&e<o)return 1}})(t)?parseFloat(t):d.test(t)?new Date(t):""===t?null:t):t)(n=m.header?r>=c.length?"__parsed_extra":c[r]:n,s=m.transform?m.transform(s,n):s);"__parsed_extra"===n?(i[n]=i[n]||[],i[n].push(s)):i[n]=s}return m.header&&(r>c.length?k("FieldMismatch","TooManyFields","Too many fields: expected "+c.length+" fields but parsed "+r,f+t):r<c.length&&k("FieldMismatch","TooFewFields","Too few fields: expected "+c.length+" fields but parsed "+r,f+t)),i}var r;p&&(m.header||m.dynamicTyping||m.transform)&&(r=1,!p.data.length||Array.isArray(p.data[0])?(p.data=p.data.map(i),r=p.data.length):p.data=i(p.data,0),m.header&&p.meta&&(p.meta.fields=c),f+=r)}function _(){return m.header&&0===c.length}function k(e,t,i,r){e={type:e,code:t,message:i};void 0!==r&&(e.row=r),p.errors.push(e)}U(m.step)&&(t=m.step,m.step=function(e){p=e,_()?g():(g(),0!==p.data.length&&(r+=e.data.length,m.preview&&r>m.preview?s.abort():(p.data=p.data[0],t(p,i))))}),this.parse=function(e,t,i){var r=m.quoteChar||'"',r=(m.newline||(m.newline=this.guessLineEndings(e,r)),a=!1,m.delimiter?U(m.delimiter)&&(m.delimiter=m.delimiter(e),p.meta.delimiter=m.delimiter):((r=((e,t,i,r,n)=>{var s,a,o,h;n=n||[",","\t","|",";",v.RECORD_SEP,v.UNIT_SEP];for(var u=0;u<n.length;u++){for(var d,f=n[u],l=0,c=0,p=0,g=(o=void 0,new E({comments:r,delimiter:f,newline:t,preview:10}).parse(e)),_=0;_<g.data.length;_++)i&&y(g.data[_])?p++:(d=g.data[_].length,c+=d,void 0===o?o=d:0<d&&(l+=Math.abs(d-o),o=d));0<g.data.length&&(c/=g.data.length-p),(void 0===a||l<=a)&&(void 0===h||h<c)&&1.99<c&&(a=l,s=f,h=c)}return{successful:!!(m.delimiter=s),bestDelimiter:s}})(e,m.newline,m.skipEmptyLines,m.comments,m.delimitersToGuess)).successful?m.delimiter=r.bestDelimiter:(a=!0,m.delimiter=v.DefaultDelimiter),p.meta.delimiter=m.delimiter),b(m));return m.preview&&m.header&&r.preview++,n=e,s=new E(r),p=s.parse(n,t,i),g(),l?{meta:{paused:!0}}:p||{meta:{paused:!1}}},this.paused=function(){return l},this.pause=function(){l=!0,s.abort(),n=U(m.chunk)?"":n.substring(s.getCharIndex())},this.resume=function(){i.streamer._halted?(l=!1,i.streamer.parseChunk(n,!0)):setTimeout(i.resume,3)},this.aborted=function(){return e},this.abort=function(){e=!0,s.abort(),p.meta.aborted=!0,U(m.complete)&&m.complete(p),n=""},this.guessLineEndings=function(e,t){e=e.substring(0,1048576);var t=new RegExp(P(t)+"([^]*?)"+P(t),"gm"),i=(e=e.replace(t,"")).split("\r"),t=e.split("\n"),e=1<t.length&&t[0].length<i[0].length;if(1===i.length||e)return"\n";for(var r=0,n=0;n<i.length;n++)"\n"===i[n][0]&&r++;return r>=i.length/2?"\r\n":"\r"}}function P(e){return e.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}function E(C){var S=(C=C||{}).delimiter,O=C.newline,x=C.comments,I=C.step,A=C.preview,T=C.fastMode,D=null,L=!1,F=null==C.quoteChar?'"':C.quoteChar,j=F;if(void 0!==C.escapeChar&&(j=C.escapeChar),("string"!=typeof S||-1<v.BAD_DELIMITERS.indexOf(S))&&(S=","),x===S)throw new Error("Comment character same as delimiter");!0===x?x="#":("string"!=typeof x||-1<v.BAD_DELIMITERS.indexOf(x))&&(x=!1),"\n"!==O&&"\r"!==O&&"\r\n"!==O&&(O="\n");var z=0,M=!1;this.parse=function(i,t,r){if("string"!=typeof i)throw new Error("Input must be a string");var n=i.length,e=S.length,s=O.length,a=x.length,o=U(I),h=[],u=[],d=[],f=z=0;if(!i)return w();if(T||!1!==T&&-1===i.indexOf(F)){for(var l=i.split(O),c=0;c<l.length;c++){if(d=l[c],z+=d.length,c!==l.length-1)z+=O.length;else if(r)return w();if(!x||d.substring(0,a)!==x){if(o){if(h=[],k(d.split(S)),R(),M)return w()}else k(d.split(S));if(A&&A<=c)return h=h.slice(0,A),w(!0)}}return w()}for(var p=i.indexOf(S,z),g=i.indexOf(O,z),_=new RegExp(P(j)+P(F),"g"),m=i.indexOf(F,z);;)if(i[z]===F)for(m=z,z++;;){if(-1===(m=i.indexOf(F,m+1)))return r||u.push({type:"Quotes",code:"MissingQuotes",message:"Quoted field unterminated",row:h.length,index:z}),E();if(m===n-1)return E(i.substring(z,m).replace(_,F));if(F===j&&i[m+1]===j)m++;else if(F===j||0===m||i[m-1]!==j){-1!==p&&p<m+1&&(p=i.indexOf(S,m+1));var y=v(-1===(g=-1!==g&&g<m+1?i.indexOf(O,m+1):g)?p:Math.min(p,g));if(i.substr(m+1+y,e)===S){d.push(i.substring(z,m).replace(_,F)),i[z=m+1+y+e]!==F&&(m=i.indexOf(F,z)),p=i.indexOf(S,z),g=i.indexOf(O,z);break}y=v(g);if(i.substring(m+1+y,m+1+y+s)===O){if(d.push(i.substring(z,m).replace(_,F)),b(m+1+y+s),p=i.indexOf(S,z),m=i.indexOf(F,z),o&&(R(),M))return w();if(A&&h.length>=A)return w(!0);break}u.push({type:"Quotes",code:"InvalidQuotes",message:"Trailing quote on quoted field is malformed",row:h.length,index:z}),m++}}else if(x&&0===d.length&&i.substring(z,z+a)===x){if(-1===g)return w();z=g+s,g=i.indexOf(O,z),p=i.indexOf(S,z)}else if(-1!==p&&(p<g||-1===g))d.push(i.substring(z,p)),z=p+e,p=i.indexOf(S,z);else{if(-1===g)break;if(d.push(i.substring(z,g)),b(g+s),o&&(R(),M))return w();if(A&&h.length>=A)return w(!0)}return E();function k(e){h.push(e),f=z}function v(e){var t=0;return t=-1!==e&&(e=i.substring(m+1,e))&&""===e.trim()?e.length:t}function E(e){return r||(void 0===e&&(e=i.substring(z)),d.push(e),z=n,k(d),o&&R()),w()}function b(e){z=e,k(d),d=[],g=i.indexOf(O,z)}function w(e){if(C.header&&!t&&h.length&&!L){var s=h[0],a=Object.create(null),o=new Set(s);let n=!1;for(let r=0;r<s.length;r++){let i=s[r];if(a[i=U(C.transformHeader)?C.transformHeader(i,r):i]){let e,t=a[i];for(;e=i+"_"+t,t++,o.has(e););o.add(e),s[r]=e,a[i]++,n=!0,(D=null===D?{}:D)[e]=i}else a[i]=1,s[r]=i;o.add(i)}n&&console.warn("Duplicate headers found and renamed."),L=!0}return{data:h,errors:u,meta:{delimiter:S,linebreak:O,aborted:M,truncated:!!e,cursor:f+(t||0),renamedHeaders:D}}}function R(){I(w()),h=[],u=[]}},this.abort=function(){M=!0},this.getCharIndex=function(){return z}}function g(e){var t=e.data,i=o[t.workerId],r=!1;if(t.error)i.userError(t.error,t.file);else if(t.results&&t.results.data){var n={abort:function(){r=!0,_(t.workerId,{data:[],errors:[],meta:{aborted:!0}})},pause:m,resume:m};if(U(i.userStep)){for(var s=0;s<t.results.data.length&&(i.userStep({data:t.results.data[s],errors:t.results.errors,meta:t.results.meta},n),!r);s++);delete t.results}else U(i.userChunk)&&(i.userChunk(t.results,n,t.file),delete t.results)}t.finished&&!r&&_(t.workerId,t.results)}function _(e,t){var i=o[e];U(i.userComplete)&&i.userComplete(t),i.terminate(),delete o[e]}function m(){throw new Error("Not implemented.")}function b(e){if("object"!=typeof e||null===e)return e;var t,i=Array.isArray(e)?[]:{};for(t in e)i[t]=b(e[t]);return i}function y(e,t){return function(){e.apply(t,arguments)}}function U(e){return"function"==typeof e}return v.parse=function(e,t){var i=(t=t||{}).dynamicTyping||!1;U(i)&&(t.dynamicTypingFunction=i,i={});if(t.dynamicTyping=i,t.transform=!!U(t.transform)&&t.transform,!t.worker||!v.WORKERS_SUPPORTED)return i=null,v.NODE_STREAM_INPUT,"string"==typeof e?(e=(e=>65279!==e.charCodeAt(0)?e:e.slice(1))(e),i=new(t.download?f:c)(t)):!0===e.readable&&U(e.read)&&U(e.on)?i=new p(t):(n.File&&e instanceof File||e instanceof Object)&&(i=new l(t)),i.stream(e);(i=(()=>{var e;return!!v.WORKERS_SUPPORTED&&(e=(()=>{var e=n.URL||n.webkitURL||null,t=r.toString();return v.BLOB_URL||(v.BLOB_URL=e.createObjectURL(new Blob(["var global = (function() { if (typeof self !== 'undefined') { return self; } if (typeof window !== 'undefined') { return window; } if (typeof global !== 'undefined') { return global; } return {}; })(); global.IS_PAPA_WORKER=true; ","(",t,")();"],{type:"text/javascript"})))})(),(e=new n.Worker(e)).onmessage=g,e.id=h++,o[e.id]=e)})()).userStep=t.step,i.userChunk=t.chunk,i.userComplete=t.complete,i.userError=t.error,t.step=U(t.step),t.chunk=U(t.chunk),t.complete=U(t.complete),t.error=U(t.error),delete t.worker,i.postMessage({input:e,config:t,workerId:i.id})},v.unparse=function(e,t){var n=!1,_=!0,m=",",y="\r\n",s='"',a=s+s,i=!1,r=null,o=!1,h=((()=>{if("object"==typeof t){if("string"!=typeof t.delimiter||v.BAD_DELIMITERS.filter(function(e){return-1!==t.delimiter.indexOf(e)}).length||(m=t.delimiter),"boolean"!=typeof t.quotes&&"function"!=typeof t.quotes&&!Array.isArray(t.quotes)||(n=t.quotes),"boolean"!=typeof t.skipEmptyLines&&"string"!=typeof t.skipEmptyLines||(i=t.skipEmptyLines),"string"==typeof t.newline&&(y=t.newline),"string"==typeof t.quoteChar&&(s=t.quoteChar),"boolean"==typeof t.header&&(_=t.header),Array.isArray(t.columns)){if(0===t.columns.length)throw new Error("Option columns is empty");r=t.columns}void 0!==t.escapeChar&&(a=t.escapeChar+s),t.escapeFormulae instanceof RegExp?o=t.escapeFormulae:"boolean"==typeof t.escapeFormulae&&t.escapeFormulae&&(o=/^[=+\-@\t\r].*$/)}})(),new RegExp(P(s),"g"));"string"==typeof e&&(e=JSON.parse(e));if(Array.isArray(e)){if(!e.length||Array.isArray(e[0]))return u(null,e,i);if("object"==typeof e[0])return u(r||Object.keys(e[0]),e,i)}else if("object"==typeof e)return"string"==typeof e.data&&(e.data=JSON.parse(e.data)),Array.isArray(e.data)&&(e.fields||(e.fields=e.meta&&e.meta.fields||r),e.fields||(e.fields=Array.isArray(e.data[0])?e.fields:"object"==typeof e.data[0]?Object.keys(e.data[0]):[]),Array.isArray(e.data[0])||"object"==typeof e.data[0]||(e.data=[e.data])),u(e.fields||[],e.data||[],i);throw new Error("Unable to serialize unrecognized input");function u(e,t,i){var r="",n=("string"==typeof e&&(e=JSON.parse(e)),"string"==typeof t&&(t=JSON.parse(t)),Array.isArray(e)&&0<e.length),s=!Array.isArray(t[0]);if(n&&_){for(var a=0;a<e.length;a++)0<a&&(r+=m),r+=k(e[a],a);0<t.length&&(r+=y)}for(var o=0;o<t.length;o++){var h=(n?e:t[o]).length,u=!1,d=n?0===Object.keys(t[o]).length:0===t[o].length;if(i&&!n&&(u="greedy"===i?""===t[o].join("").trim():1===t[o].length&&0===t[o][0].length),"greedy"===i&&n){for(var f=[],l=0;l<h;l++){var c=s?e[l]:l;f.push(t[o][c])}u=""===f.join("").trim()}if(!u){for(var p=0;p<h;p++){0<p&&!d&&(r+=m);var g=n&&s?e[p]:p;r+=k(t[o][g],p)}o<t.length-1&&(!i||0<h&&!d)&&(r+=y)}}return r}function k(e,t){var i,r;return null==e?"":e.constructor===Date?JSON.stringify(e).slice(1,25):(r=!1,o&&"string"==typeof e&&o.test(e)&&(e="'"+e,r=!0),i=e.toString().replace(h,a),(r=r||!0===n||"function"==typeof n&&n(e,t)||Array.isArray(n)&&n[t]||((e,t)=>{for(var i=0;i<t.length;i++)if(-1<e.indexOf(t[i]))return!0;return!1})(i,v.BAD_DELIMITERS)||-1<i.indexOf(m)||" "===i.charAt(0)||" "===i.charAt(i.length-1))?s+i+s:i)}},v.RECORD_SEP=String.fromCharCode(30),v.UNIT_SEP=String.fromCharCode(31),v.BYTE_ORDER_MARK="\ufeff",v.BAD_DELIMITERS=["\r","\n",'"',v.BYTE_ORDER_MARK],v.WORKERS_SUPPORTED=!s&&!!n.Worker,v.NODE_STREAM_INPUT=1,v.LocalChunkSize=10485760,v.RemoteChunkSize=5242880,v.DefaultDelimiter=",",v.Parser=E,v.ParserHandle=i,v.NetworkStreamer=f,v.FileStreamer=l,v.StringStreamer=c,v.ReadableStreamStreamer=p,n.jQuery&&((d=n.jQuery).fn.parse=function(o){var i=o.config||{},h=[];return this.each(function(e){if(!("INPUT"===d(this).prop("tagName").toUpperCase()&&"file"===d(this).attr("type").toLowerCase()&&n.FileReader)||!this.files||0===this.files.length)return!0;for(var t=0;t<this.files.length;t++)h.push({file:this.files[t],inputElem:this,instanceConfig:d.extend({},i)})}),e(),this;function e(){if(0===h.length)U(o.complete)&&o.complete();else{var e,t,i,r,n=h[0];if(U(o.before)){var s=o.before(n.file,n.inputElem);if("object"==typeof s){if("abort"===s.action)return e="AbortError",t=n.file,i=n.inputElem,r=s.reason,void(U(o.error)&&o.error({name:e},t,i,r));if("skip"===s.action)return void u();"object"==typeof s.config&&(n.instanceConfig=d.extend(n.instanceConfig,s.config))}else if("skip"===s)return void u()}var a=n.instanceConfig.complete;n.instanceConfig.complete=function(e){U(a)&&a(e,n.file,n.inputElem),u()},v.parse(n.file,n.instanceConfig)}}function u(){h.splice(0,1),e()}}),a&&(n.onmessage=function(e){e=e.data;void 0===v.WORKER_ID&&e&&(v.WORKER_ID=e.workerId);"string"==typeof e.input?n.postMessage({workerId:v.WORKER_ID,results:v.parse(e.input,e.config),finished:!0}):(n.File&&e.input instanceof File||e.input instanceof Object)&&(e=v.parse(e.input,e.config))&&n.postMessage({workerId:v.WORKER_ID,results:e,finished:!0})}),(f.prototype=Object.create(u.prototype)).constructor=f,(l.prototype=Object.create(u.prototype)).constructor=l,(c.prototype=Object.create(c.prototype)).constructor=c,(p.prototype=Object.create(u.prototype)).constructor=p,v});
+
+/***/ }),
+
+/***/ "./static/assets/js/apis/e7-API.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/apis/e7-API.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _e7_references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/references.js */ "./static/assets/js/e7/references.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+var HERO_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json";
+var ARTIFACT_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_artifact.json";
+function fetchE7Data(_x) {
+  return _fetchE7Data.apply(this, arguments);
+}
+function _fetchE7Data() {
+  _fetchE7Data = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+    var response, data, _t;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          _context.p = 0;
+          _context.n = 1;
+          return fetch(url);
+        case 1:
+          response = _context.v;
+          if (response.ok) {
+            _context.n = 2;
+            break;
+          }
+          throw new Error("HTTP error: status: ".concat(response.status));
+        case 2:
+          _context.n = 3;
+          return response.json();
+        case 3:
+          data = _context.v;
+          console.log("Fetched data from E7 Server; keys:", Object.keys(data));
+          return _context.a(2, data);
+        case 4:
+          _context.p = 4;
+          _t = _context.v;
+          console.error("Error fetching global user data:", _t);
+          return _context.a(2, null);
+      }
+    }, _callee, null, [[0, 4]]);
+  }));
+  return _fetchE7Data.apply(this, arguments);
+}
+function fetchHeroJSON() {
+  return _fetchHeroJSON.apply(this, arguments);
+}
+function _fetchHeroJSON() {
+  _fetchHeroJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+    var lang,
+      data,
+      _args2 = arguments;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          lang = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : null;
+          console.log("Fetching hero data (lang=".concat(lang !== null && lang !== void 0 ? lang : "all", ") from E7 Server..."));
+          _context2.n = 1;
+          return fetchE7Data(HERO_URL);
+        case 1:
+          data = _context2.v;
+          if (lang && data[lang]) {
+            data = data[lang];
+          } else if (lang && !data[lang]) {
+            console.error("Could not find hero data for language:", lang);
+            data = null;
+          }
+          return _context2.a(2, data);
+      }
+    }, _callee2);
+  }));
+  return _fetchHeroJSON.apply(this, arguments);
+}
+function fetchArtifactJSON() {
+  return _fetchArtifactJSON.apply(this, arguments);
+}
+function _fetchArtifactJSON() {
+  _fetchArtifactJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+    var lang,
+      data,
+      _args3 = arguments;
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
+        case 0:
+          lang = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : null;
+          console.log("Fetching hero data (lang=".concat(lang !== null && lang !== void 0 ? lang : "all", ") from E7 Server..."));
+          _context3.n = 1;
+          return fetchE7Data(ARTIFACT_URL);
+        case 1:
+          data = _context3.v;
+          if (lang && data[lang]) {
+            data = data[lang];
+          } else if (lang && !data[lang]) {
+            console.error("Could not find artifact data for language:", lang);
+            data = null;
+          }
+          return _context3.a(2, data);
+      }
+    }, _callee3);
+  }));
+  return _fetchArtifactJSON.apply(this, arguments);
+}
+function fetchUserJSON(_x2) {
+  return _fetchUserJSON.apply(this, arguments);
+}
+function _fetchUserJSON() {
+  _fetchUserJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(world_code) {
+    var url, data;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          world_code = world_code.replace("world_", "");
+          if (_toConsumableArray(_e7_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES).some(function (code) {
+            return code.replace("world_", "") === world_code;
+          })) {
+            _context4.n = 1;
+            break;
+          }
+          console.error("Could not find world code: ".concat(world_code));
+          return _context4.a(2, null);
+        case 1:
+          console.log("Fetching users for world code: ".concat(world_code, " from E7 Server..."));
+          url = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(world_code, ".json");
+          _context4.n = 2;
+          return fetchE7Data(url);
+        case 2:
+          data = _context4.v;
+          if (data) {
+            console.log("Got user data for world: ".concat(world_code, " ; Found ").concat(data.users.length, " users"));
+          }
+          return _context4.a(2, data);
+      }
+    }, _callee4);
+  }));
+  return _fetchUserJSON.apply(this, arguments);
+}
+var E7API = {
+  fetchHeroJSON: fetchHeroJSON,
+  fetchUserJSON: fetchUserJSON,
+  fetchArtifactJSON: fetchArtifactJSON
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (E7API);
+
+/***/ }),
+
+/***/ "./static/assets/js/apis/py-API.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/apis/py-API.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+var BATTLE_URL = '/api/get_battle_data';
+var RS_BATTLE_URL = '/api/rs_get_battle_data';
+var HERO_URL = '/api/get_hero_data';
+var USER_URL = '/api/get_user_data';
+var SEASON_URL = '/api/get_season_details';
+var PYAPI = {
+  test: function test(data) {
+    // test the fetching works properly
+    console.log('Got data in test:', data.rank_plot);
+  },
+  fetchFromPython: function () {
+    var _fetchFromPython = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+      var response, data;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return fetch(url);
+          case 1:
+            response = _context.v;
+            if (response.ok) {
+              _context.n = 3;
+              break;
+            }
+            console.log("Retrying Fetch...");
+            _context.n = 2;
+            return fetch(url);
+          case 2:
+            response = _context.v;
+          case 3:
+            _context.n = 4;
+            return response.json();
+          case 4:
+            data = _context.v;
+            return _context.a(2, data ? data : null);
+        }
+      }, _callee);
+    }));
+    function fetchFromPython(_x) {
+      return _fetchFromPython.apply(this, arguments);
+    }
+    return fetchFromPython;
+  }(),
+  fetchHeroData: function () {
+    var _fetchHeroData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return this.fetchFromPython(HERO_URL);
+          case 1:
+            return _context2.a(2, _context2.v);
+        }
+      }, _callee2, this);
+    }));
+    function fetchHeroData() {
+      return _fetchHeroData.apply(this, arguments);
+    }
+    return fetchHeroData;
+  }(),
+  fetchBattleData: function () {
+    var _fetchBattleData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(user) {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            if (user) {
+              _context3.n = 1;
+              break;
+            }
+            throw new Error("Must pass user to fetch battles data");
+          case 1:
+            _context3.n = 2;
+            return fetch(BATTLE_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                user: user
+              })
+            });
+          case 2:
+            return _context3.a(2, _context3.v);
+        }
+      }, _callee3);
+    }));
+    function fetchBattleData(_x2) {
+      return _fetchBattleData.apply(this, arguments);
+    }
+    return fetchBattleData;
+  }(),
+  // uses the new API endpoint that utilizes Rust for fetching and processing the battles
+  rsFetchBattleData: function () {
+    var _rsFetchBattleData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(user) {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            if (user) {
+              _context4.n = 1;
+              break;
+            }
+            throw new Error("Must pass user to fetch battles data");
+          case 1:
+            _context4.n = 2;
+            return fetch(RS_BATTLE_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                user: user
+              })
+            });
+          case 2:
+            return _context4.a(2, _context4.v);
+        }
+      }, _callee4);
+    }));
+    function rsFetchBattleData(_x3) {
+      return _rsFetchBattleData.apply(this, arguments);
+    }
+    return rsFetchBattleData;
+  }(),
+  fetchSeasonDetails: function () {
+    var _fetchSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      var response, data, seasonDetails;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return fetch(SEASON_URL);
+          case 1:
+            response = _context5.v;
+            _context5.n = 2;
+            return response.json();
+          case 2:
+            data = _context5.v;
+            if (!data.success) {
+              _context5.n = 3;
+              break;
+            }
+            seasonDetails = JSON.parse(data.seasonDetails);
+            return _context5.a(2, {
+              seasonDetails: seasonDetails,
+              error: false
+            });
+          case 3:
+            return _context5.a(2, {
+              seasonDetails: null,
+              error: data.error
+            });
+          case 4:
+            return _context5.a(2);
+        }
+      }, _callee5);
+    }));
+    function fetchSeasonDetails() {
+      return _fetchSeasonDetails.apply(this, arguments);
+    }
+    return fetchSeasonDetails;
+  }(),
+  fetchUser: function () {
+    var _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(userData) {
+      var response, data, worldCodeStr, user, _t;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            if (!((!userData.name || !userData.world_code) && !userData.id)) {
+              _context6.n = 1;
+              break;
+            }
+            throw new Error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");
+          case 1:
+            _context6.n = 2;
+            return fetch(USER_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                userData: userData
+              })
+            });
+          case 2:
+            response = _context6.v;
+            _context6.n = 3;
+            return response.json();
+          case 3:
+            data = _context6.v;
+            _context6.p = 4;
+            if (!response.ok) {
+              _context6.n = 9;
+              break;
+            }
+            if (data.foundUser) {
+              _context6.n = 7;
+              break;
+            }
+            if (!userData.name) {
+              _context6.n = 5;
+              break;
+            }
+            worldCodeStr = userData.world_code.replace("world_", "");
+            return _context6.a(2, {
+              user: null,
+              error: "Could not find user: \"".concat(userData.name, "\" in world_code: ").concat(worldCodeStr)
+            });
+          case 5:
+            if (!userData.id) {
+              _context6.n = 6;
+              break;
+            }
+            return _context6.a(2, {
+              user: null,
+              error: "Could not find user with ID: ".concat(userData.id)
+            });
+          case 6:
+            _context6.n = 8;
+            break;
+          case 7:
+            user = data.user;
+            console.log("Server communication successful; received response data for user");
+            console.log("Found user: ".concat(JSON.stringify(user)));
+            return _context6.a(2, {
+              user: user,
+              error: false
+            });
+          case 8:
+            _context6.n = 10;
+            break;
+          case 9:
+            console.log("Server communication unsuccessful");
+            return _context6.a(2, {
+              user: null,
+              error: data.error
+            });
+          case 10:
+            ;
+            _context6.n = 12;
+            break;
+          case 11:
+            _context6.p = 11;
+            _t = _context6.v;
+            console.error("Error fetching and caching user: ".concat(_t));
+            return _context6.a(2, {
+              user: null,
+              error: _t.message
+            });
+          case 12:
+            return _context6.a(2);
+        }
+      }, _callee6, null, [[4, 11]]);
+    }));
+    function fetchUser(_x4) {
+      return _fetchUser.apply(this, arguments);
+    }
+    return fetchUser;
+  }(),
+  //returns both user and battles
+  fetchDataFromID: function () {
+    var _fetchDataFromID = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(id) {
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            if (id) {
+              _context7.n = 1;
+              break;
+            }
+            throw new Error("Must pass ID to fetch user");
+          case 1:
+            _context7.n = 2;
+            return fetch('/api/get_battle_data_from_id', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                id: id
+              })
+            });
+          case 2:
+            return _context7.a(2, _context7.v);
+        }
+      }, _callee7);
+    }));
+    function fetchDataFromID(_x5) {
+      return _fetchDataFromID.apply(this, arguments);
+    }
+    return fetchDataFromID;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PYAPI);
+
+/***/ }),
+
+/***/ "./static/assets/js/cache-manager.js":
+/*!*******************************************!*\
+  !*** ./static/assets/js/cache-manager.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+// static/app.js
+
+function clearStore(_x, _x2) {
+  return _clearStore.apply(this, arguments);
+}
+function _clearStore() {
+  _clearStore = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17(db, storeName) {
+    var tx, store;
+    return _regenerator().w(function (_context17) {
+      while (1) switch (_context17.n) {
+        case 0:
+          tx = db.transaction(storeName, 'readwrite');
+          store = tx.objectStore(storeName);
+          store.clear();
+          _context17.n = 1;
+          return tx.done;
+        case 1:
+          return _context17.a(2);
+      }
+    }, _callee17);
+  }));
+  return _clearStore.apply(this, arguments);
+}
+;
+var Keys = {
+  USER: "current-user",
+  HERO_MANAGER: "hero-manager",
+  BATTLES: "battles",
+  UPLOADED_BATTLES: "uploaded-battles",
+  FILTERED_BATTLES: "filtered-battles",
+  FILTER_STR: "filter-str",
+  STATS: "stats",
+  SEASON_DETAILS: "season-details",
+  AUTO_ZOOM_FLAG: "auto-zoom",
+  AUTO_QUERY_FLAG: "auto-query",
+  GLOBAL_USERS: "global-users",
+  EU_USERS: "eu-users",
+  ASIA_USERS: "asia-users",
+  JPN_USERS: "jpn-users",
+  KOR_USERS: "kor-users",
+  ARTIFACTS: "artifacts",
+  HOME_PAGE_STATE: "home-page-state"
+};
+var FlagsToKeys = {
+  "autoZoom": Keys.AUTO_ZOOM_FLAG,
+  "autoQuery": Keys.AUTO_QUERY_FLAG
+};
+var ClientCache = {
+  consts: {
+    DB_NAME: 'E7ArenaStatsClientDB',
+    DB_VERSION: 1,
+    STORE_NAME: 'DataStore',
+    META_STORE_NAME: 'MetaStore',
+    CACHE_TIMEOUT: 1000 * 60 * 60 * 24 * 2 // 2 day cache timeout
+  },
+  Keys: _objectSpread({}, Keys),
+  MetaKeys: {
+    TIMESTAMP: "timestamp"
+  },
+  loaded_UM: new Set(),
+  openDB: function () {
+    var _openDB2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            return _context.a(2, (0,idb__WEBPACK_IMPORTED_MODULE_0__.openDB)(ClientCache.consts.DB_NAME, ClientCache.consts.DB_VERSION, {
+              upgrade: function upgrade(db) {
+                if (db.objectStoreNames.contains(ClientCache.consts.STORE_NAME)) {
+                  db.deleteObjectStore(ClientCache.consts.STORE_NAME); // 🧹 clear old store
+                  console.log('Old store deleted');
+                }
+                if (!db.objectStoreNames.contains(ClientCache.consts.STORE_NAME)) {
+                  console.log('Created data store');
+                  db.createObjectStore(ClientCache.consts.STORE_NAME);
+                }
+                if (!db.objectStoreNames.contains(ClientCache.consts.META_STORE_NAME)) {
+                  console.log('Created meta data store');
+                  db.createObjectStore(ClientCache.consts.META_STORE_NAME);
+                }
+              }
+            }));
+        }
+      }, _callee);
+    }));
+    function openDB() {
+      return _openDB2.apply(this, arguments);
+    }
+    return openDB;
+  }(),
+  get: function () {
+    var _get = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(id) {
+      var db, result, useCache;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context2.v;
+            _context2.n = 2;
+            return db.get(this.consts.STORE_NAME, id);
+          case 2:
+            result = _context2.v;
+            if (!(result !== null)) {
+              _context2.n = 3;
+              break;
+            }
+            console.log("Found ".concat(id, " in cache"));
+            _context2.n = 4;
+            break;
+          case 3:
+            console.log("".concat(id, " not found in cache; returning null"));
+            return _context2.a(2, null);
+          case 4:
+            _context2.n = 5;
+            return this.checkCacheTimeout(id);
+          case 5:
+            useCache = _context2.v;
+            if (!useCache) {
+              _context2.n = 6;
+              break;
+            }
+            console.log("Timeout not reached, using cache for ".concat(id));
+            return _context2.a(2, result);
+          case 6:
+            console.log("Timeout reached, returning null for ".concat(id));
+            return _context2.a(2, null);
+          case 7:
+            return _context2.a(2);
+        }
+      }, _callee2, this);
+    }));
+    function get(_x3) {
+      return _get.apply(this, arguments);
+    }
+    return get;
+  }(),
+  cache: function () {
+    var _cache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(id, data) {
+      var db;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            console.log("Caching ".concat(id, " with data: ").concat(data));
+            _context3.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context3.v;
+            _context3.n = 2;
+            return db.put(this.consts.STORE_NAME, data, id);
+          case 2:
+            _context3.n = 3;
+            return this.setTimestamp(id, Date.now());
+          case 3:
+            return _context3.a(2);
+        }
+      }, _callee3, this);
+    }));
+    function cache(_x4, _x5) {
+      return _cache.apply(this, arguments);
+    }
+    return cache;
+  }(),
+  "delete": function () {
+    var _delete2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(id) {
+      var db;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context4.v;
+            _context4.n = 2;
+            return db["delete"](this.consts.STORE_NAME, id);
+          case 2:
+            _context4.n = 3;
+            return this.deleteTimestamp(id);
+          case 3:
+            return _context4.a(2);
+        }
+      }, _callee4, this);
+    }));
+    function _delete(_x6) {
+      return _delete2.apply(this, arguments);
+    }
+    return _delete;
+  }(),
+  deleteDB: function () {
+    var _deleteDB = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return indexedDB.deleteDatabase(this.consts.DB_NAME);
+          case 1:
+            console.log('Database deleted');
+          case 2:
+            return _context5.a(2);
+        }
+      }, _callee5, this);
+    }));
+    function deleteDB() {
+      return _deleteDB.apply(this, arguments);
+    }
+    return deleteDB;
+  }(),
+  getTimestamp: function () {
+    var _getTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(id) {
+      var db, key, timestamp;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            _context6.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context6.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context6.n = 2;
+            return db.get(this.consts.META_STORE_NAME, key);
+          case 2:
+            timestamp = _context6.v;
+            return _context6.a(2, timestamp !== null && timestamp !== void 0 ? timestamp : null);
+        }
+      }, _callee6, this);
+    }));
+    function getTimestamp(_x7) {
+      return _getTimestamp.apply(this, arguments);
+    }
+    return getTimestamp;
+  }(),
+  setTimestamp: function () {
+    var _setTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(id, timestamp) {
+      var db, key, val;
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            _context7.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context7.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context7.n = 2;
+            return db.put(this.consts.META_STORE_NAME, timestamp, key);
+          case 2:
+            _context7.n = 3;
+            return db.get(this.consts.META_STORE_NAME, key);
+          case 3:
+            val = _context7.v;
+            console.log("Timestamp set: ".concat(val));
+          case 4:
+            return _context7.a(2);
+        }
+      }, _callee7, this);
+    }));
+    function setTimestamp(_x8, _x9) {
+      return _setTimestamp.apply(this, arguments);
+    }
+    return setTimestamp;
+  }(),
+  deleteTimestamp: function () {
+    var _deleteTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(id) {
+      var db, key;
+      return _regenerator().w(function (_context8) {
+        while (1) switch (_context8.n) {
+          case 0:
+            _context8.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context8.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context8.n = 2;
+            return db["delete"](this.consts.META_STORE_NAME, key);
+          case 2:
+            console.log("Timestamp deleted for <".concat(id, ">"));
+          case 3:
+            return _context8.a(2);
+        }
+      }, _callee8, this);
+    }));
+    function deleteTimestamp(_x0) {
+      return _deleteTimestamp.apply(this, arguments);
+    }
+    return deleteTimestamp;
+  }(),
+  clearData: function () {
+    var _clearData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9() {
+      var db;
+      return _regenerator().w(function (_context9) {
+        while (1) switch (_context9.n) {
+          case 0:
+            _context9.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context9.v;
+            _context9.n = 2;
+            return clearStore(db, this.consts.STORE_NAME);
+          case 2:
+            _context9.n = 3;
+            return clearStore(db, this.consts.META_STORE_NAME);
+          case 3:
+            console.log('All data cleared from data cache and meta data cache');
+          case 4:
+            return _context9.a(2);
+        }
+      }, _callee9, this);
+    }));
+    function clearData() {
+      return _clearData.apply(this, arguments);
+    }
+    return clearData;
+  }(),
+  clearUserData: function () {
+    var _clearUserData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
+      var _this = this;
+      var toDelete;
+      return _regenerator().w(function (_context0) {
+        while (1) switch (_context0.n) {
+          case 0:
+            toDelete = [Keys.USER, Keys.BATTLES, Keys.UPLOADED_BATTLES, Keys.FILTERED_BATTLES, Keys.FILTER_STR, Keys.STATS];
+            _context0.n = 1;
+            return Promise.all(toDelete.map(function (key) {
+              return _this["delete"](key);
+            }));
+          case 1:
+            console.log("User data cleared from data cache");
+          case 2:
+            return _context0.a(2);
+        }
+      }, _callee0);
+    }));
+    function clearUserData() {
+      return _clearUserData.apply(this, arguments);
+    }
+    return clearUserData;
+  }(),
+  clearSeasonData: function () {
+    var _clearSeasonData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
+      return _regenerator().w(function (_context1) {
+        while (1) switch (_context1.n) {
+          case 0:
+            _context1.n = 1;
+            return this["delete"](Keys.SEASON_DETAILS);
+          case 1:
+            console.log("Season data cleared from data cache");
+          case 2:
+            return _context1.a(2);
+        }
+      }, _callee1, this);
+    }));
+    function clearSeasonData() {
+      return _clearSeasonData.apply(this, arguments);
+    }
+    return clearSeasonData;
+  }(),
+  checkCacheTimeout: function () {
+    var _checkCacheTimeout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(id) {
+      var timestamp, currentTime;
+      return _regenerator().w(function (_context10) {
+        while (1) switch (_context10.n) {
+          case 0:
+            _context10.n = 1;
+            return this.getTimestamp(id);
+          case 1:
+            timestamp = _context10.v;
+            currentTime = Date.now();
+            console.log("Checking Timeout for <".concat(id, "> | Current time: ").concat(currentTime, ", cache timestamp: ").concat(timestamp, ", difference: ").concat(currentTime - timestamp, " ms"));
+            if (!(!timestamp || currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
+              _context10.n = 3;
+              break;
+            }
+            console.log("Cache timeout reached, clearing data from <".concat(id, ">"));
+            _context10.n = 2;
+            return this["delete"](id);
+          case 2:
+            return _context10.a(2, false);
+          case 3:
+            return _context10.a(2, true);
+        }
+      }, _callee10, this);
+    }));
+    function checkCacheTimeout(_x1) {
+      return _checkCacheTimeout.apply(this, arguments);
+    }
+    return checkCacheTimeout;
+  }(),
+  getFilterStr: function () {
+    var _getFilterStr = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11() {
+      return _regenerator().w(function (_context11) {
+        while (1) switch (_context11.n) {
+          case 0:
+            _context11.n = 1;
+            return this.get(ClientCache.Keys.FILTER_STR);
+          case 1:
+            return _context11.a(2, _context11.v);
+        }
+      }, _callee11, this);
+    }));
+    function getFilterStr() {
+      return _getFilterStr.apply(this, arguments);
+    }
+    return getFilterStr;
+  }(),
+  setFilterStr: function () {
+    var _setFilterStr = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(filterStr) {
+      return _regenerator().w(function (_context12) {
+        while (1) switch (_context12.n) {
+          case 0:
+            _context12.n = 1;
+            return this.cache(ClientCache.Keys.FILTER_STR, filterStr);
+          case 1:
+            return _context12.a(2);
+        }
+      }, _callee12, this);
+    }));
+    function setFilterStr(_x10) {
+      return _setFilterStr.apply(this, arguments);
+    }
+    return setFilterStr;
+  }(),
+  getStats: function () {
+    var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13() {
+      return _regenerator().w(function (_context13) {
+        while (1) switch (_context13.n) {
+          case 0:
+            _context13.n = 1;
+            return this.get(ClientCache.Keys.STATS);
+          case 1:
+            return _context13.a(2, _context13.v);
+        }
+      }, _callee13, this);
+    }));
+    function getStats() {
+      return _getStats.apply(this, arguments);
+    }
+    return getStats;
+  }(),
+  setStats: function () {
+    var _setStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(stats) {
+      return _regenerator().w(function (_context14) {
+        while (1) switch (_context14.n) {
+          case 0:
+            _context14.n = 1;
+            return this.cache(Keys.STATS, stats);
+          case 1:
+            return _context14.a(2);
+        }
+      }, _callee14, this);
+    }));
+    function setStats(_x11) {
+      return _setStats.apply(this, arguments);
+    }
+    return setStats;
+  }(),
+  getFlag: function () {
+    var _getFlag = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(flag) {
+      var key;
+      return _regenerator().w(function (_context15) {
+        while (1) switch (_context15.n) {
+          case 0:
+            key = FlagsToKeys[flag];
+            if (key) {
+              _context15.n = 1;
+              break;
+            }
+            throw new Error("No key found for flag <".concat(flag, ">"));
+          case 1:
+            _context15.n = 2;
+            return this.get(key);
+          case 2:
+            return _context15.a(2, _context15.v);
+        }
+      }, _callee15, this);
+    }));
+    function getFlag(_x12) {
+      return _getFlag.apply(this, arguments);
+    }
+    return getFlag;
+  }(),
+  setFlag: function () {
+    var _setFlag = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(flag, value) {
+      var key;
+      return _regenerator().w(function (_context16) {
+        while (1) switch (_context16.n) {
+          case 0:
+            key = FlagsToKeys[flag];
+            if (key) {
+              _context16.n = 1;
+              break;
+            }
+            throw new Error("No key found for flag <".concat(flag, ">"));
+          case 1:
+            _context16.n = 2;
+            return this.cache(key, value);
+          case 2:
+            return _context16.a(2);
+        }
+      }, _callee16, this);
+    }));
+    function setFlag(_x13, _x14) {
+      return _setFlag.apply(this, arguments);
+    }
+    return setFlag;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ClientCache);
+
+/***/ }),
+
+/***/ "./static/assets/js/content-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/content-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./e7/hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _e7_battle_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7/battle-manager.js */ "./static/assets/js/e7/battle-manager.js");
+/* harmony import */ var _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./e7/season-manager.js */ "./static/assets/js/e7/season-manager.js");
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./e7/filter-syntax-parser.js */ "./static/assets/js/e7/filter-syntax-parser.js");
+/* harmony import */ var _e7_user_manager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./e7/user-manager.js */ "./static/assets/js/e7/user-manager.js");
+/* harmony import */ var _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./e7/artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+
+
+var ContentManager = {
+  HeroManager: _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  BattleManager: _e7_battle_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  SeasonManager: _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"],
+  UserManager: _e7_user_manager_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+  ClientCache: _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+  ArtifactManager: _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__["default"],
+  getFilters: function () {
+    var _getFilters = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(HM) {
+      var filterStr, seasonDetails, parser;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__["default"].getFilterStr();
+          case 1:
+            filterStr = _context.v;
+            if (filterStr) {
+              _context.n = 2;
+              break;
+            }
+            return _context.a(2, _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__["default"].getEmptyFilters());
+          case 2:
+            _context.n = 3;
+            return _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].getSeasonDetails();
+          case 3:
+            seasonDetails = _context.v;
+            _context.n = 4;
+            return _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__["default"].createAndParse(filterStr, HM, seasonDetails);
+          case 4:
+            parser = _context.v;
+            return _context.a(2, parser.filters);
+        }
+      }, _callee);
+    }));
+    function getFilters(_x) {
+      return _getFilters.apply(this, arguments);
+    }
+    return getFilters;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ContentManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/csv-parse.js":
+/*!***************************************!*\
+  !*** ./static/assets/js/csv-parse.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var papaparse__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! papaparse */ "./node_modules/papaparse/papaparse.min.js");
+/* harmony import */ var papaparse__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(papaparse__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _e7_references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7/references.js */ "./static/assets/js/e7/references.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+var COLUMNS = Object.values(_e7_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP);
+var CSVParse = {
+  parseUpload: function () {
+    var _parseUpload = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(upload_file) {
+      var csvString, result, parsedHeaders, error;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            this.validateCSV(upload_file);
+            _context.n = 1;
+            return upload_file.text();
+          case 1:
+            csvString = _context.v;
+            // Parse with PapaParse
+            result = papaparse__WEBPACK_IMPORTED_MODULE_0___default().parse(csvString, {
+              header: true,
+              skipEmptyLines: true,
+              quoteChar: '"',
+              dynamicTyping: false
+            }); // Validate headers
+            parsedHeaders = result.meta.fields;
+            parsedHeaders.forEach(function (h, i) {
+              var cleaned = h.trim().replace(/"/g, '');
+              if (cleaned !== COLUMNS[i]) {
+                throw new Error("Header ".concat(cleaned, " does not match expected column ").concat(COLUMNS[i], " at index ").concat(i));
+              }
+            });
+            if (!(result.errors.length > 0)) {
+              _context.n = 2;
+              break;
+            }
+            error = result.errors[0];
+            throw new Error("Failed to parse CSV: Row ".concat(error.row, ", ").concat(error.message));
+          case 2:
+            console.log("Parsed CSV");
+            console.log(result.data);
+            return _context.a(2, result.data);
+        }
+      }, _callee, this);
+    }));
+    function parseUpload(_x) {
+      return _parseUpload.apply(this, arguments);
+    }
+    return parseUpload;
+  }(),
+  validateCSV: function validateCSV(upload_file) {
+    if (!upload_file.name.endsWith(".csv")) {
+      throw new Error("File must be .csv");
+    }
+
+    // Check file size (optional, e.g. <5MB)
+    var maxMB = 10;
+    var maxSize = maxMB * 1024 * 1024;
+    if (upload_file.size > maxSize) {
+      throw new Error("File must be smaller than ".concat(maxMB, "mb, got ").concat(upload_file.size / (1024 * 1024), "mb File."));
+    }
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CSVParse);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/artifact-manager.js":
+/*!*************************************************!*\
+  !*** ./static/assets/js/e7/artifact-manager.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+function getArtifactMapFromE7Server() {
+  return _getArtifactMapFromE7Server.apply(this, arguments);
+}
+function _getArtifactMapFromE7Server() {
+  _getArtifactMapFromE7Server = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+    var rawJSON;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          console.log("Getting artifact map from E7 server...");
+          _context4.n = 1;
+          return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].fetchArtifactJSON("en");
+        case 1:
+          rawJSON = _context4.v;
+          if (rawJSON) {
+            _context4.n = 2;
+            break;
+          }
+          console.error("Could not get user map from E7 server for world code: ".concat(world_code));
+          return _context4.a(2, null);
+        case 2:
+          console.log("Got artifact map from E7 server for language: 'en'");
+          return _context4.a(2, Object.fromEntries(rawJSON.map(function (artifact) {
+            return [artifact.code, artifact.name];
+          })));
+      }
+    }, _callee4);
+  }));
+  return _getArtifactMapFromE7Server.apply(this, arguments);
+}
+var ArtifactManager = {
+  getArtifacts: function () {
+    var _getArtifacts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 5;
+            break;
+          case 3:
+            _context.n = 4;
+            return this.fetchAndCacheArtifacts();
+          case 4:
+            _t3 = _context.v;
+          case 5:
+            return _context.a(2, _t3);
+        }
+      }, _callee, this);
+    }));
+    function getArtifacts() {
+      return _getArtifacts.apply(this, arguments);
+    }
+    return getArtifacts;
+  }(),
+  fetchAndCacheArtifacts: function () {
+    var _fetchAndCacheArtifacts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var artifactMap;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            console.log("ArtifactManager not found in cache, fetching from server and caching it");
+            _context2.n = 1;
+            return getArtifactMapFromE7Server();
+          case 1:
+            artifactMap = _context2.v;
+            _context2.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS, artifactMap);
+          case 2:
+            console.log("Cached ArtifactManager using raw data recieved from server");
+            return _context2.a(2, artifactMap);
+        }
+      }, _callee2);
+    }));
+    function fetchAndCacheArtifacts() {
+      return _fetchAndCacheArtifacts.apply(this, arguments);
+    }
+    return fetchAndCacheArtifacts;
+  }(),
+  clearArtifactData: function () {
+    var _clearArtifactData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS);
+          case 1:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function clearArtifactData() {
+      return _clearArtifactData.apply(this, arguments);
+    }
+    return clearArtifactData;
+  }(),
+  // will fall back to the code if the name is not found
+  convertCodeToName: function convertCodeToName(code, artifacts) {
+    return artifacts[code] || code;
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ArtifactManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/battle-manager.js":
+/*!***********************************************!*\
+  !*** ./static/assets/js/e7/battle-manager.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _plots_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./plots.js */ "./static/assets/js/e7/plots.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filter-syntax-parser.js */ "./static/assets/js/e7/filter-syntax-parser.js");
+/* harmony import */ var _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stats-builder.js */ "./static/assets/js/e7/stats-builder.js");
+/* harmony import */ var _battle_transform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./battle-transform.js */ "./static/assets/js/e7/battle-transform.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _regeneratorValues(e) { if (null != e) { var t = e["function" == typeof Symbol && Symbol.iterator || "@@iterator"], r = 0; if (t) return t.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) return { next: function next() { return e && r >= e.length && (e = void 0), { value: e && e[r++], done: !e }; } }; } throw new TypeError(_typeof(e) + " is not iterable"); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+
+
+
+
+
+
+var HERO_COLUMNS = _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS.filter(function (col) {
+  return col.includes(" Pick ") || col.includes("ban ");
+});
+function cleanUploadedBattle(battle) {
+  var _iterator = _createForOfIteratorHelper(HERO_COLUMNS),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var col = _step.value;
+      battle[col] = battle[col] ? battle[col] : "Empty";
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  battle["P1 Points"] = Number(battle["P1 Points"]) || battle["P1 Points"];
+  battle["P1 Picks"] = [battle["P1 Pick 1"], battle["P1 Pick 2"], battle["P1 Pick 3"], battle["P1 Pick 4"], battle["P1 Pick 5"]];
+  battle["P2 Picks"] = [battle["P2 Pick 1"], battle["P2 Pick 2"], battle["P2 Pick 3"], battle["P2 Pick 4"], battle["P2 Pick 5"]];
+  battle["P1 Prebans"] = [battle["P1 Preban 1"], battle["P1 Preban 2"]];
+  battle["P2 Prebans"] = [battle["P2 Preban 1"], battle["P2 Preban 2"]];
+  return battle;
+}
+var BattleManager = {
+  loaded_servers: new Set(),
+  // gets battles (upload and/or queried) and returns as list in clean format; used directly to populate battles table
+  getBattles: function () {
+    var _getBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            console.log("Getting battles");
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 4;
+            break;
+          case 3:
+            _t3 = null;
+          case 4:
+            return _context.a(2, _t3);
+        }
+      }, _callee);
+    }));
+    function getBattles() {
+      return _getBattles.apply(this, arguments);
+    }
+    return getBattles;
+  }(),
+  // Removes all user battle data from cache, should be called when user is switched out
+  removeBattles: function () {
+    var _removeBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _context2.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.UPLOADED_BATTLES);
+          case 2:
+            _context2.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES);
+          case 3:
+            console.log("Removed battle data from cache; cleared ['BATTLES', 'UPLOADED_BATTLES', 'FILTERED_BATTLES']");
+          case 4:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    function removeBattles() {
+      return _removeBattles.apply(this, arguments);
+    }
+    return removeBattles;
+  }(),
+  removeFilteredBattles: function () {
+    var _removeFilteredBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES);
+          case 1:
+            console.log("Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']");
+          case 2:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function removeFilteredBattles() {
+      return _removeFilteredBattles.apply(this, arguments);
+    }
+    return removeFilteredBattles;
+  }(),
+  /* after battles are set in cache, applies filters to the battles and stores filtered arr in cache under filtered 
+  battle key all battles are stored in their clean format, not numerical format; convert after to compute metrics */
+  applyFilter: function () {
+    var _applyFilter = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(filters) {
+      var battles, localFilterList, globalFilterList, battleList, _iterator2, _step2, filter, startLen, _iterator3, _step3, _loop, _t4;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return this.getBattles();
+          case 1:
+            battles = _context5.v;
+            localFilterList = filters.localFilters || [];
+            globalFilterList = filters.globalFilters || []; // apply global filters (filters that require context of all battles); these are always applied before local filters in order of appearance
+            battleList = Object.values(battles);
+            _iterator2 = _createForOfIteratorHelper(globalFilterList);
+            try {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                filter = _step2.value;
+                console.log("Applying global filter: ".concat(filter));
+                startLen = battleList.length;
+                battleList = filter.call(battleList);
+                battles = Object.fromEntries(battleList.map(function (b) {
+                  return [b["Seq Num"], b];
+                }));
+                console.log("Filtered ".concat(startLen - battleList.length, " out of ").concat(startLen, "; new total = ").concat(battleList.length));
+              }
+
+              // apply local filters (filters that can be resolved on each battle without context of other battles)
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
+            }
+            _iterator3 = _createForOfIteratorHelper(localFilterList);
+            _context5.p = 2;
+            _loop = /*#__PURE__*/_regenerator().m(function _loop() {
+              var filter, startLen;
+              return _regenerator().w(function (_context4) {
+                while (1) switch (_context4.n) {
+                  case 0:
+                    filter = _step3.value;
+                    console.log("Applying local filter: ".concat(filter));
+                    startLen = Object.keys(battles).length;
+                    battles = Object.fromEntries(Object.entries(battles).filter(function (_ref) {
+                      var _ref2 = _slicedToArray(_ref, 2),
+                        key = _ref2[0],
+                        battle = _ref2[1];
+                      var include = filter.call(battle);
+                      //console.log(`Filtering battle: ${key} ${include ? "included" : "excluded"}`);
+                      return include;
+                    }));
+                    console.log("Filtered ".concat(startLen - Object.keys(battles).length, " out of ").concat(startLen, "; new total = ").concat(Object.keys(battles).length));
+                  case 1:
+                    return _context4.a(2);
+                }
+              }, _loop);
+            });
+            _iterator3.s();
+          case 3:
+            if ((_step3 = _iterator3.n()).done) {
+              _context5.n = 5;
+              break;
+            }
+            return _context5.d(_regeneratorValues(_loop()), 4);
+          case 4:
+            _context5.n = 3;
+            break;
+          case 5:
+            _context5.n = 7;
+            break;
+          case 6:
+            _context5.p = 6;
+            _t4 = _context5.v;
+            _iterator3.e(_t4);
+          case 7:
+            _context5.p = 7;
+            _iterator3.f();
+            return _context5.f(7);
+          case 8:
+            console.log("Caching filtered battles ; total = ".concat(Object.keys(battles).length));
+            _context5.n = 9;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES, battles);
+          case 9:
+            console.log("Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <".concat(localFilterList.length + globalFilterList.length, "> filters"));
+            return _context5.a(2, battles);
+        }
+      }, _callee4, this, [[2, 6, 7, 8]]);
+    }));
+    function applyFilter(_x) {
+      return _applyFilter.apply(this, arguments);
+    }
+    return applyFilter;
+  }(),
+  // should be called when computing metrics
+  getNumericalBattles: function () {
+    var _getNumericalBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(battles, HM) {
+      var mapFn, numericalBattles;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            mapFn = function mapFn(key, battle) {
+              return [key, formatBattleNumerical(battle, HM)];
+            };
+            numericalBattles = Object.fromEntries(Object.entries(battles).map(function (_ref3) {
+              var _ref4 = _slicedToArray(_ref3, 2),
+                key = _ref4[0],
+                battle = _ref4[1];
+              return mapFn(key, battle);
+            })); //console.log("Converted filtered battles from cache to numerical format; returning:" + JSON.stringify(numericalBattles) + " battles"  );
+            return _context6.a(2, numericalBattles);
+        }
+      }, _callee5);
+    }));
+    function getNumericalBattles(_x2, _x3) {
+      return _getNumericalBattles.apply(this, arguments);
+    }
+    return getNumericalBattles;
+  }(),
+  //takes in list of battles then converts to dict and then adds to cached battles
+  extendBattles: function () {
+    var _extendBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(cleanBattleMap) {
+      var _yield$ClientCache$ge2;
+      var oldDict, newDict, _t5, _t6, _t7;
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            _context7.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _t6 = _yield$ClientCache$ge2 = _context7.v;
+            _t5 = _t6 !== null;
+            if (!_t5) {
+              _context7.n = 2;
+              break;
+            }
+            _t5 = _yield$ClientCache$ge2 !== void 0;
+          case 2:
+            if (!_t5) {
+              _context7.n = 3;
+              break;
+            }
+            _t7 = _yield$ClientCache$ge2;
+            _context7.n = 4;
+            break;
+          case 3:
+            _t7 = {};
+          case 4:
+            oldDict = _t7;
+            // new battles automatically overwrite old ones if they share same seq_num
+            newDict = _objectSpread(_objectSpread({}, oldDict), cleanBattleMap);
+            _context7.n = 5;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES, newDict);
+          case 5:
+            console.log("Extended user data in cache");
+            return _context7.a(2, newDict);
+        }
+      }, _callee6);
+    }));
+    function extendBattles(_x4) {
+      return _extendBattles.apply(this, arguments);
+    }
+    return extendBattles;
+  }(),
+  //Takes queried battles, clean format and extend in cache
+  cacheQuery: function () {
+    var _cacheQuery = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(battleList, HM, artifacts) {
+      var cleanBattleMap, battles;
+      return _regenerator().w(function (_context8) {
+        while (1) switch (_context8.n) {
+          case 0:
+            if (battleList) {
+              _context8.n = 1;
+              break;
+            }
+            console.log("No query battles provided to cacheQuery");
+            return _context8.a(2, []);
+          case 1:
+            console.log("Caching queried battles: ".concat(battleList.length, " battles; modified [BATTLES]"));
+            cleanBattleMap = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_5__.buildFormattedBattleMap)(battleList, HM, artifacts);
+            _context8.n = 2;
+            return this.extendBattles(cleanBattleMap);
+          case 2:
+            battles = _context8.v;
+            console.log("Cached queried battles in cache; modified [BATTLES]");
+            return _context8.a(2, battles);
+        }
+      }, _callee7, this);
+    }));
+    function cacheQuery(_x5, _x6, _x7) {
+      return _cacheQuery.apply(this, arguments);
+    }
+    return cacheQuery;
+  }(),
+  //Takes uploaded battles and sets as battles in cache, should be called before attempting to get battles if upload exists
+  cacheUpload: function () {
+    var _cacheUpload = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(rawParsedBattleList, HM) {
+      var cleanBattles, battles;
+      return _regenerator().w(function (_context9) {
+        while (1) switch (_context9.n) {
+          case 0:
+            if (rawParsedBattleList) {
+              _context9.n = 1;
+              break;
+            }
+            console.error("No uploaded battles provided to cacheUpload");
+            return _context9.a(2, {});
+          case 1:
+            cleanBattles = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_5__.parsedCSVToFormattedBattleMap)(rawParsedBattleList, HM);
+            _context9.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.UPLOADED_BATTLES, cleanBattles);
+          case 2:
+            _context9.n = 3;
+            return this.extendBattles(cleanBattles);
+          case 3:
+            battles = _context9.v;
+            console.log("Ingested uploaded battle data into cache; modified [BATTLES] and overwrote [UPLOADED_BATTLES]");
+            return _context9.a(2, battles);
+        }
+      }, _callee8, this);
+    }));
+    function cacheUpload(_x8, _x9) {
+      return _cacheUpload.apply(this, arguments);
+    }
+    return cacheUpload;
+  }(),
+  getStats: function () {
+    var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(battles, user, filters, HM, autoZoom) {
+      var numFilters, filteredBattles, battlesList, filteredBattlesList, plotContent, prebanStats, firstPickStats, generalStats, heroStats, serverStats;
+      return _regenerator().w(function (_context0) {
+        while (1) switch (_context0.n) {
+          case 0:
+            console.log("Getting stats");
+            numFilters = filters.localFilters.length + filters.globalFilters.length;
+            console.log("Applying ".concat(numFilters, " filters"));
+            _context0.n = 1;
+            return this.applyFilter(filters);
+          case 1:
+            filteredBattles = _context0.v;
+            battlesList = Object.values(battles);
+            filteredBattlesList = Object.values(filteredBattles);
+            plotContent = (0,_plots_js__WEBPACK_IMPORTED_MODULE_1__.generateRankPlot)(battlesList, user, numFilters > 0 ? filteredBattles : null, autoZoom);
+            console.log("Getting preban stats");
+            _context0.n = 2;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getPrebanStats(filteredBattles, HM);
+          case 2:
+            prebanStats = _context0.v;
+            console.log("Getting first pick stats");
+            _context0.n = 3;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getFirstPickStats(filteredBattles, HM);
+          case 3:
+            firstPickStats = _context0.v;
+            console.log("Getting general stats");
+            _context0.n = 4;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getGeneralStats(filteredBattles, HM);
+          case 4:
+            generalStats = _context0.v;
+            console.log("Getting hero stats");
+            _context0.n = 5;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getHeroStats(filteredBattles, HM);
+          case 5:
+            heroStats = _context0.v;
+            console.log("Getting server stats");
+            _context0.n = 6;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getServerStats(filteredBattlesList);
+          case 6:
+            serverStats = _context0.v;
+            console.log("Returning stats");
+            return _context0.a(2, {
+              battles: battlesList,
+              filteredBattles: filteredBattlesList,
+              plotContent: plotContent,
+              prebanStats: prebanStats,
+              generalStats: generalStats,
+              firstPickStats: firstPickStats,
+              playerHeroStats: heroStats.playerHeroStats,
+              enemyHeroStats: heroStats.enemyHeroStats,
+              serverStats: serverStats
+            });
+        }
+      }, _callee9, this);
+    }));
+    function getStats(_x0, _x1, _x10, _x11, _x12) {
+      return _getStats.apply(this, arguments);
+    }
+    return getStats;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BattleManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/battle-transform.js":
+/*!*************************************************!*\
+  !*** ./static/assets/js/e7/battle-transform.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   buildFormattedBattleMap: () => (/* binding */ buildFormattedBattleMap),
+/* harmony export */   parsedCSVToFormattedBattleMap: () => (/* binding */ parsedCSVToFormattedBattleMap)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+// takes in cleaned battle row (including from uploaded file or in formatBattleAsRow) 
+// and adds fields representing sets heroes as prime products
+function addPrimeFields(battle, HM) {
+  var getChampPrime = function getChampPrime(name) {
+    var _HeroManager$getHeroB, _HeroManager$getHeroB2;
+    return (_HeroManager$getHeroB = (_HeroManager$getHeroB2 = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName(name, HM)) === null || _HeroManager$getHeroB2 === void 0 ? void 0 : _HeroManager$getHeroB2.prime) !== null && _HeroManager$getHeroB !== void 0 ? _HeroManager$getHeroB : HM.Fodder.prime;
+  };
+  var product = function product(acc, prime) {
+    return acc * prime;
+  };
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIMES].reduce(product, 1);
+}
+
+// takes raw battle from array returned by rust battle array call to flask-server; formats into row to populate table
+function formatBattleAsRow(raw, HM, artifacts) {
+  var _battle;
+  // Make functions used to convert the identifier strings in the E7 data into human readable names
+
+  var getChampName = function getChampName(code) {
+    var _HeroManager$getHeroB3, _HeroManager$getHeroB4;
+    return (_HeroManager$getHeroB3 = (_HeroManager$getHeroB4 = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByCode(code, HM)) === null || _HeroManager$getHeroB4 === void 0 ? void 0 : _HeroManager$getHeroB4.name) !== null && _HeroManager$getHeroB3 !== void 0 ? _HeroManager$getHeroB3 : HM.Fodder.name;
+  };
+  var getArtifactName = function getArtifactName(code) {
+    return _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].convertCodeToName(code, artifacts) || "None";
+  };
+  var checkBanned = function checkBanned(index) {
+    return raw.p2_postban === raw.p1_picks[index];
+  }; // used to check if artifact is null because banned or because not equipped
+  var formatArtifacts = function formatArtifacts(artiArr) {
+    return artiArr.map(function (code, index) {
+      return code ? getArtifactName(code) : checkBanned(index) ? "N/A" : "None";
+    });
+  };
+  var formatCRBar = function formatCRBar(crBar) {
+    return crBar.map(function (entry) {
+      return entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["N/A", 0];
+    });
+  };
+
+  // Fall back to the code if the equipment set is not defined in references
+  var formatEquipment = function formatEquipment(equipArr) {
+    return equipArr.map(function (heroEquipList) {
+      return heroEquipList.map(function (equip) {
+        return _references_js__WEBPACK_IMPORTED_MODULE_2__.EQUIPMENT_SET_MAP[equip] || equip;
+      });
+    });
+  };
+  var firstTurnHero = raw.cr_bar.find(function (entry) {
+    return entry[1] === 100;
+  });
+  var p1TookFirstTurn = firstTurnHero ? raw.p1_picks.includes(firstTurnHero[0]) : false;
+  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, raw.p1_league || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, raw.p2_league || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
+
+  // finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
+  addPrimeFields(battle, HM);
+  return battle;
+}
+function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
+  artifacts = artifacts !== null && artifacts !== void 0 ? artifacts : _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getArtifacts();
+  return Object.fromEntries(rawBattles.map(function (rawBattle) {
+    var battle = formatBattleAsRow(rawBattle, HeroManager, artifacts);
+    return [battle["Seq Num"], battle];
+  }));
+}
+var ARRAY_COLUMNS = [_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS];
+var BOOLS_COLS = [_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN];
+var INT_COLUMNS = [_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN];
+
+// takes output of CSV parse and parses the list rows and ensures types are correct
+function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {
+  var rows = rawRowsArr.map(function (row) {
+    var _iterator = _createForOfIteratorHelper(ARRAY_COLUMNS),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var col = _step.value;
+        row[col] = JSON.parse(row[col]);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    var _iterator2 = _createForOfIteratorHelper(BOOLS_COLS),
+      _step2;
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _col = _step2.value;
+        row[_col] = row[_col].toLowerCase() === "true";
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+    var _iterator3 = _createForOfIteratorHelper(INT_COLUMNS),
+      _step3;
+    try {
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+        var _col2 = _step3.value;
+        row[_col2] = Number(row[_col2]);
+      }
+    } catch (err) {
+      _iterator3.e(err);
+    } finally {
+      _iterator3.f();
+    }
+    addPrimeFields(row, HM);
+    return row;
+  });
+  return Object.fromEntries(rows.map(function (row) {
+    return [row["Seq Num"], row];
+  }));
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/e7-utils.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/e7/e7-utils.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getJSON: () => (/* binding */ getJSON),
+/* harmony export */   getUsers: () => (/* binding */ getUsers),
+/* harmony export */   printObjStruct: () => (/* binding */ printObjStruct)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+function getJSON(_x) {
+  return _getJSON.apply(this, arguments);
+}
+function _getJSON() {
+  _getJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          console.log("Fetching");
+          return _context.a(2, fetch(url).then(function (response) {
+            console.log("Got response");
+            if (!response.ok) {
+              // Handle HTTP error responses (404, 500, etc.)
+              throw new Error("HTTP error! Status: ".concat(response.status));
+            }
+            return response.json(); // May also throw if not valid JSON
+          })["catch"](function (error) {
+            throw new E7APIError("Fetch error: ".concat(error.message));
+          }));
+      }
+    }, _callee);
+  }));
+  return _getJSON.apply(this, arguments);
+}
+function createUser(userJSON, world_code) {
+  return {
+    id: userJSON.nick_no,
+    name: userJSON.nick_nm.toLowerCase(),
+    code: userJSON.code,
+    rank: userJSON.rank,
+    world_code: world_code
+  };
+}
+function getUsers(_x2) {
+  return _getUsers.apply(this, arguments);
+}
+function _getUsers() {
+  _getUsers = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(world_code) {
+    var url, data, users;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          if (_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES.has(world_code)) {
+            _context2.n = 1;
+            break;
+          }
+          console.log("No Data returned: code ".concat(world_code, " not in ").concat(refs.WORLD_CODES));
+          return _context2.a(2);
+        case 1:
+          world_code = world_code.replace("world_", "");
+          url = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(world_code, ".json");
+          _context2.n = 2;
+          return getJSON(url);
+        case 2:
+          data = _context2.v;
+          users = new Object();
+          data.users.forEach(function (user) {
+            users[user.nick_nm] = createUser(user, world_code);
+          });
+          return _context2.a(2, users);
+      }
+    }, _callee2);
+  }));
+  return _getUsers.apply(this, arguments);
+}
+function printObjStruct(obj) {
+  var newObj = {};
+  for (var key in obj) {
+    if (Array.isArray(obj[key]) && obj[key].length > 0) {
+      newObj[key] = [obj[key][0], "Length: ".concat(obj[key].length)];
+    } else {
+      newObj[key] = obj[key];
+    }
+  }
+  console.log(newObj);
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-syntax-parser.js":
+/*!*****************************************************!*\
+  !*** ./static/assets/js/e7/filter-syntax-parser.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-utils.js");
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./regex.js */ "./static/assets/js/e7/regex.js");
+/* harmony import */ var _season_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./season-manager.js */ "./static/assets/js/e7/season-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+
+
+
+
+
+var ACCEPTED_CHARS = new Set("'\"(),-.=; ><!1234567890{}" + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+var PRINT_PREFIX = "   ";
+
+// must handle both regular sets and ranges
+function inOperatorFn(a, b) {
+  var bStr = _typeof(b) === "object" ? JSON.stringify(b) : "".concat(b);
+  if (b instanceof Set) {
+    return b.has(a);
+  }
+  // handle ranges
+  else if (_typeof(b) === "object" && b !== null && !Array.isArray(b) && ['start', 'end', 'endInclusive', 'type'].every(function (key) {
+    return b.hasOwnProperty(key);
+  })) {
+    return a >= b.start && (b.endInclusive ? a <= b.end : a < b.end);
+  }
+
+  // handles fields that are arrays (ie p1.picks)
+  else if (Array.isArray(b)) {
+    return b.includes(a);
+  } else {
+    throw new Error("Invalid match pattern for 'in' operators; got: '".concat(a, "' and '").concat(bStr, "' (").concat(b.constructor.name, ")"));
+  }
+}
+var OPERATOR_MAP = {
+  '>': function _(a, b) {
+    return a > b;
+  },
+  '<': function _(a, b) {
+    return a < b;
+  },
+  '=': function _(a, b) {
+    return a === b;
+  },
+  'in': function _in(a, b) {
+    return inOperatorFn(a, b);
+  },
+  '>=': function _(a, b) {
+    return a >= b;
+  },
+  '<=': function _(a, b) {
+    return a <= b;
+  },
+  '!=': function _(a, b) {
+    return a !== b;
+  },
+  '!in': function _in(a, b) {
+    return !inOperatorFn(a, b);
+  }
+};
+function validateChars(str, charSet, objName) {
+  var _iterator = _createForOfIteratorHelper(str),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _char = _step.value;
+      if (!charSet.has(_char)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid character within <".concat(objName, "> ; ' ").concat(_char, " ' is not allowed; got string: '").concat(str, "'"));
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+}
+function preParse(str) {
+  str = str.replace(/[\n\t\r]/g, " ").replace(/\s+/g, " "); // replace newlines with spaces and remove multiple spaces
+  validateChars(str, ACCEPTED_CHARS, "Main Filter String");
+  str = str.toLowerCase();
+  return str;
+}
+var INT_FIELDS = new Set(["victory-points"]);
+
+// Fields that will extract arrays and can be used with the 'in' operators
+var SET_FIELDS = new Set(["prebans", "p1.picks", "p2.picks", "p1.prebans", "p2.prebans"]);
+var FieldType = /*#__PURE__*/function () {
+  function FieldType(str) {
+    _classCallCheck(this, FieldType);
+    var fn = FieldType.FIELD_EXTRACT_FN_MAP[str];
+    if (!fn) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].ValidationError("Invalid field type: '".concat(str, "'; valid types are: ").concat(Object.keys(FieldType.FIELD_EXTRACT_FN_MAP).join(', ')));
+    } else {
+      console.log("Found valid field type: ", str);
+    }
+    this.str = str;
+    this.extractData = fn;
+  }
+  return _createClass(FieldType, [{
+    key: "toString",
+    value: function toString() {
+      return this.str;
+    }
+  }]);
+}();
+// FNS that take in a clean format battle and return the appropriate data
+_defineProperty(FieldType, "FIELD_EXTRACT_FN_MAP", {
+  'date': function date(battle) {
+    var _battle$DateTime;
+    return battle["Date/Time"] ? new Date("".concat((_battle$DateTime = battle["Date/Time"]) === null || _battle$DateTime === void 0 ? void 0 : _battle$DateTime.slice(0, 10), "T00:00:00")) : "N/A";
+  },
+  'is-first-pick': function isFirstPick(battle) {
+    return battle["First Pick"] ? 1 : 0;
+  },
+  'is-win': function isWin(battle) {
+    return battle["Win"] ? 1 : 0;
+  },
+  'victory-points': function victoryPoints(battle) {
+    return battle["P1 Points"];
+  },
+  'p1.picks': function p1Picks(battle) {
+    return battle["P1 Picks"];
+  },
+  'p2.picks': function p2Picks(battle) {
+    return battle["P2 Picks"];
+  },
+  'p1.prebans': function p1Prebans(battle) {
+    return battle["P1 Prebans"];
+  },
+  'p2.prebans': function p2Prebans(battle) {
+    return battle["P2 Prebans"];
+  },
+  'p1.postban': function p1Postban(battle) {
+    return battle["P1 Postban"];
+  },
+  'p2.postban': function p2Postban(battle) {
+    return battle["P2 Postban"];
+  },
+  'prebans': function prebans(battle) {
+    return [].concat(_toConsumableArray(battle["P1 Prebans"]), _toConsumableArray(battle["P2 Prebans"]));
+  },
+  'p1.pick1': function p1Pick1(battle) {
+    return battle["P1 Picks"][0];
+  },
+  'p1.pick2': function p1Pick2(battle) {
+    return battle["P1 Picks"][1];
+  },
+  'p1.pick3': function p1Pick3(battle) {
+    return battle["P1 Picks"][2];
+  },
+  'p1.pick4': function p1Pick4(battle) {
+    return battle["P1 Picks"][3];
+  },
+  'p1.pick5': function p1Pick5(battle) {
+    return battle["P1 Picks"][4];
+  },
+  'p2.pick1': function p2Pick1(battle) {
+    return battle["P2 Picks"][0];
+  },
+  'p2.pick2': function p2Pick2(battle) {
+    return battle["P2 Picks"][1];
+  },
+  'p2.pick3': function p2Pick3(battle) {
+    return battle["P2 Picks"][2];
+  },
+  'p2.pick4': function p2Pick4(battle) {
+    return battle["P2 Picks"][3];
+  },
+  'p2.pick5': function p2Pick5(battle) {
+    return battle["P2 Picks"][4];
+  },
+  'p1.league': function p1League(battle) {
+    return _references_js__WEBPACK_IMPORTED_MODULE_0__.LEAGUE_MAP[battle["P1 League"]];
+  },
+  'p2.league': function p2League(battle) {
+    return _references_js__WEBPACK_IMPORTED_MODULE_0__.LEAGUE_MAP[battle["P2 League"]];
+  },
+  'p1.server': function p1Server(battle) {
+    return battle["P1 Server"];
+  },
+  'p2.server': function p2Server(battle) {
+    return battle["P2 Server"];
+  }
+});
+var DataType = /*#__PURE__*/function () {
+  function DataType(str) {
+    var HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    _classCallCheck(this, DataType);
+    this.rawString = str;
+    this.data = this.getData(str, HM);
+  }
+  return _createClass(DataType, [{
+    key: "toString",
+    value: function toString() {
+      return "".concat(this.data);
+    }
+  }]);
+}();
+var StringType = /*#__PURE__*/function (_DataType) {
+  function StringType() {
+    _classCallCheck(this, StringType);
+    return _callSuper(this, StringType, arguments);
+  }
+  _inherits(StringType, _DataType);
+  return _createClass(StringType, [{
+    key: "getData",
+    value: function getData(str, HM) {
+      str = str.replace(/'/g, "").replace(/"/g, "");
+      str = str.trim();
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.source, " ); got: '").concat(str, "'"));
+      }
+      str = str.replace(/"|'/g, "");
+      var hero = _hero_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getHeroByName(str, HM);
+      var league = _references_js__WEBPACK_IMPORTED_MODULE_0__.LEAGUE_MAP[str];
+      var server = Object.values(_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_TO_CLEAN_STR).find(function (server) {
+        return server.toLowerCase() === str;
+      });
+      if (!(hero || league || server)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid string; All strings must either be a valid hero, league name, or server; got: '".concat(str, "'"));
+      }
+      return hero ? hero.name : league ? league : server;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "\"".concat(this.data, "\"");
+    }
+  }]);
+}(DataType);
+var DateType = /*#__PURE__*/function (_DataType2) {
+  function DateType() {
+    _classCallCheck(this, DateType);
+    return _callSuper(this, DateType, arguments);
+  }
+  _inherits(DateType, _DataType2);
+  return _createClass(DateType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      return _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].parseDate(str);
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "".concat(this.data);
+    }
+  }]);
+}(DataType);
+var IntType = /*#__PURE__*/function (_DataType3) {
+  function IntType() {
+    _classCallCheck(this, IntType);
+    return _callSuper(this, IntType, arguments);
+  }
+  _inherits(IntType, _DataType3);
+  return _createClass(IntType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid integer; must be a number; got: '".concat(str, "'"));
+      }
+      var parsedInt = parseInt(str);
+      if (isNaN(parsedInt)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid integer; must be a number; got: '".concat(str, "'"));
+      }
+      return parsedInt;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "".concat(this.data);
+    }
+  }]);
+}(DataType);
+var BoolType = /*#__PURE__*/function (_DataType4) {
+  function BoolType() {
+    _classCallCheck(this, BoolType);
+    return _callSuper(this, BoolType, arguments);
+  }
+  _inherits(BoolType, _DataType4);
+  return _createClass(BoolType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid boolean; must be 'true' or 'false'; got: '".concat(str, "'"));
+      }
+      return str === "true" ? 1 : 0;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "".concat(this.data ? "true" : "false");
+    }
+  }]);
+}(DataType);
+var RangeType = /*#__PURE__*/function (_DataType5) {
+  function RangeType() {
+    _classCallCheck(this, RangeType);
+    return _callSuper(this, RangeType, arguments);
+  }
+  _inherits(RangeType, _DataType5);
+  return _createClass(RangeType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _HM = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var split = str.split("...");
+      if (split.length !== 2) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid range; ranges must be of the format x...y or x...=y ; got more than two values when splitting string: '".concat(str, "'"));
+      }
+      var _split = _slicedToArray(split, 2),
+        start = _split[0],
+        end = _split[1];
+      var endInclusive = false;
+      if (end.includes("=")) {
+        end = end.replace("=", "");
+        endInclusive = true;
+      }
+      var output = {
+        start: null,
+        end: null,
+        endInclusive: endInclusive
+      };
+      if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_DATE_LITERAL_RE.test(start)) {
+        output.start = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tryConvert(_filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].parseDate, "Date", start, "Could not convert '".concat(start, "' to Date in declared range: '").concat(str, "'"));
+        output.end = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tryConvert(_filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].parseDate, "Date", end, "Could not convert '".concat(end, "' to Date in declared range: '").concat(str, "' ; Ranges must have homogenous types"));
+        if (output.start > output.end) {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid range; start date must be on or before end date; ".concat(output.start, " > ").concat(output.end));
+        }
+        output.type = "Date";
+      } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(start)) {
+        output.start = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tryConvert(function (i) {
+          return new IntType(i);
+        }, "Int", start, "Could not convert '".concat(start, "' to Int in declared range: '").concat(str, "'")).data;
+        output.end = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tryConvert(function (i) {
+          return new IntType(i);
+        }, "Int", end, "Could not convert '".concat(end, "' to Int in declared range: '").concat(str, "' ; Ranges must have homogenous types")).data;
+        if (output.start > output.end) {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid range; start integer must be equal to or less than end integer; ".concat(output.start, " > ").concat(output.end));
+        }
+        output.type = "Int";
+      } else {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid range; must be of the format x...y or x...=y ; got: '".concat(str, "'"));
+      }
+      console.log("Built Range: ".concat(JSON.stringify(output)));
+      return output;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      var rangeSymb = this.data.endInclusive ? "...=" : "...";
+      if (this.data.type === "Date") {
+        return "".concat(this.data.start.toISOString()).concat(rangeSymb).concat(this.data.end.toISOString(), ")");
+      } else if (this.data.type === "Int") {
+        return "".concat(this.data.start, "...").concat(rangeSymb).concat(this.data.end);
+      } else {
+        return "Error Converting Range to String => < ".concat(this.data.start, "...").concat(rangeSymb).concat(this.data.end, " >");
+      }
+    }
+  }]);
+}(DataType);
+var SetType = /*#__PURE__*/function (_DataType6) {
+  function SetType() {
+    _classCallCheck(this, SetType);
+    return _callSuper(this, SetType, arguments);
+  }
+  _inherits(SetType, _DataType6);
+  return _createClass(SetType, [{
+    key: "getData",
+    value: function getData(str, HM) {
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_SET_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_SET_RE.source, " ) (Just chat gpt this one bro); got: '").concat(str, "'"));
+      }
+      var elements = str.replace(/^\{|\}$/g, "").split(",").map(function (e) {
+        return e.trim();
+      }).filter(function (e) {
+        return e !== "";
+      }).map(function (elt) {
+        if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_RE.test(elt)) {
+          return new StringType(elt, HM);
+        } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_DATE_LITERAL_RE.test(elt)) {
+          return new DateType(elt);
+        } else {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid set element; must be a string or date; got: '".concat(elt, "'"));
+        }
+      });
+      console.log("GOT ELEMENTS: ", elements);
+      var types = new Set();
+      var _iterator2 = _createForOfIteratorHelper(elements),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var element = _step2.value;
+          types.add(element.constructor.name);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+      types = _toConsumableArray(types);
+      console.log("GOT TYPES: ", types);
+      if (types.size > 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid set; all set elements must have the same data type; got: types: [".concat(types.join(", "), "]"));
+      }
+      this.Type = types[0];
+      return new Set(elements.map(function (data) {
+        return data.data;
+      }));
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "{".concat(this.data.map(function (data) {
+        return data.toString();
+      }).join(", "), "}");
+    }
+  }]);
+}(DataType);
+function parseKeywordAsDataType(str, sourceData) {
+  if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_SEASON_LITERAL_RE.test(str)) {
+    var toStr = function toStr(date) {
+      return date.toISOString().slice(0, 10);
+    };
+    if (sourceData.SeasonDetails.length < 1) {
+      throw new Error("Did not recieve any season details; failed on: '".concat(str, "'"));
+    } else if (str === "current-season") {
+      var _sourceData$SeasonDet = _slicedToArray(sourceData.SeasonDetails.find(function (season) {
+          return season["Status"] === "Active";
+        }).range, 2),
+        start = _sourceData$SeasonDet[0],
+        end = _sourceData$SeasonDet[1];
+      return new RangeType("".concat(toStr(start), "...=").concat(toStr(end === "N/A" ? new Date() : end)));
+    } else {
+      var seasonNum = Number(str.split("-")[1]);
+      var season = sourceData.SeasonDetails.find(function (season) {
+        return season["Season Number"] === seasonNum;
+      });
+      if (!season) {
+        throw new Error("Invalid season specified; ".concat(seasonNum, " is not a valid season number; failed on str: '").concat(str, "'"));
+      }
+      var _season$range = _slicedToArray(season.range, 2),
+        _start = _season$range[0],
+        _end = _season$range[1];
+      return new RangeType("".concat(toStr(_start), "...=").concat(toStr(_end)));
+    }
+  }
+}
+function parseDataType(str, HM, SeasonDetails) {
+  console.log("Trying to Parse DataType: ".concat(str));
+  if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test(str)) {
+    console.log("Parsing as StringType");
+    return new StringType(str, HM);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_DATE_LITERAL_RE.test(str)) {
+    console.log("Parsing as DateType");
+    return new DateType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(str)) {
+    console.log("Parsing as IntType");
+    return new IntType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
+    console.log("Parsing as BoolType");
+    return new BoolType(str);
+  } else if (/\{.*\}/.test(str)) {
+    console.log("Parsing as SetType");
+    return new SetType(str, HM);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_RANGE_LITERAL_RE.test(str)) {
+    console.log("Parsing as RangeType");
+    return new RangeType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_DATA_WORD_LITERAL_RE.test(str)) {
+    console.log("Parsing as DataWord");
+    return parseKeywordAsDataType(str, {
+      SeasonDetails: SeasonDetails
+    });
+  } else {
+    console.log("Failed to parse DataType");
+    if (_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test("'".concat(str, "'"))) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; did you forget to wrap string literals in double or single quotes?"));
+    } else if (str.includes("'") && str.includes('"')) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; did you encase in mismatching quote types?"));
+    } else if (str.includes('.=') || str.includes("..")) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only be int-int or date-date"));
+    }
+    throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid DataType declaration; could not parse to valid Field or Declared Data Type; got: '".concat(str, "'"));
+  }
+}
+var Fn = /*#__PURE__*/function () {
+  function Fn() {
+    _classCallCheck(this, Fn);
+  }
+  return _createClass(Fn, [{
+    key: "call",
+    value: function call(battle) {
+      throw new Error("Base class ".concat(this.constructor.name, " does not implement the 'call' method. Implement this method in a subclass."));
+    }
+  }]);
+}();
+var globalFilterFn = /*#__PURE__*/function (_Fn) {
+  function globalFilterFn() {
+    _classCallCheck(this, globalFilterFn);
+    return _callSuper(this, globalFilterFn);
+  }
+  _inherits(globalFilterFn, _Fn);
+  return _createClass(globalFilterFn, [{
+    key: "toString",
+    value: function toString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      return "".concat(prefix).concat(this.str);
+    }
+  }]);
+}(Fn);
+var lastN = /*#__PURE__*/function (_globalFilterFn) {
+  function lastN(args) {
+    var _this;
+    _classCallCheck(this, lastN);
+    _this = _callSuper(this, lastN);
+    _this.name = "last-N";
+    if (args.length !== 1) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("".concat(_this.name, " expects 1 argument, got ").concat(args.length));
+    }
+    var num = Number(args[0]);
+    if (!Number.isInteger(num)) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("".concat(_this.name, " expects an integer argument, could not parse '").concat(args[0], "' as integer"));
+    }
+    _this.str = "".concat(_this.name, "(").concat(num, ")");
+    _this.n = num;
+    return _this;
+  }
+  _inherits(lastN, _globalFilterFn);
+  return _createClass(lastN, [{
+    key: "call",
+    value: function call(battles) {
+      battles.sort(function (b1, b2) {
+        return b1["Seq Num"] - b2["Seq Num"];
+      });
+      return battles.slice(-this.n);
+    }
+  }]);
+}(globalFilterFn);
+var ClauseFn = /*#__PURE__*/function (_Fn2) {
+  function ClauseFn(fns) {
+    var _this2;
+    _classCallCheck(this, ClauseFn);
+    _this2 = _callSuper(this, ClauseFn);
+    _this2.fns = fns;
+    console.log("Clause Fn constructor got fns:", fns);
+    return _this2;
+  }
+  _inherits(ClauseFn, _Fn2);
+  return _createClass(ClauseFn, [{
+    key: "toString",
+    value: function toString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      var output = '';
+      var newPrefix = prefix + PRINT_PREFIX;
+      this.fns.localFilters.forEach(function (fn) {
+        return output += "".concat(fn.toString(newPrefix), ",\n");
+      });
+      console.log("Clause Fn toString got output:", output);
+      return "".concat(prefix).concat(this.str, "(\n").concat(output.trimEnd(), "\n").concat(prefix, ")");
+    }
+  }]);
+}(Fn);
+var AND = /*#__PURE__*/function (_ClauseFn) {
+  function AND(fns) {
+    var _this3;
+    _classCallCheck(this, AND);
+    _this3 = _callSuper(this, AND, [fns]);
+    _this3.str = "AND";
+    return _this3;
+  }
+  _inherits(AND, _ClauseFn);
+  return _createClass(AND, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fns.localFilters.every(function (fn) {
+        return fn.call(battle);
+      });
+    }
+  }]);
+}(ClauseFn);
+var OR = /*#__PURE__*/function (_ClauseFn2) {
+  function OR(fns) {
+    var _this4;
+    _classCallCheck(this, OR);
+    _this4 = _callSuper(this, OR, [fns]);
+    _this4.str = "OR";
+    return _this4;
+  }
+  _inherits(OR, _ClauseFn2);
+  return _createClass(OR, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fns.localFilters.some(function (fn) {
+        return fn.call(battle);
+      });
+    }
+  }]);
+}(ClauseFn);
+var XOR = /*#__PURE__*/function (_ClauseFn3) {
+  function XOR(fns) {
+    var _this5;
+    _classCallCheck(this, XOR);
+    _this5 = _callSuper(this, XOR, [fns]);
+    _this5.str = "XOR";
+    return _this5;
+  }
+  _inherits(XOR, _ClauseFn3);
+  return _createClass(XOR, [{
+    key: "call",
+    value: function call(battle) {
+      var result = false;
+      // Cascading XOR
+      var _iterator3 = _createForOfIteratorHelper(this.fns.localFilters),
+        _step3;
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var fn = _step3.value;
+          result = !result && fn.call(battle) || result && !fn.call(battle);
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
+      return result;
+    }
+  }]);
+}(ClauseFn);
+var NOT = /*#__PURE__*/function (_ClauseFn4) {
+  function NOT(fns) {
+    var _this6;
+    _classCallCheck(this, NOT);
+    _this6 = _callSuper(this, NOT, [fns]);
+    _this6.str = "NOT";
+    return _this6;
+  }
+  _inherits(NOT, _ClauseFn4);
+  return _createClass(NOT, [{
+    key: "call",
+    value: function call(battle) {
+      return !this.fns.localFilters[0].call(battle);
+    }
+  }]);
+}(ClauseFn);
+var FN_MAP = {
+  and: AND,
+  or: OR,
+  xor: XOR,
+  not: NOT,
+  "last-n": lastN
+};
+var CLAUSE_FNS = new Set([AND, OR, XOR, NOT]);
+var GLOBAL_FILTER_FNS = new Set([lastN]);
+var BaseFilter = /*#__PURE__*/function () {
+  function BaseFilter(str, fn) {
+    _classCallCheck(this, BaseFilter);
+    this.str = str;
+    this.fn = fn;
+  }
+  return _createClass(BaseFilter, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fn(battle);
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      return "".concat(prefix).concat(this.str);
+    }
+  }]);
+}();
+function tryParseFilterElement(leftOrRight, strValue, filterStr, HM, SeasonDetails) {
+  var parsedValue = null;
+  try {
+    if (strValue in FieldType.FIELD_EXTRACT_FN_MAP) {
+      parsedValue = new FieldType(strValue);
+    } else {
+      parsedValue = parseDataType(strValue, HM, SeasonDetails);
+    }
+  } catch (e) {
+    for (var key in FieldType.FIELD_EXTRACT_FN_MAP) {
+      if (strValue.includes(key) || key.includes(strValue)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Could not parse ".concat(leftOrRight, " side of filter; got: \"").concat(strValue, "\" from filter: [").concat(filterStr, "], did you mean to use '").concat(key, "' as a field instead?"));
+      }
+    }
+    console.error(e);
+    throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Could not parse ".concat(leftOrRight, " side of filter; got: \"").concat(strValue, "\" from filter: [").concat(filterStr, "]; error: ").concat(e.message));
+  }
+  return parsedValue;
+}
+var FilterSyntaxParser = /*#__PURE__*/function () {
+  function FilterSyntaxParser(key) {
+    _classCallCheck(this, FilterSyntaxParser);
+    if (key !== _INTERNAL_KEY._) {
+      throw new Error("Cannot instantiate FilterSyntaxParser directly; use createAndParse method instead.");
+    }
+  }
+  return _createClass(FilterSyntaxParser, [{
+    key: "toString",
+    value: function toString() {
+      var filters = _toConsumableArray(this.filters.localFilters);
+      filters.push.apply(filters, _toConsumableArray(this.filters.globalFilters));
+      return "[\n".concat(filters.map(function (filter) {
+        return filter.toString(PRINT_PREFIX);
+      }).join(";\n"), "\n]");
+    }
+  }, {
+    key: "parseGlobalFilterFn",
+    value: function parseGlobalFilterFn(globalFilterFn, str) {
+      var pattern = _regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.anchorExp(_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_GLOBAL_FILTER_RE);
+      if (!pattern.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid global filter format; must follow the case insensitive regex format \"".concat(pattern.source, "\" ; got: '").concat(str, "'"));
+      }
+      var delim = ",",
+        enclosureLevel = 1;
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
+      if (globalFilterFn === lastN) {
+        return {
+          localFilters: [],
+          globalFilters: [new lastN(args)]
+        };
+      } else {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Global filter function ".concat(globalFilterFn.str, " not mapped in parseGlobalFilterFn"));
+      }
+    }
+  }, {
+    key: "parseClauseFn",
+    value: function parseClauseFn(clauseFn, str) {
+      var _this7 = this;
+      console.log("Parsing clause fn:", clauseFn.name, str);
+      var delim = ",",
+        enclosureLevel = 1;
+      var argArr = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
+      console.log("Got argArr:", argArr);
+      if (clauseFn === XOR && argArr.length < 2) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("XOR clause must have at least two arguments; got: ".concat(argArr.length, " arguments from string: \"").concat(str, "\""));
+      } else if (clauseFn === NOT && argArr.length !== 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("NOT clause must have exactly one argument; got: ".concat(argArr.length, " arguments from string: \"").concat(str, "\""));
+      }
+      var fns = argArr.reduce(function (acc, arg) {
+        var _acc$localFilters, _acc$globalFilters;
+        (_acc$localFilters = acc.localFilters).push.apply(_acc$localFilters, _toConsumableArray(_this7.parseFilters(arg).localFilters));
+        (_acc$globalFilters = acc.globalFilters).push.apply(_acc$globalFilters, _toConsumableArray(_this7.parseFilters(arg).globalFilters));
+        return acc;
+      }, FilterSyntaxParser.getEmptyFilters());
+      if (fns.globalFilters.length > 0) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Global filters not allowed in clause functions; got: ".concat(fns.globalFilters, " from string: \"").concat(str, "\""));
+      }
+      if (clauseFn === NOT && fns.localFilters.length !== 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("NOT clause must have exactly one argument; got: ".concat(fns.length, " arguments from string: \"").concat(str, "\""));
+      }
+      return {
+        localFilters: [new clauseFn(fns)],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "parseBaseFilter",
+    value: function parseBaseFilter(str) {
+      console.log("Parsing base filter:", str);
+      var HM = this.HM;
+      var delim = " ",
+        enclosureLevel = 0,
+        trim = true;
+      var tokens = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel, trim);
+      console.log("Got tokens: ", tokens, "; Length: ".concat(tokens.length));
+
+      // must be of form ['X', operator, 'Y']
+      if (!(tokens.length === 3)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid base filter format; all filters must be of the form: ['X', operator, 'Y']; got tokens: [".concat(tokens.join(", "), "]"));
+      }
+      var _tokens = _slicedToArray(tokens, 3),
+        left = _tokens[0],
+        operator = _tokens[1],
+        right = _tokens[2];
+
+      // Validate operator
+      if (!OPERATOR_MAP[operator]) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid operator in base filter; got: \"".concat(operator, "\" as the operator in filter: [").concat(str, "]"));
+      }
+      var opFn = OPERATOR_MAP[operator];
+
+      // try to converty to field types and data types
+      left = tryParseFilterElement("left", left, str, HM, this.SeasonDetails);
+      right = tryParseFilterElement("right", right, str, HM, this.SeasonDetails);
+
+      // validate filter
+      if (operator === "in" || operator === "!in") {
+        if (!(right instanceof SetType || right instanceof RangeType)) {
+          if (!(right instanceof FieldType) || !SET_FIELDS.has(right.str)) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '".concat(str, "'"));
+          }
+        }
+      }
+      if (right instanceof RangeType) {
+        if (right.data.type === "Date") {
+          if (!left.str.includes('date')) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("When using a Date Range, the left side of the operator must be a date field; ".concat(left.str, " is not a date field; error found in filter: '").concat(str, "'"));
+          }
+        } else if (right.data.type === "Int") {
+          if (!INT_FIELDS.has(left.str)) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("When using an Int Range, the left side of the operator must be an integer field; ".concat(left.str, " is not an integer field; error found in filter: '").concat(str, "'"));
+          }
+        }
+      }
+      if (right instanceof DataType && left instanceof DataType) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Either left or right side of filter must be a data field (a property of a battle); both ".concat(left, " and ").concat(right, " are user declared data types in filter: \"").concat(str, "\""));
+      }
+
+      // make filter
+      var filterFn = null;
+      if (left instanceof DataType) {
+        filterFn = function filterFn(battle) {
+          return opFn(left.data, right.extractData(battle));
+        };
+      } else if (right instanceof DataType) {
+        filterFn = function filterFn(battle) {
+          return opFn(left.extractData(battle), right.data);
+        };
+      } else {
+        filterFn = function filterFn(battle) {
+          return opFn(left.extractData(battle), right.extractData(battle));
+        };
+      }
+      console.log("Returning base local filter", [new BaseFilter(str, filterFn).toString()]);
+      return {
+        localFilters: [new BaseFilter(str, filterFn)],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "parseFilters",
+    value: function parseFilters(str) {
+      var _this8 = this;
+      console.log("Parsing filter string: \"".concat(str || this.preParsedString, "\""));
+      if (str === "") {
+        console.log("Empty filter string; Returning empty filters");
+        return FilterSyntaxParser.getEmptyFilters();
+      }
+      str = str.trim();
+      var split = str.split(";").filter(function (s) {
+        return s.length > 0;
+      });
+      var _iterator4 = _createForOfIteratorHelper(split),
+        _step4;
+      try {
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var splitStr = _step4.value;
+          var charCounts = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].getCharCounts(splitStr);
+          if (charCounts["("] !== charCounts[")"]) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Imbalanced parentheses in following string: \"".concat(splitStr, "\""));
+          } else if (charCounts["{"] !== charCounts["}"]) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Imbalanced braces ('{', '}') in following string: \"".concat(splitStr, "\""));
+          } else if ((charCounts["\""] || 0) % 2 !== 0) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Imbalanced double quotes in following string: \"".concat(splitStr, "\""));
+          } else if ((charCounts["'"] || 0) % 2 !== 0) {
+            console.log("Imbalanced single quotes in following string:", splitStr, "; got:", charCounts["'"]);
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Imbalanced single quotes in following string: \"".concat(splitStr, "\""));
+          }
+        }
+      } catch (err) {
+        _iterator4.e(err);
+      } finally {
+        _iterator4.f();
+      }
+      if (split.length > 1) {
+        console.log("Processing <".concat(split.length, "> filters; filters: ").concat(split));
+        return split.reduce(function (acc, arg) {
+          var _acc$localFilters2, _acc$globalFilters2;
+          (_acc$localFilters2 = acc.localFilters).push.apply(_acc$localFilters2, _toConsumableArray(_this8.parseFilters(arg).localFilters));
+          (_acc$globalFilters2 = acc.globalFilters).push.apply(_acc$globalFilters2, _toConsumableArray(_this8.parseFilters(arg).globalFilters));
+          return acc;
+        }, FilterSyntaxParser.getEmptyFilters());
+      }
+      var filterString = split[0];
+      if (filterString.length < 4) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Filter string cannot be valid (less than 4 characters); got filter string: [".concat(filterString, "]"));
+      }
+      var splitFilterString = filterString.split("(");
+      var fn = FN_MAP[splitFilterString[0]];
+      console.log("Trying to look for Fn ; got:", splitFilterString[0], "from string:", filterString);
+      if (!fn) {
+        console.log("Did not find Fn; dispatching to base filter parser");
+        return this.parseBaseFilter(filterString);
+      } else if (CLAUSE_FNS.has(fn)) {
+        console.log("Found clause fn; dispatching to clause fn parser");
+        return this.parseClauseFn(fn, filterString);
+      } else if (GLOBAL_FILTER_FNS.has(fn)) {
+        console.log("Found global filter fn; dispatching to global filter fn parser");
+        return this.parseGlobalFilterFn(fn, filterString);
+      } else {
+        throw new Error("could not parse filter string as Fn: \"".concat(str, "\" ; did not map to any defined pattern"));
+      }
+    }
+  }], [{
+    key: "getEmptyFilters",
+    value: function getEmptyFilters() {
+      return {
+        localFilters: [],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "createAndParse",
+    value: function () {
+      var _createAndParse = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(string) {
+        var HM,
+          SeasonDetails,
+          parser,
+          _args = arguments,
+          _t,
+          _t2;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              HM = _args.length > 1 && _args[1] !== undefined ? _args[1] : null;
+              SeasonDetails = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
+              console.log("Initialized parsing of string:", string);
+              parser = new FilterSyntaxParser(_INTERNAL_KEY._);
+              _t = HM;
+              if (_t) {
+                _context.n = 2;
+                break;
+              }
+              _context.n = 1;
+              return _hero_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getHeroManager();
+            case 1:
+              _t = _context.v;
+            case 2:
+              HM = _t;
+              _t2 = SeasonDetails;
+              if (_t2) {
+                _context.n = 4;
+                break;
+              }
+              _context.n = 3;
+              return _season_manager_js__WEBPACK_IMPORTED_MODULE_4__["default"].getSeasonDetails();
+            case 3:
+              _t2 = _context.v;
+            case 4:
+              SeasonDetails = _t2;
+              parser.rawString = string;
+              parser.HM = HM;
+              parser.SeasonDetails = SeasonDetails;
+              parser.preParsedString = preParse(string);
+              parser.globalFilters = [];
+              parser.filters = parser.parseFilters(parser.preParsedString);
+              console.log("Got Filters\n");
+              console.log(parser.toString());
+              return _context.a(2, parser);
+          }
+        }, _callee);
+      }));
+      function createAndParse(_x) {
+        return _createAndParse.apply(this, arguments);
+      }
+      return createAndParse;
+    }()
+  }]);
+}();
+var _INTERNAL_KEY = {
+  _: Symbol("internal")
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FilterSyntaxParser);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-utils.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/e7/filter-utils.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ "./static/assets/js/e7/regex.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _wrapNativeSuper(t) { var r = "function" == typeof Map ? new Map() : void 0; return _wrapNativeSuper = function _wrapNativeSuper(t) { if (null === t || !_isNativeFunction(t)) return t; if ("function" != typeof t) throw new TypeError("Super expression must either be null or a function"); if (void 0 !== r) { if (r.has(t)) return r.get(t); r.set(t, Wrapper); } function Wrapper() { return _construct(t, arguments, _getPrototypeOf(this).constructor); } return Wrapper.prototype = Object.create(t.prototype, { constructor: { value: Wrapper, enumerable: !1, writable: !0, configurable: !0 } }), _setPrototypeOf(Wrapper, t); }, _wrapNativeSuper(t); }
+function _construct(t, e, r) { if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments); var o = [null]; o.push.apply(o, e); var p = new (t.bind.apply(t, o))(); return r && _setPrototypeOf(p, r.prototype), p; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _isNativeFunction(t) { try { return -1 !== Function.toString.call(t).indexOf("[native code]"); } catch (n) { return "function" == typeof t; } }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+
+var SyntaxException = /*#__PURE__*/function (_Error) {
+  function SyntaxException(message) {
+    var _this;
+    _classCallCheck(this, SyntaxException);
+    _this = _callSuper(this, SyntaxException, [message]); // Pass message to base Error
+    _this.name = "Filter Syntax Exception"; // Set error name
+    return _this;
+  }
+  _inherits(SyntaxException, _Error);
+  return _createClass(SyntaxException);
+}(/*#__PURE__*/_wrapNativeSuper(Error));
+var TypeException = /*#__PURE__*/function (_Error2) {
+  function TypeException(message) {
+    var _this2;
+    _classCallCheck(this, TypeException);
+    _this2 = _callSuper(this, TypeException, [message]); // Pass message to base Error
+    _this2.name = "Filter Type Exception"; // Set error name
+    return _this2;
+  }
+  _inherits(TypeException, _Error2);
+  return _createClass(TypeException);
+}(/*#__PURE__*/_wrapNativeSuper(Error));
+var ValidationError = /*#__PURE__*/function (_Error3) {
+  function ValidationError(message) {
+    var _this3;
+    _classCallCheck(this, ValidationError);
+    _this3 = _callSuper(this, ValidationError, [message]); // Pass message to base Error
+    _this3.name = "Filter Validation Error"; // Set error name
+    return _this3;
+  }
+  _inherits(ValidationError, _Error3);
+  return _createClass(ValidationError);
+}(/*#__PURE__*/_wrapNativeSuper(Error)); //should only be called on strings of the form 'str(...)' or 'num(...)' etc. the string must end with the enclosure char, otherwise it will throw a SyntaxException.
+function retrieveEnclosure(string) {
+  var open_char = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '(';
+  var close_char = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ')';
+  if (open_char === close_char) {
+    throw new Error("Enclosure characters must be different: ".concat(open_char, " = ").concat(close_char));
+  }
+  var started = false;
+  var count = 0;
+  var output = "";
+  var _iterator = _createForOfIteratorHelper(_toConsumableArray(string).entries()),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _step$value = _slicedToArray(_step.value, 2),
+        index = _step$value[0],
+        _char = _step$value[1];
+      if (_char === open_char) {
+        count += 1;
+        if (!started) {
+          started = true;
+          continue;
+        }
+      } else if (_char === close_char) {
+        count -= 1;
+      }
+      if (count === 0 && started) {
+        if (index != string.length - 1) {
+          throw new SyntaxException("Enclosure should not be resolved before end of string; resolved at index: ".concat(index, "; input string: ").concat(string));
+        }
+        return output;
+      } else if (count < 0) {
+        throw new SyntaxException("Unbalanced enclosure at index: ".concat(index, " of input string: ").concat(string, "; balance of \"").concat(open_char, "...").concat(close_char, "\" enclosures became negative."));
+      } else if (started) {
+        output += _char;
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  ;
+  if (!started) {
+    throw new SyntaxException("Enclosure of type ".concat(open_char, "...").concat(close_char, " not found in string; input string: ").concat(string));
+  } else if (count > 0) {
+    throw new SyntaxException("Enclosure could not be resolved; too many '".concat(close_char, "'; balance = +{count}; input string {string}"));
+  }
+}
+
+// retrieves comma separated arguments from a string; used for clause operators; input should be of the form 'fn(arg1, arg2,...)' where fn is a clause fn
+function retrieveArgs(string) {
+  var open_parenthese_count = 0;
+  var args = [];
+  var arg = "";
+  var _iterator2 = _createForOfIteratorHelper(string),
+    _step2;
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var _char2 = _step2.value;
+      if (_char2 === '(') {
+        open_parenthese_count += 1;
+        if (open_parenthese_count === 1) {
+          continue;
+        }
+      } else if (_char2 === ')') {
+        open_parenthese_count -= 1;
+      }
+      if (open_parenthese_count === 1 && _char2 === ',') {
+        args.push(arg.trim());
+        arg = "";
+      } else if (open_parenthese_count >= 1) {
+        arg += _char2;
+      }
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+  if (arg.trim()) {
+    args.push(arg.trim());
+  }
+  return args;
+}
+var ENCLOSURE_MAP = {
+  '(': ')',
+  '{': '}',
+  '"': '"',
+  "'": "'"
+};
+var REVERSE_ENCLOSURE_MAP = Object.fromEntries(Object.entries(ENCLOSURE_MAP).filter(function (_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+    k = _ref2[0],
+    v = _ref2[1];
+  return k !== v;
+}).map(function (_ref3) {
+  var _ref4 = _slicedToArray(_ref3, 2),
+    k = _ref4[0],
+    v = _ref4[1];
+  return [v, k];
+}));
+function tokenizeWithNestedEnclosures(input) {
+  var splitChars = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : " ";
+  var enclosureLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var trim = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+  var tokens = [];
+  var current = '';
+  var stack = [];
+  for (var i = 0; i < input.length; i++) {
+    var _char3 = input[i];
+
+    //console.log(`Processing char ${char} at position ${i}; current string: ${current}; tokens: ${tokens}`);
+
+    if (splitChars.includes(_char3) && stack.length === enclosureLevel) {
+      if (current) {
+        tokens.push(trim ? current.trim() : current);
+        current = '';
+      }
+    } else {
+      if (REVERSE_ENCLOSURE_MAP[_char3]) {
+        var expected = REVERSE_ENCLOSURE_MAP[_char3];
+        if (stack.length > enclosureLevel) {
+          current += _char3;
+        }
+        if (stack[stack.length - 1] === expected) {
+          stack.pop();
+        } else {
+          throw new Error("Unbalanced closing bracket at position ".concat(i));
+        }
+      } else {
+        if (stack.length >= enclosureLevel) {
+          current += _char3;
+        }
+        if (ENCLOSURE_MAP[_char3]) {
+          if (stack[stack.length - 1] === ENCLOSURE_MAP[_char3] && _char3 === ENCLOSURE_MAP[_char3]) {
+            stack.pop();
+          } else {
+            stack.push(_char3);
+          }
+        }
+      }
+    }
+  }
+  if (stack.length > 0) {
+    throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: ", stack);
+  }
+  if (current) {
+    tokens.push(trim ? current.trim() : current);
+  }
+  return tokens;
+}
+function getCharCounts(str) {
+  var counts = {};
+  var _iterator3 = _createForOfIteratorHelper(str),
+    _step3;
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var _char4 = _step3.value;
+      counts[_char4] = (counts[_char4] || 0) + 1;
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+  return counts;
+}
+function parseDate(dateStr) {
+  if (!_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.test(dateStr)) {
+    throw new SyntaxException("Invalid date; must be in the format: YYYY-MM-DD ( regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.source, " ); got: '").concat(dateStr, "'"));
+  }
+  var isoDateStr = dateStr.split(" ")[0];
+  var date = new Date("".concat(isoDateStr, "T00:00:00"));
+
+  // Check if valid date
+  if (isNaN(date.getTime())) {
+    throw new SyntaxException("Invalid date; could not be parsed as a valid date; got: '".concat(dateStr, "'"));
+  }
+
+  // Check if parsed date matches passed in string
+  var dateString = date.toISOString().split('T')[0];
+  var _dateString$split$map = dateString.split('-').map(Number),
+    _dateString$split$map2 = _slicedToArray(_dateString$split$map, 3),
+    year = _dateString$split$map2[0],
+    month = _dateString$split$map2[1],
+    day = _dateString$split$map2[2];
+  if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+    throw new SyntaxException("Invalid date; parsed date: ".concat(date.toISOString(), " does not match passed in string: ").concat(isoDateStr));
+  }
+  console.log("Parsed date: ".concat(date.toISOString(), " ; ").concat(date.constructor.name));
+  return date;
+}
+function tryConvert(convertFnc, typeName, value) {
+  var errMSG = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  if (errMSG === null) {
+    errMSG = "Could not convert ".concat(value, " to ").concat(typeName);
+  }
+  try {
+    return convertFnc(value);
+  } catch (err) {
+    throw new TypeException("".concat(errMSG, ": ").concat(err.message));
+  }
+}
+var Futils = {
+  SyntaxException: SyntaxException,
+  TypeException: TypeException,
+  ValidationError: ValidationError,
+  retrieveEnclosure: retrieveEnclosure,
+  retrieveArgs: retrieveArgs,
+  getCharCounts: getCharCounts,
+  tokenizeWithNestedEnclosures: tokenizeWithNestedEnclosures,
+  parseDate: parseDate,
+  tryConvert: tryConvert
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Futils);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/hero-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/e7/hero-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _e7_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7-utils.js */ "./static/assets/js/e7/e7-utils.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+var FODDER_NAME = "Fodder";
+var EMPTY_NAME = "Empty";
+
+// This function adds two heroes to the Hero Manager to account for fodder champions and empty picks/prebans
+function addNonHeroes(HM) {
+  var next_index = HM.heroes.length;
+  var Empty = {
+    attribute_cd: "N/A",
+    code: "N/A",
+    grade: "N/A",
+    job_cd: "N/A",
+    name: EMPTY_NAME,
+    prime: 1
+  };
+  var Fodder = {
+    attribute_cd: "N/A",
+    code: "N/A",
+    grade: "2/3",
+    job_cd: "N/A",
+    name: FODDER_NAME,
+    prime: _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[next_index]
+  };
+  HM.heroes.push(Empty);
+  HM.heroes.push(Fodder);
+  HM.Fodder = Fodder;
+  HM.Empty = Empty;
+  return HM;
+}
+
+// add lookup dicts to the hero manager so that we can perform efficient lookups
+function addDicts(HM) {
+  console.log("Adding Lookup Dicts");
+  console.log("\tAdding name lookup");
+  HM.name_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.name.toLowerCase().replace(/\s+/g, "")] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding prime lookup");
+  HM.prime_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.prime] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding code lookup");
+  HM.code_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.code] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding prime pair lookup");
+  var prime_pair_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.prime] = hero.name;
+    return acc;
+  }, {});
+  var numKeys = Object.keys(HM.prime_lookup).length - 1; // subtract 1 since we don't consider Empty hero
+  console.log("\tAdding prime pair lookup; primes to process", numKeys);
+  for (var i = 0; i < numKeys - 1; i++) {
+    var prime = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[i];
+    for (var j = i + 1; j < numKeys; j++) {
+      var prime2 = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[j];
+      var product = prime * prime2;
+      var name1 = HM.prime_lookup[prime].name;
+      var name2 = HM.prime_lookup[prime2].name;
+      prime_pair_lookup[product] = [name1, name2].sort().join(", ");
+    }
+  }
+  //capture case where two fodder heroes
+  prime_pair_lookup[HM.Fodder.prime * HM.Fodder.prime] = [HM.Fodder.name, HM.Fodder.prime];
+
+  //set prime pair lookup dict in HM and return
+  HM.prime_pair_lookup = prime_pair_lookup;
+  return HM;
+}
+var HeroManager = {
+  getHeroManager: function () {
+    var _getHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 4;
+            break;
+          case 3:
+            _t3 = this.fetchAndCacheHeroManager();
+          case 4:
+            return _context.a(2, _t3);
+        }
+      }, _callee, this);
+    }));
+    function getHeroManager() {
+      return _getHeroManager.apply(this, arguments);
+    }
+    return getHeroManager;
+  }(),
+  createHeroManager: function createHeroManager(rawHeroList) {
+    // add prime identifier to each hero so that we can represent a set as a product of primes
+    var _iterator = _createForOfIteratorHelper(rawHeroList.entries()),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var _step$value = _slicedToArray(_step.value, 2),
+          index = _step$value[0],
+          heroData = _step$value[1];
+        var prime = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[index];
+        heroData.prime = prime;
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    var HM = {
+      heroes: rawHeroList
+    };
+    HM = addNonHeroes(HM); //should not be called again
+    HM = addDicts(HM); // Must come after addNonHeroes so that empty/fodder are added to the dicts
+    return HM;
+  },
+  fetchHeroManager: function () {
+    var _fetchHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var _yield$E7API$fetchHer;
+      var heroJSON, enHeroList, HM, _t4, _t5, _t6;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_4__["default"].fetchHeroJSON();
+          case 1:
+            _t5 = _yield$E7API$fetchHer = _context2.v;
+            _t4 = _t5 !== null;
+            if (!_t4) {
+              _context2.n = 2;
+              break;
+            }
+            _t4 = _yield$E7API$fetchHer !== void 0;
+          case 2:
+            if (!_t4) {
+              _context2.n = 3;
+              break;
+            }
+            _t6 = _yield$E7API$fetchHer;
+            _context2.n = 5;
+            break;
+          case 3:
+            _context2.n = 4;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__["default"].fetchHeroData();
+          case 4:
+            _t6 = _context2.v;
+          case 5:
+            heroJSON = _t6;
+            enHeroList = heroJSON.en; //get english hero list
+            HM = this.createHeroManager(enHeroList);
+            console.log("Created HeroManager using raw data received from server");
+            return _context2.a(2, HM);
+        }
+      }, _callee2, this);
+    }));
+    function fetchHeroManager() {
+      return _fetchHeroManager.apply(this, arguments);
+    }
+    return fetchHeroManager;
+  }(),
+  fetchAndCacheHeroManager: function () {
+    var _fetchAndCacheHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      var HM;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            console.log("HeroManager not found in cache, fetching from server and caching it");
+            _context3.n = 1;
+            return this.fetchHeroManager();
+          case 1:
+            HM = _context3.v;
+            _context3.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER, HM);
+          case 2:
+            console.log("Cached HeroManager using raw data recieved from server");
+            (0,_e7_utils_js__WEBPACK_IMPORTED_MODULE_1__.printObjStruct)(HM);
+            return _context3.a(2, HM);
+        }
+      }, _callee3, this);
+    }));
+    function fetchAndCacheHeroManager() {
+      return _fetchAndCacheHeroManager.apply(this, arguments);
+    }
+    return fetchAndCacheHeroManager;
+  }(),
+  deleteHeroManager: function () {
+    var _deleteHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER);
+          case 1:
+            console.log("Removed hero manager from cache");
+          case 2:
+            return _context4.a(2);
+        }
+      }, _callee4);
+    }));
+    function deleteHeroManager() {
+      return _deleteHeroManager.apply(this, arguments);
+    }
+    return deleteHeroManager;
+  }(),
+  getHeroByName: function getHeroByName(name, HM) {
+    var _HM$name_lookup$norma;
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    } else if (!name) {
+      return HM.Empty;
+    }
+    var normalizedName = name.toLowerCase().replace(/\s+/g, "");
+    return (_HM$name_lookup$norma = HM.name_lookup[normalizedName]) !== null && _HM$name_lookup$norma !== void 0 ? _HM$name_lookup$norma : null;
+  },
+  getHeroByPrime: function getHeroByPrime(prime, HM) {
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    }
+    return HM.prime_lookup[prime];
+  },
+  getHeroByCode: function getHeroByCode(code, HM) {
+    var _HM$code_lookup$code;
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    } else if (!code) {
+      return HM.Empty;
+    }
+    return (_HM$code_lookup$code = HM.code_lookup[code]) !== null && _HM$code_lookup$code !== void 0 ? _HM$code_lookup$code : null;
+  },
+  getPairNamesByProduct: function getPairNamesByProduct(product, HM) {
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    }
+    return HM.prime_pair_lookup[product];
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HeroManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/plots.js":
+/*!**************************************!*\
+  !*** ./static/assets/js/e7/plots.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   generateRankPlot: () => (/* binding */ generateRankPlot)
+/* harmony export */ });
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function generateRankPlot(battles, user) {
+  var filteredBattles = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var zoomFiltered = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+  // Sort battles chronologically by time
+  // console.log("Creating plot HTML for:", JSON.stringify(battles));
+  // console.log("received Filtered Battles:", JSON.stringify(filteredBattles));
+  battles.sort(function (a, b) {
+    return new Date(a["Date/Time"]) - new Date(b["Date/Time"]);
+  });
+
+  // if the user is not passed, default the username to the ID of the player
+  if (!user) {
+    user = {
+      name: "UID: ".concat(battles[0]["P1 ID"])
+    };
+  }
+  var markerDefaultColor = '#0df8fd';
+  var markerFilteredColor = '#ff9900';
+  var x = battles.map(function (_, i) {
+    return i;
+  });
+  var y = battles.map(function (b) {
+    return b["P1 Points"];
+  });
+  var markerMask = [];
+  var zoom = {
+    startX: null,
+    endX: null,
+    startY: null,
+    endY: null
+  };
+  var zoomYPadding = 50;
+  var zoomXPadding = 0.5;
+
+  // iterate through battles and build list to color filtered battles distinctly 
+  // and determine the area to zoom on if needed
+  var _iterator = _createForOfIteratorHelper(battles.entries()),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _step$value = _slicedToArray(_step.value, 2),
+        idx = _step$value[0],
+        battle = _step$value[1];
+      if (filteredBattles && battle["Seq Num"] in filteredBattles) {
+        if (zoomFiltered === true) {
+          zoom.startX = idx < zoom.startX || zoom.startX === null ? idx - zoomXPadding : zoom.startX;
+          zoom.startY = battle["P1 Points"] < zoom.startY + zoomYPadding || zoom.startY === null ? battle["P1 Points"] - zoomYPadding : zoom.startY;
+          zoom.endX = idx > zoom.endX || zoom.endX === null ? idx + zoomXPadding : zoom.endX;
+          zoom.endY = battle["P1 Points"] > zoom.endY - zoomYPadding || zoom.endY === null ? battle["P1 Points"] + zoomYPadding : zoom.endY;
+        }
+        markerMask.push(markerFilteredColor);
+      } else {
+        markerMask.push(markerDefaultColor);
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  ;
+  var customdata = battles.map(function (b) {
+    return [b["Date/Time"].slice(0, 10),
+    // date
+    b["P1 League"] // league
+    ];
+  });
+  var trace = {
+    x: x,
+    y: y,
+    mode: 'lines+markers',
+    line: {
+      color: '#4f9293',
+      width: 2
+    },
+    marker: {
+      symbol: 'circle',
+      size: 4,
+      color: markerMask
+    },
+    customdata: customdata,
+    hovertemplate: 'Points: %{y}<br>' + 'Date: %{customdata[0]}<br>' + 'League: %{customdata[1]}<extra></extra>'
+  };
+  var layout = {
+    autosize: true,
+    font: {
+      family: 'Roboto, Open Sans'
+    },
+    title: {
+      text: "".concat(user.name, "'s RTA Point Plot"),
+      font: {
+        size: 24,
+        color: '#dddddd'
+      },
+      xanchor: 'center',
+      yanchor: 'top',
+      y: 0.95,
+      x: 0.5
+    },
+    xaxis: {
+      title: {
+        text: 'Battle Number (Chronological)',
+        font: {
+          size: 18,
+          color: '#dddddd'
+        }
+      },
+      showgrid: true,
+      gridcolor: '#8d8d8d',
+      zeroline: false,
+      tickfont: {
+        size: 12,
+        color: '#dddddd'
+      },
+      range: zoom.startX ? [zoom.startX, zoom.endX] : null
+    },
+    yaxis: {
+      title: {
+        text: 'Victory Points',
+        font: {
+          size: 18,
+          color: '#dddddd'
+        }
+      },
+      showgrid: true,
+      gridcolor: '#8d8d8d',
+      zeroline: true,
+      zerolinecolor: '#dddddd',
+      zerolinewidth: 2,
+      tickfont: {
+        size: 12,
+        color: '#dddddd'
+      },
+      range: zoom.startY ? [zoom.startY, zoom.endY] : null
+    },
+    plot_bgcolor: '#1e222d',
+    paper_bgcolor: '#1e222d'
+  };
+  var config = {
+    responsive: true
+  };
+
+  // Generate HTML string
+  var divId = "rank-plot-container";
+  var containerDiv = "<div id=\"".concat(divId, "\"></div>");
+  var plotScript = "\n<script>\n    Plotly.newPlot('".concat(divId, "', [").concat(JSON.stringify(trace), "], ").concat(JSON.stringify(layout), ", ").concat(JSON.stringify(config), ");\n</script>\n");
+  return containerDiv + plotScript;
+}
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/references.js":
+/*!*******************************************!*\
+  !*** ./static/assets/js/e7/references.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   COLUMNS: () => (/* binding */ COLUMNS),
+/* harmony export */   COLUMNS_EXPANDED: () => (/* binding */ COLUMNS_EXPANDED),
+/* harmony export */   COLUMNS_MAP: () => (/* binding */ COLUMNS_MAP),
+/* harmony export */   EQUIPMENT_SET_MAP: () => (/* binding */ EQUIPMENT_SET_MAP),
+/* harmony export */   LEAGUE_MAP: () => (/* binding */ LEAGUE_MAP),
+/* harmony export */   ONE_DAY: () => (/* binding */ ONE_DAY),
+/* harmony export */   PRIMES: () => (/* binding */ PRIMES),
+/* harmony export */   WORLD_CODES: () => (/* binding */ WORLD_CODES),
+/* harmony export */   WORLD_CODE_ENUM: () => (/* binding */ WORLD_CODE_ENUM),
+/* harmony export */   WORLD_CODE_TO_CLEAN_STR: () => (/* binding */ WORLD_CODE_TO_CLEAN_STR)
+/* harmony export */ });
+var WORLD_CODES = new Set(["world_kor", "world_global", "world_jpn", "world_asia", "world_eu"]);
+var WORLD_CODE_ENUM = {
+  GLOBAL: "world_global",
+  KOR: "world_kor",
+  JPN: "world_jpn",
+  ASIA: "world_asia",
+  EU: "world_eu"
+};
+var WORLD_CODE_TO_CLEAN_STR = {
+  "world_global": "Global",
+  "world_kor": "Korea",
+  "world_jpn": "Japan",
+  "world_asia": "Asia",
+  "world_eu": "Europe"
+};
+var EQUIPMENT_SET_MAP = {
+  "set_speed": "Speed",
+  "set_acc": "Hit",
+  "set_cri": "Crit",
+  "set_res": "Resist",
+  "set_def": "Defense",
+  "set_att": "Attack",
+  "set_max_hp": "HP",
+  "set_cri_dmg": "Crit DMG",
+  "set_coop": "Unity",
+  "set_immune": "Immunity",
+  "set_rage": "Rage",
+  "set_vampire": "Lifesteal",
+  "set_shield": "Protection",
+  "set_revenge": "Revenge",
+  "set_penetrate": "Penetration",
+  "set_torrent": "Torrent",
+  "set_counter": "Counter",
+  "set_scar": "Injury"
+};
+var ONE_DAY = 1000 * 60 * 60 * 24;
+var LEAGUE_MAP = {
+  "bronze": 0,
+  "silver": 1,
+  "gold": 2,
+  "master": 3,
+  "challenger": 4,
+  "champion": 5,
+  "warlord": 6,
+  "emperor": 7,
+  "legend": 8
+};
+var COLUMNS = ["Date/Time", "Seq Num", "P1 ID", "P1 Server", "P1 League", "P1 Points", "P2 ID", "P2 Server", "P2 League", "Win", "First Pick", "P1 Preban 1", "P1 Preban 2", "P2 Preban 1", "P2 Preban 2", "P1 Pick 1", "P1 Pick 2", "P1 Pick 3", "P1 Pick 4", "P1 Pick 5", "P2 Pick 1", "P2 Pick 2", "P2 Pick 3", "P2 Pick 4", "P2 Pick 5", "P1 Postban", "P2 Postban"];
+var COLUMNS_EXPANDED = ["Season", "Date/Time", "Seconds", "Turns", "Seq Num", "P1 ID", "P1 Server", "P2 ID", "P2 Server", "P1 League", "P2 League", "P1 Points", "Point Gain", "Win", "First Pick", "CR Bar", "First Turn", "First Turn Hero", "P1 Prebans", "P2 Prebans", "P1 Picks", "P2 Picks", "P1 Postban", "P2 Postban", "P1 Equipment", "P2 Equipment", "P1 Artifacts", "P2 Artifacts", "P1 MVP", "P2 MVP"];
+var COLUMNS_MAP = {
+  SEASON: "Season",
+  DATE_TIME: "Date/Time",
+  SECONDS: "Seconds",
+  TURNS: "Turns",
+  SEQ_NUM: "Seq Num",
+  P1_ID: "P1 ID",
+  P1_SERVER: "P1 Server",
+  P2_ID: "P2 ID",
+  P2_SERVER: "P2 Server",
+  P1_LEAGUE: "P1 League",
+  P2_LEAGUE: "P2 League",
+  P1_POINTS: "P1 Points",
+  POINT_GAIN: "Point Gain",
+  WIN: "Win",
+  FIRST_PICK: "First Pick",
+  CR_BAR: "CR Bar",
+  FIRST_TURN: "First Turn",
+  FIRST_TURN_HERO: "First Turn Hero",
+  P1_PREBANS: "P1 Prebans",
+  P2_PREBANS: "P2 Prebans",
+  P1_PICKS: "P1 Picks",
+  P2_PICKS: "P2 Picks",
+  P1_POSTBAN: "P1 Postban",
+  P2_POSTBAN: "P2 Postban",
+  P1_EQUIPMENT: "P1 Equipment",
+  P2_EQUIPMENT: "P2 Equipment",
+  P1_ARTIFACTS: "P1 Artifacts",
+  P2_ARTIFACTS: "P2 Artifacts",
+  P1_MVP: "P1 MVP",
+  P2_MVP: "P2 MVP",
+  P1_PICKS_PRIMES: "P1 Picks Primes",
+  P1_PICKS_PRIME_PRODUCT: "P1 Picks Prime Product",
+  P2_PICKS_PRIMES: "P2 Picks Primes",
+  P2_PICKS_PRIME_PRODUCT: "P2 Picks Prime Product",
+  P1_PREBANS_PRIMES: "P1 Prebans Primes",
+  P1_PREBANS_PRIME_PRODUCT: "P1 Prebans Prime Product",
+  P2_PREBANS_PRIMES: "P2 Prebans Primes",
+  P2_PREBANS_PRIME_PRODUCT: "P2 Prebans Prime Product"
+};
+
+/**
+ * Generates a list of all prime numbers up to and including the given limit.
+ *
+ * Uses the Sieve of Eratosthenes algorithm to generate the list.
+ * 
+ * Primes are used to represent as prime identifier allowing us to represent a set as a product of primes
+ *
+ * @param {number} limit - The upper limit of the prime numbers to generate. Must be a positive integer.
+ * @returns {number[]} - A list of all prime numbers up to and including the given limit.
+ */
+function getPrimes(limit) {
+  var sieve = new Uint8Array(limit + 1);
+  var primes = [];
+  for (var i = 2; i <= limit; i++) {
+    if (!sieve[i]) {
+      primes.push(i);
+      for (var j = i * i; j <= limit; j += i) {
+        sieve[j] = 1;
+      }
+    }
+  }
+  return primes;
+}
+var PRIMES = getPrimes(30000);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/regex.js":
+/*!**************************************!*\
+  !*** ./static/assets/js/e7/regex.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RegExps: () => (/* binding */ RegExps)
+/* harmony export */ });
+function padRegex(pattern) {
+  var flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "i";
+  return new RegExp("^(?:".concat(pattern.source, ")(?=[,)\\s;]|$)"), flags);
+}
+function anchorExp(pattern) {
+  var flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "i";
+  return new RegExp("^(?:".concat(pattern.source, ")$"), flags);
+}
+var VALID_STRING_RE = /[a-z][a-z0-9.\s]*/i;
+var VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
+var EMPTY_SET_RE = /\{\s*\}/;
+var VALID_INT_RE = /\d+/;
+var VALID_SEASON_RE = /season-[1-9]+[0-9]*(\.[1-9]*)?|current-season/i;
+var VALID_GLOBAL_FILTER_RE = /last-n\(\d+\)/i;
+var VALID_DATE_LITERAL_RE = new RegExp("^".concat(VALID_DATE_RE.source, "$"), "i");
+var VALID_INT_LITERAL_RE = /^\d+$/;
+var VALID_BOOL_LITERAL_RE = /^(true|false)$/i;
+var VALID_DATA_WORD_RE = new RegExp("(?:".concat(VALID_SEASON_RE.source, ")"), "i");
+var VALID_FIELD_WORD_RE = /(?:date|is-first-pick|is-win|victory-points|p1.picks|p1.prebans|p2.prebans|prebans|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league|p1.postban|p2.postban|p1.server|p2.server)/i;
+
+//consts without RE are used for injecting into regex patterns
+var STR = VALID_STRING_RE.source;
+var INT = VALID_INT_RE.source;
+var DATE = VALID_DATE_RE.source;
+var FIELD_WORD = VALID_FIELD_WORD_RE.source;
+var DATA_WORD = VALID_DATA_WORD_RE.source;
+var VALID_QUOTED_STRING_RE = new RegExp("\"(".concat(STR, ")\"|'(").concat(STR, ")'"), "i");
+var VALID_STRING_LITERAL_RE = new RegExp(anchorExp(VALID_QUOTED_STRING_RE), "i");
+var QUOTED_STR = VALID_QUOTED_STRING_RE.source;
+var SET_ELEMENT_RE = new RegExp("(?:".concat(QUOTED_STR, "|").concat(STR, "|").concat(DATE, ")"), "i");
+var VALID_DATAFIELD_RE = new RegExp("(?:".concat(FIELD_WORD, "|").concat(DATA_WORD, ")"), "i");
+var SETELT = SET_ELEMENT_RE.source;
+var VALID_SET_RE = new RegExp("\\{\\s*(?:".concat(SETELT, "\\s*)(?:,\\s*").concat(SETELT, "\\s*)*,?\\s*\\}|").concat(EMPTY_SET_RE.source), "i");
+var VALID_RANGE_RE = new RegExp("".concat(INT, "\\.\\.\\.").concat(INT, "|").concat(DATE, "\\.\\.\\.").concat(DATE, "|").concat(INT, "\\.\\.\\.=").concat(INT, "|").concat(DATE, "\\.\\.\\.=").concat(DATE));
+var VALID_RANGE_LITERAL_RE = new RegExp("^".concat(VALID_RANGE_RE.source, "$"));
+function tokenMatch(stream) {
+  if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()|LAST-N(?=\()/i)) {
+    console.log("Matched stream as clause:", stream);
+    return "keyword";
+  }
+  if (stream.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)) {
+    console.log("Matched stream as operator:", stream);
+    return "operator";
+  }
+  if (stream.match(new RegExp("[a-z0-9.\"'}=)-]".concat(VALID_DATAFIELD_RE.source, "(?=[,)\\s;]|$)"), "i"))) {
+    console.log("Matched stream as field with preceding fragment:", stream);
+    return null;
+  }
+  if (stream.match(padRegex(VALID_DATAFIELD_RE))) {
+    console.log("Matched stream as Data Field:", stream);
+    return "datafield";
+  }
+  if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
+    console.log("Matched stream as non-num null");
+    return null;
+  }
+  if (stream.match(padRegex(VALID_RANGE_RE))) {
+    console.log("Matched stream as range:", stream);
+    return "range";
+  }
+  if (stream.match(padRegex(VALID_INT_RE))) {
+    console.log("Matched stream as number:", stream);
+    return "number";
+  }
+  if (stream.match(padRegex(VALID_DATE_RE))) {
+    console.log("Matched stream as date:", stream);
+    return "date";
+  }
+  if (stream.match(padRegex(VALID_SET_RE))) {
+    console.log("Matched stream as set:", stream);
+    return "set";
+  }
+  if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
+    console.log("Matched stream as bool:", stream);
+    return "bool";
+  }
+  if (stream.match(padRegex(VALID_QUOTED_STRING_RE))) {
+    console.log("Matched stream as string:", stream);
+    return "string";
+  }
+  if (stream.match(/[\(\)\{\}\;\,]/)) {
+    console.log("Matched stream as bracket:", stream);
+    return "bracket";
+  }
+  stream.next();
+  console.log("Matched stream as null:", stream);
+  return null;
+}
+var RegExps = {
+  VALID_STRING_RE: VALID_STRING_RE,
+  VALID_DATE_RE: VALID_DATE_RE,
+  VALID_INT_RE: VALID_INT_RE,
+  EMPTY_SET_RE: EMPTY_SET_RE,
+  SET_ELEMENT_RE: SET_ELEMENT_RE,
+  VALID_SET_RE: VALID_SET_RE,
+  VALID_STRING_LITERAL_RE: VALID_STRING_LITERAL_RE,
+  VALID_DATE_LITERAL_RE: VALID_DATE_LITERAL_RE,
+  VALID_INT_LITERAL_RE: VALID_INT_LITERAL_RE,
+  VALID_BOOL_LITERAL_RE: VALID_BOOL_LITERAL_RE,
+  VALID_RANGE_RE: VALID_RANGE_RE,
+  VALID_RANGE_LITERAL_RE: VALID_RANGE_LITERAL_RE,
+  VALID_SEASON_RE: VALID_SEASON_RE,
+  VALID_SEASON_LITERAL_RE: anchorExp(VALID_SEASON_RE),
+  VALID_DATA_WORD_RE: VALID_DATA_WORD_RE,
+  VALID_DATA_WORD_LITERAL_RE: anchorExp(VALID_DATA_WORD_RE),
+  VALID_FIELD_WORD_RE: VALID_FIELD_WORD_RE,
+  VALID_DATAFIELD_RE: VALID_DATAFIELD_RE,
+  VALID_GLOBAL_FILTER_RE: VALID_GLOBAL_FILTER_RE,
+  ANCHORED_STR_LITERAL_RE: anchorExp(VALID_STRING_LITERAL_RE),
+  padRegex: padRegex,
+  anchorExp: anchorExp,
+  tokenMatch: tokenMatch
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/saved-filters.js":
+/*!**********************************************!*\
+  !*** ./static/assets/js/e7/saved-filters.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var SavedFilters = {
+  "Current Season": "date in current-season",
+  "Wins": "is-win = true",
+  "Losses": "is-win = false",
+  "First Pick": "is-first-pick = true",
+  "Second Pick": "is-first-pick = false",
+  "Champion+ Opponent": "p2.league in {champion, warlord, emperor, legend}",
+  "Warlord+ Opponent": "p2.league in {warlord, emperor, legend}",
+  "Emperor+ Opponent": "p2.league in {emperor, legend}",
+  "Legend Opponent": "p2.league = 'legend'",
+  extendFilters: function extendFilters(currFilterStr, filterName) {
+    var filter = SavedFilters[filterName];
+    // trim whitespace only from end of str
+    currFilterStr = currFilterStr.replace(/\s+$/, '');
+    if (currFilterStr.slice(-1) !== ";" && currFilterStr.length > 0) {
+      currFilterStr += ";\n";
+    } else if (currFilterStr.slice(-1) === ";") {
+      currFilterStr += "\n";
+    }
+    return "".concat(currFilterStr).concat(filter, ";");
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SavedFilters);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/season-manager.js":
+/*!***********************************************!*\
+  !*** ./static/assets/js/e7/season-manager.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+// a Season record has the following fields: "Season Number", "Code", "Season", "Start", "End", "Status"
+
+var SeasonManager = {
+  fetchAndCacheSeasonDetails: function () {
+    var _fetchAndCacheSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var result, seasonDetails, preSeasonFilled, lastSeason, start, preSeason;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].fetchSeasonDetails();
+          case 1:
+            result = _context.v;
+            if (!result.error) {
+              _context.n = 2;
+              break;
+            }
+            throw new Error("Could not fetch season details: ".concat(result.error));
+          case 2:
+            seasonDetails = result.seasonDetails;
+            seasonDetails.forEach(function (season) {
+              season.range = [season["Start"], season["End"]].map(function (d) {
+                return new Date("".concat(d.split(" ")[0], "T00:00:00"));
+              });
+            });
+            seasonDetails.sort(function (a, b) {
+              return a["Season Number"] - b["Season Number"];
+            });
+
+            // add pre seasons
+            preSeasonFilled = [seasonDetails[0]];
+            lastSeason = seasonDetails[0];
+            seasonDetails.slice(1).forEach(function (season) {
+              var start = new Date(+lastSeason.range[1] + _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY),
+                end = new Date(+season.range[0] - _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY);
+              var preSeason = {
+                "Season Number": lastSeason["Season Number"] + 0.5,
+                Code: null,
+                Season: "Pre-Season: ".concat(season["Season"]),
+                Start: start.toISOString().slice(0, 10),
+                End: end.toISOString().slice(0, 10),
+                Status: "Complete",
+                range: [start, end]
+              };
+              preSeasonFilled.push(preSeason);
+              preSeasonFilled.push(season);
+              lastSeason = season;
+            });
+
+            // add another pre season if current season is complete
+            if (lastSeason.range[1] < new Date()) {
+              start = new Date(+preSeasonFilled.at(-1).range[1] + _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY);
+              preSeason = {
+                "Season Number": lastSeason["Season Number"] + 0.5,
+                Code: null,
+                Season: "Pre-Season: ".concat(season["Season"]),
+                Start: start.toISOString().slice(0, 10),
+                End: "N/A",
+                Status: "Active",
+                range: [start, new Date()]
+              };
+              preSeasonFilled.push(preSeason);
+            }
+            preSeasonFilled.reverse();
+            _context.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS, preSeasonFilled);
+          case 3:
+            return _context.a(2, preSeasonFilled);
+        }
+      }, _callee);
+    }));
+    function fetchAndCacheSeasonDetails() {
+      return _fetchAndCacheSeasonDetails.apply(this, arguments);
+    }
+    return fetchAndCacheSeasonDetails;
+  }(),
+  getSeasonDetails: function () {
+    var _getSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context2.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context2.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context2.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context2.n = 5;
+            break;
+          case 3:
+            _context2.n = 4;
+            return SeasonManager.fetchAndCacheSeasonDetails();
+          case 4:
+            _t3 = _context2.v;
+          case 5:
+            return _context2.a(2, _t3);
+        }
+      }, _callee2);
+    }));
+    function getSeasonDetails() {
+      return _getSeasonDetails.apply(this, arguments);
+    }
+    return getSeasonDetails;
+  }(),
+  clearSeasonDetails: function () {
+    var _clearSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS);
+          case 1:
+            console.log("Season details cleared from data cache");
+          case 2:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function clearSeasonDetails() {
+      return _clearSeasonDetails.apply(this, arguments);
+    }
+    return clearSeasonDetails;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SeasonManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/stats-builder.js":
+/*!**********************************************!*\
+  !*** ./static/assets/js/e7/stats-builder.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+
+
+var getWins = function getWins(battleList) {
+  return battleList.filter(function (b) {
+    return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN];
+  });
+};
+var getFirstPickSubset = function getFirstPickSubset(battleList) {
+  return battleList.filter(function (b) {
+    return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK];
+  });
+};
+var getSecondPickSubset = function getSecondPickSubset(battleList) {
+  return battleList.filter(function (b) {
+    return !b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK];
+  });
+};
+var isIncomplete = function isIncomplete(b) {
+  return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS] === 0;
+};
+function toPercent(value) {
+  return (value * 100).toFixed(2) + '%';
+}
+function queryStats(battleList, totalBattles) {
+  var gamesWon = getWins(battleList).length;
+  var gamesAppeared = battleList.length;
+  var appearanceRate = totalBattles !== 0 ? gamesAppeared / totalBattles : 0;
+  var winRate = gamesAppeared !== 0 ? gamesWon / gamesAppeared : 0;
+  return {
+    games_won: gamesWon,
+    games_appeared: gamesAppeared,
+    total_games: totalBattles,
+    appearance_rate: toPercent(appearanceRate),
+    win_rate: toPercent(winRate),
+    '+/-': 2 * gamesWon - gamesAppeared
+  };
+}
+function getHeroStats(battles, HM) {
+  var heroes = HM.heroes;
+  var battleList = Object.values(battles);
+  if (battleList.length === 0) {
+    return {
+      playerHeroStats: [],
+      enemyHeroStats: []
+    };
+  }
+  var totalBattles = battleList.length;
+  var playerHeroStats = [];
+  var enemyHeroStats = [];
+  var _iterator = _createForOfIteratorHelper(heroes),
+    _step;
+  try {
+    var _loop = function _loop() {
+      var hero = _step.value;
+      if (hero.name === HM.Empty.name) {
+        return 1; // continue
+      }
+      var prime = hero.prime;
+      var playerSubset = battleList.filter(function (b) {
+        return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] % prime === 0;
+      });
+      var enemySubset = battleList.filter(function (b) {
+        return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] % prime === 0;
+      });
+      if (playerSubset.length > 0) {
+        playerHeroStats.push(_objectSpread(_objectSpread({}, queryStats(playerSubset, totalBattles)), {}, {
+          hero: hero.name
+        }));
+      }
+      if (enemySubset.length > 0) {
+        enemyHeroStats.push(_objectSpread(_objectSpread({}, queryStats(enemySubset, totalBattles)), {}, {
+          hero: hero.name
+        }));
+      }
+    };
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      if (_loop()) continue;
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  return {
+    playerHeroStats: playerHeroStats.sort(function (b1, b2) {
+      return b1.hero.localeCompare(b2.hero);
+    }),
+    enemyHeroStats: enemyHeroStats.sort(function (b1, b2) {
+      return b1.hero.localeCompare(b2.hero);
+    })
+  };
+}
+function getFirstPickStats(battles, HM) {
+  var battleList = getFirstPickSubset(Object.values(battles));
+  console.log(battles);
+  console.log(battleList);
+  if (battleList.length === 0) {
+    return [];
+  }
+  var totalBattles = battleList.length;
+  var grouped = {};
+  var _iterator2 = _createForOfIteratorHelper(battleList),
+    _step2;
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var b = _step2.value;
+      if (b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES].length === 0) continue; // skip any battle where player didn't get to pick a first unit
+      var hero = b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES][0];
+      if (!(hero in grouped)) grouped[hero] = {
+        wins: 0,
+        appearances: 0
+      };
+      grouped[hero].wins += b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN];
+      grouped[hero].appearances += 1;
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+  var result = Object.entries(grouped).map(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+      prime = _ref2[0],
+      stats = _ref2[1];
+    console.log("prime", prime);
+    var name = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM).name;
+    return {
+      hero: name,
+      wins: stats.wins,
+      appearances: stats.appearances,
+      win_rate: toPercent(stats.wins / stats.appearances),
+      appearance_rate: toPercent(stats.appearances / totalBattles),
+      '+/-': 2 * stats.wins - stats.appearances
+    };
+  });
+  result.sort(function (a, b) {
+    return b.appearances - a.appearances;
+  });
+  return result;
+}
+function getPrebanStats(battles, HM) {
+  //console.log(`Got HM: ${HM}`);
+
+  console.log(battles);
+  var emptyPrime = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName('Empty', HM).prime;
+  var battleList = Object.values(battles);
+  if (battleList.length === 0) {
+    return [];
+  }
+  var getValidPrimes = function getValidPrimes(col, index) {
+    return _toConsumableArray(new Set(battleList.map(function (b) {
+      return b[col][index];
+    }).filter(function (p) {
+      return p && p !== emptyPrime;
+    })));
+  };
+  var preban1Set = getValidPrimes(_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES, 0);
+  var preban2Set = getValidPrimes(_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES, 1);
+  var prebanSet = new Set([].concat(_toConsumableArray(preban1Set), _toConsumableArray(preban2Set)));
+  var prebans = [];
+  var _iterator3 = _createForOfIteratorHelper(prebanSet),
+    _step3;
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var prime = _step3.value;
+      prebans.push(prime);
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+  var _iterator4 = _createForOfIteratorHelper(prebanSet),
+    _step4;
+  try {
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var a = _step4.value;
+      var _iterator5 = _createForOfIteratorHelper(prebanSet),
+        _step5;
+      try {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var b = _step5.value;
+          if (a < b) prebans.push(a * b);
+        }
+      } catch (err) {
+        _iterator5.e(err);
+      } finally {
+        _iterator5.f();
+      }
+    }
+  } catch (err) {
+    _iterator4.e(err);
+  } finally {
+    _iterator4.f();
+  }
+  console.log("Prebans:", prebans);
+  var totalBattles = battleList.length;
+  var output = [];
+  var _loop2 = function _loop2() {
+    var preban = _prebans[_i];
+    var filtered = battleList.filter(function (b) {
+      return b["P1 Prebans Prime Product"] % preban === 0;
+    });
+    var appearances = filtered.length;
+    if (appearances < 1) {
+      return 1; // continue
+    }
+    var wins = filtered.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var appearanceRate = totalBattles > 0 ? appearances / totalBattles : 0;
+    var winRate = appearances > 0 ? wins / appearances : 0;
+    var plusMinus = 2 * wins - appearances;
+    output.push({
+      preban: HM.prime_pair_lookup[preban],
+      wins: wins,
+      appearances: appearances,
+      appearance_rate: toPercent(appearanceRate),
+      win_rate: toPercent(winRate),
+      '+/-': plusMinus
+    });
+  };
+  for (var _i = 0, _prebans = prebans; _i < _prebans.length; _i++) {
+    if (_loop2()) continue;
+  }
+  output.sort(function (a, b) {
+    return b.appearances - a.appearances;
+  });
+  return output;
+}
+function getGeneralStats(battles, HM) {
+  var battleList = Object.values(battles);
+  battleList.sort(function (b1, b2) {
+    return new Date(b1["Date/Time"]) - new Date(b2["Date/Time"]);
+  });
+  var totalBattles = battleList.length;
+  var totalGain = battleList.reduce(function (acc, b) {
+    return acc + b["Point Gain"];
+  }, 0);
+  var avgPPG = totalBattles > 0 ? totalGain / totalBattles : 0;
+
+  // create subsets for first pick and second pick battles
+  var fpBattles = getFirstPickSubset(battleList);
+  var spBattles = getSecondPickSubset(battleList);
+
+  // get counts for first pick and second pick battles
+  var fpCount = fpBattles.length;
+  var spCount = spBattles.length;
+
+  // calculate wins for first pick and second pick battles
+  var fpWins = fpBattles.reduce(function (acc, b) {
+    return acc + b.Win;
+  }, 0);
+  var spWins = spBattles.reduce(function (acc, b) {
+    return acc + b.Win;
+  }, 0);
+
+  // calculate rate of occurrence for first pick and second pick battles
+  var fpR = totalBattles ? fpCount / totalBattles : 0;
+  var spR = totalBattles ? spCount / totalBattles : 0;
+
+  // calculate win rate for first pick and second pick battles
+  var fpWR = fpCount ? fpWins / fpCount : 0;
+  var spWR = spCount ? spWins / spCount : 0;
+
+  // calculate total win rate
+  var winRate = totalBattles ? (fpWins + spWins) / totalBattles : 0;
+
+  // iterate through battles and calculate longest win/loss streaks
+  var maxWinStreak = 0,
+    maxLossStreak = 0,
+    winStreak = 0,
+    lossStreak = 0;
+  for (var _i2 = 0, _battleList = battleList; _i2 < _battleList.length; _i2++) {
+    var b = _battleList[_i2];
+    if (b.Win) {
+      winStreak += 1;
+      maxWinStreak = Math.max(maxWinStreak, winStreak);
+      lossStreak = 0;
+    } else {
+      winStreak = 0;
+      lossStreak += 1;
+      maxLossStreak = Math.max(maxLossStreak, lossStreak);
+    }
+  }
+  var NA = "N/A";
+  return {
+    "first_pick_count": fpCount,
+    "second_pick_count": spCount,
+    "first_pick_rate": fpCount ? toPercent(fpR) : NA,
+    "second_pick_rate": spCount ? toPercent(spR) : NA,
+    "first_pick_winrate": fpCount ? toPercent(fpWR) : NA,
+    "second_pick_winrate": spCount ? toPercent(spWR) : NA,
+    "total_winrate": totalBattles ? toPercent(winRate) : NA,
+    "total_battles": totalBattles,
+    "total_wins": fpWins + spWins,
+    "max_win_streak": maxWinStreak,
+    "max_loss_streak": maxLossStreak,
+    "avg_ppg": avgPPG.toFixed(2)
+  };
+}
+function getServerStats(battlesList) {
+  var allServerStats = [];
+  var totalBattles = battlesList.length;
+  var _loop3 = function _loop3() {
+    var server = _Object$values[_i3];
+    var subset = battlesList.filter(function (b) {
+      return b["P2 Server"] === server;
+    });
+    var count = subset.length;
+    var wins = subset.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var winRate = count > 0 ? wins / count : "N/A";
+    var frequency = totalBattles > 0 ? count / totalBattles : "N/A";
+    var firstPickGames = subset.filter(function (b) {
+      return b["First Pick"];
+    });
+    var fpWins = firstPickGames.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var secondPickGames = subset.filter(function (b) {
+      return !b["First Pick"];
+    });
+    var spWins = secondPickGames.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    allServerStats.push({
+      server: server,
+      count: count,
+      wins: wins,
+      win_rate: toPercent(winRate),
+      frequency: toPercent(frequency),
+      "+/-": 2 * wins - count,
+      fp_games: firstPickGames.length,
+      sp_games: secondPickGames.length,
+      fp_wr: firstPickGames.length > 0 ? toPercent(fpWins / firstPickGames.length) : "N/A",
+      sp_wr: secondPickGames.length > 0 ? toPercent(spWins / secondPickGames.length) : "N/A"
+    });
+  };
+  for (var _i3 = 0, _Object$values = Object.values(_references_js__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR); _i3 < _Object$values.length; _i3++) {
+    _loop3();
+  }
+  allServerStats.sort(function (a, b) {
+    return a.server.localeCompare(b.server);
+  });
+  return allServerStats;
+}
+var StatsBuilder = {
+  getHeroStats: getHeroStats,
+  getFirstPickStats: getFirstPickStats,
+  getPrebanStats: getPrebanStats,
+  getServerStats: getServerStats,
+  getGeneralStats: getGeneralStats
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StatsBuilder);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/user-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/e7/user-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+var userMapCacheKeyMap = {
+  world_global: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.GLOBAL_USERS,
+  world_eu: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.EU_USERS,
+  world_asia: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.ASIA_USERS,
+  world_jpn: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.JPN_USERS,
+  world_kor: _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.KOR_USERS
+};
+function createUser(userJSON, world_code) {
+  return {
+    id: userJSON.nick_no,
+    name: userJSON.nick_nm.toLowerCase(),
+    code: userJSON.code,
+    rank: userJSON.rank,
+    world_code: world_code
+  };
+}
+function getUserMapFromE7Server(_x) {
+  return _getUserMapFromE7Server.apply(this, arguments);
+}
+function _getUserMapFromE7Server() {
+  _getUserMapFromE7Server = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(world_code) {
+    var rawUserJSON;
+    return _regenerator().w(function (_context8) {
+      while (1) switch (_context8.n) {
+        case 0:
+          console.log("Getting user map for world code from E7 server: ".concat(world_code));
+          _context8.n = 1;
+          return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_2__["default"].fetchUserJSON(world_code);
+        case 1:
+          rawUserJSON = _context8.v;
+          if (rawUserJSON) {
+            _context8.n = 2;
+            break;
+          }
+          console.log("Could not get user map from E7 server for world code: ".concat(world_code));
+          return _context8.a(2, null);
+        case 2:
+          console.log("Got user map from E7 server for world code: ".concat(world_code));
+          return _context8.a(2, Object.fromEntries(rawUserJSON.users.map(function (user) {
+            return [user.nick_no, createUser(user, world_code)];
+          })));
+      }
+    }, _callee8);
+  }));
+  return _getUserMapFromE7Server.apply(this, arguments);
+}
+var UserManager = {
+  getUserMap: function () {
+    var _getUserMap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(world_code) {
+      var cachedUserMap, fetchedUserMap;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            console.log("Getting user map for world code: ".concat(world_code));
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].get(userMapCacheKeyMap[world_code]);
+          case 1:
+            cachedUserMap = _context.v;
+            if (!(cachedUserMap !== null)) {
+              _context.n = 2;
+              break;
+            }
+            console.log("Got user map from cache");
+            return _context.a(2, cachedUserMap);
+          case 2:
+            _context.n = 3;
+            return getUserMapFromE7Server(world_code);
+          case 3:
+            fetchedUserMap = _context.v;
+            _context.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].cache(userMapCacheKeyMap[world_code], fetchedUserMap);
+          case 4:
+            return _context.a(2, fetchedUserMap);
+        }
+      }, _callee);
+    }));
+    function getUserMap(_x2) {
+      return _getUserMap.apply(this, arguments);
+    }
+    return getUserMap;
+  }(),
+  findUser: function () {
+    var _findUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(userData) {
+      var useFlaskServer, _iterator, _step, world_code, userMap, users, user, _ref, name, _world_code, _userMap, _users, lowerCaseName, _user, flaskServerResponse, _t;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            useFlaskServer = false; // attempt to find user through client-side means
+            // try to find user by ID
+            if (!userData.id) {
+              _context2.n = 10;
+              break;
+            }
+            _iterator = _createForOfIteratorHelper(_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES);
+            _context2.p = 1;
+            _iterator.s();
+          case 2:
+            if ((_step = _iterator.n()).done) {
+              _context2.n = 6;
+              break;
+            }
+            world_code = _step.value;
+            _context2.n = 3;
+            return this.getUserMap(world_code);
+          case 3:
+            userMap = _context2.v;
+            users = Object.values(userMap);
+            if (!(users.length > 0)) {
+              console.log("User map had no users, falling back to flask server for world code: ".concat(world_code));
+              useFlaskServer = true;
+            }
+            user = users.find(function (user) {
+              return user.id === userData.id;
+            });
+            if (!user) {
+              _context2.n = 4;
+              break;
+            }
+            console.log("Found user: ".concat(JSON.stringify(user), " in world code: ").concat(world_code));
+            return _context2.a(2, {
+              user: user,
+              error: false
+            });
+          case 4:
+            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(world_code, " from client-side means"));
+          case 5:
+            _context2.n = 2;
+            break;
+          case 6:
+            _context2.n = 8;
+            break;
+          case 7:
+            _context2.p = 7;
+            _t = _context2.v;
+            _iterator.e(_t);
+          case 8:
+            _context2.p = 8;
+            _iterator.f();
+            return _context2.f(8);
+          case 9:
+            _context2.n = 15;
+            break;
+          case 10:
+            if (!(userData.name && userData.world_code)) {
+              _context2.n = 14;
+              break;
+            }
+            _ref = [userData.name, userData.world_code], name = _ref[0], _world_code = _ref[1];
+            _context2.n = 11;
+            return this.getUserMap(_world_code);
+          case 11:
+            _userMap = _context2.v;
+            _users = Object.values(_userMap);
+            if (!(_users.length > 0)) {
+              console.log("User map had no users, falling back to flask server for world code: ".concat(_world_code));
+              useFlaskServer = true;
+            }
+            lowerCaseName = name.toLowerCase();
+            _user = _users.find(function (user) {
+              return lowerCaseName === user.name.toLowerCase();
+            });
+            if (!_user) {
+              _context2.n = 12;
+              break;
+            }
+            console.log("Found user: ".concat(JSON.stringify(_user), " in world code: ").concat(_world_code));
+            return _context2.a(2, {
+              user: _user,
+              error: false
+            });
+          case 12:
+            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(_world_code, " from client-side means"));
+          case 13:
+            _context2.n = 15;
+            break;
+          case 14:
+            console.error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");
+            return _context2.a(2, {
+              user: null,
+              error: "Must pass a user object with either user.name and user.world_code or user.id to fetch user"
+            });
+          case 15:
+            if (!useFlaskServer) {
+              _context2.n = 18;
+              break;
+            }
+            console.log("Failed to find user through client-side means; falling back to flask server");
+            // failed to find user through client-side means; make request to flask server
+            _context2.n = 16;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__["default"].fetchUser(userData);
+          case 16:
+            flaskServerResponse = _context2.v;
+            if (!flaskServerResponse.error) {
+              _context2.n = 17;
+              break;
+            }
+            return _context2.a(2, {
+              user: null,
+              error: flaskServerResponse.error
+            });
+          case 17:
+            return _context2.a(2, {
+              user: flaskServerResponse.user,
+              error: false
+            });
+          case 18:
+            return _context2.a(2, {
+              user: null,
+              error: "Could not find user"
+            });
+          case 19:
+            return _context2.a(2);
+        }
+      }, _callee2, this, [[1, 7, 8, 9]]);
+    }));
+    function findUser(_x3) {
+      return _findUser.apply(this, arguments);
+    }
+    return findUser;
+  }(),
+  addP2ServersByID: function () {
+    var _addP2ServersByID = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(battles) {
+      var _this = this;
+      var battleList, userMaps, _t2;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            console.log("Adding P2 servers by ID...");
+            battleList = Object.values(battles);
+            userMaps = [];
+            _context3.p = 1;
+            _context3.n = 2;
+            return Promise.all(_toConsumableArray(_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES).map(function (world_code) {
+              return _this.getUserMap(world_code);
+            }));
+          case 2:
+            userMaps = _context3.v;
+            _context3.n = 4;
+            break;
+          case 3:
+            _context3.p = 3;
+            _t2 = _context3.v;
+            console.error(_t2);
+            battleList.forEach(function (battle) {
+              return battle["P2 Server"] = "Not Found";
+            });
+            return _context3.a(2);
+          case 4:
+            if (!(userMaps.length === 0)) {
+              _context3.n = 5;
+              break;
+            }
+            console.error("Failed to get any user maps");
+            battleList.forEach(function (battle) {
+              return battle["P2 Server"] = "Not Found";
+            });
+            return _context3.a(2);
+          case 5:
+            battleList.forEach(function (battle) {
+              var _userMaps$find;
+              var world_code = (_userMaps$find = userMaps.find(function (userMap) {
+                return userMap[battle["P2 ID"]];
+              })) === null || _userMaps$find === void 0 ? void 0 : _userMaps$find[battle["P2 ID"]].world_code;
+              if (world_code) {
+                battle["P2 Server"] = _this.convertServerStr(world_code);
+              } else {
+                console.log("Could not find user with ID: ".concat(battle["P2 ID"], " in client-side means ; typeof: ").concat(_typeof(battle["P2 ID"]), ", id type: ").concat(_typeof(Object.keys(USER_MAPS[0])[0])));
+                battle["P2 Server"] = "Not Found";
+              }
+            });
+          case 6:
+            return _context3.a(2);
+        }
+      }, _callee3, null, [[1, 3]]);
+    }));
+    function addP2ServersByID(_x4) {
+      return _addP2ServersByID.apply(this, arguments);
+    }
+    return addP2ServersByID;
+  }(),
+  setUser: function () {
+    var _setUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(userData) {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER, userData);
+          case 1:
+            return _context4.a(2);
+        }
+      }, _callee4);
+    }));
+    function setUser(_x5) {
+      return _setUser.apply(this, arguments);
+    }
+    return setUser;
+  }(),
+  getUser: function () {
+    var _getUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
+          case 1:
+            return _context5.a(2, _context5.v);
+        }
+      }, _callee5);
+    }));
+    function getUser() {
+      return _getUser.apply(this, arguments);
+    }
+    return getUser;
+  }(),
+  clearUserData: function () {
+    var _clearUserData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            _context6.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].clearUserData();
+          case 1:
+            return _context6.a(2);
+        }
+      }, _callee6);
+    }));
+    function clearUserData() {
+      return _clearUserData.apply(this, arguments);
+    }
+    return clearUserData;
+  }(),
+  clearUserDataLists: function () {
+    var _clearUserDataLists = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            _context7.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.GLOBAL_USERS);
+          case 1:
+            _context7.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.EU_USERS);
+          case 2:
+            _context7.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.ASIA_USERS);
+          case 3:
+            _context7.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.JPN_USERS);
+          case 4:
+            _context7.n = 5;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.KOR_USERS);
+          case 5:
+            return _context7.a(2);
+        }
+      }, _callee7);
+    }));
+    function clearUserDataLists() {
+      return _clearUserDataLists.apply(this, arguments);
+    }
+    return clearUserDataLists;
+  }(),
+  convertServerStr: function convertServerStr(serverStr) {
+    return _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_TO_CLEAN_STR[serverStr];
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/exports.js":
+/*!*************************************!*\
+  !*** ./static/assets/js/exports.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CSVParse: () => (/* reexport safe */ _csv_parse_js__WEBPACK_IMPORTED_MODULE_2__["default"]),
+/* harmony export */   CardContent: () => (/* reexport safe */ _populate_content_js__WEBPACK_IMPORTED_MODULE_1__.CardContent),
+/* harmony export */   ContentManager: () => (/* reexport safe */ _content_manager_js__WEBPACK_IMPORTED_MODULE_5__["default"]),
+/* harmony export */   PYAPI: () => (/* reexport safe */ _apis_py_API_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* harmony export */   PageUtils: () => (/* reexport safe */ _pages_page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_3__["default"]),
+/* harmony export */   RegExps: () => (/* reexport safe */ _e7_regex_js__WEBPACK_IMPORTED_MODULE_4__.RegExps),
+/* harmony export */   SavedFilters: () => (/* reexport safe */ _e7_saved_filters_js__WEBPACK_IMPORTED_MODULE_6__["default"]),
+/* harmony export */   Tables: () => (/* reexport safe */ _populate_content_js__WEBPACK_IMPORTED_MODULE_1__.Tables)
+/* harmony export */ });
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _populate_content_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./populate_content.js */ "./static/assets/js/populate_content.js");
+/* harmony import */ var _csv_parse_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./csv-parse.js */ "./static/assets/js/csv-parse.js");
+/* harmony import */ var _pages_page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages/page-utilities/page-utils.js */ "./static/assets/js/pages/page-utilities/page-utils.js");
+/* harmony import */ var _e7_regex_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./e7/regex.js */ "./static/assets/js/e7/regex.js");
+/* harmony import */ var _content_manager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./content-manager.js */ "./static/assets/js/content-manager.js");
+/* harmony import */ var _e7_saved_filters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./e7/saved-filters.js */ "./static/assets/js/e7/saved-filters.js");
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/context-references.js":
+/*!*********************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/context-references.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CONTEXT: () => (/* binding */ CONTEXT)
+/* harmony export */ });
+// Reference for context flags that are used within single pages to communicate accross vies for the page
+
+var SOURCE_CONTEXT_VALUES = {
+  QUERY: "query",
+  UPLOAD: "upload",
+  STATS: "stats"
+};
+var CONTEXT_VALUES = {
+  BOOL: {
+    TRUE: true,
+    FALSE: false
+  },
+  SOURCE: SOURCE_CONTEXT_VALUES,
+  ERROR_MSG: null
+};
+var CONTEXT_KEYS = {
+  QUERY: "QUERY",
+  SOURCE: "SOURCE",
+  ERROR_MSG: "ERROR_MSG",
+  AUTO_ZOOM: "AUTO_ZOOM",
+  EDITOR_INITIALIZED: "EDITOR_INITIALIZED"
+};
+var CONTEXT = {
+  KEYS: CONTEXT_KEYS,
+  VALUES: CONTEXT_VALUES
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/page-state-manager.js":
+/*!*********************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/page-state-manager.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   HOME_PAGE_STATES: () => (/* binding */ HOME_PAGE_STATES),
+/* harmony export */   PageStateManager: () => (/* binding */ PageStateManager),
+/* harmony export */   homePageSetView: () => (/* binding */ homePageSetView),
+/* harmony export */   validateState: () => (/* binding */ validateState)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../cache-manager.js */ "./static/assets/js/cache-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+var HOME_PAGE_STATES = {
+  SELECT_DATA: "select-data",
+  SHOW_STATS: "show-stats",
+  LOAD_DATA: "load-data"
+};
+var VALIDATION_SET = new Set(Object.values(HOME_PAGE_STATES));
+function validateState(state) {
+  if (!VALIDATION_SET.has(state)) {
+    console.error("Invalid page state: ".concat(state));
+    return false;
+  }
+  return true;
+}
+function getContentBodyID(state) {
+  return "".concat(state, "-body");
+}
+var PageStateManager = {
+  getState: function () {
+    var _getState = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HOME_PAGE_STATE);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 4;
+            break;
+          case 3:
+            _t3 = HOME_PAGE_STATES.SELECT_DATA;
+          case 4:
+            return _context.a(2, _t3);
+        }
+      }, _callee);
+    }));
+    function getState() {
+      return _getState.apply(this, arguments);
+    }
+    return getState;
+  }(),
+  setState: function () {
+    var _setState = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(state) {
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            if (validateState(state)) {
+              _context2.n = 1;
+              break;
+            }
+            return _context2.a(2);
+          case 1:
+            _context2.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HOME_PAGE_STATE, state);
+          case 2:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    function setState(_x) {
+      return _setState.apply(this, arguments);
+    }
+    return setState;
+  }(),
+  resetState: function () {
+    var _resetState = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HOME_PAGE_STATE);
+          case 1:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function resetState() {
+      return _resetState.apply(this, arguments);
+    }
+    return resetState;
+  }()
+};
+function homePageSetView(state) {
+  if (!validateState(state)) return;
+  for (var _i = 0, _Object$values = Object.values(HOME_PAGE_STATES); _i < _Object$values.length; _i++) {
+    var otherState = _Object$values[_i];
+    if (state === otherState) continue;
+    var _contentBodyID = getContentBodyID(otherState);
+    console.log("Hiding ".concat(_contentBodyID));
+    document.getElementById(_contentBodyID).classList.add("d-none");
+  }
+  var contentBodyID = getContentBodyID(state);
+  console.log("Showing ".concat(contentBodyID));
+  document.getElementById(contentBodyID).classList.remove("d-none");
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/page-utils.js":
+/*!*************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/page-utils.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _e7_battle_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../e7/battle-manager.js */ "./static/assets/js/e7/battle-manager.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../e7/hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../e7/filter-syntax-parser.js */ "./static/assets/js/e7/filter-syntax-parser.js");
+/* harmony import */ var _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../e7/artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+/* harmony import */ var _context_references_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _page_state_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+
+
+var PageUtils = {
+  queryAndCacheBattles: function () {
+    var _queryAndCacheBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(user, stateDispatcher, contextFlags, HM) {
+      var artifacts, response, error, errorMSG, data, rawBattles;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_4__["default"].getArtifacts();
+          case 1:
+            artifacts = _context.v;
+            _context.n = 2;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].rsFetchBattleData(user);
+          case 2:
+            response = _context.v;
+            if (response.ok) {
+              _context.n = 4;
+              break;
+            }
+            _context.n = 3;
+            return response.json().error;
+          case 3:
+            error = _context.v;
+            errorMSG = "Error while fetching data: ".concat(error);
+            console.error("Error while fetching data: ".concat(error));
+            contextFlags[_context_references_js__WEBPACK_IMPORTED_MODULE_5__.CONTEXT.KEYS.ERROR_MSG] = errorMSG;
+            stateDispatcher(_page_state_manager_js__WEBPACK_IMPORTED_MODULE_6__.HOME_PAGE_STATES.SELECT_DATA, contextFlags);
+            _context.n = 7;
+            break;
+          case 4:
+            _context.n = 5;
+            return response.json();
+          case 5:
+            data = _context.v;
+            rawBattles = data.battles;
+            _context.n = 6;
+            return _e7_battle_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cacheQuery(rawBattles, HM, artifacts);
+          case 6:
+            console.log("Cached queried battles");
+          case 7:
+            return _context.a(2);
+        }
+      }, _callee);
+    }));
+    function queryAndCacheBattles(_x, _x2, _x3, _x4) {
+      return _queryAndCacheBattles.apply(this, arguments);
+    }
+    return queryAndCacheBattles;
+  }(),
+  addStrParam: function addStrParam(URL, key, val) {
+    var encodedParam = encodeURIComponent(val);
+    URL = "".concat(URL, "?").concat(key, "=").concat(encodedParam);
+    return URL;
+  },
+  addStrParams: function addStrParams(URL, obj) {
+    for (var key in obj) {
+      URL = this.addStrParam(URL, key, obj[key]);
+    }
+    return URL;
+  },
+  validateFilterSyntax: function () {
+    var _validateFilterSyntax = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(str) {
+      var HM, filterMSG, _t;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].getHeroManager();
+          case 1:
+            HM = _context2.v;
+            filterMSG = document.getElementById("filterMSG");
+            _context2.p = 2;
+            _context2.n = 3;
+            return _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_3__["default"].createAndParse(str, HM);
+          case 3:
+            filterMSG.textContent = "Validation Passed";
+            filterMSG.classList.remove("text-danger");
+            filterMSG.classList.add("text-safe");
+            return _context2.a(2, true);
+          case 4:
+            _context2.p = 4;
+            _t = _context2.v;
+            console.error(_t);
+            filterMSG.textContent = "Validation Failed: ".concat(_t.message);
+            filterMSG.classList.remove("text-safe");
+            filterMSG.classList.add("text-danger");
+            return _context2.a(2, false);
+        }
+      }, _callee2, null, [[2, 4]]);
+    }));
+    function validateFilterSyntax(_x5) {
+      return _validateFilterSyntax.apply(this, arguments);
+    }
+    return validateFilterSyntax;
+  }(),
+  setScrollPercent: function setScrollPercent(percent) {
+    var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    var targetScroll = percent / 100 * maxScroll;
+    // Temporarily disable CSS smooth scrolling
+    var html = document.documentElement;
+    var prevScrollBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";
+    window.scrollTo({
+      top: targetScroll
+    });
+
+    // Restore previous behavior
+    html.style.scrollBehavior = prevScrollBehavior;
+  },
+  getScrollPercent: function getScrollPercent() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var scrollHeight = document.documentElement.scrollHeight;
+    var clientHeight = window.innerHeight;
+    var maxScroll = scrollHeight - clientHeight;
+    if (maxScroll === 0) return 0; // avoid division by zero
+
+    return scrollTop / maxScroll * 100;
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PageUtils);
+
+/***/ }),
+
+/***/ "./static/assets/js/populate_content.js":
+/*!**********************************************!*\
+  !*** ./static/assets/js/populate_content.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CardContent: () => (/* binding */ CardContent),
+/* harmony export */   Tables: () => (/* binding */ Tables)
+/* harmony export */ });
+/* harmony import */ var _e7_references__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./e7/references */ "./static/assets/js/e7/references.js");
+
+function destroyDataTable(tableSelector) {
+  if ($.fn.dataTable.isDataTable(tableSelector)) {
+    tableSelector.DataTable().destroy();
+  }
+}
+var Tables = {};
+function convertPercentToColorClass(str) {
+  var num = Number(str.replace("%", ""));
+  if (num > 50) {
+    return "text-over50";
+  } else if (num < 50) {
+    return "text-below50";
+  } else {
+    return "";
+  }
+}
+Tables.functions = {
+  populateHeroStatsTable: function populateHeroStatsTable(tableid, data) {
+    var tbody = document.getElementById("".concat(tableid, "Body"));
+    tbody.innerHTML = ""; // Clear existing rows
+
+    data.forEach(function (item) {
+      var row = document.createElement("tr");
+
+      // Populate each <td> in order
+      row.innerHTML = "\n            <td>".concat(item.hero, "</td>\n            <td>").concat(item.games_won, "</td>\n            <td>").concat(item.games_appeared, "</td>\n            <td>").concat(item.appearance_rate, "</td>\n            <td>").concat(item.win_rate, "</td>\n            <td>").concat(item["+/-"], "</td>\n            ");
+      tbody.appendChild(row);
+    });
+    var person = tableid.includes("Player") ? "Player" : "Enemy";
+    var tableSelector = $("#".concat(tableid));
+    destroyDataTable(tableSelector);
+    var table = tableSelector.DataTable({
+      layout: {
+        topStart: "buttons"
+      },
+      language: {
+        info: "Total rows: _TOTAL_"
+      },
+      order: [[3, "desc"]],
+      // order by pick rate desc
+      buttons: {
+        name: "primary",
+        buttons: ["copy", {
+          extend: "csv",
+          text: "CSV",
+          filename: person + " Hero Stats"
+        }, {
+          extend: "excel",
+          text: "Excel",
+          filename: person + " Hero Stats"
+        }]
+      },
+      columnDefs: [{
+        targets: "_all",
+        className: "nowrap"
+      }, {
+        targets: 4,
+        // "win_rate" column
+        createdCell: function createdCell(td, cellData) {
+          var num = Number(cellData.replace("%", ""));
+          if (num < 50) {
+            td.style.color = "red";
+          } else if (num > 50) {
+            td.style.color = "mediumspringgreen";
+          }
+        }
+      }],
+      pageLength: 50,
+      scrollY: "300px",
+      deferRender: true,
+      scroller: true,
+      scrollCollapse: false
+    });
+  },
+  populateSeasonDetailsTable: function populateSeasonDetailsTable(tableid, data) {
+    var tbody = document.getElementById("".concat(tableid, "Body"));
+    tbody.innerHTML = ""; // Clear existing rows
+
+    data.forEach(function (item) {
+      var row = document.createElement("tr");
+
+      // Populate each <td> in order
+      row.innerHTML = "\n            <td>".concat(item["Season Number"], "</td>\n            <td>").concat(item["Season"], "</td>\n            <td>").concat(item["Start"], "</td>\n            <td>").concat(item["End"], "</td>\n            <td>").concat(item["Status"], "</td>\n            ");
+      tbody.appendChild(row);
+    });
+  },
+  populateServerStatsTable: function populateServerStatsTable(tableid, data) {
+    var tbody = document.getElementById("".concat(tableid, "-body"));
+    tbody.innerHTML = ""; // Clear existing rows
+
+    data.forEach(function (item) {
+      var row = document.createElement("tr");
+
+      // Populate each <td> in order
+      row.innerHTML = "\n            <td>".concat(item["server"], "</td>\n            <td>").concat(item["count"], "</td>\n            <td>").concat(item["frequency"], "</td>\n            <td>").concat(item["wins"], "</td>\n            <td class=\"").concat(convertPercentToColorClass(item["win_rate"]), "\">").concat(item["win_rate"], "</td>\n            <td>").concat(item["+/-"], "</td>\n            <td class=\"").concat(convertPercentToColorClass(item["fp_wr"]), "\">").concat(item["fp_wr"], "</td>\n            <td class=\"").concat(convertPercentToColorClass(item["sp_wr"]), "\">").concat(item["sp_wr"], "</td>\n            ");
+      tbody.appendChild(row);
+    });
+  },
+  populatePlayerPrebansTable: function populatePlayerPrebansTable(tableid, data) {
+    var tbody = document.getElementById("".concat(tableid, "Body"));
+    tbody.innerHTML = ""; // Clear existing rows
+
+    data.forEach(function (item) {
+      var row = document.createElement("tr");
+
+      // Populate each <td> in order
+      row.innerHTML = "\n            <td>".concat(item["preban"], "</td>\n            <td>").concat(item["appearances"], "</td>\n            <td>").concat(item["appearance_rate"], "</td>\n            <td class=\"").concat(convertPercentToColorClass(item["win_rate"]), "\">").concat(item["win_rate"], "</td>\n            <td>").concat(item["+/-"], "</td>\n            ");
+      tbody.appendChild(row);
+    });
+  },
+  populatePlayerFirstPickTable: function populatePlayerFirstPickTable(tableid, data) {
+    var tbody = document.getElementById("".concat(tableid, "Body"));
+    tbody.innerHTML = ""; // Clear existing rows
+
+    data.forEach(function (item) {
+      var row = document.createElement("tr");
+
+      // Populate each <td> in order
+      row.innerHTML = "\n            <td>".concat(item["hero"], "</td>\n            <td>").concat(item["appearances"], "</td>\n            <td>").concat(item["appearance_rate"], "</td>\n            <td class=\"").concat(convertPercentToColorClass(item["win_rate"]), "\">").concat(item["win_rate"], "</td>\n            <td>").concat(item["+/-"], "</td>\n            ");
+      tbody.appendChild(row);
+    });
+  },
+  populateFullBattlesTable: function populateFullBattlesTable(tableid, data, user) {
+    var tbody = document.getElementById("".concat(tableid, "Body"));
+    tbody.innerHTML = ""; // Clear existing rows
+
+    var name;
+    if (user) {
+      name = user.name;
+    } else {
+      name = data.length === 0 ? "Empty" : "UID(".concat(data[0]["P1 ID"], ")");
+    }
+    data.forEach(function (item) {
+      var row = document.createElement("tr");
+      row.innerHTML = "\n        <td>".concat(item["Season"], "</td>\n        <td>").concat(item["Date/Time"], "</td>\n        <td>").concat(item["Seconds"], "</td>\n        <td>").concat(item["Turns"], "</td>\n        <td>").concat(item["Seq Num"], "</td>\n        <td>").concat(item["P1 ID"], "</td>\n        <td>").concat(item["P1 Server"], "</td>\n        <td>").concat(item["P2 ID"], "</td>\n        <td>").concat(item["P2 Server"], "</td>\n        <td>").concat(item["P1 League"], "</td>\n        <td>").concat(item["P2 League"], "</td>\n        <td>").concat(item["P1 Points"], "</td>\n        <td>").concat(item["Point Gain"], "</td>\n        <td>").concat(item["Win"], "</td>\n        <td>").concat(item["First Pick"], "</td>\n        <td>").concat(JSON.stringify(item["CR Bar"]), "</td>\n        <td>").concat(item["First Turn"], "</td>\n        <td>").concat(item["First Turn Hero"], "</td>\n        <td>").concat(JSON.stringify(item["P1 Prebans"]), "</td>\n        <td>").concat(JSON.stringify(item["P2 Prebans"]), "</td>\n        <td>").concat(JSON.stringify(item["P1 Picks"]), "</td>\n        <td>").concat(JSON.stringify(item["P2 Picks"]), "</td>\n        <td>").concat(item["P1 Postban"], "</td>\n        <td>").concat(item["P2 Postban"], "</td>\n        <td>").concat(JSON.stringify(item["P1 Equipment"]), "</td>\n        <td>").concat(JSON.stringify(item["P2 Equipment"]), "</td>\n        <td>").concat(JSON.stringify(item["P1 Artifacts"]), "</td>\n        <td>").concat(JSON.stringify(item["P2 Artifacts"]), "</td>\n        <td>").concat(item["P1 MVP"], "</td>\n        <td>").concat(item["P2 MVP"], "</td>\n    ");
+      tbody.appendChild(row);
+    });
+    var fname = "".concat(name, " Battle Data");
+    var tableSelector = $("#BattlesTable");
+    destroyDataTable(tableSelector);
+    var table = $("#BattlesTable").DataTable({
+      layout: {
+        topStart: "buttons"
+      },
+      language: {
+        info: "Total rows: _TOTAL_"
+      },
+      order: [[0, "desc"]],
+      // Sort by Date/Time desc by default
+      columnDefs: [{
+        targets: "_all",
+        className: "nowrap"
+      }, {
+        targets: 13,
+        // Win column
+        createdCell: function createdCell(td, cellData) {
+          if (cellData === "true") {
+            td.style.color = "mediumspringgreen";
+          } else if (cellData === "false") {
+            td.style.color = "red";
+          }
+        }
+      }, {
+        targets: 14,
+        // First Pick column
+        createdCell: function createdCell(td, cellData) {
+          if (cellData === "true") {
+            td.style.color = "deepskyblue";
+          }
+        }
+      }],
+      buttons: {
+        name: "primary",
+        buttons: ["copy", {
+          extend: "csv",
+          text: "CSV",
+          filename: fname
+        }, {
+          extend: "excel",
+          text: "Excel",
+          filename: fname
+        }]
+      },
+      pageLength: 50,
+      scrollY: "300px",
+      deferRender: true,
+      scroller: true,
+      scrollCollapse: false,
+      columns: _e7_references__WEBPACK_IMPORTED_MODULE_0__.COLUMNS_EXPANDED.map(function (col) {
+        return {
+          data: col
+        };
+      })
+    });
+    return table;
+  },
+  replaceDatatableData: function replaceDatatableData(datatableReference, data) {
+    datatableReference.clear().rows.add(data).draw();
+  }
+};
+var CardContent = {};
+CardContent.functions = {
+  populateGeneralStats: function populateGeneralStats(general_stats) {
+    document.getElementById("total-battles").textContent = general_stats.total_battles;
+    document.getElementById("first-pick-count").textContent = general_stats.first_pick_count;
+    document.getElementById("first-pick-rate").textContent = " (".concat(general_stats.first_pick_rate, ")");
+    document.getElementById("second-pick-count").textContent = general_stats.second_pick_count;
+    document.getElementById("second-pick-rate").textContent = " (".concat(general_stats.second_pick_rate, ")");
+    document.getElementById("total-winrate").textContent = general_stats.total_winrate;
+    document.getElementById("first-pick-winrate").textContent = general_stats.first_pick_winrate;
+    document.getElementById("second-pick-winrate").textContent = general_stats.second_pick_winrate;
+    document.getElementById("total-wins").textContent = general_stats.total_wins;
+    document.getElementById("max-win-streak").textContent = general_stats.max_win_streak;
+    document.getElementById("max-loss-streak").textContent = general_stats.max_loss_streak;
+    document.getElementById("avg-ppg").textContent = general_stats.avg_ppg;
+  },
+  populateRankPlot: function populateRankPlot(rank_plot_html) {
+    var container = document.getElementById("rank-plot-container");
+    container.innerHTML = rank_plot_html;
+
+    // Extract and re-execute any <script> in the injected HTML
+    var scripts = container.querySelectorAll("script");
+    scripts.forEach(function (script) {
+      var newScript = document.createElement("script");
+      if (script.src) {
+        newScript.src = script.src;
+      } else {
+        newScript.textContent = script.textContent;
+      }
+      document.body.appendChild(newScript); // or container.appendChild if it's inline
+    });
+    setTimeout(function () {
+      window.dispatchEvent(new Event("resize"));
+    }, 10);
+  }
+};
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
+(() => {
+"use strict";
+/*!*****************************************!*\
+  !*** ./static/assets/js/pages/stats.js ***!
+  \*****************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../exports.js */ "./static/assets/js/exports.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+console.log("Attaching DOMContentLoaded listener");
+document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+  var params, paramObj, autoZoomCheckbox, user, filterMSG, seasonDetails, stats, battleTable, filterBattleTableCheckbox, textarea, editor, appliedFilter, filterForm, _t;
+  return _regenerator().w(function (_context5) {
+    while (1) switch (_context5.n) {
+      case 0:
+        params = new URLSearchParams(window.location.search);
+        paramObj = Object.fromEntries(params.entries());
+        console.log("GOT PARAMS:", paramObj);
+        autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+        _context5.n = 1;
+        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFlag("autoZoom");
+      case 1:
+        autoZoomCheckbox.checked = _context5.v;
+        autoZoomCheckbox.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+          return _regenerator().w(function (_context) {
+            while (1) switch (_context.n) {
+              case 0:
+                _context.n = 1;
+                return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFlag("autoZoom", autoZoomCheckbox.checked);
+              case 1:
+                return _context.a(2);
+            }
+          }, _callee);
+        })));
+        _context5.n = 2;
+        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.getUser();
+      case 2:
+        user = _context5.v;
+        if (!user) {
+          window.location.href = URLS.addStrParam(URLS.userQueryURL, "errorMSG", "Type1: no user"); //URLS.userQueryURL;
+        }
+        if (params.get("errorMSG")) {
+          filterMSG = document.getElementById("filterMSG");
+          filterMSG.textContent = params.get("errorMSG");
+          filterMSG.classList.remove("text-safe");
+          filterMSG.classList.add("text-danger");
+        }
+        document.getElementById("switch-user-nav").addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+          return _regenerator().w(function (_context2) {
+            while (1) switch (_context2.n) {
+              case 0:
+                console.log("Clearing User Data");
+                _context2.n = 1;
+                return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.clearUserData();
+              case 1:
+                window.location.href = URLS.userQueryURL;
+              case 2:
+                return _context2.a(2);
+            }
+          }, _callee2);
+        })));
+        console.log("POPULATING DATA PROCESS INITIATED");
+        _context5.p = 3;
+        console.log("Getting Season Details");
+        _context5.n = 4;
+        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.SeasonManager.getSeasonDetails();
+      case 4:
+        seasonDetails = _context5.v;
+        console.log("Got season details:", seasonDetails, _typeof(seasonDetails));
+        console.log("Getting Stats");
+        _context5.n = 5;
+        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getStats();
+      case 5:
+        stats = _context5.v;
+        //console.log("GOT STATS: ", JSON.stringify(stats));
+
+        console.time("populateTables");
+        console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS");
+        _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateSeasonDetailsTable("SeasonDetails", seasonDetails);
+        _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateHeroStatsTable("PlayerTable", stats.playerHeroStats);
+        _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateHeroStatsTable("OpponentTable", stats.enemyHeroStats);
+        _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populatePlayerFirstPickTable("FirstPickStats", stats.firstPickStats);
+        _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populatePlayerPrebansTable("PrebanStats", stats.prebanStats);
+        _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateServerStatsTable("server-stats", stats.serverStats);
+        battleTable = _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.populateFullBattlesTable("BattlesTable", stats.battles, user);
+        _exports_js__WEBPACK_IMPORTED_MODULE_0__.CardContent.functions.populateGeneralStats(stats.generalStats);
+        _exports_js__WEBPACK_IMPORTED_MODULE_0__.CardContent.functions.populateRankPlot(stats.plotContent);
+        console.log("FINISHED POPULATING");
+        console.timeEnd("populateTables");
+        console.log("Setting listener for filter-battle-table checkbox");
+        filterBattleTableCheckbox = document.getElementById("filter-battle-table");
+        filterBattleTableCheckbox.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+          return _regenerator().w(function (_context3) {
+            while (1) switch (_context3.n) {
+              case 0:
+                if (!filterBattleTableCheckbox.checked) {
+                  _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.replaceDatatableData(battleTable, stats.battles);
+                } else {
+                  _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.replaceDatatableData(battleTable, stats.filteredBattles);
+                }
+              case 1:
+                return _context3.a(2);
+            }
+          }, _callee3);
+        })));
+        _context5.n = 7;
+        break;
+      case 6:
+        _context5.p = 6;
+        _t = _context5.v;
+        console.error("Error loading data:", _t);
+      case 7:
+        // render content once all data is loaded
+        document.getElementById("content-body").classList.remove("d-none");
+        CodeMirror.defineMode("filterSyntax", function () {
+          return {
+            token: function token(stream, state) {
+              return _exports_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.tokenMatch(stream);
+            }
+          };
+        });
+        textarea = document.getElementById("codeArea");
+        editor = CodeMirror.fromTextArea(textarea, {
+          mode: "filterSyntax",
+          lineNumbers: true,
+          theme: "default"
+        });
+        editor.setSize(null, 185);
+        _context5.n = 8;
+        return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFilterStr();
+      case 8:
+        appliedFilter = _context5.v;
+        if (appliedFilter) {
+          editor.setValue(appliedFilter);
+        }
+
+        // Logic for adding premade filters to filter pane
+        document.getElementById("premade-filters").addEventListener("click", function (event) {
+          console.log("Attempting to add a premade filter");
+          event.preventDefault();
+          var target = event.target.closest(".dropdown-item");
+          if (!target) return;
+          var filterName = target.textContent.trim();
+          console.log("Target found:", filterName);
+          var currStr = editor.getValue();
+          var newStr = _exports_js__WEBPACK_IMPORTED_MODULE_0__.SavedFilters.extendFilters(currStr, filterName);
+          editor.setValue(newStr);
+        });
+
+        // Logic for submit buttons on filter pane
+        filterForm = document.getElementById("filterForm");
+        filterForm.addEventListener("submit", /*#__PURE__*/function () {
+          var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(event) {
+            var clickedButton, action, syntaxStr, validFilter, _autoZoomCheckbox, autoZoomFlag, loadParams, _loadParams;
+            return _regenerator().w(function (_context4) {
+              while (1) switch (_context4.n) {
+                case 0:
+                  event.preventDefault(); // Prevent actual form submission to server
+
+                  // Ensure value is synced back to textarea before submit ; not strictly necessary since processed client-side
+                  document.getElementById("codeArea").value = editor.getValue();
+                  console.log("Processing Filter Action");
+                  clickedButton = event.submitter;
+                  action = clickedButton === null || clickedButton === void 0 ? void 0 : clickedButton.value;
+                  syntaxStr = editor.getValue();
+                  if (!(action === "apply")) {
+                    _context4.n = 4;
+                    break;
+                  }
+                  _context4.n = 1;
+                  return _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.validateFilterSyntax(syntaxStr);
+                case 1:
+                  validFilter = _context4.v;
+                  if (!validFilter) {
+                    _context4.n = 3;
+                    break;
+                  }
+                  _context4.n = 2;
+                  return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFilterStr(syntaxStr);
+                case 2:
+                  _autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+                  autoZoomFlag = _autoZoomCheckbox.checked;
+                  loadParams = {
+                    autoZoom: autoZoomFlag,
+                    query: "false"
+                  };
+                  window.location.href = URLS.addStrParams(URLS.loadData, loadParams);
+                case 3:
+                  _context4.n = 8;
+                  break;
+                case 4:
+                  if (!(action === "check")) {
+                    _context4.n = 6;
+                    break;
+                  }
+                  console.log("Checking Str", syntaxStr);
+                  _context4.n = 5;
+                  return _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.validateFilterSyntax(syntaxStr);
+                case 5:
+                  _context4.n = 8;
+                  break;
+                case 6:
+                  if (!(action === "clear")) {
+                    _context4.n = 8;
+                    break;
+                  }
+                  editor.setValue("");
+                  console.log("Found applied filter", appliedFilter, "when clearing");
+                  if (!appliedFilter) {
+                    _context4.n = 8;
+                    break;
+                  }
+                  console.log("Found filter str", appliedFilter);
+                  _context4.n = 7;
+                  return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFilterStr("");
+                case 7:
+                  _loadParams = {
+                    autoZoom: autoZoomCheckbox.checked,
+                    query: "false"
+                  };
+                  window.location.href = URLS.addStrParams(URLS.loadData, _loadParams);
+                case 8:
+                  return _context4.a(2);
+              }
+            }, _callee4);
+          }));
+          return function (_x) {
+            return _ref5.apply(this, arguments);
+          };
+        }());
+
+        // Optional: sync changes back to textarea if needed
+        editor.on("change", function () {
+          editor.save(); // Updates the hidden textarea for form submit
+        });
+
+        // Show the editor after it's initialized
+        textarea.classList.remove("codemirror-hidden");
+      case 9:
+        return _context5.a(2);
+    }
+  }, _callee5, null, [[3, 6]]);
+})));
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=stats.bundle.js.map

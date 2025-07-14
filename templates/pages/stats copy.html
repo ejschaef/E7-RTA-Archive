@@ -3,85 +3,7 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
-<div class="pc-container d-none" data-bs-theme="dark" id="select-data-body">
-    <div class="pc-content" data-bs-theme="dark">
-
-        <!-- [ Main Content ] start -->
-        <div class="row justify-content-center">
-            <!-- [ feather-icon ] start -->
-            <div class="col-md-9">
-                <div class="card">
-                    <div class="card-header thin-header text-center">
-                        <h4>Select Data</h4>
-                    </div>
-                    <div class="card-body text-center px-5 py-0">
-                        <div class="row justify-content-center">
-                            <span id="errorMSG" class="d-inline-block text-danger mt-2"></span>
-                            <div class="px-5 mt-2 mb-2">
-                                <form id="userForm" method="post">
-                                    <h6 class="text-center f-w-500 mb-2">Query E7 Server</h6>
-                                    {{ query_form.hidden_tag() }}
-                                    <div class="form-group mb-3">
-                                        {{ query_form.username(placeholder="E7 Username", class="form-control
-                                        custom-input")
-                                        }}
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        {{ query_form.server(placeholder="Server", class="form-control ") }}
-                                    </div>
-                                    <div class="text-center mt-1">
-                                        <button type="submit" name="user_query"
-                                            class="btn btn-primary shadow px-sm-4">Query
-                                            User</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <hr>
-                            <div class="px-5 mt-0 mb-3">
-                                <form id="uploadForm">
-                                    {{ upload_form.hidden_tag() }}
-                                    <h6 class="text-center f-w-500 mb-3">Upload CSV</h6>
-                                    <div class="form-group mb-3">
-                                        {{ upload_form.file(class="form-control", id="csvFile") }}
-                                    </div>
-                                    <div class="d-flex justify-content-center text-center gap-4 mt-1">
-                                        <button type="submit" name="battle_data"
-                                            class="btn btn-primary shadow px-sm-4">Submit File</button>
-                                        <span class="toggle-container" id="auto-query-toggle-container">
-                                            <label class="toggle-switch">
-                                                <input type="checkbox" id="auto-query-flag" checked>
-                                                <span class="toggle-switch-background">
-                                                    <span class="toggle-switch-handle"></span>
-                                                </span>
-                                            </label>
-                                            <h6> Auto-Query New Battles</h6>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- [ Main Content ] end -->
-    </div>
-</div>
-
-
-<div class="pc-container d-none" id="load-data-body">
-    <div class="pc-content">
-        <div class="loader-overlay">
-            <div class="loader-content">
-                <h2>Content Loading</h2>
-                <div class="loader"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="pc-container d-none" id="show-stats-body">
+<div class="pc-container d-none" id="content-body">
     <div class="pc-content">
         <!-- [ breadcrumb ] start -->
         <div class="page-header">
@@ -109,8 +31,7 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="SeasonDetails"
-                                class="scrollables interior-border-tbl clean-table align-center-except-second col2-150">
+                            <table id="SeasonDetails" class="scrollables interior-border-tbl clean-table align-center-except-second col2-150">
                                 <thead>
                                     <tr>
                                         <th scope="col"></th>
@@ -139,12 +60,10 @@
                         <div class="row justify-content-center">
                             <div class="d-flex justify-content-between align-items-center mt-2 w-100 px-2">
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle filter-pane-btn ms-3" type="button"
-                                        id="filter-select" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-secondary dropdown-toggle filter-pane-btn ms-3" type="button" id="filter-select" data-bs-toggle="dropdown" aria-expanded="false">
                                         Premade Filters
                                     </button>
-                                    <ul class="dropdown-menu scrollable-300px f-12" aria-labelledby="filter-select"
-                                        id="premade-filters">
+                                    <ul class="dropdown-menu scrollable-300px f-12" aria-labelledby="filter-select" id="premade-filters">
                                         <li><a class="dropdown-item" href="#">Current Season</a></li>
                                         <li><a class="dropdown-item" href="#">First Pick</a></li>
                                         <li><a class="dropdown-item" href="#">Second Pick</a></li>
@@ -156,25 +75,20 @@
                                         <li><a class="dropdown-item" href="#">Legend Opponent</a></li>
                                     </ul>
                                 </div>
-                                <span class="d-block me-3 rel-width-60 scrollable-40px f-10"
-                                    id="filterMSG">&nbsp;</span>
+                                <span class="d-block me-3 rel-width-60 scrollable-40px f-10" id="filterMSG">&nbsp;</span>
                             </div>
                             <form method="post" id="filterForm" class="card-body">
-                                {{ filter_form.hidden_tag() }}
-                                <textarea id="codeArea" name="code"
-                                    class="codemirror-hidden">{{ code or '' }}</textarea>
+                                {{ form.hidden_tag() }}
+                                <textarea id="codeArea" name="code" class="codemirror-hidden">{{ code or '' }}</textarea>
                                 <div class="d-flex justify-content-center gap-3 mt-4">
-                                    <button type="submit" name="check-syntax" value="check"
-                                        class="btn shadow px-sm-1 filter-pane-btn">Check Syntax</button>
-                                    <button type="submit" name="apply-filter" value="apply"
-                                        class="btn shadow px-sm-1 filter-pane-btn">Apply Filter</button>
-                                    <button type="submit" name="clear-filter" value="clear"
-                                        class="btn shadow px-sm-1 filter-pane-btn">Clear Filter</button>
+                                    <button type="submit" name="check-syntax" value="check" class="btn shadow px-sm-1 filter-pane-btn">Check Syntax</button>
+                                    <button type="submit" name="apply-filter" value="apply" class="btn shadow px-sm-1 filter-pane-btn">Apply Filter</button>
+                                    <button type="submit" name="clear-filter" value="clear" class="btn shadow px-sm-1 filter-pane-btn">Clear Filter</button>
                                     <div class="toggle-container-vertical" id="auto-zoom-toggle-container">
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="auto-zoom-flag">
                                             <span class="toggle-switch-background">
-                                                <span class="toggle-switch-handle"></span>
+                                            <span class="toggle-switch-handle"></span>
                                             </span>
                                         </label>
                                         <span class="filter-pane-btn">Auto-Zoom</span>
@@ -278,13 +192,11 @@
                 <div class="card height-400">
                     <div class="card-header kpi-header">
                         <h5 class="text-white">Server Stats</h5>
-                        <p class="f-w-100 f-10 mb-0" id="first-pick-rate">(FP WR = First Pick Win Rate, SP WR = Second
-                            Pick Win Rate)</p>
+                        <p class="f-w-100 f-10 mb-0" id="first-pick-rate">(FP WR = First Pick Win Rate, SP WR = Second Pick Win Rate)</p>
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="server-stats"
-                                class="interior-border-tbl clean-table align-center-except-first col1-150 f-16">
+                            <table id="server-stats" class="interior-border-tbl clean-table align-center-except-first col1-150 f-16">
                                 <thead>
                                     <tr>
                                         <th scope="col"></th>
@@ -315,8 +227,7 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="FirstPickStats"
-                                class="scrollables interior-border-tbl clean-table align-center-except-first col1-150">
+                            <table id="FirstPickStats" class="scrollables interior-border-tbl clean-table align-center-except-first col1-150">
                                 <thead>
                                     <tr>
                                         <th scope="col">Hero</th>
@@ -344,8 +255,7 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="PrebanStats"
-                                class="scrollables interior-border-tbl clean-table align-center-except-first col1-150">
+                            <table id="PrebanStats" class="scrollables interior-border-tbl clean-table align-center-except-first col1-150">
                                 <thead>
                                     <tr>
                                         <th scope="col">Preban</th>
@@ -447,8 +357,7 @@
                     <div class="card-header text-center kpi-header">
                         <h3>Player Battles</h3>
                         <h5 style="font-size: 0.7em;">
-                            Displays information for each of the player's battles. Export this table and upload to
-                            maintain history. Two star heroes will show as 'Fodder'.
+                            Displays information for each of the player's battles. Export this table and upload to maintain history. Two star heroes will show as 'Fodder'.
                         </h5>
                     </div>
                     <div class="card-body kpi-body">
@@ -456,7 +365,7 @@
                             <label class="toggle-switch">
                                 <input type="checkbox" id="filter-battle-table">
                                 <span class="toggle-switch-background">
-                                    <span class="toggle-switch-handle"></span>
+                                <span class="toggle-switch-handle"></span>
                                 </span>
                             </label>
                             <h6>Apply Filters to Table</h6>
@@ -506,10 +415,10 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+    {% endblock content %}
 
-{% block extra_js %}
+    {% block extra_js %}
 
-<script type="module" src="{{ url_for('static', filename='dist/home-page.bundle.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='dist/stats.bundle.js') }}"></script>
 
-{% endblock extra_js %}
+    {% endblock extra_js %}

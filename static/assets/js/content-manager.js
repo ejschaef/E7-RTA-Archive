@@ -4,6 +4,7 @@ import SeasonManager from "./e7/season-manager.js";
 import ClientCache from "./cache-manager.js";
 import FilterSyntaxParser from "./e7/filter-syntax-parser.js";
 import UserManager from "./e7/user-manager.js";
+import ArtifactManager from "./e7/artifact-manager.js";
 
 let ContentManager = {
     HeroManager: HeroManager,
@@ -11,6 +12,7 @@ let ContentManager = {
     SeasonManager: SeasonManager, 
     UserManager: UserManager,
     ClientCache: ClientCache,
+    ArtifactManager: ArtifactManager,
 
     getFilters: async function(HM) {
         const filterStr = await ClientCache.getFilterStr();
