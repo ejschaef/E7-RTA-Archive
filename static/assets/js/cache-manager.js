@@ -8,14 +8,19 @@ async function clearStore(db, storeName) {
   await tx.done;
 };
 
-const Keys = {
+const USER_DATA_KEYS = {
   USER: "current-user",
-  HERO_MANAGER: "hero-manager",
   BATTLES: "battles",
+  RAW_UPLOAD: "raw-upload",
   UPLOADED_BATTLES: "uploaded-battles",
   FILTERED_BATTLES: "filtered-battles",
-  FILTER_STR: "filter-str",
   STATS: "stats",
+  FILTER_STR: "filter-str",
+}
+
+const Keys = {
+  ...USER_DATA_KEYS,
+  HERO_MANAGER: "hero-manager",
   SEASON_DETAILS: "season-details",
   AUTO_ZOOM_FLAG: "auto-zoom",
   AUTO_QUERY_FLAG: "auto-query",
@@ -80,10 +85,8 @@ let ClientCache = {
     }
     const useCache = await this.checkCacheTimeout(id);
     if (useCache){
-      console.log(`Timeout not reached, using cache for ${id}`);
       return result;
     } else {
-      console.log(`Timeout reached, returning null for ${id}`);
       return null;
     }
   },
@@ -118,14 +121,12 @@ let ClientCache = {
     const key = `${id+this.MetaKeys.TIMESTAMP}`;
     await db.put(this.consts.META_STORE_NAME, timestamp, key);
     const val = await db.get(this.consts.META_STORE_NAME, key);
-    console.log(`Timestamp set: ${val}`);
   },
 
   deleteTimestamp: async function(id) {
     const db = await this.openDB();
     const key = `${id+this.MetaKeys.TIMESTAMP}`;
     await db.delete(this.consts.META_STORE_NAME, key);
-    console.log(`Timestamp deleted for <${id}>`);
   },
 
   clearData: async function() {
@@ -136,7 +137,7 @@ let ClientCache = {
   },
 
   clearUserData: async function() {
-    const toDelete = [Keys.USER, Keys.BATTLES, Keys.UPLOADED_BATTLES, Keys.FILTERED_BATTLES, Keys.FILTER_STR, Keys.STATS];
+    const toDelete = Object.values(USER_DATA_KEYS);
     await Promise.all(toDelete.map(key => this.delete(key)));
     console.log("User data cleared from data cache");
   },
@@ -149,9 +150,8 @@ let ClientCache = {
   checkCacheTimeout: async function(id) {
     const timestamp = await this.getTimestamp(id);
     const currentTime = Date.now();
-    console.log(`Checking Timeout for <${id}> | Current time: ${currentTime}, cache timestamp: ${timestamp}, difference: ${currentTime - timestamp} ms`);
     if (!timestamp || (currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
-      console.log(`Cache timeout reached, clearing data from <${id}>`);
+      console.log(`Cache timeout for ${id}`);
       await this.delete(id);
       return false;
     }

@@ -1,8 +1,9 @@
-import { CSVParse, ContentManager } from "../../exports.js";
+import { ContentManager, PageUtils } from "../../exports.js";
 import { HOME_PAGE_STATES } from "../page-utilities/page-state-manager.js";
-import { CONTEXT } from "../page-utilities/context-references.js";
+import { CONTEXT } from "../page-utilities/home-page-context.js";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 
-async function addUserFormListener(stateDispatcher, contextFlags) {
+async function addUserFormListener(stateDispatcher) {
 	const form = document.getElementById("userForm");
 
 	// Intercept form submission
@@ -17,7 +18,10 @@ async function addUserFormListener(stateDispatcher, contextFlags) {
 		const world_code = data.get("server");
 
 		if (!name) {
-			document.getElementById("errorMSG").textContent = "Must enter username";
+			PageUtils.setTextRed(
+				DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG,
+				"Must enter username"
+			);
 		} else {
 			try {
 				console.log("Finding User");
@@ -27,28 +31,30 @@ async function addUserFormListener(stateDispatcher, contextFlags) {
 				});
 				console.log("Got data:", JSON.stringify(result));
 				if (!result.error) {
+					await ContentManager.UserManager.clearUserData();
 					await ContentManager.UserManager.setUser(result.user);
-					contextFlags[CONTEXT.KEYS.QUERY] = true;
-					contextFlags.SOURCE = CONTEXT.VALUES.SOURCE.QUERY;
-					stateDispatcher(HOME_PAGE_STATES.LOAD_DATA, contextFlags);
+					CONTEXT.AUTO_QUERY = true;
+					CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.QUERY;
+					stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
+					return;
 				} else {
 					console.log("User Not Found:", result.error);
 					document.getElementById(
-						"errorMSG"
+						"select-data-msg"
 					).textContent = `Could not find user: ${name} in server: ${world_code}`;
 				}
 			} catch (err) {
 				// You can now store the data, process it, or update your app state
 				console.error("Caught Error:", err);
 				document.getElementById(
-					"errorMSG"
+					"select-data-msg"
 				).textcontent = `Error encountered: ${err.message}`;
 			}
 		}
 	});
 }
 
-async function addUploadFormListener(stateDispatcher, contextFlags) {
+async function addUploadFormListener(stateDispatcher) {
 	const checkbox = document.getElementById("auto-query-flag");
 
 	checkbox.checked = await ContentManager.ClientCache.getFlag("autoQuery");
@@ -60,72 +66,64 @@ async function addUploadFormListener(stateDispatcher, contextFlags) {
 	let selectedFile = null;
 
 	// Capture file when selected
-	document
-		.getElementById("csvFile")
-		.addEventListener("change", function (event) {
-			selectedFile = event.target.files[0];
-		});
+	DOC_ELEMENTS.HOME_PAGE.CSV_FILE.addEventListener("change", function (event) {
+		selectedFile = event.target.files[0];
+	});
 
 	// Intercept form submission
-	document
-		.getElementById("uploadForm")
-		.addEventListener("submit", async function (event) {
+	DOC_ELEMENTS.HOME_PAGE.UPLOAD_FORM.addEventListener(
+		"submit",
+		async function (event) {
 			console.log("Processing File Submission");
 
 			event.preventDefault(); // Prevent actual form submission to server
 
 			// Get its state of auto-query checkbox
 			const autoQueryFlag = checkbox.checked;
+			const msgElement = DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG;
 
 			try {
 				// parse uploaded battles into an array
-				const battleArr = await CSVParse.parseUpload(selectedFile);
-
-        const HM = await ContentManager.HeroManager.getHeroManager();
-
-				// delete existing data for the old user if there was one
-				await ContentManager.ClientCache.clearUserData();
-
-				// cache uploaded battles
-				await ContentManager.BattleManager.cacheUpload(battleArr, HM);
-
-
-				const playerID = battleArr[0]["P1 ID"];
-				const data = await ContentManager.UserManager.findUser({
-					id: playerID,
-				});
-				console.log("Got data:", JSON.stringify(data));
-				if (!data.error) {
-					await ContentManager.UserManager.setUser(data.user);
-					contextFlags[CONTEXT.KEYS.QUERY] = autoQueryFlag;
-					contextFlags[CONTEXT.KEYS.SOURCE] = CONTEXT.VALUES.SOURCE.UPLOAD;
-					stateDispatcher(HOME_PAGE_STATES.LOAD_DATA, contextFlags);
-				} else {
-          console.log("Setting Error Message:", data.error);
-					document.getElementById("errorMSG").textContent = data.error;
-          console.log("Error Message is now:", document.getElementById("errorMSG").textContent);
+				if (!selectedFile) {
+					PageUtils.setTextRed(msgElement, "Must upload a file");
+					return;
 				}
+				console.log(
+					`Selected File: ${selectedFile.name} ; content: ${JSON.stringify(
+						selectedFile
+					)}`
+				);
+				await ContentManager.UserManager.clearUserData();
+				await ContentManager.ClientCache.cache(
+					ContentManager.ClientCache.Keys.RAW_UPLOAD,
+					selectedFile
+				);
+				CONTEXT.AUTO_QUERY = autoQueryFlag;
+				CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.UPLOAD;
+				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
+				return;
 			} catch (err) {
 				console.error("Caught Error:", err);
-				document.getElementById("errorMSG").textContent = err.message;
+				PageUtils.setTextRed(msgElement, err.message);
 			}
-		});
+		}
+	);
 }
 
-async function initializeSelectDataLogic(stateDispatcher, contextFlags) {
-	addUserFormListener(stateDispatcher, contextFlags);
-	addUploadFormListener(stateDispatcher, contextFlags);
+async function initializeSelectDataLogic(stateDispatcher) {
+	addUserFormListener(stateDispatcher);
+	addUploadFormListener(stateDispatcher);
 }
 
-async function runSelectDataLogic(stateDispatcher, contextFlags) {
+async function runSelectDataLogic(stateDispatcher) {
 	const checkbox = document.getElementById("auto-query-flag");
 	checkbox.checked = await ContentManager.ClientCache.getFlag("autoQuery");
-  document.getElementById("errorMSG").textContent = "";
-	if (contextFlags[CONTEXT.KEYS.ERROR_MSG]) {
-		const errorMSG = contextFlags[CONTEXT.KEYS.ERROR_MSG];
-    console.log("Setting Error Message:", errorMSG);
-		document.getElementById("errorMSG").textContent = errorMSG;
-		contextFlags[CONTEXT.KEYS.ERROR_MSG] = null;
+	const msgElement = DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG;
+	msgElement.textContent = "";
+	if (CONTEXT.ERROR_MSG) {
+		const errorMSG = CONTEXT.popKey(CONTEXT.KEYS.ERROR_MSG);
+		console.log("Setting Error Message:", errorMSG);
+		PageUtils.setTextRed(msgElement, errorMSG);
 	}
 }
 

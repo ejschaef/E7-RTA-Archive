@@ -133,43 +133,6 @@ let UserManager = {
 		}
 	},
 
-	addP2ServersByID: async function (battles) {
-		console.log("Adding P2 servers by ID...");
-		const battleList = Object.values(battles);
-		let userMaps = [];
-		try {
-			userMaps = await Promise.all(
-				[...WORLD_CODES].map((world_code) => this.getUserMap(world_code))
-			);
-		} catch (error) {
-			console.error(error);
-			battleList.forEach((battle) => (battle["P2 Server"] = "Not Found"));
-			return;
-		}
-		if (userMaps.length === 0) {
-			console.error("Failed to get any user maps");
-			battleList.forEach((battle) => (battle["P2 Server"] = "Not Found"));
-			return;
-		}
-		battleList.forEach((battle) => {
-			const world_code = userMaps.find((userMap) => userMap[battle["P2 ID"]])?.[
-				battle["P2 ID"]
-			].world_code;
-			if (world_code) {
-				battle["P2 Server"] = this.convertServerStr(world_code);
-			} else {
-				console.log(
-					`Could not find user with ID: ${
-						battle["P2 ID"]
-					} in client-side means ; typeof: ${typeof battle[
-						"P2 ID"
-					]}, id type: ${typeof Object.keys(USER_MAPS[0])[0]}`
-				);
-				battle["P2 Server"] = "Not Found";
-			}
-		});
-	},
-
 	setUser: async function (userData) {
 		await ClientCache.cache(ClientCache.Keys.USER, userData);
 	},

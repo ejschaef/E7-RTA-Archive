@@ -4,10 +4,6 @@ module.exports = {
   entry: {
     "home-page"     : './static/assets/js/pages/home-page.js',
     "filter-syntax" : './static/assets/js/pages/filter-syntax.js',
-    "stats"         : './static/assets/js/pages/stats.js',
-    "user-query"    : './static/assets/js/pages/user-query.js',
-    "upload"        : './static/assets/js/pages/upload.js',
-    "loading-data"  : './static/assets/js/pages/loading-data.js',
     "test"          : './static/assets/js/pages/test.js',
   },
   output: {

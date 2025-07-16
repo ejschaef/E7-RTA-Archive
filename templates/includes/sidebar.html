@@ -1,7 +1,7 @@
 <nav class="pc-sidebar">
   <div class="navbar-wrapper">
     <div class="m-header d-flex justify-content-start align-items-center">
-      <a href="{{ url_for('home_blueprint.index') }}" class="b-brand text-primary">
+      <a href="{{ url_for('home_blueprint.home') }}" class="b-brand text-primary">
         <img src="{{ url_for('static', filename='assets/images/app-icon.svg') }}"
             width="50" height="50" class="img-fluid" alt="logo">
       </a>
@@ -16,11 +16,11 @@
 
 
         <li class="pc-item pc-caption" id="information-section">
-          <label>Information</label>
+          <label>Content</label>
           <i data-feather="monitor"></i>
         </li>
         <li class="pc-item" id="homeNav">
-          <a href="{{ url_for('home_blueprint.index') }}" class="pc-link">
+          <a href="{{ url_for('home_blueprint.home') }}" class="pc-link">
             <span class="pc-micon"><i data-feather="home"></i></span>
             <span class="pc-mtext">Home</span>
           </a>
@@ -32,34 +32,15 @@
           </a>
         </li>
         <li class="pc-item pc-caption" id="HeroSection">
-          <label>User Stats</label>
+          <label>DEV</label>
           <i data-feather="monitor"></i>
         </li>
-        <li class="pc-item" id="heroStats">
-          <a href="{{ url_for('home_blueprint.stats') }}" class="pc-link">
-            <span class="pc-micon"><i data-feather="bar-chart-2"></i></span>
-            <span class="pc-mtext">Stats</span>
-          </a>
-        </li>
-        <li class="pc-item" id="queryUser">
-          <a href="{{ url_for('home_blueprint.user_query') }}" class="pc-link">
-            <span class="pc-micon"><i data-feather="download"></i></span>
-            <span class="pc-mtext">Query User Data</span>
-          </a>
-        </li>
-        <li class="pc-item" id="uploadBattleData">
-          <a href="{{ url_for('home_blueprint.upload_battle_data') }}" class="pc-link">
-            <span class="pc-micon"><i data-feather="share"></i></span>
-            <span class="pc-mtext">Upload Battle Data</span>
-          </a>
-        </li>
-
-        <!-- <li class="pc-item">
+        <li class="pc-item">
           <a href="{{ url_for('home_blueprint.test') }}" class="pc-link">
             <span class="pc-micon"><i data-feather="download"></i></span>
             <span class="pc-mtext">Test</span>
           </a>
-        </li>  -->
+        </li>
       </ul>
     </div>
   </div>

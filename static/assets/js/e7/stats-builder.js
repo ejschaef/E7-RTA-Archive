@@ -59,9 +59,6 @@ function getHeroStats(battles, HM) {
 function getFirstPickStats(battles, HM) {
     const battleList = getFirstPickSubset(Object.values(battles));
 
-    console.log(battles);
-    console.log(battleList);
-
     if (battleList.length === 0) {
       return [];
     }
@@ -78,7 +75,6 @@ function getFirstPickStats(battles, HM) {
     }
 
     const result = Object.entries(grouped).map(([prime, stats]) => {
-        console.log("prime", prime);
         const name = HeroManager.getHeroByPrime(prime, HM).name;
         return {
             hero: name,
@@ -96,8 +92,6 @@ function getFirstPickStats(battles, HM) {
 
 function getPrebanStats(battles, HM) {
     //console.log(`Got HM: ${HM}`);
-    
-    console.log(battles);
 
     const emptyPrime = HeroManager.getHeroByName('Empty', HM).prime;
 

@@ -6,10 +6,9 @@ import {
 	ContentManager,
 	SavedFilters,
 } from "../../exports.js";
-import { CONTEXT } from "../page-utilities/context-references.js";
-import {
-	HOME_PAGE_STATES,
-} from "../page-utilities/page-state-manager.js";
+import { CONTEXT } from "../page-utilities/home-page-context.js";
+import { HOME_PAGE_STATES } from "../page-utilities/page-state-manager.js";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 
 async function populateContent() {
 	const user = await ContentManager.UserManager.getUser();
@@ -17,7 +16,7 @@ async function populateContent() {
 	if (!user) {
 		console.log("Skipping populate tables: user not found");
 		return;
-	};
+	}
 
 	console.log("POPULATING DATA PROCESS INITIATED");
 
@@ -63,37 +62,21 @@ async function populateContent() {
 		CardContent.functions.populateRankPlot(stats.plotContent);
 		console.log("FINISHED POPULATING");
 		console.timeEnd("populateTables");
-
-		console.log("Setting listener for filter-battle-table checkbox");
-		const filterBattleTableCheckbox = document.getElementById(
-			"filter-battle-table"
-		);
-		filterBattleTableCheckbox.addEventListener("click", async () => {
-			if (!filterBattleTableCheckbox.checked) {
-				Tables.functions.replaceDatatableData(battleTable, stats.battles);
-			} else {
-				Tables.functions.replaceDatatableData(
-					battleTable,
-					stats.filteredBattles
-				);
-			}
-		});
-
 	} catch (err) {
 		console.error("Error loading data:", err);
 	}
 }
 
 function addAutoZoomListener() {
-	const autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
 	autoZoomCheckbox.addEventListener("click", async () => {
+		console.log("Toggling Auto Zoom: ", autoZoomCheckbox.checked);
 		await ContentManager.ClientCache.setFlag(
 			"autoZoom",
 			autoZoomCheckbox.checked
 		);
 	});
 }
-
 
 function addPremadeFilterButtonListener(editor) {
 	// Logic for adding premade filters to filter pane
@@ -109,11 +92,10 @@ function addPremadeFilterButtonListener(editor) {
 			const currStr = editor.getValue();
 			const newStr = SavedFilters.extendFilters(currStr, filterName);
 			editor.setValue(newStr);
-	});
+		});
 }
 
-
-function addFilterButtonListeners(editor, stateDispatcher, context) {
+function addFilterButtonListeners(editor, stateDispatcher) {
 	// Logic for submit buttons on filter pane
 	const filterForm = document.getElementById("filterForm");
 	filterForm.addEventListener("submit", async function (event) {
@@ -121,7 +103,7 @@ function addFilterButtonListeners(editor, stateDispatcher, context) {
 
 		// Ensure value is synced back to textarea before submit ; not strictly necessary since processed client-side
 		document.getElementById("codeArea").value = editor.getValue();
-		
+
 		console.log("Processing Filter Action");
 
 		const clickedButton = event.submitter;
@@ -133,30 +115,28 @@ function addFilterButtonListeners(editor, stateDispatcher, context) {
 			const validFilter = await PageUtils.validateFilterSyntax(syntaxStr);
 			if (validFilter) {
 				await ContentManager.ClientCache.setFilterStr(syntaxStr);
-				const autoZoomCheckbox = document.getElementById("auto-zoom-flag");
-				context[CONTEXT.KEYS.AUTO_ZOOM] = autoZoomCheckbox.checked;
-				context[CONTEXT.KEYS.QUERY] = false;
-				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA, context);
+				CONTEXT.AUTO_QUERY = false;
+				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
+				return;
 			}
 		} else if (action === "check") {
 			console.log("Checking Str", syntaxStr);
 			await PageUtils.validateFilterSyntax(syntaxStr);
 		} else if (action === "clear") {
 			editor.setValue("");
-			console.log("Found applied filter", appliedFilter, "when clearing");
+			console.log("Found applied filter [", appliedFilter, "] when clearing");
 			if (appliedFilter) {
 				console.log("Found filter str", appliedFilter);
 				await ContentManager.ClientCache.setFilterStr("");
-				context[CONTEXT.KEYS.AUTO_ZOOM] = autoZoomCheckbox.checked;
-				context[CONTEXT.KEYS.QUERY] = false;
-				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA, context);
+				CONTEXT.AUTO_QUERY = false;
+				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
+				return;
 			}
 		}
 	});
 }
 
-async function addCodeMirror(stateDispatcher, context) {
-	const autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+async function addCodeMirror(stateDispatcher) {
 	CodeMirror.defineMode("filterSyntax", function () {
 		return {
 			token: function (stream, state) {
@@ -172,8 +152,6 @@ async function addCodeMirror(stateDispatcher, context) {
 		lineNumbers: true,
 		theme: "default",
 	});
-
-	context[CONTEXT.KEYS.EDITOR_INITIALIZED] = true;
 
 	editor.setSize(null, 185);
 
@@ -192,7 +170,29 @@ async function addCodeMirror(stateDispatcher, context) {
 	textarea.classList.remove("codemirror-hidden");
 
 	addPremadeFilterButtonListener(editor);
-	addFilterButtonListeners(editor, stateDispatcher, context);
+	addFilterButtonListeners(editor, stateDispatcher);
+}
+
+function addBattleTableFilterToggleListener() {
+	console.log("Setting listener for filter-battle-table checkbox");
+	const filterBattleTableCheckbox = document.getElementById(
+		"filter-battle-table"
+	);
+	filterBattleTableCheckbox.addEventListener("click", async () => {
+		const battleTable = $("#BattlesTable").DataTable();
+		const stats = await ContentManager.ClientCache.getStats();
+		if (!filterBattleTableCheckbox.checked) {
+			Tables.functions.replaceDatatableData(battleTable, stats.battles);
+		} else {
+			Tables.functions.replaceDatatableData(battleTable, stats.filteredBattles);
+		}
+	});
+}
+
+async function postFirstRenderLogic(stateDispatcher) {
+	await addCodeMirror(stateDispatcher);
+	addBattleTableFilterToggleListener();
+	CONTEXT.STATS_POST_RENDER_COMPLETED = true;
 }
 
 async function initializeStatsLogic() {
@@ -200,33 +200,34 @@ async function initializeStatsLogic() {
 	addAutoZoomListener();
 }
 
-async function runStatsLogic(stateDispatcher, context) {
-	const autoZoomCheckbox = document.getElementById("auto-zoom-flag");
-	autoZoomCheckbox.checked = await ContentManager.ClientCache.getFlag(
-		"autoZoom"
-	);
+async function runStatsLogic(stateDispatcher) {
+	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
+	const checked = await ContentManager.ClientCache.getFlag("autoZoom");
+	autoZoomCheckbox.checked = checked;
 
 	const user = await ContentManager.UserManager.getUser();
 
 	if (!user) {
-		context[CONTEXT.KEYS.ERROR_MSG] =
-			"User not found; Must either query a valid user or upload battles to view hero stats";
-		console.error(context[CONTEXT.KEYS.ERROR_MSG]);
-		stateDispatcher(HOME_PAGE_STATES.SELECT_DATA, context);
+		console.log("User not found sending to select data quitely");
+		stateDispatcher(HOME_PAGE_STATES.SELECT_DATA); // switch view with no error; should only happen if user is reloading and state cache did not expire while user info did
+		return;
 	} else {
 		console.log("User found:", user);
 	}
 
 	await populateContent();
 
-	const filterMSG = document.getElementById("filterMSG");
+	const filterMSG = DOC_ELEMENTS.HOME_PAGE.FILTER_MSG;
 
-	if (context[CONTEXT.KEYS.ERROR_MSG]) {
-		filterMSG.textContent = context[CONTEXT.KEYS.ERROR_MSG];
-		filterMSG.classList.remove("text-safe");
-		filterMSG.classList.add("text-danger");
-		context[CONTEXT.KEYS.ERROR_MSG] = null;
+	filterMSG.textContent = "";
+
+	if (CONTEXT.ERROR_MSG) {
+		console.log(`Setting Error Message: ${CONTEXT.ERROR_MSG}`);	
+		PageUtils.setTextRed(filterMSG, CONTEXT.popKey(CONTEXT.KEYS.ERROR_MSG));
 	}
+
+	DOC_ELEMENTS.HOME_PAGE.CSV_FILE.value = "";
+	DOC_ELEMENTS.HOME_PAGE.USER_QUERY_FORM_NAME.value = "";
 }
 
-export { initializeStatsLogic, addCodeMirror, runStatsLogic };
+export { initializeStatsLogic, postFirstRenderLogic, runStatsLogic };

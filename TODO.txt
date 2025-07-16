@@ -4,13 +4,21 @@ Add compression algorithm to flask with nginx gzip. Shouldn't need to do any dec
 Added proxy using Nginx in front of flask --
 Bundled JS files using webpack and node --
 
-finish the Rust API and data expansion
+finish the Rust API and data expansion --
 add logging
 Update readme
 
 
-parse uploads
-fix footer loading in
+parse uploads --
+fix footer loading in --
+
+update page utils cache and query function to be cleaner
+update find user to return more cleanly
+
+
+
+
+
 
 # Would be nice
 Use same API function to query battles for both upload and user query (would need to search either by ID or name/server)
@@ -25,3 +33,5 @@ new fields
 
 turns -> int
 seconds -> int
+point-gain -> int
+

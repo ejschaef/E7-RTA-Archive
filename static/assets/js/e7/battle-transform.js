@@ -19,6 +19,9 @@ function addPrimeFields(battle, HM) {
 }
 
 
+const P1 = "p1";
+const P2 = "p2";
+
 // takes raw battle from array returned by rust battle array call to flask-server; formats into row to populate table
 function formatBattleAsRow(raw, HM, artifacts) {
 
@@ -28,9 +31,15 @@ function formatBattleAsRow(raw, HM, artifacts) {
     
     const getArtifactName = code => ArtifactManager.convertCodeToName(code, artifacts) || "None";
 
-    const checkBanned = index => raw.p2_postban === raw.p1_picks[index]; // used to check if artifact is null because banned or because not equipped
-    const formatArtifacts = artiArr => artiArr.map((code, index) => code ? getArtifactName(code) : checkBanned(index) ? "N/A" : "None");
-    const formatCRBar = crBar => crBar.map(entry => entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["N/A", 0]);
+    const checkBanned = (player, index) => { // used to check if artifact is null because banned or because not equipped
+        if (player === P1) {
+            return raw.p2_postban === raw.p1_picks[index];
+        } else {
+            return raw.p1_postban === raw.p2_picks[index];
+        }
+    }
+    const formatArtifacts = (player, artiArr) => artiArr.map((code, index) => code ? getArtifactName(code) : checkBanned(player, index) ? "n/a" : "None");
+    const formatCRBar = crBar => crBar.map(entry => entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["n/a", 0]);
 
     // Fall back to the code if the equipment set is not defined in references
     const formatEquipment = equipArr => equipArr.map(heroEquipList => heroEquipList.map(equip => EQUIPMENT_SET_MAP[equip] || equip));
@@ -56,7 +65,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
         [COLUMNS_MAP.FIRST_PICK]: raw.first_pick === 1 ? true : false,
         [COLUMNS_MAP.CR_BAR]: formatCRBar(raw.cr_bar),
         [COLUMNS_MAP.FIRST_TURN]: p1TookFirstTurn ? true : false,
-        [COLUMNS_MAP.FIRST_TURN_HERO]: firstTurnHero ? getChampName(firstTurnHero[0]) : "None",
+        [COLUMNS_MAP.FIRST_TURN_HERO]: firstTurnHero ? getChampName(firstTurnHero[0]) : "n/a",
         [COLUMNS_MAP.P1_PREBANS]: raw.p1_prebans.map(getChampName),
         [COLUMNS_MAP.P2_PREBANS]: raw.p2_prebans.map(getChampName),
         [COLUMNS_MAP.P1_PICKS]: raw.p1_picks.map(getChampName),
@@ -65,8 +74,8 @@ function formatBattleAsRow(raw, HM, artifacts) {
         [COLUMNS_MAP.P2_POSTBAN]: getChampName(raw.p2_postban),
         [COLUMNS_MAP.P1_EQUIPMENT]: formatEquipment(raw.p1_equipment),
         [COLUMNS_MAP.P2_EQUIPMENT]: formatEquipment(raw.p2_equipment),
-        [COLUMNS_MAP.P1_ARTIFACTS]: formatArtifacts(raw.p1_artifacts),
-        [COLUMNS_MAP.P2_ARTIFACTS]: formatArtifacts(raw.p2_artifacts),
+        [COLUMNS_MAP.P1_ARTIFACTS]: formatArtifacts(P1, raw.p1_artifacts),
+        [COLUMNS_MAP.P2_ARTIFACTS]: formatArtifacts(P2, raw.p2_artifacts),
         [COLUMNS_MAP.P1_MVP]: getChampName(raw.p1_mvp),
         [COLUMNS_MAP.P2_MVP]: getChampName(raw.p2_mvp),
     };

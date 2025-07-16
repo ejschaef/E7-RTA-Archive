@@ -1,4 +1,4 @@
-{% extends "layouts/base-herostats.html" %}
+{% extends "layouts/base-home.html" %}
 
 {% block title %}Home{% endblock title %}
 
@@ -16,7 +16,7 @@
                     </div>
                     <div class="card-body text-center px-5 py-0">
                         <div class="row justify-content-center">
-                            <span id="errorMSG" class="d-inline-block text-danger mt-2"></span>
+                            <span id="select-data-msg" class="d-inline-block text-danger mt-2"></span>
                             <div class="px-5 mt-2 mb-2">
                                 <form id="userForm" method="post">
                                     <h6 class="text-center f-w-500 mb-2">Query E7 Server</h6>
@@ -145,15 +145,15 @@
                                     </button>
                                     <ul class="dropdown-menu scrollable-300px f-12" aria-labelledby="filter-select"
                                         id="premade-filters">
-                                        <li><a class="dropdown-item" href="#">Current Season</a></li>
-                                        <li><a class="dropdown-item" href="#">First Pick</a></li>
-                                        <li><a class="dropdown-item" href="#">Second Pick</a></li>
-                                        <li><a class="dropdown-item" href="#">Wins</a></li>
-                                        <li><a class="dropdown-item" href="#">Losses</a></li>
-                                        <li><a class="dropdown-item" href="#">Champion+ Opponent</a></li>
-                                        <li><a class="dropdown-item" href="#">Warlord+ Opponent</a></li>
-                                        <li><a class="dropdown-item" href="#">Emperor+ Opponent</a></li>
-                                        <li><a class="dropdown-item" href="#">Legend Opponent</a></li>
+                                        <li><button type="button" class="dropdown-item">Current Season</button></li>
+                                        <li><button type="button" class="dropdown-item">First Pick</button></li>
+                                        <li><button type="button" class="dropdown-item">Second Pick</button></li>
+                                        <li><button type="button" class="dropdown-item">Wins</button></li>
+                                        <li><button type="button" class="dropdown-item">Losses</button></li>
+                                        <li><button type="button" class="dropdown-item">Champion+ Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item">Warlord+ Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item">Emperor+ Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item">Legend Opponent</button></li>
                                     </ul>
                                 </div>
                                 <span class="d-block me-3 rel-width-60 scrollable-40px f-10"

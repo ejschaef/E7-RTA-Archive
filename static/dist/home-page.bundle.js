@@ -861,14 +861,17 @@ function _clearStore() {
   return _clearStore.apply(this, arguments);
 }
 ;
-var Keys = {
+var USER_DATA_KEYS = {
   USER: "current-user",
-  HERO_MANAGER: "hero-manager",
   BATTLES: "battles",
+  RAW_UPLOAD: "raw-upload",
   UPLOADED_BATTLES: "uploaded-battles",
   FILTERED_BATTLES: "filtered-battles",
-  FILTER_STR: "filter-str",
   STATS: "stats",
+  FILTER_STR: "filter-str"
+};
+var Keys = _objectSpread(_objectSpread({}, USER_DATA_KEYS), {}, {
+  HERO_MANAGER: "hero-manager",
   SEASON_DETAILS: "season-details",
   AUTO_ZOOM_FLAG: "auto-zoom",
   AUTO_QUERY_FLAG: "auto-query",
@@ -879,7 +882,7 @@ var Keys = {
   KOR_USERS: "kor-users",
   ARTIFACTS: "artifacts",
   HOME_PAGE_STATE: "home-page-state"
-};
+});
 var FlagsToKeys = {
   "autoZoom": Keys.AUTO_ZOOM_FLAG,
   "autoQuery": Keys.AUTO_QUERY_FLAG
@@ -959,10 +962,8 @@ var ClientCache = {
               _context2.n = 6;
               break;
             }
-            console.log("Timeout not reached, using cache for ".concat(id));
             return _context2.a(2, result);
           case 6:
-            console.log("Timeout reached, returning null for ".concat(id));
             return _context2.a(2, null);
           case 7:
             return _context2.a(2);
@@ -1086,7 +1087,6 @@ var ClientCache = {
             return db.get(this.consts.META_STORE_NAME, key);
           case 3:
             val = _context7.v;
-            console.log("Timestamp set: ".concat(val));
           case 4:
             return _context7.a(2);
         }
@@ -1111,8 +1111,6 @@ var ClientCache = {
             _context8.n = 2;
             return db["delete"](this.consts.META_STORE_NAME, key);
           case 2:
-            console.log("Timestamp deleted for <".concat(id, ">"));
-          case 3:
             return _context8.a(2);
         }
       }, _callee8, this);
@@ -1156,7 +1154,7 @@ var ClientCache = {
       return _regenerator().w(function (_context0) {
         while (1) switch (_context0.n) {
           case 0:
-            toDelete = [Keys.USER, Keys.BATTLES, Keys.UPLOADED_BATTLES, Keys.FILTERED_BATTLES, Keys.FILTER_STR, Keys.STATS];
+            toDelete = Object.values(USER_DATA_KEYS);
             _context0.n = 1;
             return Promise.all(toDelete.map(function (key) {
               return _this["delete"](key);
@@ -1203,12 +1201,11 @@ var ClientCache = {
           case 1:
             timestamp = _context10.v;
             currentTime = Date.now();
-            console.log("Checking Timeout for <".concat(id, "> | Current time: ").concat(currentTime, ", cache timestamp: ").concat(timestamp, ", difference: ").concat(currentTime - timestamp, " ms"));
             if (!(!timestamp || currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
               _context10.n = 3;
               break;
             }
-            console.log("Cache timeout reached, clearing data from <".concat(id, ">"));
+            console.log("Cache timeout for ".concat(id));
             _context10.n = 2;
             return this["delete"](id);
           case 2:
@@ -2131,6 +2128,8 @@ function addPrimeFields(battle, HM) {
   battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIMES].reduce(product, 1);
   battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIMES].reduce(product, 1);
 }
+var P1 = "p1";
+var P2 = "p2";
 
 // takes raw battle from array returned by rust battle array call to flask-server; formats into row to populate table
 function formatBattleAsRow(raw, HM, artifacts) {
@@ -2144,17 +2143,22 @@ function formatBattleAsRow(raw, HM, artifacts) {
   var getArtifactName = function getArtifactName(code) {
     return _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].convertCodeToName(code, artifacts) || "None";
   };
-  var checkBanned = function checkBanned(index) {
-    return raw.p2_postban === raw.p1_picks[index];
-  }; // used to check if artifact is null because banned or because not equipped
-  var formatArtifacts = function formatArtifacts(artiArr) {
+  var checkBanned = function checkBanned(player, index) {
+    // used to check if artifact is null because banned or because not equipped
+    if (player === P1) {
+      return raw.p2_postban === raw.p1_picks[index];
+    } else {
+      return raw.p1_postban === raw.p2_picks[index];
+    }
+  };
+  var formatArtifacts = function formatArtifacts(player, artiArr) {
     return artiArr.map(function (code, index) {
-      return code ? getArtifactName(code) : checkBanned(index) ? "N/A" : "None";
+      return code ? getArtifactName(code) : checkBanned(player, index) ? "n/a" : "None";
     });
   };
   var formatCRBar = function formatCRBar(crBar) {
     return crBar.map(function (entry) {
-      return entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["N/A", 0];
+      return entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["n/a", 0];
     });
   };
 
@@ -2170,7 +2174,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
     return entry[1] === 100;
   });
   var p1TookFirstTurn = firstTurnHero ? raw.p1_picks.includes(firstTurnHero[0]) : false;
-  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, raw.p1_league || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, raw.p2_league || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
+  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, raw.p1_league || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, raw.p2_league || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "n/a"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(P1, raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(P2, raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
 
   // finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
   addPrimeFields(battle, HM);
@@ -4681,8 +4685,6 @@ function getHeroStats(battles, HM) {
 }
 function getFirstPickStats(battles, HM) {
   var battleList = getFirstPickSubset(Object.values(battles));
-  console.log(battles);
-  console.log(battleList);
   if (battleList.length === 0) {
     return [];
   }
@@ -4711,7 +4713,6 @@ function getFirstPickStats(battles, HM) {
     var _ref2 = _slicedToArray(_ref, 2),
       prime = _ref2[0],
       stats = _ref2[1];
-    console.log("prime", prime);
     var name = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM).name;
     return {
       hero: name,
@@ -4730,7 +4731,6 @@ function getFirstPickStats(battles, HM) {
 function getPrebanStats(battles, HM) {
   //console.log(`Got HM: ${HM}`);
 
-  console.log(battles);
   var emptyPrime = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName('Empty', HM).prime;
   var battleList = Object.values(battles);
   if (battleList.length === 0) {
@@ -5381,10 +5381,107 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./static/assets/js/pages/page-utilities/context-references.js":
-/*!*********************************************************************!*\
-  !*** ./static/assets/js/pages/page-utilities/context-references.js ***!
-  \*********************************************************************/
+/***/ "./static/assets/js/pages/page-utilities/doc-element-references.js":
+/*!*************************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/doc-element-references.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var HomePageElements = /*#__PURE__*/function () {
+  function HomePageElements() {
+    _classCallCheck(this, HomePageElements);
+  }
+  return _createClass(HomePageElements, [{
+    key: "SELECT_DATA_MSG",
+    get: function get() {
+      return this._SELECT_DATA_MSG || (this._SELECT_DATA_MSG = document.getElementById("select-data-msg"));
+    }
+  }, {
+    key: "FILTER_MSG",
+    get: function get() {
+      return this._FILTER_MSG || (this._FILTER_MSG = document.getElementById("filterMSG"));
+    }
+  }, {
+    key: "SELECT_DATA_BODY",
+    get: function get() {
+      return this._SELECT_DATA_BODY || (this._SELECT_DATA_BODY = document.getElementById("select-data-body"));
+    }
+  }, {
+    key: "SHOW_STATS_BODY",
+    get: function get() {
+      return this._SHOW_STATS_BODY || (this._SHOW_STATS_BODY = document.getElementById("show-stats-body"));
+    }
+  }, {
+    key: "LOAD_DATA_BODY",
+    get: function get() {
+      return this._LOAD_DATA_BODY || (this._LOAD_DATA_BODY = document.getElementById("load-data-body"));
+    }
+  }, {
+    key: "CLEAR_DATA_BTN",
+    get: function get() {
+      return this._CLEAR_DATA_BTN || (this._CLEAR_DATA_BTN = document.getElementById("clear-data-btn"));
+    }
+  }, {
+    key: "UPLOAD_FORM",
+    get: function get() {
+      return this._UPLOAD_FORM || (this._UPLOAD_FORM = document.getElementById("uploadForm"));
+    }
+  }, {
+    key: "CSV_FILE",
+    get: function get() {
+      return this._CSV_FILE || (this._CSV_FILE = document.getElementById("csvFile"));
+    }
+  }, {
+    key: "USER_QUERY_FORM_NAME",
+    get: function get() {
+      //needs to be kept in sync with id in forms.py of home folder in apps
+      return this._USER_QUERY_FORM_NAME || (this._USER_QUERY_FORM_NAME = document.getElementById("user-query-form-name"));
+    }
+  }, {
+    key: "USER_QUERY_FORM_SERVER",
+    get: function get() {
+      //needs to be kept in sync with id in forms.py of home folder in apps
+      return this._USER_QUERY_FORM_SERVER || (this._USER_QUERY_FORM_SERVER = document.getElementById("user-query-form-server"));
+    }
+  }, {
+    key: "BATTLES_TABLE",
+    get: function get() {
+      return this._BATTLES_TABLE || (this._BATTLES_TABLE = document.getElementById("BattlesTable"));
+    }
+  }, {
+    key: "AUTO_ZOOM_FLAG",
+    get: function get() {
+      return this._AUTO_ZOOM_FLAG || (this._AUTO_ZOOM_FLAG = document.getElementById("auto-zoom-flag"));
+    }
+  }, {
+    key: "FOOTER_BODY",
+    get: function get() {
+      return this._FOOTER || (this._FOOTER = document.getElementById("footer-body"));
+    }
+  }]);
+}();
+var DOC_ELEMENTS = {
+  HOME_PAGE: new HomePageElements()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DOC_ELEMENTS);
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/home-page-context.js":
+/*!********************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/home-page-context.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5392,7 +5489,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CONTEXT: () => (/* binding */ CONTEXT)
 /* harmony export */ });
+/* harmony import */ var _page_state_references__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./page-state-references */ "./static/assets/js/pages/page-utilities/page-state-references.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 // Reference for context flags that are used within single pages to communicate accross vies for the page
+
 
 var SOURCE_CONTEXT_VALUES = {
   QUERY: "query",
@@ -5400,23 +5503,54 @@ var SOURCE_CONTEXT_VALUES = {
   STATS: "stats"
 };
 var CONTEXT_VALUES = {
-  BOOL: {
-    TRUE: true,
-    FALSE: false
-  },
-  SOURCE: SOURCE_CONTEXT_VALUES,
-  ERROR_MSG: null
+  SOURCE: SOURCE_CONTEXT_VALUES
 };
+var SCROLL_PERCENTS = _defineProperty(_defineProperty(_defineProperty({}, _page_state_references__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, 0), _page_state_references__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS, 0), _page_state_references__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.LOAD_DATA, 0);
 var CONTEXT_KEYS = {
-  QUERY: "QUERY",
   SOURCE: "SOURCE",
   ERROR_MSG: "ERROR_MSG",
   AUTO_ZOOM: "AUTO_ZOOM",
-  EDITOR_INITIALIZED: "EDITOR_INITIALIZED"
+  AUTO_QUERY: "AUTO_QUERY",
+  STATS_POST_RENDER_COMPLETED: "STATS_POST_RENDER_COMPLETED",
+  HOME_PAGE_STATE: "STATE",
+  SCROLL_PERCENTS: "SCROLL_PERCENTS"
 };
 var CONTEXT = {
   KEYS: CONTEXT_KEYS,
-  VALUES: CONTEXT_VALUES
+  VALUES: CONTEXT_VALUES,
+  ERROR_MSG: null,
+  SOURCE: null,
+  AUTO_QUERY: null,
+  AUTO_ZOOM: false,
+  STATS_POST_RENDER_COMPLETED: false,
+  HOME_PAGE_STATE: null,
+  SCROLL_PERCENTS: SCROLL_PERCENTS,
+  popKey: function popKey(key) {
+    var value = this[key];
+    this[key] = this._getDefault(key);
+    return value;
+  },
+  readKey: function readKey(key) {
+    return this[key];
+  },
+  _getDefault: function _getDefault(key) {
+    switch (key) {
+      case CONTEXT_KEYS.AUTO_ZOOM:
+        return false;
+      case CONTEXT_KEYS.ERROR_MSG:
+        return null;
+      case CONTEXT_KEYS.SOURCE:
+        return null;
+      case CONTEXT_KEYS.AUTO_QUERY:
+        return null;
+      case CONTEXT_KEYS.STATS_POST_RENDER_COMPLETED:
+        return false;
+      case CONTEXT_KEYS.HOME_PAGE_STATE:
+        return null;
+      case CONTEXT_KEYS.SCROLL_PERCENTS:
+        return SCROLL_PERCENTS;
+    }
+  }
 };
 
 
@@ -5431,23 +5565,24 @@ var CONTEXT = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   HOME_PAGE_STATES: () => (/* binding */ HOME_PAGE_STATES),
+/* harmony export */   HOME_PAGE_STATES: () => (/* reexport safe */ _page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES),
 /* harmony export */   PageStateManager: () => (/* binding */ PageStateManager),
 /* harmony export */   homePageSetView: () => (/* binding */ homePageSetView),
 /* harmony export */   validateState: () => (/* binding */ validateState)
 /* harmony export */ });
 /* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
+/* harmony import */ var _page_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-utils.js */ "./static/assets/js/pages/page-utilities/page-utils.js");
+/* harmony import */ var _page_state_references_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./page-state-references.js */ "./static/assets/js/pages/page-utilities/page-state-references.js");
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
-var HOME_PAGE_STATES = {
-  SELECT_DATA: "select-data",
-  SHOW_STATS: "show-stats",
-  LOAD_DATA: "load-data"
-};
-var VALIDATION_SET = new Set(Object.values(HOME_PAGE_STATES));
+
+
+
+var VALIDATION_SET = new Set(Object.values(_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES));
 function validateState(state) {
   if (!VALIDATION_SET.has(state)) {
     console.error("Invalid page state: ".concat(state));
@@ -5455,8 +5590,17 @@ function validateState(state) {
   }
   return true;
 }
-function getContentBodyID(state) {
-  return "".concat(state, "-body");
+function getContentBody(state) {
+  switch (state) {
+    case _page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES.SELECT_DATA:
+      return _doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.SELECT_DATA_BODY;
+    case _page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES.SHOW_STATS:
+      return _doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.SHOW_STATS_BODY;
+    case _page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES.LOAD_DATA:
+      return _doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.LOAD_DATA_BODY;
+    default:
+      console.error("Invalid page state: ".concat(state));
+  }
 }
 var PageStateManager = {
   getState: function () {
@@ -5485,7 +5629,7 @@ var PageStateManager = {
             _context.n = 4;
             break;
           case 3:
-            _t3 = HOME_PAGE_STATES.SELECT_DATA;
+            _t3 = _page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES.SELECT_DATA;
           case 4:
             return _context.a(2, _t3);
         }
@@ -5539,18 +5683,37 @@ var PageStateManager = {
 };
 function homePageSetView(state) {
   if (!validateState(state)) return;
-  for (var _i = 0, _Object$values = Object.values(HOME_PAGE_STATES); _i < _Object$values.length; _i++) {
+  for (var _i = 0, _Object$values = Object.values(_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES); _i < _Object$values.length; _i++) {
     var otherState = _Object$values[_i];
     if (state === otherState) continue;
-    var _contentBodyID = getContentBodyID(otherState);
-    console.log("Hiding ".concat(_contentBodyID));
-    document.getElementById(_contentBodyID).classList.add("d-none");
+    var otherStateBody = getContentBody(otherState);
+    console.log("Hiding ".concat(otherStateBody.id));
+    _page_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].setVisibility(otherStateBody, false);
   }
-  var contentBodyID = getContentBodyID(state);
-  console.log("Showing ".concat(contentBodyID));
-  document.getElementById(contentBodyID).classList.remove("d-none");
+  var contentBody = getContentBody(state);
+  console.log("Showing ".concat(contentBody.id));
+  _page_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].setVisibility(contentBody, true);
 }
 
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/page-state-references.js":
+/*!************************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/page-state-references.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   HOME_PAGE_STATES: () => (/* binding */ HOME_PAGE_STATES)
+/* harmony export */ });
+var HOME_PAGE_STATES = {
+  SELECT_DATA: "select-data",
+  SHOW_STATS: "show-stats",
+  LOAD_DATA: "load-data"
+};
 
 /***/ }),
 
@@ -5570,7 +5733,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../e7/hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
 /* harmony import */ var _e7_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../e7/filter-syntax-parser.js */ "./static/assets/js/e7/filter-syntax-parser.js");
 /* harmony import */ var _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../e7/artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
-/* harmony import */ var _context_references_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _home_page_context_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./home-page-context.js */ "./static/assets/js/pages/page-utilities/home-page-context.js");
 /* harmony import */ var _page_state_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
@@ -5585,7 +5748,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 var PageUtils = {
   queryAndCacheBattles: function () {
-    var _queryAndCacheBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(user, stateDispatcher, contextFlags, HM) {
+    var _queryAndCacheBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(user, stateDispatcher, HM) {
       var artifacts, response, error, errorMSG, data, rawBattles;
       return _regenerator().w(function (_context) {
         while (1) switch (_context.n) {
@@ -5608,8 +5771,8 @@ var PageUtils = {
             error = _context.v;
             errorMSG = "Error while fetching data: ".concat(error);
             console.error("Error while fetching data: ".concat(error));
-            contextFlags[_context_references_js__WEBPACK_IMPORTED_MODULE_5__.CONTEXT.KEYS.ERROR_MSG] = errorMSG;
-            stateDispatcher(_page_state_manager_js__WEBPACK_IMPORTED_MODULE_6__.HOME_PAGE_STATES.SELECT_DATA, contextFlags);
+            _home_page_context_js__WEBPACK_IMPORTED_MODULE_5__.CONTEXT.ERROR_MSG = errorMSG;
+            stateDispatcher(_page_state_manager_js__WEBPACK_IMPORTED_MODULE_6__.HOME_PAGE_STATES.SELECT_DATA);
             _context.n = 7;
             break;
           case 4:
@@ -5627,7 +5790,7 @@ var PageUtils = {
         }
       }, _callee);
     }));
-    function queryAndCacheBattles(_x, _x2, _x3, _x4) {
+    function queryAndCacheBattles(_x, _x2, _x3) {
       return _queryAndCacheBattles.apply(this, arguments);
     }
     return queryAndCacheBattles;
@@ -5673,12 +5836,13 @@ var PageUtils = {
         }
       }, _callee2, null, [[2, 4]]);
     }));
-    function validateFilterSyntax(_x5) {
+    function validateFilterSyntax(_x4) {
       return _validateFilterSyntax.apply(this, arguments);
     }
     return validateFilterSyntax;
   }(),
   setScrollPercent: function setScrollPercent(percent) {
+    console.log("Scrolling to ".concat(percent, "%"));
     var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     var targetScroll = percent / 100 * maxScroll;
     // Temporarily disable CSS smooth scrolling
@@ -5700,6 +5864,23 @@ var PageUtils = {
     if (maxScroll === 0) return 0; // avoid division by zero
 
     return scrollTop / maxScroll * 100;
+  },
+  setTextGreen: function setTextGreen(element, text) {
+    element.textContent = text;
+    element.classList.remove("text-danger");
+    element.classList.add("text-safe");
+  },
+  setTextRed: function setTextRed(element, text) {
+    element.textContent = text;
+    element.classList.remove("text-safe");
+    element.classList.add("text-danger");
+  },
+  setVisibility: function setVisibility(element, visible) {
+    if (visible) {
+      element.classList.remove("d-none");
+    } else {
+      element.classList.add("d-none");
+    }
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PageUtils);
@@ -5717,9 +5898,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   runLoadDataLogic: () => (/* binding */ runLoadDataLogic)
 /* harmony export */ });
-/* harmony import */ var _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../page-utilities/context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../page-utilities/home-page-context.js */ "./static/assets/js/pages/page-utilities/home-page-context.js");
 /* harmony import */ var _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../page-utilities/page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
 /* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../exports.js */ "./static/assets/js/exports.js");
+/* harmony import */ var _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../page-utilities/doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -5728,93 +5910,168 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
-function runLoadDataLogic(_x, _x2) {
-  return _runLoadDataLogic.apply(this, arguments);
+
+function handleUploadAndSetUser(_x) {
+  return _handleUploadAndSetUser.apply(this, arguments);
 }
-function _runLoadDataLogic() {
-  _runLoadDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(stateDispatcher, contextFlags) {
-    var HM, user, autoZoom, battles, filters, stats, sourceState, source, _t;
+function _handleUploadAndSetUser() {
+  _handleUploadAndSetUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(HM) {
+    var selectedFile, battleArr, playerID, data;
     return _regenerator().w(function (_context) {
       while (1) switch (_context.n) {
         case 0:
-          (0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.homePageSetView)(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA);
-          _context.p = 1;
+          _context.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.ClientCache.get(_exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.ClientCache.Keys.RAW_UPLOAD);
+        case 1:
+          selectedFile = _context.v;
+          console.log("Retrieved Upload: ", selectedFile);
           _context.n = 2;
-          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.HeroManager.getHeroManager();
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.CSVParse.parseUpload(selectedFile);
         case 2:
-          HM = _context.v;
+          battleArr = _context.v;
           _context.n = 3;
-          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.UserManager.getUser();
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.ClientCache.clearUserData();
         case 3:
-          user = _context.v;
-          if (!contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.QUERY]) {
-            _context.n = 4;
+          _context.n = 4;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.BattleManager.cacheUpload(battleArr, HM);
+        case 4:
+          playerID = battleArr[0]["P1 ID"];
+          _context.n = 5;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.UserManager.findUser({
+            id: playerID
+          });
+        case 5:
+          data = _context.v;
+          if (data.error) {
+            _context.n = 7;
             break;
           }
-          contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.QUERY] = false;
+          _context.n = 6;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.UserManager.setUser(data.user);
+        case 6:
+          return _context.a(2);
+        case 7:
+          console.log("Failed to find user with ID during upload verification:", playerID);
+          console.log("Setting Error Message:", data.error);
+          throw new Error("File Upload Error ", data.error);
+        case 8:
+          return _context.a(2);
+      }
+    }, _callee);
+  }));
+  return _handleUploadAndSetUser.apply(this, arguments);
+}
+function handleBattleQuery(_x2, _x3, _x4) {
+  return _handleBattleQuery.apply(this, arguments);
+}
+function _handleBattleQuery() {
+  _handleBattleQuery = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(user, stateDispatcher, HM) {
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
           console.log("querying and caching user battles for user: ", JSON.stringify(user));
-          _context.n = 4;
-          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.PageUtils.queryAndCacheBattles(user, stateDispatcher, contextFlags, HM);
+          _context2.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.PageUtils.queryAndCacheBattles(user, stateDispatcher, HM);
+        case 1:
+          return _context2.a(2);
+      }
+    }, _callee2);
+  }));
+  return _handleBattleQuery.apply(this, arguments);
+}
+function runLoadDataLogic(_x5) {
+  return _runLoadDataLogic.apply(this, arguments);
+}
+function _runLoadDataLogic() {
+  _runLoadDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(stateDispatcher) {
+    var HM, _SOURCE, autoZoom, autoQuery, user, battles, filters, stats, sourceState, _t;
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
+        case 0:
+          (0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.homePageSetView)(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA);
+          _context3.p = 1;
+          _context3.n = 2;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.HeroManager.getHeroManager();
+        case 2:
+          HM = _context3.v;
+          _SOURCE = _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.popKey(_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.SOURCE);
+          _context3.n = 3;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.ClientCache.getFlag("autoZoom");
+        case 3:
+          autoZoom = _context3.v;
+          autoQuery = _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.popKey(_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.AUTO_QUERY);
+          if (!(_SOURCE === _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.UPLOAD)) {
+            _context3.n = 4;
+            break;
+          }
+          _context3.n = 4;
+          return handleUploadAndSetUser(HM);
         case 4:
-          autoZoom = contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.AUTO_ZOOM];
-          contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.AUTO_ZOOM] = false;
-
+          _context3.n = 5;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.UserManager.getUser();
+        case 5:
+          user = _context3.v;
+          if (!autoQuery) {
+            _context3.n = 6;
+            break;
+          }
+          _context3.n = 6;
+          return handleBattleQuery(user, stateDispatcher, HM);
+        case 6:
           // retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
           console.log("Getting Battles From Cache");
-          _context.n = 5;
+          _context3.n = 7;
           return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.BattleManager.getBattles();
-        case 5:
-          battles = _context.v;
+        case 7:
+          battles = _context3.v;
           console.log("BATTLES DURING LOAD");
           console.log(battles);
           console.log("Getting Filters From Cache");
-          _context.n = 6;
+          _context3.n = 8;
           return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.getFilters(HM);
-        case 6:
-          filters = _context.v;
-          console.log("Received Filters: ".concat(JSON.stringify(filters)));
-          _context.n = 7;
-          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.BattleManager.getStats(battles, user, filters, HM, autoZoom);
-        case 7:
-          stats = _context.v;
-          _context.n = 8;
-          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.ClientCache.setStats(stats);
         case 8:
-          stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.SHOW_STATS, contextFlags);
-          _context.n = 14;
-          break;
+          filters = _context3.v;
+          console.log("Received Filters: ".concat(JSON.stringify(filters)));
+          _context3.n = 9;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.BattleManager.getStats(battles, user, filters, HM, autoZoom);
         case 9:
-          _context.p = 9;
-          _t = _context.v;
-          source = contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.SOURCE];
-          if (!(source === _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.QUERY || source === _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.UPLOAD)) {
-            _context.n = 10;
+          stats = _context3.v;
+          _context3.n = 10;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.ClientCache.setStats(stats);
+        case 10:
+          stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.SHOW_STATS);
+          console.log("REACHED END OF LOAD DATA LOGIC");
+          return _context3.a(2);
+        case 11:
+          _context3.p = 11;
+          _t = _context3.v;
+          if (!(SOURCE === _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.QUERY || SOURCE === _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.UPLOAD)) {
+            _context3.n = 12;
             break;
           }
           sourceState = _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.SELECT_DATA;
-          _context.n = 12;
+          _context3.n = 14;
           break;
-        case 10:
-          if (!(source === _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.STATS)) {
-            _context.n = 11;
+        case 12:
+          if (!(SOURCE === _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.VALUES.SOURCE.STATS)) {
+            _context3.n = 13;
             break;
           }
           sourceState = _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.SHOW_STATS;
-          _context.n = 12;
+          _context3.n = 14;
           break;
-        case 11:
-          throw new Error("Invalid source: ".concat(source));
-        case 12:
-          console.error(_t);
-          _context.n = 13;
-          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.UserManager.clearUserData();
         case 13:
-          contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.KEYS.ERROR_MSG] = "Failed to load data: ".concat(_t.message);
-          stateDispatcher(sourceState, contextFlags);
+          throw new Error("Invalid source: ".concat(source));
         case 14:
-          return _context.a(2);
+          console.error(_t);
+          _context3.n = 15;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_2__.ContentManager.UserManager.clearUserData();
+        case 15:
+          _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_0__.CONTEXT.ERROR_MSG = "Failed to load data: ".concat(_t.message);
+          stateDispatcher(sourceState);
+          return _context3.a(2);
       }
-    }, _callee, null, [[1, 9]]);
+    }, _callee3, null, [[1, 11]]);
   }));
   return _runLoadDataLogic.apply(this, arguments);
 }
@@ -5836,7 +6093,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../exports.js */ "./static/assets/js/exports.js");
 /* harmony import */ var _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../page-utilities/page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
-/* harmony import */ var _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../page-utilities/context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../page-utilities/home-page-context.js */ "./static/assets/js/pages/page-utilities/home-page-context.js");
+/* harmony import */ var _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../page-utilities/doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -5844,11 +6102,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
-function addUserFormListener(_x, _x2) {
+
+function addUserFormListener(_x) {
   return _addUserFormListener.apply(this, arguments);
 }
 function _addUserFormListener() {
-  _addUserFormListener = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(stateDispatcher, contextFlags) {
+  _addUserFormListener = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(stateDispatcher) {
     var form;
     return _regenerator().w(function (_context2) {
       while (1) switch (_context2.n) {
@@ -5869,8 +6128,8 @@ function _addUserFormListener() {
                       _context.n = 1;
                       break;
                     }
-                    document.getElementById("errorMSG").textContent = "Must enter username";
-                    _context.n = 7;
+                    _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.setTextRed(_page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.SELECT_DATA_MSG, "Must enter username");
+                    _context.n = 8;
                     break;
                   case 1:
                     _context.p = 1;
@@ -5884,35 +6143,37 @@ function _addUserFormListener() {
                     result = _context.v;
                     console.log("Got data:", JSON.stringify(result));
                     if (result.error) {
-                      _context.n = 4;
+                      _context.n = 5;
                       break;
                     }
                     _context.n = 3;
-                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.setUser(result.user);
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.clearUserData();
                   case 3:
-                    contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.QUERY] = true;
-                    contextFlags.SOURCE = _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.VALUES.SOURCE.QUERY;
-                    stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA, contextFlags);
-                    _context.n = 5;
-                    break;
+                    _context.n = 4;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.setUser(result.user);
                   case 4:
-                    console.log("User Not Found:", result.error);
-                    document.getElementById("errorMSG").textContent = "Could not find user: ".concat(name, " in server: ").concat(world_code);
+                    _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.AUTO_QUERY = true;
+                    _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.SOURCE = _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.VALUES.SOURCE.QUERY;
+                    stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA);
+                    return _context.a(2);
                   case 5:
-                    _context.n = 7;
-                    break;
+                    console.log("User Not Found:", result.error);
+                    document.getElementById("select-data-msg").textContent = "Could not find user: ".concat(name, " in server: ").concat(world_code);
                   case 6:
-                    _context.p = 6;
+                    _context.n = 8;
+                    break;
+                  case 7:
+                    _context.p = 7;
                     _t = _context.v;
                     // You can now store the data, process it, or update your app state
                     console.error("Caught Error:", _t);
-                    document.getElementById("errorMSG").textcontent = "Error encountered: ".concat(_t.message);
-                  case 7:
+                    document.getElementById("select-data-msg").textcontent = "Error encountered: ".concat(_t.message);
+                  case 8:
                     return _context.a(2);
                 }
-              }, _callee, null, [[1, 6]]);
+              }, _callee, null, [[1, 7]]);
             }));
-            return function (_x9) {
+            return function (_x5) {
               return _ref.apply(this, arguments);
             };
           }());
@@ -5923,11 +6184,11 @@ function _addUserFormListener() {
   }));
   return _addUserFormListener.apply(this, arguments);
 }
-function addUploadFormListener(_x3, _x4) {
+function addUploadFormListener(_x2) {
   return _addUploadFormListener.apply(this, arguments);
 }
 function _addUploadFormListener() {
-  _addUploadFormListener = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(stateDispatcher, contextFlags) {
+  _addUploadFormListener = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(stateDispatcher) {
     var checkbox, selectedFile;
     return _regenerator().w(function (_context5) {
       while (1) switch (_context5.n) {
@@ -5949,14 +6210,14 @@ function _addUploadFormListener() {
             }, _callee3);
           })));
           selectedFile = null; // Capture file when selected
-          document.getElementById("csvFile").addEventListener("change", function (event) {
+          _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.CSV_FILE.addEventListener("change", function (event) {
             selectedFile = event.target.files[0];
           });
 
           // Intercept form submission
-          document.getElementById("uploadForm").addEventListener("submit", /*#__PURE__*/function () {
+          _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.UPLOAD_FORM.addEventListener("submit", /*#__PURE__*/function () {
             var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(event) {
-              var autoQueryFlag, battleArr, HM, playerID, data, _t2;
+              var autoQueryFlag, msgElement, _t2;
               return _regenerator().w(function (_context4) {
                 while (1) switch (_context4.n) {
                   case 0:
@@ -5965,59 +6226,37 @@ function _addUploadFormListener() {
 
                     // Get its state of auto-query checkbox
                     autoQueryFlag = checkbox.checked;
+                    msgElement = _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.SELECT_DATA_MSG;
                     _context4.p = 1;
-                    _context4.n = 2;
-                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.CSVParse.parseUpload(selectedFile);
-                  case 2:
-                    battleArr = _context4.v;
-                    _context4.n = 3;
-                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.HeroManager.getHeroManager();
-                  case 3:
-                    HM = _context4.v;
-                    _context4.n = 4;
-                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.clearUserData();
-                  case 4:
-                    _context4.n = 5;
-                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.cacheUpload(battleArr, HM);
-                  case 5:
-                    playerID = battleArr[0]["P1 ID"];
-                    _context4.n = 6;
-                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.findUser({
-                      id: playerID
-                    });
-                  case 6:
-                    data = _context4.v;
-                    console.log("Got data:", JSON.stringify(data));
-                    if (data.error) {
-                      _context4.n = 8;
+                    if (selectedFile) {
+                      _context4.n = 2;
                       break;
                     }
-                    _context4.n = 7;
-                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.setUser(data.user);
-                  case 7:
-                    contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.QUERY] = autoQueryFlag;
-                    contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.SOURCE] = _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.VALUES.SOURCE.UPLOAD;
-                    stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA, contextFlags);
-                    _context4.n = 9;
-                    break;
-                  case 8:
-                    console.log("Setting Error Message:", data.error);
-                    document.getElementById("errorMSG").textContent = data.error;
-                    console.log("Error Message is now:", document.getElementById("errorMSG").textContent);
-                  case 9:
-                    _context4.n = 11;
-                    break;
-                  case 10:
-                    _context4.p = 10;
+                    _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.setTextRed(msgElement, "Must upload a file");
+                    return _context4.a(2);
+                  case 2:
+                    console.log("Selected File: ".concat(selectedFile.name, " ; content: ").concat(JSON.stringify(selectedFile)));
+                    _context4.n = 3;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.clearUserData();
+                  case 3:
+                    _context4.n = 4;
+                    return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.cache(_exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.Keys.RAW_UPLOAD, selectedFile);
+                  case 4:
+                    _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.AUTO_QUERY = autoQueryFlag;
+                    _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.SOURCE = _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.VALUES.SOURCE.UPLOAD;
+                    stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_1__.HOME_PAGE_STATES.LOAD_DATA);
+                    return _context4.a(2);
+                  case 5:
+                    _context4.p = 5;
                     _t2 = _context4.v;
                     console.error("Caught Error:", _t2);
-                    document.getElementById("errorMSG").textContent = _t2.message;
-                  case 11:
+                    _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.setTextRed(msgElement, _t2.message);
+                  case 6:
                     return _context4.a(2);
                 }
-              }, _callee4, null, [[1, 10]]);
+              }, _callee4, null, [[1, 5]]);
             }));
-            return function (_x0) {
+            return function (_x6) {
               return _ref3.apply(this, arguments);
             };
           }());
@@ -6028,16 +6267,16 @@ function _addUploadFormListener() {
   }));
   return _addUploadFormListener.apply(this, arguments);
 }
-function initializeSelectDataLogic(_x5, _x6) {
+function initializeSelectDataLogic(_x3) {
   return _initializeSelectDataLogic.apply(this, arguments);
 }
 function _initializeSelectDataLogic() {
-  _initializeSelectDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(stateDispatcher, contextFlags) {
+  _initializeSelectDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(stateDispatcher) {
     return _regenerator().w(function (_context6) {
       while (1) switch (_context6.n) {
         case 0:
-          addUserFormListener(stateDispatcher, contextFlags);
-          addUploadFormListener(stateDispatcher, contextFlags);
+          addUserFormListener(stateDispatcher);
+          addUploadFormListener(stateDispatcher);
         case 1:
           return _context6.a(2);
       }
@@ -6045,12 +6284,12 @@ function _initializeSelectDataLogic() {
   }));
   return _initializeSelectDataLogic.apply(this, arguments);
 }
-function runSelectDataLogic(_x7, _x8) {
+function runSelectDataLogic(_x4) {
   return _runSelectDataLogic.apply(this, arguments);
 }
 function _runSelectDataLogic() {
-  _runSelectDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(stateDispatcher, contextFlags) {
-    var checkbox, errorMSG;
+  _runSelectDataLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(stateDispatcher) {
+    var checkbox, msgElement, errorMSG;
     return _regenerator().w(function (_context7) {
       while (1) switch (_context7.n) {
         case 0:
@@ -6059,12 +6298,12 @@ function _runSelectDataLogic() {
           return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFlag("autoQuery");
         case 1:
           checkbox.checked = _context7.v;
-          document.getElementById("errorMSG").textContent = "";
-          if (contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.ERROR_MSG]) {
-            errorMSG = contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.ERROR_MSG];
+          msgElement = _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.SELECT_DATA_MSG;
+          msgElement.textContent = "";
+          if (_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.ERROR_MSG) {
+            errorMSG = _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.popKey(_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.ERROR_MSG);
             console.log("Setting Error Message:", errorMSG);
-            document.getElementById("errorMSG").textContent = errorMSG;
-            contextFlags[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_2__.CONTEXT.KEYS.ERROR_MSG] = null;
+            _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.setTextRed(msgElement, errorMSG);
           }
         case 2:
           return _context7.a(2);
@@ -6086,13 +6325,14 @@ function _runSelectDataLogic() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   addCodeMirror: () => (/* binding */ addCodeMirror),
 /* harmony export */   initializeStatsLogic: () => (/* binding */ initializeStatsLogic),
+/* harmony export */   postFirstRenderLogic: () => (/* binding */ postFirstRenderLogic),
 /* harmony export */   runStatsLogic: () => (/* binding */ runStatsLogic)
 /* harmony export */ });
 /* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../exports.js */ "./static/assets/js/exports.js");
-/* harmony import */ var _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../page-utilities/context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../page-utilities/home-page-context.js */ "./static/assets/js/pages/page-utilities/home-page-context.js");
 /* harmony import */ var _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../page-utilities/page-state-manager.js */ "./static/assets/js/pages/page-utilities/page-state-manager.js");
+/* harmony import */ var _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../page-utilities/doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
@@ -6101,12 +6341,13 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
+
 function populateContent() {
   return _populateContent.apply(this, arguments);
 }
 function _populateContent() {
   _populateContent = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
-    var user, seasonDetails, stats, battleTable, filterBattleTableCheckbox, _t;
+    var user, seasonDetails, stats, battleTable, _t;
     return _regenerator().w(function (_context4) {
       while (1) switch (_context4.n) {
         case 0:
@@ -6121,7 +6362,6 @@ function _populateContent() {
           console.log("Skipping populate tables: user not found");
           return _context4.a(2);
         case 2:
-          ;
           console.log("POPULATING DATA PROCESS INITIATED");
           _context4.p = 3;
           console.log("Getting Season Details");
@@ -6150,22 +6390,6 @@ function _populateContent() {
           _exports_js__WEBPACK_IMPORTED_MODULE_0__.CardContent.functions.populateRankPlot(stats.plotContent);
           console.log("FINISHED POPULATING");
           console.timeEnd("populateTables");
-          console.log("Setting listener for filter-battle-table checkbox");
-          filterBattleTableCheckbox = document.getElementById("filter-battle-table");
-          filterBattleTableCheckbox.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-            return _regenerator().w(function (_context3) {
-              while (1) switch (_context3.n) {
-                case 0:
-                  if (!filterBattleTableCheckbox.checked) {
-                    _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.replaceDatatableData(battleTable, stats.battles);
-                  } else {
-                    _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.replaceDatatableData(battleTable, stats.filteredBattles);
-                  }
-                case 1:
-                  return _context3.a(2);
-              }
-            }, _callee3);
-          })));
           _context4.n = 7;
           break;
         case 6:
@@ -6180,11 +6404,12 @@ function _populateContent() {
   return _populateContent.apply(this, arguments);
 }
 function addAutoZoomListener() {
-  var autoZoomCheckbox = document.getElementById("auto-zoom-flag");
+  var autoZoomCheckbox = _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.AUTO_ZOOM_FLAG;
   autoZoomCheckbox.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
     return _regenerator().w(function (_context) {
       while (1) switch (_context.n) {
         case 0:
+          console.log("Toggling Auto Zoom: ", autoZoomCheckbox.checked);
           _context.n = 1;
           return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFlag("autoZoom", autoZoomCheckbox.checked);
         case 1:
@@ -6207,12 +6432,12 @@ function addPremadeFilterButtonListener(editor) {
     editor.setValue(newStr);
   });
 }
-function addFilterButtonListeners(editor, stateDispatcher, context) {
+function addFilterButtonListeners(editor, stateDispatcher) {
   // Logic for submit buttons on filter pane
   var filterForm = document.getElementById("filterForm");
   filterForm.addEventListener("submit", /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(event) {
-      var clickedButton, action, syntaxStr, appliedFilter, validFilter, _autoZoomCheckbox;
+      var clickedButton, action, syntaxStr, appliedFilter, validFilter;
       return _regenerator().w(function (_context2) {
         while (1) switch (_context2.n) {
           case 0:
@@ -6243,10 +6468,9 @@ function addFilterButtonListeners(editor, stateDispatcher, context) {
             _context2.n = 3;
             return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFilterStr(syntaxStr);
           case 3:
-            _autoZoomCheckbox = document.getElementById("auto-zoom-flag");
-            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.AUTO_ZOOM] = _autoZoomCheckbox.checked;
-            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.QUERY] = false;
-            stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.LOAD_DATA, context);
+            _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.AUTO_QUERY = false;
+            stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.LOAD_DATA);
+            return _context2.a(2);
           case 4:
             _context2.n = 9;
             break;
@@ -6267,7 +6491,7 @@ function addFilterButtonListeners(editor, stateDispatcher, context) {
               break;
             }
             editor.setValue("");
-            console.log("Found applied filter", appliedFilter, "when clearing");
+            console.log("Found applied filter [", appliedFilter, "] when clearing");
             if (!appliedFilter) {
               _context2.n = 9;
               break;
@@ -6276,9 +6500,9 @@ function addFilterButtonListeners(editor, stateDispatcher, context) {
             _context2.n = 8;
             return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.setFilterStr("");
           case 8:
-            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.AUTO_ZOOM] = autoZoomCheckbox.checked;
-            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.QUERY] = false;
-            stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.LOAD_DATA, context);
+            _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.AUTO_QUERY = false;
+            stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.LOAD_DATA);
+            return _context2.a(2);
           case 9:
             return _context2.a(2);
         }
@@ -6289,16 +6513,15 @@ function addFilterButtonListeners(editor, stateDispatcher, context) {
     };
   }());
 }
-function addCodeMirror(_x2, _x3) {
+function addCodeMirror(_x2) {
   return _addCodeMirror.apply(this, arguments);
 }
 function _addCodeMirror() {
-  _addCodeMirror = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(stateDispatcher, context) {
-    var autoZoomCheckbox, textarea, editor, appliedFilter;
+  _addCodeMirror = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(stateDispatcher) {
+    var textarea, editor, appliedFilter;
     return _regenerator().w(function (_context5) {
       while (1) switch (_context5.n) {
         case 0:
-          autoZoomCheckbox = document.getElementById("auto-zoom-flag");
           CodeMirror.defineMode("filterSyntax", function () {
             return {
               token: function token(stream, state) {
@@ -6312,7 +6535,6 @@ function _addCodeMirror() {
             lineNumbers: true,
             theme: "default"
           });
-          context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.EDITOR_INITIALIZED] = true;
           editor.setSize(null, 185);
           _context5.n = 1;
           return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFilterStr();
@@ -6330,7 +6552,7 @@ function _addCodeMirror() {
           // Show the editor after it's initialized
           textarea.classList.remove("codemirror-hidden");
           addPremadeFilterButtonListener(editor);
-          addFilterButtonListeners(editor, stateDispatcher, context);
+          addFilterButtonListeners(editor, stateDispatcher);
         case 2:
           return _context5.a(2);
       }
@@ -6338,64 +6560,113 @@ function _addCodeMirror() {
   }));
   return _addCodeMirror.apply(this, arguments);
 }
-function initializeStatsLogic() {
-  return _initializeStatsLogic.apply(this, arguments);
+function addBattleTableFilterToggleListener() {
+  console.log("Setting listener for filter-battle-table checkbox");
+  var filterBattleTableCheckbox = document.getElementById("filter-battle-table");
+  filterBattleTableCheckbox.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+    var battleTable, stats;
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
+        case 0:
+          battleTable = $("#BattlesTable").DataTable();
+          _context3.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getStats();
+        case 1:
+          stats = _context3.v;
+          if (!filterBattleTableCheckbox.checked) {
+            _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.replaceDatatableData(battleTable, stats.battles);
+          } else {
+            _exports_js__WEBPACK_IMPORTED_MODULE_0__.Tables.functions.replaceDatatableData(battleTable, stats.filteredBattles);
+          }
+        case 2:
+          return _context3.a(2);
+      }
+    }, _callee3);
+  })));
 }
-function _initializeStatsLogic() {
-  _initializeStatsLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+function postFirstRenderLogic(_x3) {
+  return _postFirstRenderLogic.apply(this, arguments);
+}
+function _postFirstRenderLogic() {
+  _postFirstRenderLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(stateDispatcher) {
     return _regenerator().w(function (_context6) {
       while (1) switch (_context6.n) {
         case 0:
           _context6.n = 1;
-          return populateContent();
+          return addCodeMirror(stateDispatcher);
         case 1:
-          addAutoZoomListener();
+          addBattleTableFilterToggleListener();
+          _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.STATS_POST_RENDER_COMPLETED = true;
         case 2:
           return _context6.a(2);
       }
     }, _callee6);
   }));
+  return _postFirstRenderLogic.apply(this, arguments);
+}
+function initializeStatsLogic() {
   return _initializeStatsLogic.apply(this, arguments);
 }
-function runStatsLogic(_x4, _x5) {
-  return _runStatsLogic.apply(this, arguments);
-}
-function _runStatsLogic() {
-  _runStatsLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(stateDispatcher, context) {
-    var autoZoomCheckbox, user, filterMSG;
+function _initializeStatsLogic() {
+  _initializeStatsLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
     return _regenerator().w(function (_context7) {
       while (1) switch (_context7.n) {
         case 0:
-          autoZoomCheckbox = document.getElementById("auto-zoom-flag");
           _context7.n = 1;
-          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFlag("autoZoom");
-        case 1:
-          autoZoomCheckbox.checked = _context7.v;
-          _context7.n = 2;
-          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.getUser();
-        case 2:
-          user = _context7.v;
-          if (!user) {
-            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG] = "User not found; Must either query a valid user or upload battles to view hero stats";
-            console.error(context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG]);
-            stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.SELECT_DATA, context);
-          } else {
-            console.log("User found:", user);
-          }
-          _context7.n = 3;
           return populateContent();
-        case 3:
-          filterMSG = document.getElementById("filterMSG");
-          if (context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG]) {
-            filterMSG.textContent = context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG];
-            filterMSG.classList.remove("text-safe");
-            filterMSG.classList.add("text-danger");
-            context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG] = null;
-          }
-        case 4:
+        case 1:
+          addAutoZoomListener();
+        case 2:
           return _context7.a(2);
       }
     }, _callee7);
+  }));
+  return _initializeStatsLogic.apply(this, arguments);
+}
+function runStatsLogic(_x4) {
+  return _runStatsLogic.apply(this, arguments);
+}
+function _runStatsLogic() {
+  _runStatsLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(stateDispatcher) {
+    var autoZoomCheckbox, checked, user, filterMSG;
+    return _regenerator().w(function (_context8) {
+      while (1) switch (_context8.n) {
+        case 0:
+          autoZoomCheckbox = _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.AUTO_ZOOM_FLAG;
+          _context8.n = 1;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getFlag("autoZoom");
+        case 1:
+          checked = _context8.v;
+          autoZoomCheckbox.checked = checked;
+          _context8.n = 2;
+          return _exports_js__WEBPACK_IMPORTED_MODULE_0__.ContentManager.UserManager.getUser();
+        case 2:
+          user = _context8.v;
+          if (user) {
+            _context8.n = 3;
+            break;
+          }
+          console.log("User not found sending to select data quitely");
+          stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_2__.HOME_PAGE_STATES.SELECT_DATA); // switch view with no error; should only happen if user is reloading and state cache did not expire while user info did
+          return _context8.a(2);
+        case 3:
+          console.log("User found:", user);
+        case 4:
+          _context8.n = 5;
+          return populateContent();
+        case 5:
+          filterMSG = _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.FILTER_MSG;
+          filterMSG.textContent = "";
+          if (_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.ERROR_MSG) {
+            console.log("Setting Error Message: ".concat(_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.ERROR_MSG));
+            _exports_js__WEBPACK_IMPORTED_MODULE_0__.PageUtils.setTextRed(filterMSG, _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.popKey(_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_1__.CONTEXT.KEYS.ERROR_MSG));
+          }
+          _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.CSV_FILE.value = "";
+          _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].HOME_PAGE.USER_QUERY_FORM_NAME.value = "";
+        case 6:
+          return _context8.a(2);
+      }
+    }, _callee8);
   }));
   return _runStatsLogic.apply(this, arguments);
 }
@@ -6737,17 +7008,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _page_view_logic_select_data_logic_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./page-view-logic/select-data-logic.js */ "./static/assets/js/pages/page-view-logic/select-data-logic.js");
 /* harmony import */ var _page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-view-logic/stats-logic.js */ "./static/assets/js/pages/page-view-logic/stats-logic.js");
 /* harmony import */ var _page_view_logic_load_data_logic_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./page-view-logic/load-data-logic.js */ "./static/assets/js/pages/page-view-logic/load-data-logic.js");
-/* harmony import */ var _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./page-utilities/context-references.js */ "./static/assets/js/pages/page-utilities/context-references.js");
+/* harmony import */ var _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./page-utilities/home-page-context.js */ "./static/assets/js/pages/page-utilities/home-page-context.js");
 /* harmony import */ var _exports_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../exports.js */ "./static/assets/js/exports.js");
 /* harmony import */ var _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./page-utilities/page-utils.js */ "./static/assets/js/pages/page-utilities/page-utils.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+/* harmony import */ var _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./page-utilities/doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -6755,75 +7023,80 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
-var SCROLL_PERCENTS = _defineProperty(_defineProperty(_defineProperty({}, _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, 0), _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS, 0), _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.LOAD_DATA, 0);
-function stateDispatcher(_x, _x2) {
+
+
+// switches among view states for the home page
+function stateDispatcher(_x) {
   return _stateDispatcher.apply(this, arguments);
 }
 function _stateDispatcher() {
-  _stateDispatcher = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(state, context) {
-    var scrollPercent, _t;
-    return _regenerator().w(function (_context2) {
-      while (1) switch (_context2.n) {
+  _stateDispatcher = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(state) {
+    var currentState, scrollPercent, _t;
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
         case 0:
-          console.log("Switching to state: ".concat(state));
+          console.log("Switching to state: ".concat(state, ", with CONTEXT: "), _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT);
           if ((0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.validateState)(state)) {
-            _context2.n = 1;
+            _context3.n = 1;
             break;
           }
-          return _context2.a(2);
+          return _context3.a(2);
         case 1:
-          scrollPercent = SCROLL_PERCENTS[state];
-          _context2.n = 2;
-          return _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(state);
+          _context3.n = 2;
+          return _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.getState();
         case 2:
-          console.log("Error Message while in dispatch: ", document.getElementById("errorMSG").textContent);
-          _t = state;
-          _context2.n = _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA ? 3 : _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS ? 6 : _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.LOAD_DATA ? 10 : 12;
-          break;
+          currentState = _context3.v;
+          _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.SCROLL_PERCENTS[currentState] = _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].getScrollPercent();
+          scrollPercent = _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.SCROLL_PERCENTS[state];
+          _context3.n = 3;
+          return _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(state);
         case 3:
-          _context2.n = 4;
-          return (0,_page_view_logic_select_data_logic_js__WEBPACK_IMPORTED_MODULE_1__.runSelectDataLogic)(stateDispatcher, context);
+          _t = state;
+          _context3.n = _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA ? 4 : _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS ? 7 : _t === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.LOAD_DATA ? 11 : 13;
+          break;
         case 4:
-          _context2.n = 5;
-          return (0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.homePageSetView)(state);
+          _context3.n = 5;
+          return (0,_page_view_logic_select_data_logic_js__WEBPACK_IMPORTED_MODULE_1__.runSelectDataLogic)(stateDispatcher);
         case 5:
-          return _context2.a(3, 13);
-        case 6:
-          _context2.n = 7;
-          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.runStatsLogic)(stateDispatcher, context);
-        case 7:
-          _context2.n = 8;
+          _context3.n = 6;
           return (0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.homePageSetView)(state);
+        case 6:
+          return _context3.a(3, 14);
+        case 7:
+          _context3.n = 8;
+          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.runStatsLogic)(stateDispatcher);
         case 8:
-          if (context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.EDITOR_INITIALIZED]) {
-            _context2.n = 9;
+          _context3.n = 9;
+          return (0,_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.homePageSetView)(state);
+        case 9:
+          if (_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.STATS_POST_RENDER_COMPLETED) {
+            _context3.n = 10;
             break;
           }
-          _context2.n = 9;
-          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.addCodeMirror)(stateDispatcher, context);
-        case 9:
-          return _context2.a(3, 13);
+          _context3.n = 10;
+          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.postFirstRenderLogic)(stateDispatcher);
         case 10:
-          _context2.n = 11;
-          return (0,_page_view_logic_load_data_logic_js__WEBPACK_IMPORTED_MODULE_3__.runLoadDataLogic)(stateDispatcher, context);
+          return _context3.a(3, 14);
         case 11:
-          return _context2.a(3, 13);
+          _context3.n = 12;
+          return (0,_page_view_logic_load_data_logic_js__WEBPACK_IMPORTED_MODULE_3__.runLoadDataLogic)(stateDispatcher, _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT);
         case 12:
-          console.error("Invalid page state: ".concat(state));
+          return _context3.a(3, 14);
         case 13:
-          if (scrollPercent) {
-            setTimeout(function () {
-              _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].setScrollPercent(scrollPercent);
-            }, 0);
-          }
+          console.error("Invalid page state: ".concat(state));
         case 14:
-          return _context2.a(2);
+          // persist scroll position between view state changes ; will reset after leaving page
+          setTimeout(function () {
+            _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].setScrollPercent(scrollPercent);
+          }, 0);
+        case 15:
+          return _context3.a(2);
       }
-    }, _callee2);
+    }, _callee3);
   }));
   return _stateDispatcher.apply(this, arguments);
 }
-function addNavListeners(context) {
+function addNavListeners() {
   document.querySelectorAll(".nav-link").forEach(function (link) {
     link.addEventListener("click", /*#__PURE__*/function () {
       var _ref = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(event) {
@@ -6848,13 +7121,11 @@ function addNavListeners(context) {
               console.log("Already in state: ".concat(currentState, " ; returning"));
               return _context.a(2);
             case 2:
-              ;
-              SCROLL_PERCENTS[currentState] = _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].getScrollPercent();
               if (!(navType === _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA)) {
                 _context.n = 3;
                 break;
               }
-              stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, context);
+              stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT);
               _context.n = 5;
               break;
             case 3:
@@ -6868,11 +7139,11 @@ function addNavListeners(context) {
               user = _context.v;
               // Stats will not show if there is no active user ; will redirect to select data view with error
               if (!user) {
-                context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.ERROR_MSG] = "User not found; Must either query a valid user or upload battles to view hero stats";
-                console.error(context[_page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.ERROR_MSG]);
-                stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, context);
+                _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.ERROR_MSG = "User not found; Must either query a valid user or upload battles to view hero stats";
+                console.error(_page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.ERROR_MSG);
+                stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA, _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT);
               } else {
-                stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS, context);
+                stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS, _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT);
               }
             case 5:
               _context.n = 7;
@@ -6885,41 +7156,83 @@ function addNavListeners(context) {
           }
         }, _callee, this);
       }));
-      return function (_x3) {
+      return function (_x2) {
         return _ref.apply(this, arguments);
       };
     }());
   });
 }
+function addSwitchUserBtnListener() {
+  _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_7__["default"].HOME_PAGE.CLEAR_DATA_BTN.addEventListener("click", /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(_event) {
+      var user;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _exports_js__WEBPACK_IMPORTED_MODULE_5__.ContentManager.UserManager.getUser();
+          case 1:
+            user = _context2.v;
+            if (!user) {
+              _context2.n = 4;
+              break;
+            }
+            _context2.n = 2;
+            return _exports_js__WEBPACK_IMPORTED_MODULE_5__.ContentManager.UserManager.clearUserData();
+          case 2:
+            _context2.n = 3;
+            return stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA);
+          case 3:
+            _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].setTextGreen(_page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_7__["default"].HOME_PAGE.SELECT_DATA_MSG, "Data of user ".concat(user.name, " (").concat(user.id, ") cleared"));
+            _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.SCROLL_PERCENTS[_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS] = 0; // reset scroll position of show stats page when user data cleared
+            _context2.n = 6;
+            break;
+          case 4:
+            _context2.n = 5;
+            return stateDispatcher(_page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA);
+          case 5:
+            _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].setTextGreen(_page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_7__["default"].HOME_PAGE.SELECT_DATA_MSG, "Data already cleared");
+          case 6:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    return function (_x3) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
+}
 function homePageLogic() {
   return _homePageLogic.apply(this, arguments);
 }
 function _homePageLogic() {
-  _homePageLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-    var context, state;
+  _homePageLogic = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+    var state;
     return _regenerator().w(function (_context4) {
       while (1) switch (_context4.n) {
         case 0:
-          context = _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({}, _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.ERROR_MSG, null), _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.AUTO_ZOOM, false), _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.SOURCE, null), _page_utilities_context_references_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.KEYS.QUERY, null), "SCROLL_PERCENTS", SCROLL_PERCENTS);
-          console.log("Initialized context flags: ".concat(JSON.stringify(context)));
-          addNavListeners(context);
+          console.log("Initialized CONTEXT", _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT);
+          addNavListeners();
+          addSwitchUserBtnListener();
           _context4.n = 1;
-          return (0,_page_view_logic_select_data_logic_js__WEBPACK_IMPORTED_MODULE_1__.initializeSelectDataLogic)(stateDispatcher, context);
+          return (0,_page_view_logic_select_data_logic_js__WEBPACK_IMPORTED_MODULE_1__.initializeSelectDataLogic)(stateDispatcher);
         case 1:
           _context4.n = 2;
-          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.initializeStatsLogic)(stateDispatcher, context);
+          return (0,_page_view_logic_stats_logic_js__WEBPACK_IMPORTED_MODULE_2__.initializeStatsLogic)(stateDispatcher);
         case 2:
           _context4.n = 3;
           return _page_utilities_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.getState();
         case 3:
           state = _context4.v;
-          if (state) {
-            stateDispatcher(state, context);
-          }
+          _page_utilities_home_page_context_js__WEBPACK_IMPORTED_MODULE_4__.CONTEXT.HOME_PAGE_STATE = state;
+          _context4.n = 4;
+          return stateDispatcher(state);
         case 4:
+          _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_6__["default"].setVisibility(_page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_7__["default"].HOME_PAGE.FOOTER_BODY, true);
+        case 5:
           return _context4.a(2);
       }
-    }, _callee3);
+    }, _callee4);
   }));
   return _homePageLogic.apply(this, arguments);
 }
@@ -6927,11 +7240,11 @@ function main() {
   return _main.apply(this, arguments);
 }
 function _main() {
-  _main = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+  _main = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
     return _regenerator().w(function (_context6) {
       while (1) switch (_context6.n) {
         case 0:
-          document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+          document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
             return _regenerator().w(function (_context5) {
               while (1) switch (_context5.n) {
                 case 0:
@@ -6940,12 +7253,12 @@ function _main() {
                 case 1:
                   return _context5.a(2);
               }
-            }, _callee4);
+            }, _callee5);
           })));
         case 1:
           return _context6.a(2);
       }
-    }, _callee5);
+    }, _callee6);
   }));
   return _main.apply(this, arguments);
 }

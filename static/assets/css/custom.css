@@ -424,3 +424,58 @@ table.dataTable.w-100 td {
 .filter-pane-btn {
   font-size: 12px !important;
 }
+
+
+button.brace-btn {
+  position: relative;
+  height: 3em;
+  border: 3px ridge #0cdfe3;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  transition: 0.5s;
+  border-radius: 0.3em;
+  font-size: 0.9em;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+button.brace-btn::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: #000000;
+  transition: 0.3s;
+  transform-origin: center;
+}
+
+button.brace-btn::before {
+  content: "";
+  transform-origin: center;
+  position: absolute;
+  top: 80%;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: #000000;
+  transition: 0.3s;
+}
+
+button.brace-btn:hover::before, button.brace-btn:hover::after {
+  transform: scale(0)
+}
+
+button.brace-btn:hover {
+  box-shadow: inset 0px 0px 1.3em #0cdfe3;
+}
+
+button.brace-btn:active {
+  transition: all 0.1s;
+  color: #0cdfe3;
+  background-color: #000000; /* optional */
+  box-shadow: inset 0 0 10px #000000;
+}

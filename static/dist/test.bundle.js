@@ -839,14 +839,17 @@ function _clearStore() {
   return _clearStore.apply(this, arguments);
 }
 ;
-var Keys = {
+var USER_DATA_KEYS = {
   USER: "current-user",
-  HERO_MANAGER: "hero-manager",
   BATTLES: "battles",
+  RAW_UPLOAD: "raw-upload",
   UPLOADED_BATTLES: "uploaded-battles",
   FILTERED_BATTLES: "filtered-battles",
-  FILTER_STR: "filter-str",
   STATS: "stats",
+  FILTER_STR: "filter-str"
+};
+var Keys = _objectSpread(_objectSpread({}, USER_DATA_KEYS), {}, {
+  HERO_MANAGER: "hero-manager",
   SEASON_DETAILS: "season-details",
   AUTO_ZOOM_FLAG: "auto-zoom",
   AUTO_QUERY_FLAG: "auto-query",
@@ -857,7 +860,7 @@ var Keys = {
   KOR_USERS: "kor-users",
   ARTIFACTS: "artifacts",
   HOME_PAGE_STATE: "home-page-state"
-};
+});
 var FlagsToKeys = {
   "autoZoom": Keys.AUTO_ZOOM_FLAG,
   "autoQuery": Keys.AUTO_QUERY_FLAG
@@ -937,10 +940,8 @@ var ClientCache = {
               _context2.n = 6;
               break;
             }
-            console.log("Timeout not reached, using cache for ".concat(id));
             return _context2.a(2, result);
           case 6:
-            console.log("Timeout reached, returning null for ".concat(id));
             return _context2.a(2, null);
           case 7:
             return _context2.a(2);
@@ -1064,7 +1065,6 @@ var ClientCache = {
             return db.get(this.consts.META_STORE_NAME, key);
           case 3:
             val = _context7.v;
-            console.log("Timestamp set: ".concat(val));
           case 4:
             return _context7.a(2);
         }
@@ -1089,8 +1089,6 @@ var ClientCache = {
             _context8.n = 2;
             return db["delete"](this.consts.META_STORE_NAME, key);
           case 2:
-            console.log("Timestamp deleted for <".concat(id, ">"));
-          case 3:
             return _context8.a(2);
         }
       }, _callee8, this);
@@ -1134,7 +1132,7 @@ var ClientCache = {
       return _regenerator().w(function (_context0) {
         while (1) switch (_context0.n) {
           case 0:
-            toDelete = [Keys.USER, Keys.BATTLES, Keys.UPLOADED_BATTLES, Keys.FILTERED_BATTLES, Keys.FILTER_STR, Keys.STATS];
+            toDelete = Object.values(USER_DATA_KEYS);
             _context0.n = 1;
             return Promise.all(toDelete.map(function (key) {
               return _this["delete"](key);
@@ -1181,12 +1179,11 @@ var ClientCache = {
           case 1:
             timestamp = _context10.v;
             currentTime = Date.now();
-            console.log("Checking Timeout for <".concat(id, "> | Current time: ").concat(currentTime, ", cache timestamp: ").concat(timestamp, ", difference: ").concat(currentTime - timestamp, " ms"));
             if (!(!timestamp || currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
               _context10.n = 3;
               break;
             }
-            console.log("Cache timeout reached, clearing data from <".concat(id, ">"));
+            console.log("Cache timeout for ".concat(id));
             _context10.n = 2;
             return this["delete"](id);
           case 2:
@@ -2023,6 +2020,8 @@ function addPrimeFields(battle, HM) {
   battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIMES].reduce(product, 1);
   battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIMES].reduce(product, 1);
 }
+var P1 = "p1";
+var P2 = "p2";
 
 // takes raw battle from array returned by rust battle array call to flask-server; formats into row to populate table
 function formatBattleAsRow(raw, HM, artifacts) {
@@ -2036,17 +2035,22 @@ function formatBattleAsRow(raw, HM, artifacts) {
   var getArtifactName = function getArtifactName(code) {
     return _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].convertCodeToName(code, artifacts) || "None";
   };
-  var checkBanned = function checkBanned(index) {
-    return raw.p2_postban === raw.p1_picks[index];
-  }; // used to check if artifact is null because banned or because not equipped
-  var formatArtifacts = function formatArtifacts(artiArr) {
+  var checkBanned = function checkBanned(player, index) {
+    // used to check if artifact is null because banned or because not equipped
+    if (player === P1) {
+      return raw.p2_postban === raw.p1_picks[index];
+    } else {
+      return raw.p1_postban === raw.p2_picks[index];
+    }
+  };
+  var formatArtifacts = function formatArtifacts(player, artiArr) {
     return artiArr.map(function (code, index) {
-      return code ? getArtifactName(code) : checkBanned(index) ? "N/A" : "None";
+      return code ? getArtifactName(code) : checkBanned(player, index) ? "n/a" : "None";
     });
   };
   var formatCRBar = function formatCRBar(crBar) {
     return crBar.map(function (entry) {
-      return entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["N/A", 0];
+      return entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["n/a", 0];
     });
   };
 
@@ -2062,7 +2066,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
     return entry[1] === 100;
   });
   var p1TookFirstTurn = firstTurnHero ? raw.p1_picks.includes(firstTurnHero[0]) : false;
-  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, raw.p1_league || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, raw.p2_league || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
+  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, raw.p1_league || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, raw.p2_league || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "n/a"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(P1, raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(P2, raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
 
   // finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
   addPrimeFields(battle, HM);
@@ -4527,8 +4531,6 @@ function getHeroStats(battles, HM) {
 }
 function getFirstPickStats(battles, HM) {
   var battleList = getFirstPickSubset(Object.values(battles));
-  console.log(battles);
-  console.log(battleList);
   if (battleList.length === 0) {
     return [];
   }
@@ -4557,7 +4559,6 @@ function getFirstPickStats(battles, HM) {
     var _ref2 = _slicedToArray(_ref, 2),
       prime = _ref2[0],
       stats = _ref2[1];
-    console.log("prime", prime);
     var name = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM).name;
     return {
       hero: name,
@@ -4576,7 +4577,6 @@ function getFirstPickStats(battles, HM) {
 function getPrebanStats(battles, HM) {
   //console.log(`Got HM: ${HM}`);
 
-  console.log(battles);
   var emptyPrime = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName('Empty', HM).prime;
   var battleList = Object.values(battles);
   if (battleList.length === 0) {

@@ -12,10 +12,10 @@ from wtforms.validators import DataRequired
 
 class UserQueryForm(FlaskForm):
     username = StringField('Username',
-                         id='username_query',
+                         id='user-query-form-name',
                          validators=[DataRequired()])
     server = SelectField('Server',
-                             id='server_query',
+                             id='user-query-form-server',
                              choices=[('world_global', "Global"),
                                       ('world_kor', "Korea"),
                                       ('world_jpn', "Japan"),

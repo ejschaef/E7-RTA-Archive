@@ -11,7 +11,6 @@
   </head>
 
   <body data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-direction="ltr" data-pc-theme="dark">
-    
     {% block loader %}
       {% include "includes/loader.html" %}
     {% endblock loader %}
@@ -21,12 +20,12 @@
     {% endblock sidebar %}
 
     {% block navigation %}
-      {% include "includes/navigation-herostats.html" %}
+      {% include "includes/navigation-home-page.html" %}
     {% endblock navigation %}
 
     {% block content %}{% endblock content %}
     {% block footer %}
-      {% include "includes/footer.html" %}
+      {% include "includes/footer-home-page.html" %}
     {% endblock footer %}
 
     {% include "includes/scripts.html" %}

@@ -67,15 +67,9 @@ def session_add_user(user: User):
 ########################################################################################################
 
 
-@blueprint.route('/')
-@blueprint.route('/index')
-def index():
-    data = [
-            {'name': 'John Doe', 'age': 30, 'city': 'New York'},
-            {'name': 'Jane Smith', 'age': 25, 'city': 'Los Angeles'},
-            {'name': 'Peter Jones', 'age': 40, 'city': 'Chicago'}
-        ]
-    return render_template('pages/index.html', segment='index', data=data)
+@blueprint.route('/overview')
+def overview():
+    return render_template('pages/overview.html', segment='overview')
 
 @blueprint.route('/icon_feather')
 def icon_feather():
@@ -128,25 +122,15 @@ def get_battle_data():
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
     
 
-class SlimUserObject:
-
-    slots = ['id', 'name', 'world_code']
-
-    def __init__(self, user_dict):
-        self.id = user_dict["id"]
-        self.name = user_dict["name"]
-        self.world_code = user_dict["world_code"]
-
 @blueprint.route('api/rs_get_battle_data', methods=["POST"])
 def rs_get_battle_data():
     print("RS API Call to get_battle_data was made")
     try:
-        data = request.get_json()
-        print(f"Got: {data}")
-        user = SlimUserObject(data["user"])
-        name, world_code = user.name, user.world_code
-        print(f"SERVER QUERYING: <name={name}, server={world_code}>, id={user.id} using RS")
-        battle_data = get_battle_array(int(user.id), user.world_code)
+        user_dict = request.get_json()["user"]
+        print(f"Got: {user_dict}")
+        name, world_code, uid = user_dict["name"], user_dict["world_code"], user_dict["id"]
+        print(f"SERVER QUERYING: <name={name}, server={world_code}>, id={uid} using RS")
+        battle_data = get_battle_array(int(uid), world_code)
         print(f"Got {len(battle_data)} battles for {name} on {world_code}")
         return jsonify({ 'battles' : battle_data }), 200 #Http status code Ok
     except Exception as e:
@@ -229,19 +213,9 @@ def get_battle_data_from_id():
 # START FUNCTIONAL PAGE NAV SECTION
 ########################################################################################################
 
-@blueprint.route('/user_query', methods=['GET'])
-def user_query():
-    login_form = UserQueryForm(request.form)
-    return render_template('pages/user_query.html', form=login_form)
-
 @blueprint.route('/loading_user_data')
 def loading_user_data():
     return render_template("loading/loading_user_data.html")
-
-@blueprint.route('/upload_battle_data', methods=['GET', 'POST'])
-def upload_battle_data():
-    upload_form = FileUploadForm()
-    return render_template('pages/upload_battle_data.html', form=upload_form)
 
 @blueprint.route('/filter_syntax', methods=['GET'])
 def filter_syntax():
@@ -260,24 +234,24 @@ def filter_syntax():
 # START HERO STATS SECTION
 ########################################################################################################
 
-@blueprint.route('/stats', methods=['GET'])
-def stats():
+@blueprint.route('/')
+@blueprint.route('/index')
+@blueprint.route('/home', methods=['GET'])
+def home():
     filter_form = CodeForm()
     query_form = UserQueryForm()
     file_upload_form = FileUploadForm()
 
     code = request.form.get('code')
 
-    context = {'segment' : 'stats', 
+    context = {'segment' : 'home', 
                'filter_form' : filter_form,
                'query_form' : query_form,
                'upload_form' : file_upload_form,
                'code' : code,
     }
 
-    print("RENDERING STATS")
-
-    return render_template('pages/stats.html', **context)
+    return render_template('pages/home.html', **context)
 
 
 ########################################################################################################
@@ -357,7 +331,7 @@ def get_segment(request):
         segment = request.path.split('/')[-1]
 
         if segment == '':
-            segment = 'index'
+            segment = 'home'
 
         return segment
 
@@ -399,7 +373,7 @@ def error_117():
 @blueprint.errorhandler(RequestEntityTooLarge)
 def handle_file_too_large(e):
     session["FILE_SIZE_ERROR"] = True
-    return redirect(request.referrer or url_for('home_blueprint.index'))
+    return redirect(request.referrer or url_for('home_blueprint.home'))
 
 
 # Celery (to be refactored)
