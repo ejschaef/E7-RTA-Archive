@@ -256,6 +256,10 @@ table.dataTable.w-100 td {
     height: 200px;
   }
 
+  .width-170 {
+    width: 170px;
+  }
+
   .height-300 {
     height: 300px;
   }
@@ -313,6 +317,10 @@ table.dataTable.w-100 td {
   }
 
   .rel-width-20 {
+    width: 20%;
+  }
+
+  .rel-width-10 {
     width: 20%;
   }
   
@@ -479,3 +487,23 @@ button.brace-btn:active {
   background-color: #000000; /* optional */
   box-shadow: inset 0 0 10px #000000;
 }
+
+.flex-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.user-info {
+  color: #0cdfe3;
+  margin: 0;
+  padding: 0;
+}
+
+.text-xxs {
+  font-size: 0.55em;
+}
+
+
+

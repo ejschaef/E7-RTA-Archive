@@ -6,6 +6,8 @@ import { buildFormattedBattleMap } from "../e7/battle-transform.js";
 document.addEventListener("DOMContentLoaded", async () => {
 	await ContentManager.ClientCache.clearUserData();
 
+    await ContentManager.UserManager.clearUserDataLists();
+
     let global_users = await ContentManager.UserManager.getUserMap("world_global");
     let first_ten = Object.values(global_users).slice(0, 10);
     console.log(first_ten);

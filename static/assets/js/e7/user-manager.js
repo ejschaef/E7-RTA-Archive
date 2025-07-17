@@ -14,7 +14,7 @@ const userMapCacheKeyMap = {
 function createUser(userJSON, world_code) {
 	return {
 		id: userJSON.nick_no,
-		name: userJSON.nick_nm.toLowerCase(),
+		name: userJSON.nick_nm,
 		code: userJSON.code,
 		rank: userJSON.rank,
 		world_code: world_code,

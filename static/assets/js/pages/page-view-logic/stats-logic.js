@@ -53,11 +53,11 @@ async function populateContent() {
 			"server-stats",
 			stats.serverStats
 		);
-		const battleTable = Tables.functions.populateFullBattlesTable(
-			"BattlesTable",
-			stats.battles,
-			user
-		);
+		if (DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE.checked) {
+				Tables.functions.populateFullBattlesTable("BattlesTable", stats.filteredBattles, user);
+		} else {
+			Tables.functions.populateFullBattlesTable("BattlesTable", stats.battles, user);
+		}
 		CardContent.functions.populateGeneralStats(stats.generalStats);
 		CardContent.functions.populateRankPlot(stats.plotContent);
 		console.log("FINISHED POPULATING");
@@ -175,16 +175,13 @@ async function addCodeMirror(stateDispatcher) {
 
 function addBattleTableFilterToggleListener() {
 	console.log("Setting listener for filter-battle-table checkbox");
-	const filterBattleTableCheckbox = document.getElementById(
-		"filter-battle-table"
-	);
+	const filterBattleTableCheckbox = DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE;
 	filterBattleTableCheckbox.addEventListener("click", async () => {
-		const battleTable = $("#BattlesTable").DataTable();
 		const stats = await ContentManager.ClientCache.getStats();
 		if (!filterBattleTableCheckbox.checked) {
-			Tables.functions.replaceDatatableData(battleTable, stats.battles);
+			Tables.functions.replaceBattleData(stats.battles);
 		} else {
-			Tables.functions.replaceDatatableData(battleTable, stats.filteredBattles);
+			Tables.functions.replaceBattleData(stats.filteredBattles);
 		}
 	});
 }
@@ -192,11 +189,13 @@ function addBattleTableFilterToggleListener() {
 async function postFirstRenderLogic(stateDispatcher) {
 	await addCodeMirror(stateDispatcher);
 	addBattleTableFilterToggleListener();
-	CONTEXT.STATS_POST_RENDER_COMPLETED = true;
+}
+
+async function preFirstRenderLogic(stateDispatcher) {
+	await populateContent();
 }
 
 async function initializeStatsLogic() {
-	await populateContent();
 	addAutoZoomListener();
 }
 
@@ -204,6 +203,10 @@ async function runStatsLogic(stateDispatcher) {
 	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
 	const checked = await ContentManager.ClientCache.getFlag("autoZoom");
 	autoZoomCheckbox.checked = checked;
+	const stats = await ContentManager.ClientCache.getStats();
+	if (checked) {
+		Tables.functions.replaceBattleData(stats.filteredBattles);
+	}
 
 	const user = await ContentManager.UserManager.getUser();
 
@@ -214,8 +217,6 @@ async function runStatsLogic(stateDispatcher) {
 	} else {
 		console.log("User found:", user);
 	}
-
-	await populateContent();
 
 	const filterMSG = DOC_ELEMENTS.HOME_PAGE.FILTER_MSG;
 
@@ -230,4 +231,4 @@ async function runStatsLogic(stateDispatcher) {
 	DOC_ELEMENTS.HOME_PAGE.USER_QUERY_FORM_NAME.value = "";
 }
 
-export { initializeStatsLogic, postFirstRenderLogic, runStatsLogic };
+export { initializeStatsLogic, postFirstRenderLogic, runStatsLogic, populateContent, preFirstRenderLogic };

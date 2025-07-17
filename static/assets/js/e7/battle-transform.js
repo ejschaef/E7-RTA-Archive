@@ -1,6 +1,6 @@
 import HeroManager from "./hero-manager.js";
 import ArtifactManager from "./artifact-manager.js";
-import { EQUIPMENT_SET_MAP, COLUMNS_MAP, WORLD_CODE_TO_CLEAN_STR, COLUMNS } from "./references.js";
+import { EQUIPMENT_SET_MAP, COLUMNS_MAP, WORLD_CODE_TO_CLEAN_STR, ARRAY_COLUMNS, BOOLS_COLS, INT_COLUMNS } from "./references.js";
 
 // takes in cleaned battle row (including from uploaded file or in formatBattleAsRow) 
 // and adds fields representing sets heroes as prime products
@@ -93,30 +93,6 @@ function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
     }));
 }
 
-const ARRAY_COLUMNS = [
-    COLUMNS_MAP.P1_EQUIPMENT,
-    COLUMNS_MAP.P2_EQUIPMENT,
-    COLUMNS_MAP.P1_ARTIFACTS,
-    COLUMNS_MAP.P2_ARTIFACTS,
-    COLUMNS_MAP.CR_BAR ,
-    COLUMNS_MAP.P1_PREBANS,
-    COLUMNS_MAP.P2_PREBANS,
-    COLUMNS_MAP.P1_PICKS,
-    COLUMNS_MAP.P2_PICKS
-];
-
-const BOOLS_COLS = [
-    COLUMNS_MAP.FIRST_PICK,
-    COLUMNS_MAP.FIRST_TURN,
-    COLUMNS_MAP.WIN
-];
-
-const INT_COLUMNS = [
-    COLUMNS_MAP.SECONDS,
-    COLUMNS_MAP.TURNS,
-    COLUMNS_MAP.P1_POINTS,
-    COLUMNS_MAP.POINT_GAIN
-];
 
 // takes output of CSV parse and parses the list rows and ensures types are correct
 function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {
@@ -128,7 +104,7 @@ function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {
             row[col] = row[col].toLowerCase() === "true";
         }
         for (const col of INT_COLUMNS) {
-            row[col] = Number(row[col]);
+            row[col] = Number(row[col].replace("'", ""));
         }
         addPrimeFields(row, HM);
         return row;

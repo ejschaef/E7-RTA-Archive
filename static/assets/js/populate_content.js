@@ -1,9 +1,21 @@
-import { COLUMNS_EXPANDED } from "./e7/references";
+import { COLUMNS_EXPANDED, ARRAY_COLUMNS } from "./e7/references";
 
-function destroyDataTable(tableSelector) {
+function destroyDataTable(tableid) {
+	const tableSelector = $(`#${tableid}`);
 	if ($.fn.dataTable.isDataTable(tableSelector)) {
-		tableSelector.DataTable().destroy();
+		console.log("Destroying DataTable: ", tableid);
+		tableSelector.DataTable().clear().destroy();
 	}
+}
+
+function getDataWithStringifiedArrayColumns(dataArr) {
+	dataArr = structuredClone(dataArr);
+	for (const row of dataArr) {
+		for (const col of ARRAY_COLUMNS) {
+			row[col] = JSON.stringify(row[col]);
+		}
+	}
+	return dataArr;
 }
 
 let Tables = {};
@@ -21,6 +33,8 @@ function convertPercentToColorClass(str) {
 
 Tables.functions = {
 	populateHeroStatsTable: function (tableid, data) {
+		destroyDataTable(tableid);
+
 		const tbody = document.getElementById(`${tableid}Body`);
 		tbody.innerHTML = ""; // Clear existing rows
 
@@ -42,10 +56,7 @@ Tables.functions = {
 
 		const person = tableid.includes("Player") ? "Player" : "Enemy";
 
-
 		const tableSelector = $(`#${tableid}`);
-
-		destroyDataTable(tableSelector);
 
 		var table = tableSelector.DataTable({
 			layout: {
@@ -188,6 +199,8 @@ Tables.functions = {
 	},
 
 	populateFullBattlesTable: function (tableid, data, user) {
+		destroyDataTable(tableid);
+		data = getDataWithStringifiedArrayColumns(data);
 		const tbody = document.getElementById(`${tableid}Body`);
 		tbody.innerHTML = ""; // Clear existing rows
 
@@ -198,50 +211,7 @@ Tables.functions = {
 			name = data.length === 0 ? "Empty" : `UID(${data[0]["P1 ID"]})`;
 		}
 
-		data.forEach((item) => {
-			const row = document.createElement("tr");
-
-			row.innerHTML = `
-        <td>${item["Season"]}</td>
-        <td>${item["Date/Time"]}</td>
-        <td>${item["Seconds"]}</td>
-        <td>${item["Turns"]}</td>
-        <td>${item["Seq Num"]}</td>
-        <td>${item["P1 ID"]}</td>
-        <td>${item["P1 Server"]}</td>
-        <td>${item["P2 ID"]}</td>
-        <td>${item["P2 Server"]}</td>
-        <td>${item["P1 League"]}</td>
-        <td>${item["P2 League"]}</td>
-        <td>${item["P1 Points"]}</td>
-        <td>${item["Point Gain"]}</td>
-        <td>${item["Win"]}</td>
-        <td>${item["First Pick"]}</td>
-        <td>${JSON.stringify(item["CR Bar"])}</td>
-        <td>${item["First Turn"]}</td>
-        <td>${item["First Turn Hero"]}</td>
-        <td>${JSON.stringify(item["P1 Prebans"])}</td>
-        <td>${JSON.stringify(item["P2 Prebans"])}</td>
-        <td>${JSON.stringify(item["P1 Picks"])}</td>
-        <td>${JSON.stringify(item["P2 Picks"])}</td>
-        <td>${item["P1 Postban"]}</td>
-        <td>${item["P2 Postban"]}</td>
-        <td>${JSON.stringify(item["P1 Equipment"])}</td>
-        <td>${JSON.stringify(item["P2 Equipment"])}</td>
-        <td>${JSON.stringify(item["P1 Artifacts"])}</td>
-        <td>${JSON.stringify(item["P2 Artifacts"])}</td>
-        <td>${item["P1 MVP"]}</td>
-        <td>${item["P2 MVP"]}</td>
-    `;
-
-			tbody.appendChild(row);
-		});
-
 		const fname = `${name} Battle Data`;
-
-		const tableSelector = $("#BattlesTable");
-
-		destroyDataTable(tableSelector);
 
 		var table = $("#BattlesTable").DataTable({
 			layout: {
@@ -256,25 +226,22 @@ Tables.functions = {
 					targets: "_all",
 					className: "nowrap",
 				},
-				{
-					targets: 13, // Win column
-					createdCell: function (td, cellData) {
-						if (cellData === "true") {
-							td.style.color = "mediumspringgreen";
-						} else if (cellData === "false") {
-							td.style.color = "red";
-						}
-					},
-				},
-				{
-					targets: 14, // First Pick column
-					createdCell: function (td, cellData) {
-						if (cellData === "true") {
-							td.style.color = "deepskyblue";
-						}
-					},
-				},
 			],
+			rowCallback: function (row, data, dataIndex) {
+
+				const winCell = row.cells[13];
+				const firstPickCell = row.cells[14];
+
+				if (data["Win"] === true) {
+					winCell.style.color = "mediumspringgreen";
+				} else if (data["Win"] === false) {
+					winCell.style.color = "red";
+				}
+
+				if (data["First Pick"] === true) {
+					firstPickCell.style.color = "deepskyblue";
+				}
+			},
 			buttons: {
 				name: "primary",
 				buttons: [
@@ -298,11 +265,18 @@ Tables.functions = {
 			scrollCollapse: false,
 			columns: COLUMNS_EXPANDED.map((col) => ({ data: col })),
 		});
+		table.rows.add(data).draw();
 		return table;
 	},
 
-	replaceDatatableData(datatableReference, data) {
+	replaceDatatableData: function (tableid, data) {
+		const datatableReference = $(`#${tableid}`).DataTable();
 		datatableReference.clear().rows.add(data).draw();
+	},
+
+	replaceBattleData(data) {
+		data = getDataWithStringifiedArrayColumns(data);
+		this.replaceDatatableData("BattlesTable", data);
 	},
 };
 

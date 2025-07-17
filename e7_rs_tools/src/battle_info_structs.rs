@@ -12,7 +12,7 @@ pub struct BattleAPIresponse {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BattleListContainer {
-    pub battle_list: Vec<BattleListEntry>,
+    pub battle_list: Option<Vec<BattleListEntry>>,
 }
 
 

@@ -6,6 +6,7 @@ import ArtifactManager from "../../e7/artifact-manager.js";
 import { CONTEXT } from "./home-page-context.js";
 import { HOME_PAGE_STATES } from "./page-state-manager.js";
 
+
 let PageUtils = {
 	queryAndCacheBattles: async function (user, stateDispatcher, HM) {
 		let artifacts = await ArtifactManager.getArtifacts();

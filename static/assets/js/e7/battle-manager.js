@@ -7,18 +7,6 @@ import { buildFormattedBattleMap, parsedCSVToFormattedBattleMap } from "./battle
 
 const HERO_COLUMNS = COLUMNS.filter(col => col.includes(" Pick ") || col.includes("ban "));
 
-function cleanUploadedBattle(battle) {
-    for (let col of HERO_COLUMNS) {
-        battle[col] = battle[col] ? battle[col] : "Empty"
-    }
-    battle["P1 Points"] = Number(battle["P1 Points"]) || battle["P1 Points"];
-    battle["P1 Picks"] = [battle["P1 Pick 1"], battle["P1 Pick 2"], battle["P1 Pick 3"], battle["P1 Pick 4"], battle["P1 Pick 5"]];
-    battle["P2 Picks"] = [battle["P2 Pick 1"], battle["P2 Pick 2"], battle["P2 Pick 3"], battle["P2 Pick 4"], battle["P2 Pick 5"]];
-    battle["P1 Prebans"] = [battle["P1 Preban 1"], battle["P1 Preban 2"]];
-    battle["P2 Prebans"] = [battle["P2 Preban 1"], battle["P2 Preban 2"]];
-    return battle;
-}
-
 
 let BattleManager = {
 
@@ -78,16 +66,6 @@ let BattleManager = {
     await ClientCache.cache(ClientCache.Keys.FILTERED_BATTLES, battles);
     console.log(`Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <${localFilterList.length + globalFilterList.length}> filters`);
     return battles;
-  },
-
-  // should be called when computing metrics
-  getNumericalBattles: async function(battles, HM) {
-    const mapFn = (key, battle) => [key, formatBattleNumerical(battle, HM)];
-    const numericalBattles = Object.fromEntries(
-            Object.entries(battles).map(([key, battle]) => mapFn(key, battle))
-        )
-    //console.log("Converted filtered battles from cache to numerical format; returning:" + JSON.stringify(numericalBattles) + " battles"  );
-    return numericalBattles;
   },
 
   //takes in list of battles then converts to dict and then adds to cached battles

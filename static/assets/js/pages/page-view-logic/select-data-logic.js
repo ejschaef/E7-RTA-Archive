@@ -1,5 +1,5 @@
 import { ContentManager, PageUtils } from "../../exports.js";
-import { HOME_PAGE_STATES } from "../page-utilities/page-state-manager.js";
+import { HOME_PAGE_STATES, HOME_PAGE_FNS } from "../page-utilities/page-state-manager.js";
 import { CONTEXT } from "../page-utilities/home-page-context.js";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 
@@ -31,8 +31,7 @@ async function addUserFormListener(stateDispatcher) {
 				});
 				console.log("Got data:", JSON.stringify(result));
 				if (!result.error) {
-					await ContentManager.UserManager.clearUserData();
-					await ContentManager.UserManager.setUser(result.user);
+					await HOME_PAGE_FNS.homePageSetUser(result.user);
 					CONTEXT.AUTO_QUERY = true;
 					CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.QUERY;
 					stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
@@ -93,7 +92,6 @@ async function addUploadFormListener(stateDispatcher) {
 						selectedFile
 					)}`
 				);
-				await ContentManager.UserManager.clearUserData();
 				await ContentManager.ClientCache.cache(
 					ContentManager.ClientCache.Keys.RAW_UPLOAD,
 					selectedFile

@@ -52,6 +52,22 @@ class HomePageElements {
     get FOOTER_BODY() {
         return this._FOOTER ||= document.getElementById("footer-body");
     }
+
+    get USER_NAME() {
+        return this._USER_NAME ||= document.getElementById("user-name");
+    }
+
+    get USER_ID() {
+        return this._USER_ID ||= document.getElementById("user-id");
+    }
+
+    get USER_SERVER() {
+        return this._USER_SERVER ||= document.getElementById("user-server");
+    }
+
+    get BATTLE_FILTER_TOGGLE() {
+        return this._BATTLE_FILTER_TOGGLER ||= document.getElementById("filter-battle-table");
+    }
 }
 
 let DOC_ELEMENTS = {

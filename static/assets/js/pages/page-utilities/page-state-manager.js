@@ -2,6 +2,8 @@ import ClientCache from "../../cache-manager.js";
 import DOC_ELEMENTS from "./doc-element-references.js";
 import PageUtils from "./page-utils.js";
 import { HOME_PAGE_STATES } from "./page-state-references.js";
+import UserManager from "../../e7/user-manager.js";
+import { WORLD_CODE_TO_CLEAN_STR } from "../../e7/references.js";
 
 
 const VALIDATION_SET = new Set(Object.values(HOME_PAGE_STATES));
@@ -58,4 +60,33 @@ function homePageSetView(state) {
 	PageUtils.setVisibility(contentBody, true);
 }
 
-export { PageStateManager, HOME_PAGE_STATES, homePageSetView, validateState };
+function homePageDrawUserInfo(user) {
+	if (user) {
+		DOC_ELEMENTS.HOME_PAGE.USER_NAME.innerText = user.name;
+		DOC_ELEMENTS.HOME_PAGE.USER_ID.innerText = user.id;
+		DOC_ELEMENTS.HOME_PAGE.USER_SERVER.innerText = WORLD_CODE_TO_CLEAN_STR[user.world_code];
+	} else {
+		DOC_ELEMENTS.HOME_PAGE.USER_NAME.innerText = "(None)";
+		DOC_ELEMENTS.HOME_PAGE.USER_ID.innerText = "(None)";
+		DOC_ELEMENTS.HOME_PAGE.USER_SERVER.innerText = "(None)";
+	}
+}
+
+async function homePageSetUser(user) {
+	await UserManager.clearUserData(); // clear any existing data
+	homePageDrawUserInfo(user);
+	if (user) {
+		await UserManager.setUser(user);
+	}
+}
+
+
+let HOME_PAGE_FNS = {
+	homePageSetView: homePageSetView,
+	homePageSetUser: homePageSetUser,
+	homePageDrawUserInfo: homePageDrawUserInfo
+};
+
+
+
+export { PageStateManager, HOME_PAGE_STATES, HOME_PAGE_FNS, validateState };

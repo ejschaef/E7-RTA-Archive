@@ -2,7 +2,7 @@ import {
 	PageStateManager,
 	HOME_PAGE_STATES,
 	validateState,
-	homePageSetView,
+	HOME_PAGE_FNS
 } from "./page-utilities/page-state-manager.js";
 import {
 	initializeSelectDataLogic,
@@ -12,12 +12,34 @@ import {
 	initializeStatsLogic,
 	runStatsLogic,
 	postFirstRenderLogic,
+	preFirstRenderLogic,
 } from "./page-view-logic/stats-logic.js";
 import { runLoadDataLogic } from "./page-view-logic/load-data-logic.js";
 import { CONTEXT } from "./page-utilities/home-page-context.js";
 import { ContentManager } from "../exports.js";
 import PageUtils from "./page-utilities/page-utils.js";
 import DOC_ELEMENTS from "./page-utilities/doc-element-references.js";
+
+
+async function resolveShowStatsDispatch(stateDispatcher) {
+	if (!CONTEXT.STATS_PRE_RENDER_COMPLETED) {
+		console.log("Running stats pre render logic");
+		await preFirstRenderLogic(stateDispatcher); // if stats page is accessed from outside home page, must populate, otherwise load data logic will
+		CONTEXT.STATS_PRE_RENDER_COMPLETED = true;
+		console.log("Completed stats pre render logic");
+	}
+	await runStatsLogic(stateDispatcher);
+	await HOME_PAGE_FNS.homePageSetView(HOME_PAGE_STATES.SHOW_STATS);
+	if (!CONTEXT.STATS_POST_RENDER_COMPLETED) {
+		console.log("Running stats post render logic");
+		await postFirstRenderLogic(stateDispatcher); // code mirror can only be initialized after element is rendered
+		setTimeout(() => {
+			Plotly.Plots.resize(document.getElementById("rank-plot-container"));
+		}, 0);
+		CONTEXT.STATS_POST_RENDER_COMPLETED = true;
+		console.log("Completed stats post render logic");
+	}
+}
 
 // switches among view states for the home page
 async function stateDispatcher(state) {
@@ -30,20 +52,14 @@ async function stateDispatcher(state) {
 	switch (state) {
 		case HOME_PAGE_STATES.SELECT_DATA:
 			await runSelectDataLogic(stateDispatcher);
-			await homePageSetView(state);
+			await HOME_PAGE_FNS.homePageSetView(state);
 			break;
 		case HOME_PAGE_STATES.SHOW_STATS:
-			await runStatsLogic(stateDispatcher);
-			await homePageSetView(state);
-			if (!CONTEXT.STATS_POST_RENDER_COMPLETED)
-				// code mirror can only be initialized after element is rendered
-				await postFirstRenderLogic(stateDispatcher);
-			// setTimeout(() => {
-			// 	Plotly.Plots.resize(document.getElementById("rank-plot-container"));
-			// }, 0);
+			await resolveShowStatsDispatch(stateDispatcher);
 			break;
 		case HOME_PAGE_STATES.LOAD_DATA:
-			await runLoadDataLogic(stateDispatcher, CONTEXT);
+			await HOME_PAGE_FNS.homePageSetView(state); // show load data page before actually running logic
+			await runLoadDataLogic(stateDispatcher);
 			break;
 		default:
 			console.error(`Invalid page state: ${state}`);
@@ -89,13 +105,13 @@ function addNavListeners() {
 	});
 }
 
-function addSwitchUserBtnListener() {
+function addClearDataBtnListener() {
 	DOC_ELEMENTS.HOME_PAGE.CLEAR_DATA_BTN.addEventListener(
 		"click",
 		async function (_event) {
 			const user = await ContentManager.UserManager.getUser();
 			if (user) {
-				await ContentManager.UserManager.clearUserData();
+				await HOME_PAGE_FNS.homePageSetUser(null);
 				await stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
 				PageUtils.setTextGreen(
 					DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG,
@@ -116,9 +132,11 @@ function addSwitchUserBtnListener() {
 async function homePageLogic() {
 	console.log("Initialized CONTEXT", CONTEXT);
 	addNavListeners();
-	addSwitchUserBtnListener();
+	addClearDataBtnListener();
 	await initializeSelectDataLogic(stateDispatcher);
 	await initializeStatsLogic(stateDispatcher);
+	const user = await ContentManager.UserManager.getUser();
+	HOME_PAGE_FNS.homePageDrawUserInfo(user);
 	let state = await PageStateManager.getState();
 	CONTEXT.HOME_PAGE_STATE = state;
 	await stateDispatcher(state);

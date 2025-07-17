@@ -25,6 +25,7 @@ const CONTEXT_KEYS = {
     AUTO_ZOOM : "AUTO_ZOOM",
     AUTO_QUERY : "AUTO_QUERY",
     STATS_POST_RENDER_COMPLETED : "STATS_POST_RENDER_COMPLETED",
+    STATS_PRE_RENDER_COMPLETED : "STATS_PRE_RENDER_COMPLETED",
     HOME_PAGE_STATE : "STATE",
     SCROLL_PERCENTS : "SCROLL_PERCENTS",
 }
@@ -38,6 +39,7 @@ const CONTEXT = {
 	AUTO_QUERY: null,
     AUTO_ZOOM: false,
 	STATS_POST_RENDER_COMPLETED: false,
+    STATS_PRE_RENDER_COMPLETED: false,
 	HOME_PAGE_STATE: null,
 	SCROLL_PERCENTS: SCROLL_PERCENTS,
 
@@ -59,8 +61,10 @@ const CONTEXT = {
             case CONTEXT_KEYS.SOURCE : return null;
             case CONTEXT_KEYS.AUTO_QUERY : return null;
             case CONTEXT_KEYS.STATS_POST_RENDER_COMPLETED : return false;
+            case CONTEXT_KEYS.STATS_PRE_RENDER_COMPLETED : return false;
             case CONTEXT_KEYS.HOME_PAGE_STATE : return null;
             case CONTEXT_KEYS.SCROLL_PERCENTS : return SCROLL_PERCENTS;
+            default: return null;
         }
     }
 }

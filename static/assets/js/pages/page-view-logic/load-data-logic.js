@@ -1,11 +1,12 @@
 import { CONTEXT } from "../page-utilities/home-page-context.js";
 import {
+	HOME_PAGE_FNS,
 	HOME_PAGE_STATES,
-	homePageSetView,
 } from "../page-utilities/page-state-manager.js";
 import { ContentManager, CSVParse } from "../../exports.js";
 import { PageUtils } from "../../exports.js";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
+import { populateContent } from "./stats-logic.js";
 
 async function handleUploadAndSetUser(HM) {
 	const selectedFile = await ContentManager.ClientCache.get(
@@ -16,18 +17,13 @@ async function handleUploadAndSetUser(HM) {
 
 	const battleArr = await CSVParse.parseUpload(selectedFile);
 
-	// delete existing data for the old user if there was one
-	await ContentManager.ClientCache.clearUserData();
-
-	// cache uploaded battles
-	await ContentManager.BattleManager.cacheUpload(battleArr, HM);
-
 	const playerID = battleArr[0]["P1 ID"];
 	const data = await ContentManager.UserManager.findUser({
 		id: playerID,
 	});
 	if (!data.error) {
-		await ContentManager.UserManager.setUser(data.user);
+		await HOME_PAGE_FNS.homePageSetUser(data.user);
+		await ContentManager.BattleManager.cacheUpload(battleArr, HM);
 		return;
 	} else {
 		console.log(
@@ -48,7 +44,6 @@ async function handleBattleQuery(user, stateDispatcher, HM) {
 }
 
 async function runLoadDataLogic(stateDispatcher) {
-	homePageSetView(HOME_PAGE_STATES.LOAD_DATA);
 	try {
 		const HM = await ContentManager.HeroManager.getHeroManager();
 
@@ -86,6 +81,9 @@ async function runLoadDataLogic(stateDispatcher) {
 			autoZoom
 		);
 		await ContentManager.ClientCache.setStats(stats);
+
+		await populateContent();  // populates tables and plots in show stats view before showing
+		CONTEXT.STATS_PRE_RENDER_COMPLETED = true;
 		stateDispatcher(HOME_PAGE_STATES.SHOW_STATS);
 		console.log("REACHED END OF LOAD DATA LOGIC");
 		return;
