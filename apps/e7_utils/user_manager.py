@@ -24,7 +24,7 @@ def get_all_user_data(world_code: str):
     return result['users']
 
 class User:
-    __slots__ = 'id', 'name', 'rawName', 'level', 'world_code'
+    __slots__ = 'id', 'name', 'level', 'world_code'
     
     def __init__(self, user_json_instance, world_code):
         self.id = int(user_json_instance["nick_no"])
