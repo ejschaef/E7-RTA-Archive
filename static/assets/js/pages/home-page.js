@@ -138,6 +138,10 @@ async function homePageLogic() {
 	const user = await ContentManager.UserManager.getUser();
 	HOME_PAGE_FNS.homePageDrawUserInfo(user);
 	let state = await PageStateManager.getState();
+	if (state == HOME_PAGE_STATES.LOAD_DATA) {
+		state = HOME_PAGE_STATES.SELECT_DATA;  // don't trap user in load data page if something goes wrong
+		await PageStateManager.setState(state);
+	}
 	CONTEXT.HOME_PAGE_STATE = state;
 	await stateDispatcher(state);
 	PageUtils.setVisibility(DOC_ELEMENTS.HOME_PAGE.FOOTER_BODY, true);

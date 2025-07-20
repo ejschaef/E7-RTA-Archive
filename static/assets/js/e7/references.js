@@ -19,12 +19,12 @@ export const WORLD_CODE_TO_CLEAN_STR = {
 export const EQUIPMENT_SET_MAP = {
   "set_speed" : "Speed",
   "set_acc" : "Hit",
-  "set_cri" : "Crit",
+  "set_cri" : "Critical",
   "set_res" : "Resist",
   "set_def" : "Defense",
   "set_att" : "Attack",
-  "set_max_hp" : "HP",
-  "set_cri_dmg" : "Crit DMG",
+  "set_max_hp" : "Health",
+  "set_cri_dmg" : "Destruction",
   "set_coop" : "Unity",
   "set_immune" : "Immunity",
   "set_rage" : "Rage",
@@ -163,6 +163,11 @@ export const INT_COLUMNS = [
     COLUMNS_MAP.P1_POINTS,
     COLUMNS_MAP.POINT_GAIN
 ];
+
+export const TITLE_CASE_COLUMNS = [
+  COLUMNS_MAP.P1_LEAGUE,
+  COLUMNS_MAP.P2_LEAGUE
+]
 
 
 

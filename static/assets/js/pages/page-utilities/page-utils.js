@@ -1,11 +1,10 @@
 import BattleManager from "../../e7/battle-manager.js";
 import PYAPI from "../../apis/py-API.js";
 import HeroManager from "../../e7/hero-manager.js";
-import FilterSyntaxParser from "../../e7/filter-syntax-parser.js";
+import FilterSyntaxParser from "../../e7/filter-parsing/filter-syntax-parser.js";
 import ArtifactManager from "../../e7/artifact-manager.js";
 import { CONTEXT } from "./home-page-context.js";
 import { HOME_PAGE_STATES } from "./page-state-manager.js";
-
 
 let PageUtils = {
 	queryAndCacheBattles: async function (user, stateDispatcher, HM) {

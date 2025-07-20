@@ -6,6 +6,52 @@ function anchorExp(pattern, flags="i") {
     return new RegExp(`^(?:${pattern.source})$`, flags);
 }
 
+function orRegex(patterns, flags="i") {
+    if (patterns.length < 1) throw new Error("orRegex must have at least one pattern");
+    let regExStr = `(?:${patterns[0].source})`;
+    for (let i = 1; i < patterns.length; i++) {
+        regExStr += `|(?:${patterns[i].source})`;
+    }
+    return new RegExp(regExStr, flags);
+}
+
+const escapeRegex = str =>
+  str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const VALID_FIELD_WORDS = [
+    "date", "is-first-pick", "is-win", "victory-points", 
+    "p1.picks", "p2.picks", "p1.prebans", "p2.prebans", "p1.postban", "p2.postban", "prebans", 
+    "p1.id", "p2.id", "p1.league", "p2.league", "p1.server", "p2.server",
+    "p1.pick1", "p1.pick2", "p1.pick3", "p1.pick4", "p1.pick5",
+    "p2.pick1", "p2.pick2", "p2.pick3", "p2.pick4", "p2.pick5",
+    "p1.mvp", "p2.mvp",
+    "first-turn", "first-turn-hero",
+    "turns", "seconds",
+]
+
+const VALID_FIELD_WORD_RE = new RegExp(`^(?:${VALID_FIELD_WORDS.map(escapeRegex).join("|")})`, "i");
+
+const VALID_CLAUSE_FUNCTIONS = [
+    "and", "or", "xor", "not",
+]
+
+const VALID_GLOBAL_FUNCTIONS = [
+    "last-n",
+]
+
+const VALID_DIRECT_FUNCTIONS = [
+    "p1.equipment", "p2.equipment",
+    "p1.artifacts", "p2.artifacts",
+    "p1.cr-bar", "p2.cr-bar",
+]
+
+const VALID_CLAUSE_FUNCTIONS_RE = new RegExp(`(?:${VALID_CLAUSE_FUNCTIONS.map(escapeRegex).join("|")})(?=\\()`, "i");
+const VALID_GLOBAL_FUNCTIONS_RE = new RegExp(`(?:${VALID_GLOBAL_FUNCTIONS.map(escapeRegex).join("|")})(?=\\()`, "i");
+const VALID_DIRECT_FUNCTIONS_RE = new RegExp(`(?:${VALID_DIRECT_FUNCTIONS.map(escapeRegex).join("|")})(?=\\()`, "i");
+
+const VALID_FUNCTIONS_RE = orRegex([VALID_CLAUSE_FUNCTIONS_RE, VALID_GLOBAL_FUNCTIONS_RE, VALID_DIRECT_FUNCTIONS_RE]);
+
+
 const VALID_STRING_RE = /[a-z][a-z0-9.\s]*/i;
 const VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
 const EMPTY_SET_RE = /\{\s*\}/;
@@ -19,8 +65,6 @@ const VALID_INT_LITERAL_RE = /^\d+$/;
 const VALID_BOOL_LITERAL_RE = /^(true|false)$/i;
 
 const VALID_DATA_WORD_RE = new RegExp(`(?:${VALID_SEASON_RE.source})`, "i");
-
-const VALID_FIELD_WORD_RE = /(?:date|is-first-pick|is-win|victory-points|p1.picks|p1.prebans|p2.prebans|prebans|p2.picks|p1.pick1|p1.pick2|p1.pick3|p1.pick4|p1.pick5|p2.pick1|p2.pick2|p2.pick3|p2.pick4|p2.pick5|p1.league|p2.league|p1.postban|p2.postban|p1.server|p2.server)/i
 
 //consts without RE are used for injecting into regex patterns
 const STR = VALID_STRING_RE.source;
@@ -48,7 +92,7 @@ const VALID_RANGE_RE = new RegExp(`${INT}\\.\\.\\.${INT}|${DATE}\\.\\.\\.${DATE}
 const VALID_RANGE_LITERAL_RE = new RegExp(`^${VALID_RANGE_RE.source}$`);
 
 function tokenMatch(stream){
-    if (stream.match(/AND(?=\()|OR(?=\()|XOR(?=\()|NOT(?=\()|LAST-N(?=\()/i)) {
+    if (stream.match(VALID_FUNCTIONS_RE)) {
         console.log("Matched stream as clause:", stream);
         return "keyword";
     }
@@ -133,9 +177,16 @@ let RegExps = {
 
     ANCHORED_STR_LITERAL_RE: anchorExp(VALID_STRING_LITERAL_RE),
 
+    VALID_CLAUSE_FUNCTIONS_RE: VALID_CLAUSE_FUNCTIONS_RE,
+    VALID_DIRECT_FUNCTIONS_RE: VALID_DIRECT_FUNCTIONS_RE,
+    VALID_GLOBAL_FUNCTIONS_RE: VALID_GLOBAL_FUNCTIONS_RE,
+    VALID_FUNCTIONS_RE: VALID_FUNCTIONS_RE,
+
     padRegex: padRegex,
     anchorExp: anchorExp,
     tokenMatch: tokenMatch,
+    orRegex: orRegex,
+    escapeRegex: escapeRegex,
 }
 
 export {RegExps};

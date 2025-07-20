@@ -1,6 +1,14 @@
 import HeroManager from "./hero-manager.js";
 import ArtifactManager from "./artifact-manager.js";
-import { EQUIPMENT_SET_MAP, COLUMNS_MAP, WORLD_CODE_TO_CLEAN_STR, ARRAY_COLUMNS, BOOLS_COLS, INT_COLUMNS } from "./references.js";
+import { EQUIPMENT_SET_MAP, 
+    COLUMNS_MAP, 
+    WORLD_CODE_TO_CLEAN_STR, 
+    ARRAY_COLUMNS, 
+    BOOLS_COLS, 
+    INT_COLUMNS,
+    TITLE_CASE_COLUMNS
+} from "./references.js";
+import { toTitleCase } from "../utils.js";
 
 // takes in cleaned battle row (including from uploaded file or in formatBattleAsRow) 
 // and adds fields representing sets heroes as prime products
@@ -17,7 +25,6 @@ function addPrimeFields(battle, HM) {
     battle[COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT] = battle[COLUMNS_MAP.P1_PREBANS_PRIMES].reduce(product, 1);
     battle[COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT] = battle[COLUMNS_MAP.P2_PREBANS_PRIMES].reduce(product, 1);
 }
-
 
 const P1 = "p1";
 const P2 = "p2";
@@ -57,8 +64,8 @@ function formatBattleAsRow(raw, HM, artifacts) {
         [COLUMNS_MAP.P1_SERVER]: WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None",
         [COLUMNS_MAP.P2_ID]: raw.p2_id.toString(),
         [COLUMNS_MAP.P2_SERVER]: WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None",
-        [COLUMNS_MAP.P1_LEAGUE]: raw.p1_league || "None",
-        [COLUMNS_MAP.P2_LEAGUE]: raw.p2_league || "None",
+        [COLUMNS_MAP.P1_LEAGUE]: toTitleCase(raw.p1_league) || "None",
+        [COLUMNS_MAP.P2_LEAGUE]: toTitleCase(raw.p2_league) || "None",
         [COLUMNS_MAP.P1_POINTS]: raw.p1_win_score || null,
         [COLUMNS_MAP.POINT_GAIN]: raw.p1_point_delta || null,
         [COLUMNS_MAP.WIN]: raw.win === 1 ? true : false,
@@ -105,6 +112,9 @@ function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {
         }
         for (const col of INT_COLUMNS) {
             row[col] = Number(row[col].replace("'", ""));
+        }
+        for (const col of TITLE_CASE_COLUMNS) {
+            row[col] = toTitleCase(row[col]);
         }
         addPrimeFields(row, HM);
         return row;

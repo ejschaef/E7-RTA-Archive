@@ -27,25 +27,42 @@ function queryStats(battleList, totalBattles) {
   };
 }
 
+function getPrimes(battles, isP1=true) {
+  const primeSet = new Set();
+  for (const battle of Object.values(battles)) {
+    const picks = isP1 ? battle[COLUMNS_MAP.P1_PICKS_PRIMES] : battle[COLUMNS_MAP.P2_PICKS_PRIMES];
+    picks.forEach(element => {
+      primeSet.add(element);
+    });
+  }
+  return primeSet;
+}
+
 function getHeroStats(battles, HM) {
-  const heroes = HM.heroes;
   const battleList = Object.values(battles);
+
   if (battleList.length === 0) {
       return {playerHeroStats: [], enemyHeroStats: []};
   }
+
   const totalBattles = battleList.length;
+
+  const playerPrimes = getPrimes(battleList, true);
+  const enemyPrimes = getPrimes(battleList, false);
+
   const playerHeroStats = [];
   const enemyHeroStats = [];
-  for (const hero of heroes) {
-    if (hero.name === HM.Empty.name) {
-      continue;
-    }
-    const prime = hero.prime;
+
+  for (const prime of playerPrimes) {
+    const hero = HeroManager.getHeroByPrime(prime, HM);
     const playerSubset = battleList.filter( b => b[COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] % prime === 0 );
-    const enemySubset = battleList.filter( b => b[COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] % prime === 0);
     if (playerSubset.length > 0) {
       playerHeroStats.push({...queryStats(playerSubset, totalBattles), hero: hero.name});
     }
+  }
+  for (const prime of enemyPrimes) {
+    const hero = HeroManager.getHeroByPrime(prime, HM);
+    const enemySubset = battleList.filter( b => b[COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] % prime === 0);
     if (enemySubset.length > 0) {
       enemyHeroStats.push({...queryStats(enemySubset, totalBattles), hero: hero.name});
     }
@@ -233,7 +250,7 @@ function getServerStats(battlesList) {
         server,
         count, 
         wins, 
-        win_rate: toPercent(winRate), 
+        win_rate: winRate === "N/A" ? "N/A" : toPercent(winRate), 
         frequency: toPercent(frequency),
         "+/-": 2 * wins - count,
         fp_games : firstPickGames.length,

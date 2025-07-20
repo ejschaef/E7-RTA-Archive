@@ -29,7 +29,8 @@ const Keys = {
   ASIA_USERS: "asia-users",
   JPN_USERS: "jpn-users",
   KOR_USERS: "kor-users",
-  ARTIFACTS: "artifacts",
+  ARTIFACTS: "artifacts", // map of artifact codes to names
+  ARTIFACTS_LOWERCASE_NAMES_SET: "artifacts-lowercase-names-set", // set of artifact lowercase names
   HOME_PAGE_STATE: "home-page-state",
 };
 

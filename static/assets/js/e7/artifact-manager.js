@@ -25,6 +25,17 @@ let ArtifactManager = {
 		);
 	},
 
+    getArtifactLowercaseNameSet: async function () {
+        let artiSet = ClientCache.get(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_SET);
+        if (artiSet) {
+            return artiSet;
+        }
+        const artifacts = await this.getArtifacts();
+        artiSet = new Set(Object.values(artifacts).map(name => name.toLowerCase()));
+        await ClientCache.cache(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_SET, artiSet);
+        return artiSet;
+    },
+
 	fetchAndCacheArtifacts: async function () {
 		console.log(
 			`ArtifactManager not found in cache, fetching from server and caching it`

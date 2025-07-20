@@ -44,12 +44,18 @@ async function handleBattleQuery(user, stateDispatcher, HM) {
 }
 
 async function runLoadDataLogic(stateDispatcher) {
-	try {
-		const HM = await ContentManager.HeroManager.getHeroManager();
+	let [HM, SOURCE, autoZoom, autoQuery] = [null, null, null, null];
+	try{
+		HM = await ContentManager.HeroManager.getHeroManager();
+		SOURCE = CONTEXT.popKey(CONTEXT.KEYS.SOURCE);
+		autoZoom = await ContentManager.ClientCache.getFlag("autoZoom");
+		autoQuery = CONTEXT.popKey(CONTEXT.KEYS.AUTO_QUERY);
+	} catch (e) {
+		console.error("Could not load reference and context variables: ", e);
+		stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+	}
 
-		const SOURCE = CONTEXT.popKey(CONTEXT.KEYS.SOURCE);
-		const autoZoom = await ContentManager.ClientCache.getFlag("autoZoom");
-		const autoQuery = CONTEXT.popKey(CONTEXT.KEYS.AUTO_QUERY);
+	try {
 
 		if (SOURCE === CONTEXT.VALUES.SOURCE.UPLOAD) {
 			await handleUploadAndSetUser(HM); // will set user value in cache if successful
@@ -88,22 +94,28 @@ async function runLoadDataLogic(stateDispatcher) {
 		console.log("REACHED END OF LOAD DATA LOGIC");
 		return;
 	} catch (err) {
-		let sourceState;
-		if (
-			SOURCE === CONTEXT.VALUES.SOURCE.QUERY ||
-			SOURCE === CONTEXT.VALUES.SOURCE.UPLOAD
-		) {
-			sourceState = HOME_PAGE_STATES.SELECT_DATA;
-		} else if (SOURCE === CONTEXT.VALUES.SOURCE.STATS) {
-			sourceState = HOME_PAGE_STATES.SHOW_STATS;
-		} else {
-			throw new Error(`Invalid source: ${source}`);
+		try {
+			let sourceState;
+			if (
+				SOURCE === CONTEXT.VALUES.SOURCE.QUERY ||
+				SOURCE === CONTEXT.VALUES.SOURCE.UPLOAD
+			) {
+				sourceState = HOME_PAGE_STATES.SELECT_DATA;
+			} else if (SOURCE === CONTEXT.VALUES.SOURCE.STATS) {
+				sourceState = HOME_PAGE_STATES.SHOW_STATS;
+			} else {
+				console.error(`Invalid source: ${SOURCE} ; redirecting to select data`);
+				sourceState = HOME_PAGE_STATES.SELECT_DATA;
+			}
+			console.error(err);
+			await ContentManager.UserManager.clearUserData();
+			CONTEXT.ERROR_MSG = `Failed to load data: ${err.message}`;
+			stateDispatcher(sourceState);
+			return;
+		} catch (err) {
+			console.error(`Something went wrong ; redirecting to select data ; error:`, err);
+			stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
 		}
-		console.error(err);
-		await ContentManager.UserManager.clearUserData();
-		CONTEXT.ERROR_MSG = `Failed to load data: ${err.message}`;
-		stateDispatcher(sourceState);
-		return;
 	}
 }
 
