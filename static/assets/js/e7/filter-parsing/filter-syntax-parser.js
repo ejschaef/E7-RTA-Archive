@@ -87,7 +87,9 @@ class FilterSyntaxParser {
 		parser.rawString = string;
 		parser.HM = HM;
 		parser.ARTIFACT_LOWERCASE_STRINGS_SET =
-			ArtifactManager.getArtifactLowercaseNameSet();
+			await ArtifactManager.getArtifactLowercaseNameSet();
+		console.log("Got Artifact Lowercase Strings Set");
+		console.log(parser.ARTIFACT_LOWERCASE_STRINGS_SET);
 		parser.SeasonDetails = SeasonDetails;
 		parser.REFS = {
 			HM: parser.HM,

@@ -26,12 +26,13 @@ let ArtifactManager = {
 	},
 
     getArtifactLowercaseNameSet: async function () {
-        let artiSet = ClientCache.get(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_SET);
-        if (artiSet) {
+        let artiSet = await ClientCache.get(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_SET);
+        if (artiSet !== null) {
+			console.log("Got artifact lowercase name set from cache");
             return artiSet;
         }
         const artifacts = await this.getArtifacts();
-        artiSet = new Set(Object.values(artifacts).map(name => name.toLowerCase()));
+        artiSet = new Set(Object.values(artifacts).filter((artiName) => artiName !== null).map((artiName) => artiName.toLowerCase()));
         await ClientCache.cache(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_SET, artiSet);
         return artiSet;
     },

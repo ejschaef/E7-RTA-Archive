@@ -20,7 +20,7 @@ class DataType {
 	}
 }
 
-// string type will always convert to titlecase
+// string type will always convert to titlecase to  match against values in battle records
 class StringType extends DataType {
 	getData(
 		str,

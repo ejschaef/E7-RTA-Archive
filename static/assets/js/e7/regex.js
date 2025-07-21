@@ -41,8 +41,8 @@ const VALID_GLOBAL_FUNCTIONS = [
 
 const VALID_DIRECT_FUNCTIONS = [
     "p1.equipment", "p2.equipment",
-    "p1.artifacts", "p2.artifacts",
-    "p1.cr-bar", "p2.cr-bar",
+    "p1.artifact", "p2.artifact",
+    "p1.cr-geq", "p2.cr-geq",
 ]
 
 const VALID_CLAUSE_FUNCTIONS_RE = new RegExp(`(?:${VALID_CLAUSE_FUNCTIONS.map(escapeRegex).join("|")})(?=\\()`, "i");
@@ -52,7 +52,7 @@ const VALID_DIRECT_FUNCTIONS_RE = new RegExp(`(?:${VALID_DIRECT_FUNCTIONS.map(es
 const VALID_FUNCTIONS_RE = orRegex([VALID_CLAUSE_FUNCTIONS_RE, VALID_GLOBAL_FUNCTIONS_RE, VALID_DIRECT_FUNCTIONS_RE]);
 
 
-const VALID_STRING_RE = /[a-z][a-z0-9.\s]*/i;
+const VALID_STRING_RE = /[a-z0-9.][a-z0-9.\s]*/i;
 const VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
 const EMPTY_SET_RE = /\{\s*\}/;
 const VALID_INT_RE = /\d+/;
@@ -109,14 +109,21 @@ function tokenMatch(stream){
         console.log("Matched stream as Data Field:", stream);
         return "datafield"; 
     }
-
-    if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
-        console.log("Matched stream as non-num null")
-        return null
+    if (stream.match(padRegex(VALID_QUOTED_STRING_RE))) {
+        console.log("Matched stream as string:", stream)
+        return "string"; 
+    }
+    if (stream.match(padRegex(VALID_SET_RE))) {
+        console.log("Matched stream as set:", stream);
+        return "set"; 
     }
     if (stream.match(padRegex(VALID_RANGE_RE))) {
         console.log("Matched stream as range:", stream);
         return "range"; 
+    }
+    if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
+        console.log("Matched stream as non-num null", stream);
+        return null
     }
     if (stream.match(padRegex(VALID_INT_RE))) {
         console.log("Matched stream as number:", stream);
@@ -126,17 +133,9 @@ function tokenMatch(stream){
         console.log("Matched stream as date:", stream);
         return "date"; 
     }
-    if (stream.match(padRegex(VALID_SET_RE))) {
-        console.log("Matched stream as set:", stream);
-        return "set"; 
-    }
     if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
         console.log("Matched stream as bool:", stream);
         return "bool"; 
-    }
-    if (stream.match(padRegex(VALID_QUOTED_STRING_RE))) {
-        console.log("Matched stream as string:", stream)
-        return "string"; 
     }
     if (stream.match(/[\(\)\{\}\;\,]/)) {
         console.log("Matched stream as bracket:", stream);

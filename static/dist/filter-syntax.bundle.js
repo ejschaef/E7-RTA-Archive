@@ -1600,23 +1600,29 @@ var ArtifactManager = {
       return _regenerator().w(function (_context2) {
         while (1) switch (_context2.n) {
           case 0:
-            artiSet = _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS_LOWERCASE_NAMES_SET);
-            if (!artiSet) {
-              _context2.n = 1;
+            _context2.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS_LOWERCASE_NAMES_SET);
+          case 1:
+            artiSet = _context2.v;
+            if (!(artiSet !== null)) {
+              _context2.n = 2;
               break;
             }
+            console.log("Got artifact lowercase name set from cache");
             return _context2.a(2, artiSet);
-          case 1:
-            _context2.n = 2;
-            return this.getArtifacts();
           case 2:
-            artifacts = _context2.v;
-            artiSet = new Set(Object.values(artifacts).map(function (name) {
-              return name.toLowerCase();
-            }));
             _context2.n = 3;
-            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS_LOWERCASE_NAMES_SET, artiSet);
+            return this.getArtifacts();
           case 3:
+            artifacts = _context2.v;
+            artiSet = new Set(Object.values(artifacts).filter(function (artiName) {
+              return artiName !== null;
+            }).map(function (artiName) {
+              return artiName.toLowerCase();
+            }));
+            _context2.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS_LOWERCASE_NAMES_SET, artiSet);
+          case 4:
             return _context2.a(2, artiSet);
         }
       }, _callee2, this);
@@ -2408,7 +2414,7 @@ var DataType = /*#__PURE__*/function () {
       return "".concat(this.data);
     }
   }]);
-}(); // string type will always convert to titlecase
+}(); // string type will always convert to titlecase to  match against values in battle records
 var StringType = /*#__PURE__*/function (_DataType) {
   function StringType() {
     _classCallCheck(this, StringType);
@@ -3292,7 +3298,12 @@ var FilterSyntaxParser = /*#__PURE__*/function () {
               SeasonDetails = _t2;
               parser.rawString = string;
               parser.HM = HM;
-              parser.ARTIFACT_LOWERCASE_STRINGS_SET = _artifact_manager_js__WEBPACK_IMPORTED_MODULE_4__["default"].getArtifactLowercaseNameSet();
+              _context.n = 5;
+              return _artifact_manager_js__WEBPACK_IMPORTED_MODULE_4__["default"].getArtifactLowercaseNameSet();
+            case 5:
+              parser.ARTIFACT_LOWERCASE_STRINGS_SET = _context.v;
+              console.log("Got Artifact Lowercase Strings Set");
+              console.log(parser.ARTIFACT_LOWERCASE_STRINGS_SET);
               parser.SeasonDetails = SeasonDetails;
               parser.REFS = {
                 HM: parser.HM,
@@ -3332,6 +3343,8 @@ var _INTERNAL_KEY = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AND: () => (/* binding */ AND),
+/* harmony export */   ArtifactFn: () => (/* binding */ ArtifactFn),
+/* harmony export */   CombatReadinessGeqFn: () => (/* binding */ CombatReadinessGeqFn),
 /* harmony export */   EquipmentFn: () => (/* binding */ EquipmentFn),
 /* harmony export */   FN_MAP: () => (/* binding */ FN_MAP),
 /* harmony export */   NOT: () => (/* binding */ NOT),
@@ -3343,6 +3356,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter-parse-references.js */ "./static/assets/js/e7/filter-parsing/filter-parse-references.js");
 /* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../filter-utils.js */ "./static/assets/js/e7/filter-utils.js");
 /* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../references.js */ "./static/assets/js/e7/references.js");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
@@ -3363,6 +3377,7 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -3525,18 +3540,7 @@ var NOT = /*#__PURE__*/function (_ClauseFn4) {
       return !this.fns.localFilters[0].call(battle);
     }
   }]);
-}(ClauseFn);
-function get_hero_equipment(heroName, picks, equipment) {
-  // picks is either P1 Picks or P2 Picks and equipment is either P1 Equipment or P2 Equipment from a battle record
-  for (var i = 0; i < picks.length; i++) {
-    if (picks[i] === heroName) {
-      return equipment[i];
-    }
-  }
-  return null;
-}
-
-// Direct functions resolve to a single base filter ; they cannot contain nested filters
+}(ClauseFn); // Direct functions resolve to a single base filter ; they cannot contain nested filters
 var DirectFn = /*#__PURE__*/function (_Fn3) {
   function DirectFn() {
     _classCallCheck(this, DirectFn);
@@ -3551,6 +3555,15 @@ var DirectFn = /*#__PURE__*/function (_Fn3) {
     }
   }]);
 }(Fn);
+function getHeroEquipment(heroName, picks, equipment) {
+  // picks is either P1 Picks or P2 Picks and equipment is either P1 Equipment or P2 Equipment from a battle record
+  for (var i = 0; i < picks.length; i++) {
+    if (picks[i] === heroName) {
+      return equipment[i];
+    }
+  }
+  return null;
+}
 var EquipmentFn = /*#__PURE__*/function (_DirectFn) {
   function EquipmentFn(hero, equipmentSet, p1Flag) {
     var _this7;
@@ -3569,8 +3582,8 @@ var EquipmentFn = /*#__PURE__*/function (_DirectFn) {
     value: function call(battle) {
       var equipment = this.isPlayer1 ? battle["P1 Equipment"] : battle["P2 Equipment"];
       var picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
-      var equipped = get_hero_equipment(this.hero, picks, equipment);
-      console.log("Got equipped: ".concat(equipped, ", hero: ").concat(this.hero.name, ", picks: ").concat(picks, ", equipment: ").concat(equipment));
+      var equipped = getHeroEquipment(this.hero, picks, equipment);
+      console.log("Got equipped: ".concat(equipped, ", hero: ").concat(this.hero, ", picks: ").concat(JSON.stringify(picks), ", equipment: ").concat(JSON.stringify(equipment)));
       if (!equipped) {
         return false;
       }
@@ -3607,6 +3620,129 @@ var EquipmentFn = /*#__PURE__*/function (_DirectFn) {
     }
   }]);
 }(DirectFn);
+function getHeroArtifact(heroName, picks, artifacts) {
+  // picks is either P1 Picks or P2 Picks and artifacts is either P1 Artifacts or P2 Artifacts from a battle record
+  for (var i = 0; i < picks.length; i++) {
+    if (picks[i] === heroName) {
+      return artifacts[i];
+    }
+  }
+  return null;
+}
+var ArtifactFn = /*#__PURE__*/function (_DirectFn2) {
+  function ArtifactFn(hero, artifactSet, p1Flag) {
+    var _this8;
+    _classCallCheck(this, ArtifactFn);
+    console.log("Received artifact fn args", hero, artifactSet, p1Flag);
+    _this8 = _callSuper(this, ArtifactFn);
+    _this8.hero = hero.data;
+    _this8.artifactArr = _toConsumableArray(artifactSet.data);
+    _this8.str = (p1Flag ? "p1" : "p2") + ".artifact(".concat(hero, ", ").concat(artifactSet.toString(), ")");
+    _this8.isPlayer1 = p1Flag;
+    return _this8;
+  }
+  _inherits(ArtifactFn, _DirectFn2);
+  return _createClass(ArtifactFn, [{
+    key: "call",
+    value: function call(battle) {
+      var artifacts = this.isPlayer1 ? battle["P1 Artifacts"] : battle["P2 Artifacts"];
+      var picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
+      var equippedArtifact = getHeroArtifact(this.hero, picks, artifacts);
+      console.log("Got equipped Artifact: ".concat(equippedArtifact, ", hero: ").concat(this.hero, ", picks: ").concat(JSON.stringify(picks), ", artifacts: ").concat(JSON.stringify(artifacts)));
+      if (!equippedArtifact) {
+        return false;
+      }
+      return this.artifactArr.some(function (arti) {
+        return equippedArtifact.toLowerCase() === arti.toLowerCase();
+      });
+    }
+  }], [{
+    key: "fromFilterStr",
+    value: function fromFilterStr(str, REFS) {
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true);
+      if (!(args.length === 2)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(args, "] from str: ").concat(str));
+      }
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.anchorExp(_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE).test(args[0])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid artifact function call ; first argument must be a valid string literal ; got: '".concat(args[0], "' from str: ").concat(str));
+      }
+      var artifactSetStr = _regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_SET_RE.test(args[1]) ? args[1] : "{".concat(args[1], "}");
+      var hero = null,
+        artifactSet = null;
+      try {
+        hero = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.String(args[0], REFS, {
+          types: ["hero"]
+        });
+        artifactSet = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Set(artifactSetStr, REFS, {
+          types: ["artifact"]
+        });
+      } catch (e) {
+        console.error(e);
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid type in artifact function call; got str: ".concat(str, " ; error: ").concat(e));
+      }
+      var p1Flag = str.split(".")[0] === "p1";
+      console.log("Sending artifact fn args", hero, artifactSet, p1Flag);
+      return new ArtifactFn(hero, artifactSet, p1Flag);
+    }
+  }]);
+}(DirectFn); // filters for battles where a hero as greater or equal starting CR as the passed integer value (indicating the percentage value)
+var CombatReadinessGeqFn = /*#__PURE__*/function (_DirectFn3) {
+  function CombatReadinessGeqFn(hero, crMinValue, p1Flag) {
+    var _this9;
+    _classCallCheck(this, CombatReadinessGeqFn);
+    console.log("Received CR-GEQ fn args", hero, crMinValue, p1Flag);
+    _this9 = _callSuper(this, CombatReadinessGeqFn);
+    _this9.hero = hero.data;
+    _this9.crMinValue = crMinValue;
+    _this9.str = (p1Flag ? "p1" : "p2") + ".CR-GEQ(".concat(hero, ", ").concat(crMinValue, ")");
+    _this9.isPlayer1 = p1Flag;
+    return _this9;
+  }
+  _inherits(CombatReadinessGeqFn, _DirectFn3);
+  return _createClass(CombatReadinessGeqFn, [{
+    key: "call",
+    value: function call(battle) {
+      var _this0 = this;
+      var findFn = function findFn(entry, picks) {
+        return picks.includes(entry[0]) && entry[1] >= _this0.crMinValue && entry[0] === _this0.hero;
+      };
+      var result = this.isPlayer1 ? battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+        return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P1_PICKS]);
+      }) : battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+        return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P2_PICKS]);
+      });
+      console.log("Got CR Result: ".concat(result, ", hero: ").concat(this.hero, ", minValue: ").concat(this.crMinValue));
+      return !!result;
+    }
+  }], [{
+    key: "fromFilterStr",
+    value: function fromFilterStr(str, REFS) {
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true);
+      if (!(args.length === 2)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(args, "] from str: ").concat(str));
+      }
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-GEQ function call ; first argument must be a valid string literal ; got: '".concat(args[0], "' from str: ").concat(str));
+      } else if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-GEQ function call ; second argument must be a valid integer literal ; got: '".concat(args[1], "' from str: ").concat(str));
+      }
+      var crMinValueStr = args[1];
+      var hero = null,
+        crMinValue = null;
+      try {
+        hero = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.String(args[0], REFS, {
+          types: ["hero"]
+        });
+        crMinValue = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Int(crMinValueStr);
+      } catch (e) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid type in CR-GEQ function call; got str: ".concat(str, " ; error: ").concat(e));
+      }
+      var p1Flag = str.split(".")[0] === "p1";
+      console.log("Sending CR-GEQ fn args", hero, crMinValue, p1Flag);
+      return new CombatReadinessGeqFn(hero, crMinValue, p1Flag);
+    }
+  }]);
+}(DirectFn);
 var FN_MAP = {
   and: AND,
   or: OR,
@@ -3614,7 +3750,11 @@ var FN_MAP = {
   not: NOT,
   "last-n": lastN,
   "p1.equipment": EquipmentFn,
-  "p2.equipment": EquipmentFn
+  "p2.equipment": EquipmentFn,
+  "p1.artifact": ArtifactFn,
+  "p2.artifact": ArtifactFn,
+  "p1.cr-geq": CombatReadinessGeqFn,
+  "p2.cr-geq": CombatReadinessGeqFn
 };
 
 
@@ -4610,12 +4750,12 @@ var VALID_FIELD_WORDS = ["date", "is-first-pick", "is-win", "victory-points", "p
 var VALID_FIELD_WORD_RE = new RegExp("^(?:".concat(VALID_FIELD_WORDS.map(escapeRegex).join("|"), ")"), "i");
 var VALID_CLAUSE_FUNCTIONS = ["and", "or", "xor", "not"];
 var VALID_GLOBAL_FUNCTIONS = ["last-n"];
-var VALID_DIRECT_FUNCTIONS = ["p1.equipment", "p2.equipment", "p1.artifacts", "p2.artifacts", "p1.cr-bar", "p2.cr-bar"];
+var VALID_DIRECT_FUNCTIONS = ["p1.equipment", "p2.equipment", "p1.artifact", "p2.artifact", "p1.cr-geq", "p2.cr-geq"];
 var VALID_CLAUSE_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_CLAUSE_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
 var VALID_GLOBAL_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_GLOBAL_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
 var VALID_DIRECT_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_DIRECT_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
 var VALID_FUNCTIONS_RE = orRegex([VALID_CLAUSE_FUNCTIONS_RE, VALID_GLOBAL_FUNCTIONS_RE, VALID_DIRECT_FUNCTIONS_RE]);
-var VALID_STRING_RE = /[a-z][a-z0-9.\s]*/i;
+var VALID_STRING_RE = /[a-z0-9.][a-z0-9.\s]*/i;
 var VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
 var EMPTY_SET_RE = /\{\s*\}/;
 var VALID_INT_RE = /\d+/;
@@ -4658,13 +4798,21 @@ function tokenMatch(stream) {
     console.log("Matched stream as Data Field:", stream);
     return "datafield";
   }
-  if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
-    console.log("Matched stream as non-num null");
-    return null;
+  if (stream.match(padRegex(VALID_QUOTED_STRING_RE))) {
+    console.log("Matched stream as string:", stream);
+    return "string";
+  }
+  if (stream.match(padRegex(VALID_SET_RE))) {
+    console.log("Matched stream as set:", stream);
+    return "set";
   }
   if (stream.match(padRegex(VALID_RANGE_RE))) {
     console.log("Matched stream as range:", stream);
     return "range";
+  }
+  if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
+    console.log("Matched stream as non-num null", stream);
+    return null;
   }
   if (stream.match(padRegex(VALID_INT_RE))) {
     console.log("Matched stream as number:", stream);
@@ -4674,17 +4822,9 @@ function tokenMatch(stream) {
     console.log("Matched stream as date:", stream);
     return "date";
   }
-  if (stream.match(padRegex(VALID_SET_RE))) {
-    console.log("Matched stream as set:", stream);
-    return "set";
-  }
   if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
     console.log("Matched stream as bool:", stream);
     return "bool";
-  }
-  if (stream.match(padRegex(VALID_QUOTED_STRING_RE))) {
-    console.log("Matched stream as string:", stream);
-    return "string";
   }
   if (stream.match(/[\(\)\{\}\;\,]/)) {
     console.log("Matched stream as bracket:", stream);
