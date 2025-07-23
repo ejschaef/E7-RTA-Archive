@@ -52,7 +52,7 @@ const VALID_DIRECT_FUNCTIONS_RE = new RegExp(`(?:${VALID_DIRECT_FUNCTIONS.map(es
 const VALID_FUNCTIONS_RE = orRegex([VALID_CLAUSE_FUNCTIONS_RE, VALID_GLOBAL_FUNCTIONS_RE, VALID_DIRECT_FUNCTIONS_RE]);
 
 
-const VALID_STRING_RE = /[a-z0-9.][a-z0-9.\s]*/i;
+const VALID_STRING_RE = /[a-z0-9.][a-z0-9.\s']*/i;
 const VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
 const EMPTY_SET_RE = /\{\s*\}/;
 const VALID_INT_RE = /\d+/;

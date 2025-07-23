@@ -1,4 +1,9 @@
-import { COLUMNS_MAP, ARRAY_COLUMNS } from "./e7/references";
+import {
+	COLUMNS_MAP,
+	ARRAY_COLUMNS,
+	HERO_STATS_COLUMN_MAP,
+	P2_HERO_STATS_COLUMN_MAP,
+} from "./e7/references";
 
 function destroyDataTable(tableid) {
 	const tableSelector = $(`#${tableid}`);
@@ -38,23 +43,30 @@ Tables.functions = {
 		const tbody = document.getElementById(`${tableid}Body`);
 		tbody.innerHTML = ""; // Clear existing rows
 
-		data.forEach((item) => {
-			const row = document.createElement("tr");
+		const isP1 = tableid.includes("Player");
+		const person = isP1 ? "Player" : "Enemy";
 
-			// Populate each <td> in order
-			row.innerHTML = `
-            <td>${item.hero}</td>
-            <td>${item.games_won}</td>
-            <td>${item.games_appeared}</td>
-            <td>${item.appearance_rate}</td>
-            <td>${item.win_rate}</td>
-            <td>${item["+/-"]}</td>
-            `;
+		const P1_COLUMNS = [
+			HERO_STATS_COLUMN_MAP.HERO_NAME,
+			HERO_STATS_COLUMN_MAP.BATTLES,
+			HERO_STATS_COLUMN_MAP.PICK_RATE,
+			HERO_STATS_COLUMN_MAP.WINS,
+			HERO_STATS_COLUMN_MAP.WIN_RATE,
+			HERO_STATS_COLUMN_MAP.POSTBAN_RATE,
+			HERO_STATS_COLUMN_MAP.SUCCESS_RATE,
+			HERO_STATS_COLUMN_MAP.PLUS_MINUS,
+			HERO_STATS_COLUMN_MAP.POINT_GAIN,
+			HERO_STATS_COLUMN_MAP.AVG_CR,
+			HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE,
+		]
 
-			tbody.appendChild(row);
-		});
+		const P2_COLUMNS = P1_COLUMNS.filter((col) => col !== HERO_STATS_COLUMN_MAP.SUCCESS_RATE);
 
-		const person = tableid.includes("Player") ? "Player" : "Enemy";
+		const columns = isP1
+			? P1_COLUMNS
+			: P2_COLUMNS;
+
+		console.log("Columns: ", columns);
 
 		const tableSelector = $(`#${tableid}`);
 
@@ -65,7 +77,7 @@ Tables.functions = {
 			language: {
 				info: "Total rows: _TOTAL_",
 			},
-			order: [[3, "desc"]], // order by pick rate desc
+			order: [[2, "desc"]], // order by pick rate desc
 			buttons: {
 				name: "primary",
 				buttons: [
@@ -104,7 +116,10 @@ Tables.functions = {
 			deferRender: true,
 			scroller: true,
 			scrollCollapse: false,
+			columns: columns.map((col) => ({ data: col })),
 		});
+		table.rows.add(data).draw();
+		return table;
 	},
 
 	populateSeasonDetailsTable: function (tableid, data) {
@@ -229,7 +244,6 @@ Tables.functions = {
 				},
 			],
 			rowCallback: function (row, data, dataIndex) {
-
 				const winCell = row.cells[13];
 				const firstPickCell = row.cells[14];
 				const firstTurnCell = row.cells[15];
@@ -247,7 +261,6 @@ Tables.functions = {
 				if (data["First Turn"] === true) {
 					firstTurnCell.style.color = "deepskyblue";
 				}
-
 			},
 			buttons: {
 				name: "primary",
@@ -322,8 +335,10 @@ CardContent.functions = {
 		document.getElementById("avg-time").textContent = general_stats.avg_time;
 		document.getElementById("max-turns").textContent = general_stats.max_turns;
 		document.getElementById("max-time").textContent = general_stats.max_time;
-		document.getElementById("first-turn-games").textContent = general_stats.first_turn_games;
-		document.getElementById("first-turn-rate").textContent = general_stats.first_turn_rate;
+		document.getElementById("first-turn-games").textContent =
+			general_stats.first_turn_games;
+		document.getElementById("first-turn-rate").textContent =
+			general_stats.first_turn_rate;
 	},
 
 	populateRankPlot: function (rank_plot_html) {

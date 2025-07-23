@@ -2252,7 +2252,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   TYPES: () => (/* binding */ TYPES),
 /* harmony export */   parseDataType: () => (/* binding */ parseDataType)
 /* harmony export */ });
-/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../filter-utils.js */ "./static/assets/js/e7/filter-utils.js");
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
 /* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./static/assets/js/utils.js");
 /* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
@@ -2320,7 +2320,7 @@ var StringType = /*#__PURE__*/function (_DataType) {
       var kwargs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
         types: ["hero", "league", "server", "equipment", "artifact"]
       };
-      str = str.replace(/"|'/g, "");
+      str = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].trimSurroundingQuotes(str);
       str = str.trim();
       if (!_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_RE.test(str)) {
         throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_LITERAL_RE.source, " ); got: '").concat(str, "'"));
@@ -2648,7 +2648,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   INT_FIELDS: () => (/* binding */ INT_FIELDS),
 /* harmony export */   SET_FIELDS: () => (/* binding */ SET_FIELDS)
 /* harmony export */ });
-/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../filter-utils.js */ "./static/assets/js/e7/filter-utils.js");
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -2719,7 +2719,7 @@ _defineProperty(FieldType, "FIELD_EXTRACT_FN_MAP", {
   "p2.postban": function p2Postban(battle) {
     return battle["P2 Postban"];
   },
-  "prebans": function prebans(battle) {
+  prebans: function prebans(battle) {
     return [].concat(_toConsumableArray(battle["P1 Prebans"]), _toConsumableArray(battle["P2 Prebans"]));
   },
   "p1.pick1": function p1Pick1(battle) {
@@ -2782,10 +2782,10 @@ _defineProperty(FieldType, "FIELD_EXTRACT_FN_MAP", {
   "first-turn-hero": function firstTurnHero(battle) {
     return battle["First Turn Hero"];
   },
-  "turns": function turns(battle) {
+  turns: function turns(battle) {
     return battle["Turns"];
   },
-  "seconds": function seconds(battle) {
+  seconds: function seconds(battle) {
     return battle["Seconds"];
   }
 });
@@ -2826,7 +2826,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
-/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../filter-utils.js */ "./static/assets/js/e7/filter-utils.js");
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
 /* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
 /* harmony import */ var _season_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../season-manager.js */ "./static/assets/js/e7/season-manager.js");
 /* harmony import */ var _artifact_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
@@ -2968,7 +2968,9 @@ var FilterSyntaxParser = /*#__PURE__*/function () {
       console.log("Parsing clause fn:", clauseFn.str, str);
       var delim = ",",
         enclosureLevel = 1;
-      var argArr = _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
+      var argArr = _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel).filter(function (s) {
+        return s.length > 0;
+      }); // account for trailing commas
       console.log("Got argArr:", argArr);
       if (clauseFn === _functions_js__WEBPACK_IMPORTED_MODULE_8__.XOR && argArr.length < 2) {
         throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("XOR clause must have at least two arguments; got: ".concat(argArr.length, " arguments from string: \"").concat(str, "\""));
@@ -3096,11 +3098,6 @@ var FilterSyntaxParser = /*#__PURE__*/function () {
             throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Imbalanced parentheses in following string: \"".concat(splitStr, "\""));
           } else if (charCounts["{"] !== charCounts["}"]) {
             throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Imbalanced braces ('{', '}') in following string: \"".concat(splitStr, "\""));
-          } else if ((charCounts['"'] || 0) % 2 !== 0) {
-            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Imbalanced double quotes in following string: \"".concat(splitStr, "\""));
-          } else if ((charCounts["'"] || 0) % 2 !== 0) {
-            console.log("Imbalanced single quotes in following string:", splitStr, "; got:", charCounts["'"]);
-            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Imbalanced single quotes in following string: \"".concat(splitStr, "\""));
           }
         }
       } catch (err) {
@@ -3223,6 +3220,308 @@ var _INTERNAL_KEY = {
 
 /***/ }),
 
+/***/ "./static/assets/js/e7/filter-parsing/filter-utils.js":
+/*!************************************************************!*\
+  !*** ./static/assets/js/e7/filter-parsing/filter-utils.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _wrapNativeSuper(t) { var r = "function" == typeof Map ? new Map() : void 0; return _wrapNativeSuper = function _wrapNativeSuper(t) { if (null === t || !_isNativeFunction(t)) return t; if ("function" != typeof t) throw new TypeError("Super expression must either be null or a function"); if (void 0 !== r) { if (r.has(t)) return r.get(t); r.set(t, Wrapper); } function Wrapper() { return _construct(t, arguments, _getPrototypeOf(this).constructor); } return Wrapper.prototype = Object.create(t.prototype, { constructor: { value: Wrapper, enumerable: !1, writable: !0, configurable: !0 } }), _setPrototypeOf(Wrapper, t); }, _wrapNativeSuper(t); }
+function _construct(t, e, r) { if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments); var o = [null]; o.push.apply(o, e); var p = new (t.bind.apply(t, o))(); return r && _setPrototypeOf(p, r.prototype), p; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _isNativeFunction(t) { try { return -1 !== Function.toString.call(t).indexOf("[native code]"); } catch (n) { return "function" == typeof t; } }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+
+var SyntaxException = /*#__PURE__*/function (_Error) {
+  function SyntaxException(message) {
+    var _this;
+    _classCallCheck(this, SyntaxException);
+    _this = _callSuper(this, SyntaxException, [message]); // Pass message to base Error
+    _this.name = "Filter Syntax Exception"; // Set error name
+    return _this;
+  }
+  _inherits(SyntaxException, _Error);
+  return _createClass(SyntaxException);
+}(/*#__PURE__*/_wrapNativeSuper(Error));
+var TypeException = /*#__PURE__*/function (_Error2) {
+  function TypeException(message) {
+    var _this2;
+    _classCallCheck(this, TypeException);
+    _this2 = _callSuper(this, TypeException, [message]); // Pass message to base Error
+    _this2.name = "Filter Type Exception"; // Set error name
+    return _this2;
+  }
+  _inherits(TypeException, _Error2);
+  return _createClass(TypeException);
+}(/*#__PURE__*/_wrapNativeSuper(Error));
+var ValidationError = /*#__PURE__*/function (_Error3) {
+  function ValidationError(message) {
+    var _this3;
+    _classCallCheck(this, ValidationError);
+    _this3 = _callSuper(this, ValidationError, [message]); // Pass message to base Error
+    _this3.name = "Filter Validation Error"; // Set error name
+    return _this3;
+  }
+  _inherits(ValidationError, _Error3);
+  return _createClass(ValidationError);
+}(/*#__PURE__*/_wrapNativeSuper(Error)); //should only be called on strings of the form 'str(...)' or 'num(...)' etc. the string must end with the enclosure char, otherwise it will throw a SyntaxException.
+function retrieveEnclosure(string) {
+  var open_char = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "(";
+  var close_char = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ")";
+  if (open_char === close_char) {
+    throw new Error("Enclosure characters must be different: ".concat(open_char, " = ").concat(close_char));
+  }
+  var started = false;
+  var count = 0;
+  var output = "";
+  var _iterator = _createForOfIteratorHelper(_toConsumableArray(string).entries()),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _step$value = _slicedToArray(_step.value, 2),
+        index = _step$value[0],
+        _char = _step$value[1];
+      if (_char === open_char) {
+        count += 1;
+        if (!started) {
+          started = true;
+          continue;
+        }
+      } else if (_char === close_char) {
+        count -= 1;
+      }
+      if (count === 0 && started) {
+        if (index != string.length - 1) {
+          throw new SyntaxException("Enclosure should not be resolved before end of string; resolved at index: ".concat(index, "; input string: ").concat(string));
+        }
+        return output;
+      } else if (count < 0) {
+        throw new SyntaxException("Unbalanced enclosure at index: ".concat(index, " of input string: ").concat(string, "; balance of \"").concat(open_char, "...").concat(close_char, "\" enclosures became negative."));
+      } else if (started) {
+        output += _char;
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  if (!started) {
+    throw new SyntaxException("Enclosure of type ".concat(open_char, "...").concat(close_char, " not found in string; input string: ").concat(string));
+  } else if (count > 0) {
+    throw new SyntaxException("Enclosure could not be resolved; too many '".concat(close_char, "'; balance = +{count}; input string {string}"));
+  }
+}
+
+// retrieves comma separated arguments from a string; used for clause operators; input should be of the form 'fn(arg1, arg2,...)' where fn is a clause fn
+function retrieveArgs(string) {
+  var open_parenthese_count = 0;
+  var args = [];
+  var arg = "";
+  var _iterator2 = _createForOfIteratorHelper(string),
+    _step2;
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var _char2 = _step2.value;
+      if (_char2 === "(") {
+        open_parenthese_count += 1;
+        if (open_parenthese_count === 1) {
+          continue;
+        }
+      } else if (_char2 === ")") {
+        open_parenthese_count -= 1;
+      }
+      if (open_parenthese_count === 1 && _char2 === ",") {
+        args.push(arg.trim());
+        arg = "";
+      } else if (open_parenthese_count >= 1) {
+        arg += _char2;
+      }
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+  if (arg.trim()) {
+    args.push(arg.trim());
+  }
+  return args;
+}
+var ENCLOSURE_MAP = {
+  "(": ")",
+  "{": "}",
+  '"': '"',
+  "'": "'"
+};
+var ENCLOSURE_IGNORE = {
+  // if we are in a string enclosure, don't look for other quotes
+  "'": '"',
+  '"': "'"
+};
+var REVERSE_ENCLOSURE_MAP = Object.fromEntries(Object.entries(ENCLOSURE_MAP).filter(function (_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+    k = _ref2[0],
+    v = _ref2[1];
+  return k !== v;
+}).map(function (_ref3) {
+  var _ref4 = _slicedToArray(_ref3, 2),
+    k = _ref4[0],
+    v = _ref4[1];
+  return [v, k];
+}));
+function tokenizeWithNestedEnclosures(input) {
+  var splitChars = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : " ";
+  var enclosureLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var trim = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+  var tokens = [];
+  var current = "";
+  var stack = [];
+  for (var i = 0; i < input.length; i++) {
+    var _char3 = input[i];
+
+    //console.log(`Processing char ${char} at position ${i}; current string: ${current}; tokens: ${tokens}`);
+
+    if (splitChars.includes(_char3) && stack.length === enclosureLevel) {
+      if (current) {
+        tokens.push(trim ? current.trim() : current);
+        current = "";
+      }
+    } else {
+      if (REVERSE_ENCLOSURE_MAP[_char3]) {
+        // found a closing brace or parenthesis
+        var expected = REVERSE_ENCLOSURE_MAP[_char3];
+        if (stack.length > enclosureLevel) {
+          current += _char3;
+        }
+        if (stack[stack.length - 1] === expected) {
+          stack.pop();
+        } else {
+          throw new Error("Unbalanced closing brace at position ".concat(i));
+        }
+      } else {
+        if (stack.length >= enclosureLevel) {
+          // we are beyond the level of enclosure we are ignoring so add to current string
+          current += _char3;
+        }
+        if (ENCLOSURE_MAP[_char3] && (!ENCLOSURE_IGNORE[_char3] || stack[stack.length - 1] !== ENCLOSURE_IGNORE[_char3])) {
+          if (stack[stack.length - 1] === ENCLOSURE_MAP[_char3] &&
+          // matching quote to end the enclosure
+          _char3 === ENCLOSURE_MAP[_char3]) {
+            stack.pop();
+          } else {
+            stack.push(_char3); // add new enclosure level
+          }
+        }
+      }
+    }
+  }
+  if (stack.length > 0) {
+    throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: [ ".concat(stack.join(", "), " ]"));
+  }
+  if (current) {
+    tokens.push(trim ? current.trim() : current);
+  }
+  return tokens;
+}
+function getCharCounts(str) {
+  var counts = {};
+  var _iterator3 = _createForOfIteratorHelper(str),
+    _step3;
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var _char4 = _step3.value;
+      counts[_char4] = (counts[_char4] || 0) + 1;
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+  return counts;
+}
+function parseDate(dateStr) {
+  if (!_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.test(dateStr)) {
+    throw new SyntaxException("Invalid date; must be in the format: YYYY-MM-DD ( regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.source, " ); got: '").concat(dateStr, "'"));
+  }
+  var isoDateStr = dateStr.split(" ")[0];
+  var date = new Date("".concat(isoDateStr, "T00:00:00"));
+
+  // Check if valid date
+  if (isNaN(date.getTime())) {
+    throw new SyntaxException("Invalid date; could not be parsed as a valid date; got: '".concat(dateStr, "'"));
+  }
+
+  // Check if parsed date matches passed in string
+  var dateString = date.toISOString().split("T")[0];
+  var _dateString$split$map = dateString.split("-").map(Number),
+    _dateString$split$map2 = _slicedToArray(_dateString$split$map, 3),
+    year = _dateString$split$map2[0],
+    month = _dateString$split$map2[1],
+    day = _dateString$split$map2[2];
+  if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+    throw new SyntaxException("Invalid date; parsed date: ".concat(date.toISOString(), " does not match passed in string: ").concat(isoDateStr));
+  }
+  console.log("Parsed date: ".concat(date.toISOString(), " ; ").concat(date.constructor.name));
+  return date;
+}
+function tryConvert(convertFnc, typeName, value) {
+  var errMSG = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  if (errMSG === null) {
+    errMSG = "Could not convert ".concat(value, " to ").concat(typeName);
+  }
+  try {
+    return convertFnc(value);
+  } catch (err) {
+    throw new TypeException("".concat(errMSG, ": ").concat(err.message));
+  }
+}
+function trimSurroundingQuotes(str) {
+  return str.replace(/^"(.*)"$/, "$1").replace(/^'(.*)'$/, "$1");
+}
+var Futils = {
+  SyntaxException: SyntaxException,
+  TypeException: TypeException,
+  ValidationError: ValidationError,
+  retrieveEnclosure: retrieveEnclosure,
+  retrieveArgs: retrieveArgs,
+  getCharCounts: getCharCounts,
+  tokenizeWithNestedEnclosures: tokenizeWithNestedEnclosures,
+  parseDate: parseDate,
+  tryConvert: tryConvert,
+  trimSurroundingQuotes: trimSurroundingQuotes
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Futils);
+
+/***/ }),
+
 /***/ "./static/assets/js/e7/filter-parsing/functions.js":
 /*!*********************************************************!*\
   !*** ./static/assets/js/e7/filter-parsing/functions.js ***!
@@ -3243,7 +3542,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./declared-data-types.js */ "./static/assets/js/e7/filter-parsing/declared-data-types.js");
 /* harmony import */ var _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter-parse-references.js */ "./static/assets/js/e7/filter-parsing/filter-parse-references.js");
-/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../filter-utils.js */ "./static/assets/js/e7/filter-utils.js");
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
 /* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
 /* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../references.js */ "./static/assets/js/e7/references.js");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
@@ -3706,296 +4005,6 @@ var OPERATOR_MAP = {
   }
 };
 
-
-/***/ }),
-
-/***/ "./static/assets/js/e7/filter-utils.js":
-/*!*********************************************!*\
-  !*** ./static/assets/js/e7/filter-utils.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ "./static/assets/js/e7/regex.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _wrapNativeSuper(t) { var r = "function" == typeof Map ? new Map() : void 0; return _wrapNativeSuper = function _wrapNativeSuper(t) { if (null === t || !_isNativeFunction(t)) return t; if ("function" != typeof t) throw new TypeError("Super expression must either be null or a function"); if (void 0 !== r) { if (r.has(t)) return r.get(t); r.set(t, Wrapper); } function Wrapper() { return _construct(t, arguments, _getPrototypeOf(this).constructor); } return Wrapper.prototype = Object.create(t.prototype, { constructor: { value: Wrapper, enumerable: !1, writable: !0, configurable: !0 } }), _setPrototypeOf(Wrapper, t); }, _wrapNativeSuper(t); }
-function _construct(t, e, r) { if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments); var o = [null]; o.push.apply(o, e); var p = new (t.bind.apply(t, o))(); return r && _setPrototypeOf(p, r.prototype), p; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _isNativeFunction(t) { try { return -1 !== Function.toString.call(t).indexOf("[native code]"); } catch (n) { return "function" == typeof t; } }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-
-var SyntaxException = /*#__PURE__*/function (_Error) {
-  function SyntaxException(message) {
-    var _this;
-    _classCallCheck(this, SyntaxException);
-    _this = _callSuper(this, SyntaxException, [message]); // Pass message to base Error
-    _this.name = "Filter Syntax Exception"; // Set error name
-    return _this;
-  }
-  _inherits(SyntaxException, _Error);
-  return _createClass(SyntaxException);
-}(/*#__PURE__*/_wrapNativeSuper(Error));
-var TypeException = /*#__PURE__*/function (_Error2) {
-  function TypeException(message) {
-    var _this2;
-    _classCallCheck(this, TypeException);
-    _this2 = _callSuper(this, TypeException, [message]); // Pass message to base Error
-    _this2.name = "Filter Type Exception"; // Set error name
-    return _this2;
-  }
-  _inherits(TypeException, _Error2);
-  return _createClass(TypeException);
-}(/*#__PURE__*/_wrapNativeSuper(Error));
-var ValidationError = /*#__PURE__*/function (_Error3) {
-  function ValidationError(message) {
-    var _this3;
-    _classCallCheck(this, ValidationError);
-    _this3 = _callSuper(this, ValidationError, [message]); // Pass message to base Error
-    _this3.name = "Filter Validation Error"; // Set error name
-    return _this3;
-  }
-  _inherits(ValidationError, _Error3);
-  return _createClass(ValidationError);
-}(/*#__PURE__*/_wrapNativeSuper(Error)); //should only be called on strings of the form 'str(...)' or 'num(...)' etc. the string must end with the enclosure char, otherwise it will throw a SyntaxException.
-function retrieveEnclosure(string) {
-  var open_char = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '(';
-  var close_char = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ')';
-  if (open_char === close_char) {
-    throw new Error("Enclosure characters must be different: ".concat(open_char, " = ").concat(close_char));
-  }
-  var started = false;
-  var count = 0;
-  var output = "";
-  var _iterator = _createForOfIteratorHelper(_toConsumableArray(string).entries()),
-    _step;
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var _step$value = _slicedToArray(_step.value, 2),
-        index = _step$value[0],
-        _char = _step$value[1];
-      if (_char === open_char) {
-        count += 1;
-        if (!started) {
-          started = true;
-          continue;
-        }
-      } else if (_char === close_char) {
-        count -= 1;
-      }
-      if (count === 0 && started) {
-        if (index != string.length - 1) {
-          throw new SyntaxException("Enclosure should not be resolved before end of string; resolved at index: ".concat(index, "; input string: ").concat(string));
-        }
-        return output;
-      } else if (count < 0) {
-        throw new SyntaxException("Unbalanced enclosure at index: ".concat(index, " of input string: ").concat(string, "; balance of \"").concat(open_char, "...").concat(close_char, "\" enclosures became negative."));
-      } else if (started) {
-        output += _char;
-      }
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-  ;
-  if (!started) {
-    throw new SyntaxException("Enclosure of type ".concat(open_char, "...").concat(close_char, " not found in string; input string: ").concat(string));
-  } else if (count > 0) {
-    throw new SyntaxException("Enclosure could not be resolved; too many '".concat(close_char, "'; balance = +{count}; input string {string}"));
-  }
-}
-
-// retrieves comma separated arguments from a string; used for clause operators; input should be of the form 'fn(arg1, arg2,...)' where fn is a clause fn
-function retrieveArgs(string) {
-  var open_parenthese_count = 0;
-  var args = [];
-  var arg = "";
-  var _iterator2 = _createForOfIteratorHelper(string),
-    _step2;
-  try {
-    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-      var _char2 = _step2.value;
-      if (_char2 === '(') {
-        open_parenthese_count += 1;
-        if (open_parenthese_count === 1) {
-          continue;
-        }
-      } else if (_char2 === ')') {
-        open_parenthese_count -= 1;
-      }
-      if (open_parenthese_count === 1 && _char2 === ',') {
-        args.push(arg.trim());
-        arg = "";
-      } else if (open_parenthese_count >= 1) {
-        arg += _char2;
-      }
-    }
-  } catch (err) {
-    _iterator2.e(err);
-  } finally {
-    _iterator2.f();
-  }
-  if (arg.trim()) {
-    args.push(arg.trim());
-  }
-  return args;
-}
-var ENCLOSURE_MAP = {
-  '(': ')',
-  '{': '}',
-  '"': '"',
-  "'": "'"
-};
-var REVERSE_ENCLOSURE_MAP = Object.fromEntries(Object.entries(ENCLOSURE_MAP).filter(function (_ref) {
-  var _ref2 = _slicedToArray(_ref, 2),
-    k = _ref2[0],
-    v = _ref2[1];
-  return k !== v;
-}).map(function (_ref3) {
-  var _ref4 = _slicedToArray(_ref3, 2),
-    k = _ref4[0],
-    v = _ref4[1];
-  return [v, k];
-}));
-function tokenizeWithNestedEnclosures(input) {
-  var splitChars = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : " ";
-  var enclosureLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-  var trim = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
-  var tokens = [];
-  var current = '';
-  var stack = [];
-  for (var i = 0; i < input.length; i++) {
-    var _char3 = input[i];
-
-    //console.log(`Processing char ${char} at position ${i}; current string: ${current}; tokens: ${tokens}`);
-
-    if (splitChars.includes(_char3) && stack.length === enclosureLevel) {
-      if (current) {
-        tokens.push(trim ? current.trim() : current);
-        current = '';
-      }
-    } else {
-      if (REVERSE_ENCLOSURE_MAP[_char3]) {
-        var expected = REVERSE_ENCLOSURE_MAP[_char3];
-        if (stack.length > enclosureLevel) {
-          current += _char3;
-        }
-        if (stack[stack.length - 1] === expected) {
-          stack.pop();
-        } else {
-          throw new Error("Unbalanced closing bracket at position ".concat(i));
-        }
-      } else {
-        if (stack.length >= enclosureLevel) {
-          current += _char3;
-        }
-        if (ENCLOSURE_MAP[_char3]) {
-          if (stack[stack.length - 1] === ENCLOSURE_MAP[_char3] && _char3 === ENCLOSURE_MAP[_char3]) {
-            stack.pop();
-          } else {
-            stack.push(_char3);
-          }
-        }
-      }
-    }
-  }
-  if (stack.length > 0) {
-    throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: ", stack);
-  }
-  if (current) {
-    tokens.push(trim ? current.trim() : current);
-  }
-  return tokens;
-}
-function getCharCounts(str) {
-  var counts = {};
-  var _iterator3 = _createForOfIteratorHelper(str),
-    _step3;
-  try {
-    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-      var _char4 = _step3.value;
-      counts[_char4] = (counts[_char4] || 0) + 1;
-    }
-  } catch (err) {
-    _iterator3.e(err);
-  } finally {
-    _iterator3.f();
-  }
-  return counts;
-}
-function parseDate(dateStr) {
-  if (!_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.test(dateStr)) {
-    throw new SyntaxException("Invalid date; must be in the format: YYYY-MM-DD ( regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.source, " ); got: '").concat(dateStr, "'"));
-  }
-  var isoDateStr = dateStr.split(" ")[0];
-  var date = new Date("".concat(isoDateStr, "T00:00:00"));
-
-  // Check if valid date
-  if (isNaN(date.getTime())) {
-    throw new SyntaxException("Invalid date; could not be parsed as a valid date; got: '".concat(dateStr, "'"));
-  }
-
-  // Check if parsed date matches passed in string
-  var dateString = date.toISOString().split('T')[0];
-  var _dateString$split$map = dateString.split('-').map(Number),
-    _dateString$split$map2 = _slicedToArray(_dateString$split$map, 3),
-    year = _dateString$split$map2[0],
-    month = _dateString$split$map2[1],
-    day = _dateString$split$map2[2];
-  if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
-    throw new SyntaxException("Invalid date; parsed date: ".concat(date.toISOString(), " does not match passed in string: ").concat(isoDateStr));
-  }
-  console.log("Parsed date: ".concat(date.toISOString(), " ; ").concat(date.constructor.name));
-  return date;
-}
-function tryConvert(convertFnc, typeName, value) {
-  var errMSG = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-  if (errMSG === null) {
-    errMSG = "Could not convert ".concat(value, " to ").concat(typeName);
-  }
-  try {
-    return convertFnc(value);
-  } catch (err) {
-    throw new TypeException("".concat(errMSG, ": ").concat(err.message));
-  }
-}
-var Futils = {
-  SyntaxException: SyntaxException,
-  TypeException: TypeException,
-  ValidationError: ValidationError,
-  retrieveEnclosure: retrieveEnclosure,
-  retrieveArgs: retrieveArgs,
-  getCharCounts: getCharCounts,
-  tokenizeWithNestedEnclosures: tokenizeWithNestedEnclosures,
-  parseDate: parseDate,
-  tryConvert: tryConvert
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Futils);
 
 /***/ }),
 
@@ -4468,6 +4477,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   COLUMNS: () => (/* binding */ COLUMNS),
 /* harmony export */   COLUMNS_MAP: () => (/* binding */ COLUMNS_MAP),
 /* harmony export */   EQUIPMENT_SET_MAP: () => (/* binding */ EQUIPMENT_SET_MAP),
+/* harmony export */   HERO_STATS_COLUMN_MAP: () => (/* binding */ HERO_STATS_COLUMN_MAP),
 /* harmony export */   INT_COLUMNS: () => (/* binding */ INT_COLUMNS),
 /* harmony export */   LEAGUE_MAP: () => (/* binding */ LEAGUE_MAP),
 /* harmony export */   ONE_DAY: () => (/* binding */ ONE_DAY),
@@ -4486,43 +4496,43 @@ var WORLD_CODE_ENUM = {
   EU: "world_eu"
 };
 var WORLD_CODE_TO_CLEAN_STR = {
-  "world_global": "Global",
-  "world_kor": "Korea",
-  "world_jpn": "Japan",
-  "world_asia": "Asia",
-  "world_eu": "Europe"
+  world_global: "Global",
+  world_kor: "Korea",
+  world_jpn: "Japan",
+  world_asia: "Asia",
+  world_eu: "Europe"
 };
 var EQUIPMENT_SET_MAP = {
-  "set_speed": "Speed",
-  "set_acc": "Hit",
-  "set_cri": "Critical",
-  "set_res": "Resist",
-  "set_def": "Defense",
-  "set_att": "Attack",
-  "set_max_hp": "Health",
-  "set_cri_dmg": "Destruction",
-  "set_coop": "Unity",
-  "set_immune": "Immunity",
-  "set_rage": "Rage",
-  "set_vampire": "Lifesteal",
-  "set_shield": "Protection",
-  "set_revenge": "Revenge",
-  "set_penetrate": "Penetration",
-  "set_torrent": "Torrent",
-  "set_counter": "Counter",
-  "set_scar": "Injury"
+  set_speed: "Speed",
+  set_acc: "Hit",
+  set_cri: "Critical",
+  set_res: "Resist",
+  set_def: "Defense",
+  set_att: "Attack",
+  set_max_hp: "Health",
+  set_cri_dmg: "Destruction",
+  set_coop: "Unity",
+  set_immune: "Immunity",
+  set_rage: "Rage",
+  set_vampire: "Lifesteal",
+  set_shield: "Protection",
+  set_revenge: "Revenge",
+  set_penetrate: "Penetration",
+  set_torrent: "Torrent",
+  set_counter: "Counter",
+  set_scar: "Injury"
 };
 var ONE_DAY = 1000 * 60 * 60 * 24;
 var LEAGUE_MAP = {
-  "bronze": 0,
-  "silver": 1,
-  "gold": 2,
-  "master": 3,
-  "challenger": 4,
-  "champion": 5,
-  "warlord": 6,
-  "emperor": 7,
-  "legend": 8
+  bronze: 0,
+  silver: 1,
+  gold: 2,
+  master: 3,
+  challenger: 4,
+  champion: 5,
+  warlord: 6,
+  emperor: 7,
+  legend: 8
 };
 var COLUMNS = ["Date/Time", "Seq Num", "P1 ID", "P1 Server", "P1 League", "P1 Points", "P2 ID", "P2 Server", "P2 League", "Win", "First Pick", "P1 Preban 1", "P1 Preban 2", "P2 Preban 1", "P2 Preban 2", "P1 Pick 1", "P1 Pick 2", "P1 Pick 3", "P1 Pick 4", "P1 Pick 5", "P2 Pick 1", "P2 Pick 2", "P2 Pick 3", "P2 Pick 4", "P2 Pick 5", "P1 Postban", "P2 Postban"];
 var COLUMNS_MAP = {
@@ -4569,12 +4579,28 @@ var ARRAY_COLUMNS = [COLUMNS_MAP.P1_EQUIPMENT, COLUMNS_MAP.P2_EQUIPMENT, COLUMNS
 var BOOLS_COLS = [COLUMNS_MAP.FIRST_PICK, COLUMNS_MAP.FIRST_TURN, COLUMNS_MAP.WIN];
 var INT_COLUMNS = [COLUMNS_MAP.SECONDS, COLUMNS_MAP.TURNS, COLUMNS_MAP.P1_POINTS, COLUMNS_MAP.POINT_GAIN];
 var TITLE_CASE_COLUMNS = [COLUMNS_MAP.P1_LEAGUE, COLUMNS_MAP.P2_LEAGUE];
+var HERO_STATS_COLUMN_MAP = {
+  HERO_NAME: "Hero Name",
+  BATTLES: "Battles",
+  PICK_RATE: "Pick Rate",
+  WINS: "Wins",
+  WIN_RATE: "Win rate",
+  POSTBANS: "Postbans",
+  POSTBAN_RATE: "Postban Rate",
+  SUCCESS_RATE: "Success Rate",
+  // success rate indicates a win or a postban
+  PLUS_MINUS: "+/-",
+  POINT_GAIN: "Point Gain",
+  AVG_CR: "Avg CR",
+  FIRST_TURNS: "First Turns",
+  FIRST_TURN_RATE: "First Turn Rate"
+};
 
 /**
  * Generates a list of all prime numbers up to and including the given limit.
  *
  * Uses the Sieve of Eratosthenes algorithm to generate the list.
- * 
+ *
  * Primes are used to represent as prime identifier allowing us to represent a set as a product of primes
  *
  * @param {number} limit - The upper limit of the prime numbers to generate. Must be a positive integer.
@@ -4636,7 +4662,7 @@ var VALID_CLAUSE_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_CLAUSE_FUNCTIONS.m
 var VALID_GLOBAL_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_GLOBAL_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
 var VALID_DIRECT_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_DIRECT_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
 var VALID_FUNCTIONS_RE = orRegex([VALID_CLAUSE_FUNCTIONS_RE, VALID_GLOBAL_FUNCTIONS_RE, VALID_DIRECT_FUNCTIONS_RE]);
-var VALID_STRING_RE = /[a-z0-9.][a-z0-9.\s]*/i;
+var VALID_STRING_RE = /[a-z0-9.][a-z0-9.\s']*/i;
 var VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
 var EMPTY_SET_RE = /\{\s*\}/;
 var VALID_INT_RE = /\d+/;
@@ -4932,8 +4958,6 @@ function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLim
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
@@ -4961,21 +4985,56 @@ var isIncomplete = function isIncomplete(b) {
   return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS] === 0;
 };
 function toPercent(value) {
-  return (value * 100).toFixed(2) + '%';
+  return (value * 100).toFixed(2) + "%";
 }
-function queryStats(battleList, totalBattles) {
+function divideToPercentString(a, b) {
+  return b !== 0 ? toPercent(a / b) : toPercent(0);
+}
+function getCR(battle, heroName) {
+  var entry = battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+    return entry[0] === heroName;
+  });
+  return entry ? entry[1] : null;
+}
+function queryStats(battleList, totalBattles, heroName) {
+  var _ref;
   var gamesWon = getWins(battleList).length;
   var gamesAppeared = battleList.length;
   var appearanceRate = totalBattles !== 0 ? gamesAppeared / totalBattles : 0;
   var winRate = gamesAppeared !== 0 ? gamesWon / gamesAppeared : 0;
-  return {
-    games_won: gamesWon,
-    games_appeared: gamesAppeared,
-    total_games: totalBattles,
-    appearance_rate: toPercent(appearanceRate),
-    win_rate: toPercent(winRate),
-    '+/-': 2 * gamesWon - gamesAppeared
-  };
+  var postBanned = battleList.reduce(function (acc, b) {
+    return acc + (b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN] === heroName || b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN] === heroName);
+  }, 0);
+  var successes = battleList.reduce(function (acc, b) {
+    return acc + (b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN] || b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN] === heroName || b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN] === heroName);
+  }, 0);
+  var pointGain = battleList.reduce(function (acc, b) {
+    return acc + b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN];
+  }, 0);
+  var gamesConsidered = 0;
+  var crTotal = 0;
+  var firstTurns = 0;
+  var _iterator = _createForOfIteratorHelper(battleList),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var battle = _step.value;
+      var cr = getCR(battle, heroName);
+      if (cr !== null && cr !== 0) {
+        gamesConsidered += 1;
+        crTotal += cr;
+        if (cr === 100) {
+          firstTurns += 1;
+        }
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  var avgCR = divideToPercentString(crTotal / 100, gamesConsidered);
+  return _ref = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME, heroName), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.BATTLES, gamesAppeared), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PICK_RATE, toPercent(appearanceRate)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WINS, gamesWon), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WIN_RATE, toPercent(winRate)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBANS, postBanned), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBAN_RATE, divideToPercentString(postBanned, gamesAppeared)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.SUCCESS_RATE, divideToPercentString(successes, gamesAppeared)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PLUS_MINUS, 2 * gamesWon - gamesAppeared), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POINT_GAIN, pointGain), _defineProperty(_defineProperty(_defineProperty(_ref, _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.AVG_CR, avgCR), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURNS, firstTurns), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE, divideToPercentString(firstTurns, gamesConsidered));
 }
 function getPrimes(battles) {
   var isP1 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
@@ -5002,58 +5061,55 @@ function getHeroStats(battles, HM) {
   var enemyPrimes = getPrimes(battleList, false);
   var playerHeroStats = [];
   var enemyHeroStats = [];
-  var _iterator = _createForOfIteratorHelper(playerPrimes),
-    _step;
+  var _iterator2 = _createForOfIteratorHelper(playerPrimes),
+    _step2;
   try {
     var _loop = function _loop() {
-      var prime = _step.value;
+      var prime = _step2.value;
       var hero = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM);
       var playerSubset = battleList.filter(function (b) {
         return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] % prime === 0;
       });
       if (playerSubset.length > 0) {
-        playerHeroStats.push(_objectSpread(_objectSpread({}, queryStats(playerSubset, totalBattles)), {}, {
-          hero: hero.name
-        }));
-      }
-    };
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      _loop();
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-  var _iterator2 = _createForOfIteratorHelper(enemyPrimes),
-    _step2;
-  try {
-    var _loop2 = function _loop2() {
-      var prime = _step2.value;
-      var hero = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM);
-      var enemySubset = battleList.filter(function (b) {
-        return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] % prime === 0;
-      });
-      if (enemySubset.length > 0) {
-        enemyHeroStats.push(_objectSpread(_objectSpread({}, queryStats(enemySubset, totalBattles)), {}, {
-          hero: hero.name
-        }));
+        playerHeroStats.push(queryStats(playerSubset, totalBattles, hero.name));
       }
     };
     for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-      _loop2();
+      _loop();
     }
   } catch (err) {
     _iterator2.e(err);
   } finally {
     _iterator2.f();
   }
+  var _iterator3 = _createForOfIteratorHelper(enemyPrimes),
+    _step3;
+  try {
+    var _loop2 = function _loop2() {
+      var prime = _step3.value;
+      var hero = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM);
+      var enemySubset = battleList.filter(function (b) {
+        return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] % prime === 0;
+      });
+      if (enemySubset.length > 0) {
+        enemyHeroStats.push(queryStats(enemySubset, totalBattles, hero.name));
+      }
+    };
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      _loop2();
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+  var nameCol = _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME;
   return {
     playerHeroStats: playerHeroStats.sort(function (b1, b2) {
-      return b1.hero.localeCompare(b2.hero);
+      return b1[nameCol].localeCompare(b2[nameCol]);
     }),
     enemyHeroStats: enemyHeroStats.sort(function (b1, b2) {
-      return b1.hero.localeCompare(b2.hero);
+      return b1[nameCol].localeCompare(b2[nameCol]);
     })
   };
 }
@@ -5064,11 +5120,11 @@ function getFirstPickStats(battles, HM) {
   }
   var totalBattles = battleList.length;
   var grouped = {};
-  var _iterator3 = _createForOfIteratorHelper(battleList),
-    _step3;
+  var _iterator4 = _createForOfIteratorHelper(battleList),
+    _step4;
   try {
-    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-      var b = _step3.value;
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var b = _step4.value;
       if (b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES].length === 0) continue; // skip any battle where player didn't get to pick a first unit
       var hero = b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES][0];
       if (!(hero in grouped)) grouped[hero] = {
@@ -5079,14 +5135,14 @@ function getFirstPickStats(battles, HM) {
       grouped[hero].appearances += 1;
     }
   } catch (err) {
-    _iterator3.e(err);
+    _iterator4.e(err);
   } finally {
-    _iterator3.f();
+    _iterator4.f();
   }
-  var result = Object.entries(grouped).map(function (_ref) {
-    var _ref2 = _slicedToArray(_ref, 2),
-      prime = _ref2[0],
-      stats = _ref2[1];
+  var result = Object.entries(grouped).map(function (_ref2) {
+    var _ref3 = _slicedToArray(_ref2, 2),
+      prime = _ref3[0],
+      stats = _ref3[1];
     var name = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM).name;
     return {
       hero: name,
@@ -5094,7 +5150,7 @@ function getFirstPickStats(battles, HM) {
       appearances: stats.appearances,
       win_rate: toPercent(stats.wins / stats.appearances),
       appearance_rate: toPercent(stats.appearances / totalBattles),
-      '+/-': 2 * stats.wins - stats.appearances
+      "+/-": 2 * stats.wins - stats.appearances
     };
   });
   result.sort(function (a, b) {
@@ -5105,7 +5161,7 @@ function getFirstPickStats(battles, HM) {
 function getPrebanStats(battles, HM) {
   //console.log(`Got HM: ${HM}`);
 
-  var emptyPrime = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName('Empty', HM).prime;
+  var emptyPrime = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName("Empty", HM).prime;
   var battleList = Object.values(battles);
   if (battleList.length === 0) {
     return [];
@@ -5121,40 +5177,40 @@ function getPrebanStats(battles, HM) {
   var preban2Set = getValidPrimes(_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES, 1);
   var prebanSet = new Set([].concat(_toConsumableArray(preban1Set), _toConsumableArray(preban2Set)));
   var prebans = [];
-  var _iterator4 = _createForOfIteratorHelper(prebanSet),
-    _step4;
-  try {
-    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-      var prime = _step4.value;
-      prebans.push(prime);
-    }
-  } catch (err) {
-    _iterator4.e(err);
-  } finally {
-    _iterator4.f();
-  }
   var _iterator5 = _createForOfIteratorHelper(prebanSet),
     _step5;
   try {
     for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-      var a = _step5.value;
-      var _iterator6 = _createForOfIteratorHelper(prebanSet),
-        _step6;
-      try {
-        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-          var b = _step6.value;
-          if (a < b) prebans.push(a * b);
-        }
-      } catch (err) {
-        _iterator6.e(err);
-      } finally {
-        _iterator6.f();
-      }
+      var prime = _step5.value;
+      prebans.push(prime);
     }
   } catch (err) {
     _iterator5.e(err);
   } finally {
     _iterator5.f();
+  }
+  var _iterator6 = _createForOfIteratorHelper(prebanSet),
+    _step6;
+  try {
+    for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+      var a = _step6.value;
+      var _iterator7 = _createForOfIteratorHelper(prebanSet),
+        _step7;
+      try {
+        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+          var b = _step7.value;
+          if (a < b) prebans.push(a * b);
+        }
+      } catch (err) {
+        _iterator7.e(err);
+      } finally {
+        _iterator7.f();
+      }
+    }
+  } catch (err) {
+    _iterator6.e(err);
+  } finally {
+    _iterator6.f();
   }
   console.log("Prebans:", prebans);
   var totalBattles = battleList.length;
@@ -5180,7 +5236,7 @@ function getPrebanStats(battles, HM) {
       appearances: appearances,
       appearance_rate: toPercent(appearanceRate),
       win_rate: toPercent(winRate),
-      '+/-': plusMinus
+      "+/-": plusMinus
     });
   };
   for (var _i2 = 0, _prebans = prebans; _i2 < _prebans.length; _i2++) {
@@ -5278,24 +5334,24 @@ function getGeneralStats(battles, HM) {
   }
   var NA = "N/A";
   return {
-    "first_pick_count": fpCount,
-    "second_pick_count": spCount,
-    "first_pick_rate": fpCount ? toPercent(fpR) : NA,
-    "second_pick_rate": spCount ? toPercent(spR) : NA,
-    "first_pick_winrate": fpCount ? toPercent(fpWR) : NA,
-    "second_pick_winrate": spCount ? toPercent(spWR) : NA,
-    "total_winrate": totalBattles ? toPercent(winRate) : NA,
-    "total_battles": totalBattles,
-    "total_wins": fpWins + spWins,
-    "max_win_streak": maxWinStreak,
-    "max_loss_streak": maxLossStreak,
-    "avg_ppg": avgPPG.toFixed(2),
-    "avg_turns": avgTurns.toFixed(2),
-    "avg_time": avgTimeStr,
-    "max_turns": maxTurns,
-    "max_time": maxTimeStr,
-    "first_turn_games": totalFirstTurnGames,
-    "first_turn_rate": totalBattles ? toPercent(totalFirstTurnGames / totalBattles) : NA
+    first_pick_count: fpCount,
+    second_pick_count: spCount,
+    first_pick_rate: fpCount ? toPercent(fpR) : NA,
+    second_pick_rate: spCount ? toPercent(spR) : NA,
+    first_pick_winrate: fpCount ? toPercent(fpWR) : NA,
+    second_pick_winrate: spCount ? toPercent(spWR) : NA,
+    total_winrate: totalBattles ? toPercent(winRate) : NA,
+    total_battles: totalBattles,
+    total_wins: fpWins + spWins,
+    max_win_streak: maxWinStreak,
+    max_loss_streak: maxLossStreak,
+    avg_ppg: avgPPG.toFixed(2),
+    avg_turns: avgTurns.toFixed(2),
+    avg_time: avgTimeStr,
+    max_turns: maxTurns,
+    max_time: maxTimeStr,
+    first_turn_games: totalFirstTurnGames,
+    first_turn_rate: totalBattles ? toPercent(totalFirstTurnGames / totalBattles) : NA
   };
 }
 function getServerStats(battlesList) {

@@ -1,5 +1,5 @@
-import Futils from "../filter-utils.js";
-import { RegExps } from "../regex.js"
+import Futils from "./filter-utils.js";
+import { RegExps } from "../regex.js";
 import { toTitleCase } from "../../utils.js";
 import HeroManager from "../hero-manager.js";
 import { EQUIPMENT_LOWERCASE_STRINGS_SET } from "./filter-parse-references.js";
@@ -28,7 +28,7 @@ class StringType extends DataType {
 		REFS,
 		kwargs = { types: ["hero", "league", "server", "equipment", "artifact"] }
 	) {
-		str = str.replace(/"|'/g, "");
+		str = Futils.trimSurroundingQuotes(str);
 		str = str.trim();
 		if (!RegExps.VALID_STRING_RE.test(str)) {
 			throw new Futils.SyntaxException(
@@ -54,7 +54,7 @@ class StringType extends DataType {
 		for (const type of kwargs.types) {
 			const parsed = parseFn(type, str);
 			if (parsed) {
-                console.log(`Parsed string: '${str}' to '${parsed}'`);
+				console.log(`Parsed string: '${str}' to '${parsed}'`);
 				return toTitleCase(parsed);
 			}
 		}
@@ -314,12 +314,12 @@ function parseDataType(str, REFS) {
 }
 
 const TYPES = {
-    Date: DateType,
-    String: StringType,
-    Int: IntType,
-    Bool: BoolType,
-    Set: SetType,
-    Range: RangeType
-}
+	Date: DateType,
+	String: StringType,
+	Int: IntType,
+	Bool: BoolType,
+	Set: SetType,
+	Range: RangeType,
+};
 
 export { parseDataType, TYPES, DataType };

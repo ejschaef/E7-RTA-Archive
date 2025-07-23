@@ -452,14 +452,15 @@
             <!-- [ plot section ] end -->
 
             <!-- [ player hero stats section ] start -->
-            <div class="col-sm-6">
+            <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header fixed-height-table-header">
+                    <div class="card-header fixed-height-table-header kpi-header">
                         <h5>Player Heroes</h5>
                         <br>
                         <h6 style="font-size: 0.7em;">
                             Displays statistics for heroes computed
-                            based on when they appear on the player's team.
+                            based on when they appear on the player's team. Success Rate indicates percentage of
+                            games in which the player won the game or the hero was post banned.
                         </h6>
                     </div>
                     <div class="card-body kpi-body">
@@ -467,11 +468,16 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Hero Name</th>
-                                    <th scope="col">Wins</th>
                                     <th scope="col">Battles</th>
                                     <th scope="col">Pick Rate</th>
+                                    <th scope="col">Wins</th>
                                     <th scope="col">Win rate</th>
+                                    <th scope="col">Postban Rate</th>
+                                    <th scope="col">Success Rate</th>
                                     <th scope="col">+/-</th>
+                                    <th scope="col">Point Gain</th>
+                                    <th scope="col">Avg CR</th>
+                                    <th scope="col">First Turn Rate</th>
                                 </tr>
                             </thead>
                             <tbody id="PlayerTableBody">
@@ -483,9 +489,9 @@
             <!-- [ player hero stats section ] end -->
 
             <!-- [ opponent hero stats section ] start -->
-            <div class="col-sm-6">
+            <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header fixed-height-table-header">
+                    <div class="card-header fixed-height-table-header kpi-header">
                         <h5>Enemy Heroes</h5>
                         <br>
                         <h6 style="font-size: 0.7em;">
@@ -498,11 +504,15 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Hero Name</th>
-                                    <th scope="col">Wins</th>
                                     <th scope="col">Battles</th>
                                     <th scope="col">Pick Rate</th>
+                                    <th scope="col">Wins</th>
                                     <th scope="col">Win rate</th>
+                                    <th scope="col">Postban Rate</th>
                                     <th scope="col">+/-</th>
+                                    <th scope="col">Point Gain</th>
+                                    <th scope="col">Avg CR</th>
+                                    <th scope="col">First Turn Rate</th>
                                 </tr>
                             </thead>
                             <tbody id="OpponentTableBody">

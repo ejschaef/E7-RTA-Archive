@@ -1,14 +1,13 @@
 import HeroManager from "../hero-manager.js";
-import Futils from "../filter-utils.js";
+import Futils from "./filter-utils.js";
 import { RegExps } from "../regex.js";
 import SeasonManager from "../season-manager.js";
 import ArtifactManager from "../artifact-manager.js";
-import { ACCEPTED_CHARS, PRINT_PREFIX  } from "./filter-parse-references.js";
+import { ACCEPTED_CHARS, PRINT_PREFIX } from "./filter-parse-references.js";
 import { FieldType, INT_FIELDS, SET_FIELDS } from "./field-type.js";
 import { parseDataType, DataType, TYPES } from "./declared-data-types.js";
 import { FN_MAP, XOR, NOT, lastN } from "./functions.js";
 import { OPERATOR_MAP } from "./operators.js";
-
 
 function validateChars(str, charSet, objName) {
 	for (let char of str) {
@@ -141,7 +140,7 @@ class FilterSyntaxParser {
 			str,
 			delim,
 			enclosureLevel
-		);
+		).filter((s) => s.length > 0); // account for trailing commas
 		console.log("Got argArr:", argArr);
 		if (clauseFn === XOR && argArr.length < 2) {
 			throw new Futils.SyntaxException(
@@ -296,20 +295,6 @@ class FilterSyntaxParser {
 			} else if (charCounts["{"] !== charCounts["}"]) {
 				throw new Futils.SyntaxException(
 					`Imbalanced braces ('{', '}') in following string: "${splitStr}"`
-				);
-			} else if ((charCounts['"'] || 0) % 2 !== 0) {
-				throw new Futils.SyntaxException(
-					`Imbalanced double quotes in following string: "${splitStr}"`
-				);
-			} else if ((charCounts["'"] || 0) % 2 !== 0) {
-				console.log(
-					"Imbalanced single quotes in following string:",
-					splitStr,
-					"; got:",
-					charCounts["'"]
-				);
-				throw new Futils.SyntaxException(
-					`Imbalanced single quotes in following string: "${splitStr}"`
 				);
 			}
 		}

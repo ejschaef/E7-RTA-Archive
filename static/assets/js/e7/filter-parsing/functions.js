@@ -1,8 +1,8 @@
 import { TYPES } from "./declared-data-types.js";
 import { PRINT_PREFIX } from "./filter-parse-references.js";
-import Futils from "../filter-utils.js";
+import Futils from "./filter-utils.js";
 import { RegExps } from "../regex.js";
-import { COLUMNS_MAP } from "../references.js"
+import { COLUMNS_MAP } from "../references.js";
 
 class Fn {
 	constructor() {}
@@ -114,7 +114,6 @@ class NOT extends ClauseFn {
 	}
 }
 
-
 // Direct functions resolve to a single base filter ; they cannot contain nested filters
 class DirectFn extends Fn {
 	toString(prefix = "") {
@@ -182,7 +181,9 @@ class EquipmentFn extends DirectFn {
 		const picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
 		const equipped = getHeroEquipment(this.hero, picks, equipment);
 		console.log(
-			`Got equipped: ${equipped}, hero: ${this.hero}, picks: ${JSON.stringify(picks)}, equipment: ${JSON.stringify(equipment)}`
+			`Got equipped: ${equipped}, hero: ${this.hero}, picks: ${JSON.stringify(
+				picks
+			)}, equipment: ${JSON.stringify(equipment)}`
 		);
 		if (!equipped) {
 			return false;
@@ -240,8 +241,7 @@ class ArtifactFn extends DirectFn {
 		this.hero = hero.data;
 		this.artifactArr = [...artifactSet.data];
 		this.str =
-			(p1Flag ? "p1" : "p2") +
-			`.artifact(${hero}, ${artifactSet.toString()})`;
+			(p1Flag ? "p1" : "p2") + `.artifact(${hero}, ${artifactSet.toString()})`;
 		this.isPlayer1 = p1Flag;
 	}
 
@@ -252,15 +252,20 @@ class ArtifactFn extends DirectFn {
 		const picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
 		const equippedArtifact = getHeroArtifact(this.hero, picks, artifacts);
 		console.log(
-			`Got equipped Artifact: ${equippedArtifact}, hero: ${this.hero}, picks: ${JSON.stringify(picks)}, artifacts: ${JSON.stringify(artifacts)}`
+			`Got equipped Artifact: ${equippedArtifact}, hero: ${
+				this.hero
+			}, picks: ${JSON.stringify(picks)}, artifacts: ${JSON.stringify(
+				artifacts
+			)}`
 		);
 		if (!equippedArtifact) {
 			return false;
 		}
-		return this.artifactArr.some((arti) => equippedArtifact.toLowerCase() === arti.toLowerCase());
+		return this.artifactArr.some(
+			(arti) => equippedArtifact.toLowerCase() === arti.toLowerCase()
+		);
 	}
 }
-
 
 // filters for battles where a hero as greater or equal starting CR as the passed integer value (indicating the percentage value)
 class CombatReadinessGeqFn extends DirectFn {
@@ -278,7 +283,7 @@ class CombatReadinessGeqFn extends DirectFn {
 		} else if (!RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
 			throw new Futils.TypeException(
 				`Invalid CR-GEQ function call ; second argument must be a valid integer literal ; got: '${args[1]}' from str: ${str}`
-			)
+			);
 		}
 		const crMinValueStr = args[1];
 		let [hero, crMinValue] = [null, null];
@@ -302,17 +307,22 @@ class CombatReadinessGeqFn extends DirectFn {
 		super();
 		this.hero = hero.data;
 		this.crMinValue = crMinValue;
-		this.str =
-			(p1Flag ? "p1" : "p2") +
-			`.CR-GEQ(${hero}, ${crMinValue})`;
+		this.str = (p1Flag ? "p1" : "p2") + `.CR-GEQ(${hero}, ${crMinValue})`;
 		this.isPlayer1 = p1Flag;
 	}
 
 	call(battle) {
-		const findFn = (entry, picks) => picks.includes(entry[0]) && entry[1] >= this.crMinValue && entry[0] === this.hero;
+		const findFn = (entry, picks) =>
+			picks.includes(entry[0]) &&
+			entry[1] >= this.crMinValue &&
+			entry[0] === this.hero;
 		const result = this.isPlayer1
-			? battle[COLUMNS_MAP.CR_BAR].find(entry	=> findFn(entry, battle[COLUMNS_MAP.P1_PICKS]))
-			: battle[COLUMNS_MAP.CR_BAR].find(entry	=> findFn(entry, battle[COLUMNS_MAP.P2_PICKS]));
+			? battle[COLUMNS_MAP.CR_BAR].find((entry) =>
+					findFn(entry, battle[COLUMNS_MAP.P1_PICKS])
+			  )
+			: battle[COLUMNS_MAP.CR_BAR].find((entry) =>
+					findFn(entry, battle[COLUMNS_MAP.P2_PICKS])
+			  );
 		console.log(
 			`Got CR Result: ${result}, hero: ${this.hero}, minValue: ${this.crMinValue}`
 		);
@@ -328,10 +338,20 @@ const FN_MAP = {
 	"last-n": lastN,
 	"p1.equipment": EquipmentFn,
 	"p2.equipment": EquipmentFn,
-    "p1.artifact" : ArtifactFn,
-    "p2.artifact" : ArtifactFn,
-	"p1.cr-geq" : CombatReadinessGeqFn,
-	"p2.cr-geq" : CombatReadinessGeqFn
+	"p1.artifact": ArtifactFn,
+	"p2.artifact": ArtifactFn,
+	"p1.cr-geq": CombatReadinessGeqFn,
+	"p2.cr-geq": CombatReadinessGeqFn,
 };
 
-export { FN_MAP, AND, OR, XOR, NOT, lastN, EquipmentFn, ArtifactFn, CombatReadinessGeqFn };
+export {
+	FN_MAP,
+	AND,
+	OR,
+	XOR,
+	NOT,
+	lastN,
+	EquipmentFn,
+	ArtifactFn,
+	CombatReadinessGeqFn,
+};
