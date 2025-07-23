@@ -13,8 +13,11 @@ parse uploads --
 fix footer loading in --
 
 update page utils cache and query function to be cleaner
-update find user to return more cleanly
+update find user to return more cleanly 
 
+
+add more metrics for new fields -- started
+add search by id toggle
 
 
 

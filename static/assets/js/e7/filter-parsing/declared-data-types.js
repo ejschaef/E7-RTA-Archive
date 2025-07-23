@@ -4,6 +4,7 @@ import { toTitleCase } from "../../utils.js";
 import HeroManager from "../hero-manager.js";
 import { EQUIPMENT_LOWERCASE_STRINGS_SET } from "./filter-parse-references.js";
 import { LEAGUE_MAP } from "../references.js";
+import { WORLD_CODE_TO_CLEAN_STR } from "../references.js";
 
 class DataType {
 	constructor(str, REFS = null, kwargs = null) {

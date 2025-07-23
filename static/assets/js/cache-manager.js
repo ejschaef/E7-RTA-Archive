@@ -24,6 +24,7 @@ const Keys = {
   SEASON_DETAILS: "season-details",
   AUTO_ZOOM_FLAG: "auto-zoom",
   AUTO_QUERY_FLAG: "auto-query",
+  ID_SEARCH_FLAG: "id-search",
   GLOBAL_USERS: "global-users",
   EU_USERS: "eu-users",
   ASIA_USERS: "asia-users",
@@ -37,6 +38,7 @@ const Keys = {
 const FlagsToKeys = {
   "autoZoom": Keys.AUTO_ZOOM_FLAG,
   "autoQuery": Keys.AUTO_QUERY_FLAG,
+  "idSearch": Keys.ID_SEARCH_FLAG
 };
 
 let ClientCache = {

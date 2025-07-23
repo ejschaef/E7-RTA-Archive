@@ -1,4 +1,4 @@
-import { COLUMNS_EXPANDED, ARRAY_COLUMNS } from "./e7/references";
+import { COLUMNS_MAP, ARRAY_COLUMNS } from "./e7/references";
 
 function destroyDataTable(tableid) {
 	const tableSelector = $(`#${tableid}`);
@@ -200,6 +200,7 @@ Tables.functions = {
 
 	populateFullBattlesTable: function (tableid, data, user) {
 		destroyDataTable(tableid);
+
 		data = getDataWithStringifiedArrayColumns(data);
 		const tbody = document.getElementById(`${tableid}Body`);
 		tbody.innerHTML = ""; // Clear existing rows
@@ -231,6 +232,7 @@ Tables.functions = {
 
 				const winCell = row.cells[13];
 				const firstPickCell = row.cells[14];
+				const firstTurnCell = row.cells[15];
 
 				if (data["Win"] === true) {
 					winCell.style.color = "mediumspringgreen";
@@ -241,6 +243,11 @@ Tables.functions = {
 				if (data["First Pick"] === true) {
 					firstPickCell.style.color = "deepskyblue";
 				}
+
+				if (data["First Turn"] === true) {
+					firstTurnCell.style.color = "deepskyblue";
+				}
+
 			},
 			buttons: {
 				name: "primary",
@@ -263,7 +270,7 @@ Tables.functions = {
 			deferRender: true,
 			scroller: true,
 			scrollCollapse: false,
-			columns: COLUMNS_EXPANDED.map((col) => ({ data: col })),
+			columns: Object.values(COLUMNS_MAP).map((col) => ({ data: col })),
 		});
 		table.rows.add(data).draw();
 		return table;
@@ -311,6 +318,12 @@ CardContent.functions = {
 		document.getElementById("max-loss-streak").textContent =
 			general_stats.max_loss_streak;
 		document.getElementById("avg-ppg").textContent = general_stats.avg_ppg;
+		document.getElementById("avg-turns").textContent = general_stats.avg_turns;
+		document.getElementById("avg-time").textContent = general_stats.avg_time;
+		document.getElementById("max-turns").textContent = general_stats.max_turns;
+		document.getElementById("max-time").textContent = general_stats.max_time;
+		document.getElementById("first-turn-games").textContent = general_stats.first_turn_games;
+		document.getElementById("first-turn-rate").textContent = general_stats.first_turn_rate;
 	},
 
 	populateRankPlot: function (rank_plot_html) {

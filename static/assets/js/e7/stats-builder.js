@@ -165,6 +165,18 @@ function getPrebanStats(battles, HM) {
     return output;
 }
 
+function secondsToTimeStr(inputSeconds) {
+  let timeStr;
+  const mins = Math.floor(inputSeconds / 60);
+  const secs = (inputSeconds % 60).toFixed(1);
+  if (mins=== 0) {
+    timeStr = `${secs} secs`;
+  } else {
+    timeStr = `${mins} : ${secs}s`;
+  }
+  return timeStr;
+}
+
 function getGeneralStats(battles, HM) {
   const battleList = Object.values(battles);
   battleList.sort((b1, b2) => new Date(b1["Date/Time"]) - new Date(b2["Date/Time"]));
@@ -173,6 +185,21 @@ function getGeneralStats(battles, HM) {
 
   const totalGain = battleList.reduce((acc, b) => acc + b["Point Gain"], 0);
   const avgPPG = totalBattles > 0 ? totalGain / totalBattles : 0;
+
+  const totalTurns = battleList.reduce((acc, b) => acc + b["Turns"], 0);
+  const avgTurns = totalBattles > 0 ? totalTurns / totalBattles : 0;
+
+  const maxTurns = Math.max(...battleList.map(b => b["Turns"]));
+
+  const totalSeconds = battleList.reduce((acc, b) => acc + b["Seconds"], 0);
+  const avgSeconds = totalBattles > 0 ? totalSeconds / totalBattles : 0;
+
+  const maxSeconds = Math.max(...battleList.map(b => b["Seconds"]));
+
+  let avgTimeStr = secondsToTimeStr(avgSeconds);
+  let maxTimeStr = secondsToTimeStr(maxSeconds);
+
+  const totalFirstTurnGames = battleList.reduce((acc, b) => acc + b["First Turn"], 0);
 
   // create subsets for first pick and second pick battles
   const fpBattles = getFirstPickSubset(battleList);
@@ -220,12 +247,18 @@ function getGeneralStats(battles, HM) {
       "second_pick_rate"   : spCount? toPercent(spR) : NA,
       "first_pick_winrate" : fpCount? toPercent(fpWR) : NA,
       "second_pick_winrate": spCount? toPercent(spWR) : NA,
-      "total_winrate"     : totalBattles? toPercent(winRate) : NA,
-      "total_battles"     : totalBattles,
-      "total_wins"        : fpWins + spWins,
-      "max_win_streak"    : maxWinStreak,
-      "max_loss_streak"   : maxLossStreak,
-      "avg_ppg"           : avgPPG.toFixed(2),
+      "total_winrate"      : totalBattles? toPercent(winRate) : NA,
+      "total_battles"      : totalBattles,
+      "total_wins"         : fpWins + spWins,
+      "max_win_streak"     : maxWinStreak,
+      "max_loss_streak"    : maxLossStreak,
+      "avg_ppg"            : avgPPG.toFixed(2),
+      "avg_turns"          : avgTurns.toFixed(2),
+      "avg_time"           : avgTimeStr,
+      "max_turns"          : maxTurns,
+      "max_time"        : maxTimeStr,
+      "first_turn_games"   : totalFirstTurnGames,
+      "first_turn_rate"    : totalBattles? toPercent(totalFirstTurnGames / totalBattles) : NA
   }
 }
 

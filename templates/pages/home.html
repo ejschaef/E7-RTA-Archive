@@ -22,17 +22,26 @@
                                     <h6 class="text-center f-w-500 mb-2">Query E7 Server</h6>
                                     {{ query_form.hidden_tag() }}
                                     <div class="form-group mb-3">
-                                        {{ query_form.username(placeholder="E7 Username", class="form-control
+                                        {{ query_form.username(placeholder="E7 Username / ID", class="form-control
                                         custom-input")
                                         }}
                                     </div>
                                     <div class="form-group mb-3">
                                         {{ query_form.server(placeholder="Server", class="form-control ") }}
                                     </div>
-                                    <div class="text-center mt-1">
+                                    <div class="d-flex justify-content-start text-center gap-4 mt-1">
                                         <button type="submit" name="user_query"
                                             class="btn btn-primary shadow px-sm-4">Query
                                             User</button>
+                                        <span class="toggle-container" id="id-search-toggle-container">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="id-search-flag" checked>
+                                                <span class="toggle-switch-background">
+                                                    <span class="toggle-switch-handle"></span>
+                                                </span>
+                                            </label>
+                                            <h6>Search With ID</h6>
+                                        </span>
                                     </div>
                                 </form>
                             </div>
@@ -44,7 +53,7 @@
                                     <div class="form-group mb-3">
                                         {{ upload_form.file(class="form-control", id="csvFile") }}
                                     </div>
-                                    <div class="d-flex justify-content-center text-center gap-4 mt-1">
+                                    <div class="d-flex justify-content-start text-center gap-4 mt-1">
                                         <button type="submit" name="battle_data"
                                             class="btn btn-primary shadow px-sm-4">Submit File</button>
                                         <span class="toggle-container" id="auto-query-toggle-container">
@@ -274,8 +283,8 @@
             <!-- [ general stats section ] end -->
 
             <!-- [ server stats table ] start -->
-            <div class="col-sm-8 min-width-450">
-                <div class="card height-400">
+            <div class="col-sm-8 min-width-450 mb-24px">
+                <div class="card h-100">
                     <div class="card-header kpi-header">
                         <h5 class="text-white">Server Stats</h5>
                         <p class="f-w-100 f-10 mb-0" id="first-pick-rate">(FP WR = First Pick Win Rate, SP WR = Second
@@ -305,6 +314,69 @@
                 </div>
             </div>
             <!-- [ server stats table ] end -->
+
+            <!-- [ General stats array section ] start -->
+             <div class="col-md-4 d-flex">
+                <div class="card w-100">
+                    <div class="card-body w-100">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Avg Time:</h5>
+                            </div>
+                            <div class="col-5 text-align-left px-0">
+                                <h5 class="f-w-200 d-inline m-b-0" id="avg-time">&nbsp;</h5>
+                            </div>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Max Time:</h5>
+                            </div>
+                            <div class="col-5 px-0">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="max-time">&nbsp;</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 d-flex">
+                <div class="card w-100">
+                    <div class="card-body w-100">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">Avg Turns:</h5>
+                            </div>
+                            <div class="col-4 text-align-left px-0">
+                                <h5 class="f-w-200 d-inline m-b-0" id="avg-turns">&nbsp;</h5>
+                            </div>
+                            <div class="col-8">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">Max Turns:</h5>
+                            </div>
+                            <div class="col-4 px-0">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="max-turns">&nbsp;</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 d-flex">
+                <div class="card w-100">
+                    <div class="card-body w-100">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-flex align-items-center m-b-0">1st Turn Games:</h5>
+                            </div>
+                            <div class="col-5 text-align-left px-0">
+                                <h5 class="f-w-200 d-inline m-b-0" id="first-turn-games">&nbsp;</h5>
+                            </div>
+                            <div class="col-7">
+                                <h5 class="f-w-200 d-inline align-items-center m-b-0">1st Turn Rate:</h5>
+                            </div>
+                            <div class="col-5 px-0">
+                                <h5 class="f-w-200 d-inline text-align-left m-b-0" id="first-turn-rate">&nbsp;</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ General stats array section ] end -->
 
 
             <!-- [ first pick stats table ] start -->
@@ -479,9 +551,9 @@
                                     <th scope="col">Point Gain</th>
                                     <th scope="col">Win</th>
                                     <th scope="col">First Pick</th>
-                                    <th scope="col">CR Bar</th>
                                     <th scope="col">First Turn</th>
                                     <th scope="col">First Turn Hero</th>
+                                    <th scope="col">CR Bar</th>
                                     <th scope="col">P1 Prebans</th>
                                     <th scope="col">P2 Prebans</th>
                                     <th scope="col">P1 Picks</th>

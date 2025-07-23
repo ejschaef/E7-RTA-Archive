@@ -54,29 +54,35 @@ let UserManager = {
 
 	findUser: async function (userData) {
 		let useFlaskServer = false;
+		const cleanStr = world_code => WORLD_CODE_TO_CLEAN_STR[world_code];
 
 		// attempt to find user through client-side means
+		console.log(`Attempting to find user: ${JSON.stringify(userData)}`);
 
 		// try to find user by ID
 		if (userData.id) {
 			for (const world_code of WORLD_CODES) {
+				if (userData.world_code && userData.world_code !== world_code) {
+					continue;
+				}
 				const userMap = await this.getUserMap(world_code);
 				const users = Object.values(userMap);
-				if (!(users.length > 0)) {
+				if (!users || users.length === 0) {
 					console.log(
-						`User map had no users, falling back to flask server for world code: ${world_code}`
+						`User map had no users, falling back to flask server for world code: ${cleanStr(world_code)}`
 					);
 					useFlaskServer = true;
+					continue;
 				}
 				const user = users.find((user) => user.id === userData.id);
 				if (user) {
 					console.log(
-						`Found user: ${JSON.stringify(user)} in world code: ${world_code}`
+						`Found user: ${JSON.stringify(user)} in world code: ${cleanStr(world_code)}`
 					);
 					return { user, error: false };
 				} else {
 					console.log(
-						`Could not find user with ID: ${userData.id} in world code: ${world_code} from client-side means`
+						`Could not find user with ID: ${userData.id} in world code: ${cleanStr(world_code)} from client-side means`
 					);
 				}
 			}
@@ -87,25 +93,26 @@ let UserManager = {
 			const [name, world_code] = [userData.name, userData.world_code];
 			const userMap = await this.getUserMap(world_code);
 			const users = Object.values(userMap);
-			if (!(users.length > 0)) {
+			if (!users || (users.length === 0)) {
 				console.log(
-					`User map had no users, falling back to flask server for world code: ${world_code}`
+					`User map had no users, falling back to flask server for world code: ${cleanStr(world_code)}`
 				);
 				useFlaskServer = true;
-			}
-			const lowerCaseName = name.toLowerCase();
-			const user = users.find(
-				(user) => lowerCaseName === user.name.toLowerCase()
-			);
-			if (user) {
-				console.log(
-					`Found user: ${JSON.stringify(user)} in world code: ${world_code}`
-				);
-				return { user, error: false };
 			} else {
-				console.log(
-					`Could not find user with ID: ${userData.id} in world code: ${world_code} from client-side means`
+				const lowerCaseName = name.toLowerCase();
+				const user = users.find(
+					(user) => lowerCaseName === user.name.toLowerCase()
 				);
+				if (user) {
+					console.log(
+						`Found user: ${JSON.stringify(user)} in world code: ${cleanStr(world_code)}`
+					);
+					return { user, error: false };
+				} else {
+					console.log(
+						`Could not find user with ID: ${userData.id} in world code: ${cleanStr(world_code)} from client-side means`
+					);
+				}
 			}
 		} else {
 			console.error(

@@ -54,8 +54,10 @@ async function populateContent() {
 			stats.serverStats
 		);
 		if (DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE.checked) {
-				Tables.functions.populateFullBattlesTable("BattlesTable", stats.filteredBattles, user);
+			console.log("POPULATING AS FILTERED BATTLES TABLE");
+			Tables.functions.populateFullBattlesTable("BattlesTable", stats.filteredBattles, user);
 		} else {
+			console.log("POPULATING AS FULL BATTLES TABLE");
 			Tables.functions.populateFullBattlesTable("BattlesTable", stats.battles, user);
 		}
 		CardContent.functions.populateGeneralStats(stats.generalStats);
@@ -204,7 +206,9 @@ async function runStatsLogic(stateDispatcher) {
 	const checked = await ContentManager.ClientCache.getFlag("autoZoom");
 	autoZoomCheckbox.checked = checked;
 	const stats = await ContentManager.ClientCache.getStats();
-	if (checked) {
+	
+	const filterBattleTableCheckbox = DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE;
+	if (filterBattleTableCheckbox.checked) {
 		Tables.functions.replaceBattleData(stats.filteredBattles);
 	}
 

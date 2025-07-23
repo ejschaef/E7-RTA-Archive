@@ -65,38 +65,6 @@ export const COLUMNS = [
   "P1 Postban","P2 Postban"
   ];
 
-export const COLUMNS_EXPANDED = [
-  "Season",
-  "Date/Time",
-  "Seconds",
-  "Turns",
-  "Seq Num",
-  "P1 ID",
-  "P1 Server",
-  "P2 ID",
-  "P2 Server",
-  "P1 League",
-  "P2 League",
-  "P1 Points",
-  "Point Gain",
-  "Win",
-  "First Pick",
-  "CR Bar",
-  "First Turn",
-  "First Turn Hero",
-  "P1 Prebans",
-  "P2 Prebans",
-  "P1 Picks",
-  "P2 Picks",
-  "P1 Postban",
-  "P2 Postban",
-  "P1 Equipment",
-  "P2 Equipment",
-  "P1 Artifacts",
-  "P2 Artifacts",
-  "P1 MVP",
-  "P2 MVP"
-]
 
 export const COLUMNS_MAP = {
   SEASON: "Season",
@@ -114,9 +82,9 @@ export const COLUMNS_MAP = {
   POINT_GAIN: "Point Gain",
   WIN: "Win",
   FIRST_PICK: "First Pick",
-  CR_BAR: "CR Bar",
   FIRST_TURN: "First Turn",
   FIRST_TURN_HERO: "First Turn Hero",
+  CR_BAR: "CR Bar",
   P1_PREBANS: "P1 Prebans",
   P2_PREBANS: "P2 Prebans",
   P1_PICKS: "P1 Picks",

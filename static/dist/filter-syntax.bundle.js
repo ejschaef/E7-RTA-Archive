@@ -875,6 +875,7 @@ var Keys = _objectSpread(_objectSpread({}, USER_DATA_KEYS), {}, {
   SEASON_DETAILS: "season-details",
   AUTO_ZOOM_FLAG: "auto-zoom",
   AUTO_QUERY_FLAG: "auto-query",
+  ID_SEARCH_FLAG: "id-search",
   GLOBAL_USERS: "global-users",
   EU_USERS: "eu-users",
   ASIA_USERS: "asia-users",
@@ -888,7 +889,8 @@ var Keys = _objectSpread(_objectSpread({}, USER_DATA_KEYS), {}, {
 });
 var FlagsToKeys = {
   "autoZoom": Keys.AUTO_ZOOM_FLAG,
-  "autoQuery": Keys.AUTO_QUERY_FLAG
+  "autoQuery": Keys.AUTO_QUERY_FLAG,
+  "idSearch": Keys.ID_SEARCH_FLAG
 };
 var ClientCache = {
   consts: {
@@ -2172,7 +2174,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
     return entry[1] === 100;
   });
   var p1TookFirstTurn = firstTurnHero ? raw.p1_picks.includes(firstTurnHero[0]) : false;
-  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p1_league) || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p2_league) || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "n/a"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(P1, raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(P2, raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
+  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p1_league) || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p2_league) || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "n/a"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(P1, raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(P2, raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
 
   // finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
   addPrimeFields(battle, HM);
@@ -2396,6 +2398,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
+
 var DataType = /*#__PURE__*/function () {
   function DataType(str) {
     var REFS = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -2440,7 +2443,7 @@ var StringType = /*#__PURE__*/function (_DataType) {
           case "league":
             return _references_js__WEBPACK_IMPORTED_MODULE_5__.LEAGUE_MAP[str] ? str : null;
           case "server":
-            return Object.values(WORLD_CODE_TO_CLEAN_STR).find(function (server) {
+            return Object.values(_references_js__WEBPACK_IMPORTED_MODULE_5__.WORLD_CODE_TO_CLEAN_STR).find(function (server) {
               return server.toLowerCase() === str;
             });
           case "equipment":
@@ -4582,7 +4585,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ARRAY_COLUMNS: () => (/* binding */ ARRAY_COLUMNS),
 /* harmony export */   BOOLS_COLS: () => (/* binding */ BOOLS_COLS),
 /* harmony export */   COLUMNS: () => (/* binding */ COLUMNS),
-/* harmony export */   COLUMNS_EXPANDED: () => (/* binding */ COLUMNS_EXPANDED),
 /* harmony export */   COLUMNS_MAP: () => (/* binding */ COLUMNS_MAP),
 /* harmony export */   EQUIPMENT_SET_MAP: () => (/* binding */ EQUIPMENT_SET_MAP),
 /* harmony export */   INT_COLUMNS: () => (/* binding */ INT_COLUMNS),
@@ -4642,7 +4644,6 @@ var LEAGUE_MAP = {
   "legend": 8
 };
 var COLUMNS = ["Date/Time", "Seq Num", "P1 ID", "P1 Server", "P1 League", "P1 Points", "P2 ID", "P2 Server", "P2 League", "Win", "First Pick", "P1 Preban 1", "P1 Preban 2", "P2 Preban 1", "P2 Preban 2", "P1 Pick 1", "P1 Pick 2", "P1 Pick 3", "P1 Pick 4", "P1 Pick 5", "P2 Pick 1", "P2 Pick 2", "P2 Pick 3", "P2 Pick 4", "P2 Pick 5", "P1 Postban", "P2 Postban"];
-var COLUMNS_EXPANDED = ["Season", "Date/Time", "Seconds", "Turns", "Seq Num", "P1 ID", "P1 Server", "P2 ID", "P2 Server", "P1 League", "P2 League", "P1 Points", "Point Gain", "Win", "First Pick", "CR Bar", "First Turn", "First Turn Hero", "P1 Prebans", "P2 Prebans", "P1 Picks", "P2 Picks", "P1 Postban", "P2 Postban", "P1 Equipment", "P2 Equipment", "P1 Artifacts", "P2 Artifacts", "P1 MVP", "P2 MVP"];
 var COLUMNS_MAP = {
   SEASON: "Season",
   DATE_TIME: "Date/Time",
@@ -4659,9 +4660,9 @@ var COLUMNS_MAP = {
   POINT_GAIN: "Point Gain",
   WIN: "Win",
   FIRST_PICK: "First Pick",
-  CR_BAR: "CR Bar",
   FIRST_TURN: "First Turn",
   FIRST_TURN_HERO: "First Turn Hero",
+  CR_BAR: "CR Bar",
   P1_PREBANS: "P1 Prebans",
   P2_PREBANS: "P2 Prebans",
   P1_PICKS: "P1 Picks",
@@ -5349,6 +5350,17 @@ function getPrebanStats(battles, HM) {
   });
   return output;
 }
+function secondsToTimeStr(inputSeconds) {
+  var timeStr;
+  var mins = Math.floor(inputSeconds / 60);
+  var secs = (inputSeconds % 60).toFixed(1);
+  if (mins === 0) {
+    timeStr = "".concat(secs, " secs");
+  } else {
+    timeStr = "".concat(mins, " : ").concat(secs, "s");
+  }
+  return timeStr;
+}
 function getGeneralStats(battles, HM) {
   var battleList = Object.values(battles);
   battleList.sort(function (b1, b2) {
@@ -5359,6 +5371,25 @@ function getGeneralStats(battles, HM) {
     return acc + b["Point Gain"];
   }, 0);
   var avgPPG = totalBattles > 0 ? totalGain / totalBattles : 0;
+  var totalTurns = battleList.reduce(function (acc, b) {
+    return acc + b["Turns"];
+  }, 0);
+  var avgTurns = totalBattles > 0 ? totalTurns / totalBattles : 0;
+  var maxTurns = Math.max.apply(Math, _toConsumableArray(battleList.map(function (b) {
+    return b["Turns"];
+  })));
+  var totalSeconds = battleList.reduce(function (acc, b) {
+    return acc + b["Seconds"];
+  }, 0);
+  var avgSeconds = totalBattles > 0 ? totalSeconds / totalBattles : 0;
+  var maxSeconds = Math.max.apply(Math, _toConsumableArray(battleList.map(function (b) {
+    return b["Seconds"];
+  })));
+  var avgTimeStr = secondsToTimeStr(avgSeconds);
+  var maxTimeStr = secondsToTimeStr(maxSeconds);
+  var totalFirstTurnGames = battleList.reduce(function (acc, b) {
+    return acc + b["First Turn"];
+  }, 0);
 
   // create subsets for first pick and second pick battles
   var fpBattles = getFirstPickSubset(battleList);
@@ -5417,7 +5448,13 @@ function getGeneralStats(battles, HM) {
     "total_wins": fpWins + spWins,
     "max_win_streak": maxWinStreak,
     "max_loss_streak": maxLossStreak,
-    "avg_ppg": avgPPG.toFixed(2)
+    "avg_ppg": avgPPG.toFixed(2),
+    "avg_turns": avgTurns.toFixed(2),
+    "avg_time": avgTimeStr,
+    "max_turns": maxTurns,
+    "max_time": maxTimeStr,
+    "first_turn_games": totalFirstTurnGames,
+    "first_turn_rate": totalBattles ? toPercent(totalFirstTurnGames / totalBattles) : NA
   };
 }
 function getServerStats(battlesList) {
@@ -5587,14 +5624,19 @@ var UserManager = {
   }(),
   findUser: function () {
     var _findUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(userData) {
-      var useFlaskServer, _iterator, _step, world_code, userMap, users, user, _ref, name, _world_code, _userMap, _users, lowerCaseName, _user, flaskServerResponse, _t;
+      var useFlaskServer, cleanStr, _iterator, _step, world_code, userMap, users, user, _ref, name, _world_code, _userMap, _users, lowerCaseName, _user, flaskServerResponse, _t;
       return _regenerator().w(function (_context2) {
         while (1) switch (_context2.n) {
           case 0:
-            useFlaskServer = false; // attempt to find user through client-side means
+            useFlaskServer = false;
+            cleanStr = function cleanStr(world_code) {
+              return _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_TO_CLEAN_STR[world_code];
+            }; // attempt to find user through client-side means
+            console.log("Attempting to find user: ".concat(JSON.stringify(userData)));
+
             // try to find user by ID
             if (!userData.id) {
-              _context2.n = 10;
+              _context2.n = 12;
               break;
             }
             _iterator = _createForOfIteratorHelper(_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES);
@@ -5602,122 +5644,137 @@ var UserManager = {
             _iterator.s();
           case 2:
             if ((_step = _iterator.n()).done) {
-              _context2.n = 6;
+              _context2.n = 8;
               break;
             }
             world_code = _step.value;
-            _context2.n = 3;
-            return this.getUserMap(world_code);
+            if (!(userData.world_code && userData.world_code !== world_code)) {
+              _context2.n = 3;
+              break;
+            }
+            return _context2.a(3, 7);
           case 3:
+            _context2.n = 4;
+            return this.getUserMap(world_code);
+          case 4:
             userMap = _context2.v;
             users = Object.values(userMap);
-            if (!(users.length > 0)) {
-              console.log("User map had no users, falling back to flask server for world code: ".concat(world_code));
-              useFlaskServer = true;
+            if (!(!users || users.length === 0)) {
+              _context2.n = 5;
+              break;
             }
+            console.log("User map had no users, falling back to flask server for world code: ".concat(cleanStr(world_code)));
+            useFlaskServer = true;
+            return _context2.a(3, 7);
+          case 5:
             user = users.find(function (user) {
               return user.id === userData.id;
             });
             if (!user) {
-              _context2.n = 4;
+              _context2.n = 6;
               break;
             }
-            console.log("Found user: ".concat(JSON.stringify(user), " in world code: ").concat(world_code));
+            console.log("Found user: ".concat(JSON.stringify(user), " in world code: ").concat(cleanStr(world_code)));
             return _context2.a(2, {
               user: user,
               error: false
             });
-          case 4:
-            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(world_code, " from client-side means"));
-          case 5:
+          case 6:
+            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(cleanStr(world_code), " from client-side means"));
+          case 7:
             _context2.n = 2;
             break;
-          case 6:
-            _context2.n = 8;
+          case 8:
+            _context2.n = 10;
             break;
-          case 7:
-            _context2.p = 7;
+          case 9:
+            _context2.p = 9;
             _t = _context2.v;
             _iterator.e(_t);
-          case 8:
-            _context2.p = 8;
-            _iterator.f();
-            return _context2.f(8);
-          case 9:
-            _context2.n = 15;
-            break;
           case 10:
+            _context2.p = 10;
+            _iterator.f();
+            return _context2.f(10);
+          case 11:
+            _context2.n = 18;
+            break;
+          case 12:
             if (!(userData.name && userData.world_code)) {
-              _context2.n = 14;
+              _context2.n = 17;
               break;
             }
             _ref = [userData.name, userData.world_code], name = _ref[0], _world_code = _ref[1];
-            _context2.n = 11;
+            _context2.n = 13;
             return this.getUserMap(_world_code);
-          case 11:
+          case 13:
             _userMap = _context2.v;
             _users = Object.values(_userMap);
-            if (!(_users.length > 0)) {
-              console.log("User map had no users, falling back to flask server for world code: ".concat(_world_code));
-              useFlaskServer = true;
+            if (!(!_users || _users.length === 0)) {
+              _context2.n = 14;
+              break;
             }
+            console.log("User map had no users, falling back to flask server for world code: ".concat(cleanStr(_world_code)));
+            useFlaskServer = true;
+            _context2.n = 16;
+            break;
+          case 14:
             lowerCaseName = name.toLowerCase();
             _user = _users.find(function (user) {
               return lowerCaseName === user.name.toLowerCase();
             });
             if (!_user) {
-              _context2.n = 12;
+              _context2.n = 15;
               break;
             }
-            console.log("Found user: ".concat(JSON.stringify(_user), " in world code: ").concat(_world_code));
+            console.log("Found user: ".concat(JSON.stringify(_user), " in world code: ").concat(cleanStr(_world_code)));
             return _context2.a(2, {
               user: _user,
               error: false
             });
-          case 12:
-            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(_world_code, " from client-side means"));
-          case 13:
-            _context2.n = 15;
+          case 15:
+            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(cleanStr(_world_code), " from client-side means"));
+          case 16:
+            _context2.n = 18;
             break;
-          case 14:
+          case 17:
             console.error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");
             return _context2.a(2, {
               user: null,
               error: "Must pass a user object with either user.name and user.world_code or user.id to fetch user"
             });
-          case 15:
+          case 18:
             if (!useFlaskServer) {
-              _context2.n = 18;
+              _context2.n = 21;
               break;
             }
             console.log("Failed to find user through client-side means; falling back to flask server");
             // failed to find user through client-side means; make request to flask server
-            _context2.n = 16;
+            _context2.n = 19;
             return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__["default"].fetchUser(userData);
-          case 16:
+          case 19:
             flaskServerResponse = _context2.v;
             if (!flaskServerResponse.error) {
-              _context2.n = 17;
+              _context2.n = 20;
               break;
             }
             return _context2.a(2, {
               user: null,
               error: flaskServerResponse.error
             });
-          case 17:
+          case 20:
             return _context2.a(2, {
               user: flaskServerResponse.user,
               error: false
             });
-          case 18:
+          case 21:
             return _context2.a(2, {
               user: null,
               error: "Could not find user"
             });
-          case 19:
+          case 22:
             return _context2.a(2);
         }
-      }, _callee2, this, [[1, 7, 8, 9]]);
+      }, _callee2, this, [[1, 9, 10, 11]]);
     }));
     function findUser(_x3) {
       return _findUser.apply(this, arguments);
@@ -5955,6 +6012,11 @@ var HomePageElements = /*#__PURE__*/function () {
     key: "BATTLE_FILTER_TOGGLE",
     get: function get() {
       return this._BATTLE_FILTER_TOGGLER || (this._BATTLE_FILTER_TOGGLER = document.getElementById("filter-battle-table"));
+    }
+  }, {
+    key: "ID_SEARCH_FLAG",
+    get: function get() {
+      return this._ID_SEARCH_FLAG || (this._ID_SEARCH_FLAG = document.getElementById("id-search-flag"));
     }
   }]);
 }();
@@ -6623,6 +6685,7 @@ Tables.functions = {
       rowCallback: function rowCallback(row, data, dataIndex) {
         var winCell = row.cells[13];
         var firstPickCell = row.cells[14];
+        var firstTurnCell = row.cells[15];
         if (data["Win"] === true) {
           winCell.style.color = "mediumspringgreen";
         } else if (data["Win"] === false) {
@@ -6630,6 +6693,9 @@ Tables.functions = {
         }
         if (data["First Pick"] === true) {
           firstPickCell.style.color = "deepskyblue";
+        }
+        if (data["First Turn"] === true) {
+          firstTurnCell.style.color = "deepskyblue";
         }
       },
       buttons: {
@@ -6649,7 +6715,7 @@ Tables.functions = {
       deferRender: true,
       scroller: true,
       scrollCollapse: false,
-      columns: _e7_references__WEBPACK_IMPORTED_MODULE_0__.COLUMNS_EXPANDED.map(function (col) {
+      columns: Object.values(_e7_references__WEBPACK_IMPORTED_MODULE_0__.COLUMNS_MAP).map(function (col) {
         return {
           data: col
         };
@@ -6682,6 +6748,12 @@ CardContent.functions = {
     document.getElementById("max-win-streak").textContent = general_stats.max_win_streak;
     document.getElementById("max-loss-streak").textContent = general_stats.max_loss_streak;
     document.getElementById("avg-ppg").textContent = general_stats.avg_ppg;
+    document.getElementById("avg-turns").textContent = general_stats.avg_turns;
+    document.getElementById("avg-time").textContent = general_stats.avg_time;
+    document.getElementById("max-turns").textContent = general_stats.max_turns;
+    document.getElementById("max-time").textContent = general_stats.max_time;
+    document.getElementById("first-turn-games").textContent = general_stats.first_turn_games;
+    document.getElementById("first-turn-rate").textContent = general_stats.first_turn_rate;
   },
   populateRankPlot: function populateRankPlot(rank_plot_html) {
     var container = document.getElementById("rank-plot-container");

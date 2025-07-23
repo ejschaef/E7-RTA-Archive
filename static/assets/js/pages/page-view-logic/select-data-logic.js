@@ -1,9 +1,19 @@
 import { ContentManager, PageUtils } from "../../exports.js";
-import { HOME_PAGE_STATES, HOME_PAGE_FNS } from "../page-utilities/page-state-manager.js";
+import {
+	HOME_PAGE_STATES,
+	HOME_PAGE_FNS,
+} from "../page-utilities/page-state-manager.js";
 import { CONTEXT } from "../page-utilities/home-page-context.js";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
+import { WORLD_CODE_TO_CLEAN_STR } from "../../e7/references.js";
 
 async function addUserFormListener(stateDispatcher) {
+	const checkbox = DOC_ELEMENTS.HOME_PAGE.ID_SEARCH_FLAG;
+	const key = ContentManager.ClientCache.Keys.ID_SEARCH_FLAG;
+	checkbox.addEventListener("click", async () => {
+		await ContentManager.ClientCache.cache(key, checkbox.checked);
+	});
+
 	const form = document.getElementById("userForm");
 
 	// Intercept form submission
@@ -24,11 +34,14 @@ async function addUserFormListener(stateDispatcher) {
 			);
 		} else {
 			try {
-				console.log("Finding User");
-				const result = await ContentManager.UserManager.findUser({
-					name,
-					world_code,
-				});
+				const idSearchFlag = await ContentManager.ClientCache.get(
+					ContentManager.ClientCache.Keys.ID_SEARCH_FLAG
+				);
+				const userObj = idSearchFlag
+					? { id: name, world_code }
+					: { name, world_code };
+				console.log("Finding User using:", userObj);
+				const result = await ContentManager.UserManager.findUser(userObj);
 				console.log("Got data:", JSON.stringify(result));
 				if (!result.error) {
 					await HOME_PAGE_FNS.homePageSetUser(result.user);
@@ -40,7 +53,7 @@ async function addUserFormListener(stateDispatcher) {
 					console.log("User Not Found:", result.error);
 					document.getElementById(
 						"select-data-msg"
-					).textContent = `Could not find user: ${name} in server: ${world_code}`;
+					).textContent = `Could not find user: ${name} in server: ${WORLD_CODE_TO_CLEAN_STR[world_code]}`;
 				}
 			} catch (err) {
 				// You can now store the data, process it, or update your app state
@@ -55,9 +68,6 @@ async function addUserFormListener(stateDispatcher) {
 
 async function addUploadFormListener(stateDispatcher) {
 	const checkbox = document.getElementById("auto-query-flag");
-
-	checkbox.checked = await ContentManager.ClientCache.getFlag("autoQuery");
-
 	checkbox.addEventListener("click", async () => {
 		await ContentManager.ClientCache.setFlag("autoQuery", checkbox.checked);
 	});
@@ -114,8 +124,10 @@ async function initializeSelectDataLogic(stateDispatcher) {
 }
 
 async function runSelectDataLogic(stateDispatcher) {
-	const checkbox = document.getElementById("auto-query-flag");
-	checkbox.checked = await ContentManager.ClientCache.getFlag("autoQuery");
+	const autoQueryFlag = document.getElementById("auto-query-flag");
+	autoQueryFlag.checked = await ContentManager.ClientCache.getFlag("autoQuery");
+	const idSearchFlag = DOC_ELEMENTS.HOME_PAGE.ID_SEARCH_FLAG;
+	idSearchFlag.checked = await ContentManager.ClientCache.getFlag("idSearch");
 	const msgElement = DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG;
 	msgElement.textContent = "";
 	if (CONTEXT.ERROR_MSG) {

@@ -68,6 +68,10 @@ class HomePageElements {
     get BATTLE_FILTER_TOGGLE() {
         return this._BATTLE_FILTER_TOGGLER ||= document.getElementById("filter-battle-table");
     }
+
+    get ID_SEARCH_FLAG() {
+        return this._ID_SEARCH_FLAG ||= document.getElementById("id-search-flag");
+    }
 }
 
 let DOC_ELEMENTS = {
