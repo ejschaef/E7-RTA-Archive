@@ -19,6 +19,7 @@ import { CONTEXT } from "./page-utilities/home-page-context.js";
 import { ContentManager } from "../exports.js";
 import PageUtils from "./page-utilities/page-utils.js";
 import DOC_ELEMENTS from "./page-utilities/doc-element-references.js";
+import IPM from "./page-utilities/inter-page-manager.js";
 
 
 async function resolveShowStatsDispatch(stateDispatcher) {
@@ -129,6 +130,32 @@ function addClearDataBtnListener() {
 	);
 }
 
+async function handleAction(action) {
+	switch (action) {
+		case IPM.ACTIONS.CLEAR_USER:
+			const user = await ContentManager.UserManager.getUser();
+			await HOME_PAGE_FNS.homePageSetUser(null);
+			await stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+			PageUtils.setTextGreen(
+				DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG,
+				`Data of user ${user.name} (${user.id}) cleared`
+			);
+			return
+		case IPM.ACTIONS.SHOW_DATA_ALREADY_CLEARED_MSG:
+			PageUtils.setTextGreen(
+				DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG,
+				"Data already cleared"
+			);
+			return;
+		case IPM.ACTIONS.SHOW_NO_USER_MSG:
+			PageUtils.setTextRed(
+				DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG,
+				"User not found; Must either query a valid user or upload battles to view hero stats"
+			)
+			return;
+	}
+}
+
 async function homePageLogic() {
 	console.log("Initialized CONTEXT", CONTEXT);
 	addNavListeners();
@@ -144,6 +171,11 @@ async function homePageLogic() {
 	}
 	CONTEXT.HOME_PAGE_STATE = state;
 	await stateDispatcher(state);
+	const ipmState = await IPM.readAndClear();
+	console.log("IPM STATE", ipmState);
+	for (const action of ipmState.actions) {
+		await handleAction(action);
+	}
 	PageUtils.setVisibility(DOC_ELEMENTS.HOME_PAGE.FOOTER_BODY, true);
 }
 

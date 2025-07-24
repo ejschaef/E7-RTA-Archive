@@ -58,13 +58,13 @@ Tables.functions = {
 			HERO_STATS_COLUMN_MAP.POINT_GAIN,
 			HERO_STATS_COLUMN_MAP.AVG_CR,
 			HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE,
-		]
+		];
 
-		const P2_COLUMNS = P1_COLUMNS.filter((col) => col !== HERO_STATS_COLUMN_MAP.SUCCESS_RATE);
+		const P2_COLUMNS = P1_COLUMNS.filter(
+			(col) => col !== HERO_STATS_COLUMN_MAP.SUCCESS_RATE
+		);
 
-		const columns = isP1
-			? P1_COLUMNS
-			: P2_COLUMNS;
+		const columns = isP1 ? P1_COLUMNS : P2_COLUMNS;
 
 		console.log("Columns: ", columns);
 
@@ -283,7 +283,9 @@ Tables.functions = {
 			deferRender: true,
 			scroller: true,
 			scrollCollapse: false,
-			columns: Object.values(COLUMNS_MAP).map((col) => ({ data: col })),
+			columns: Object.values(COLUMNS_MAP)
+				.filter((col) => !col.toLowerCase().includes("prime"))
+				.map((col) => ({ data: col })),
 		});
 		table.rows.add(data).draw();
 		return table;

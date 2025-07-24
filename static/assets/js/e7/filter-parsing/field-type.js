@@ -67,7 +67,7 @@ class FieldType {
 		this.extractData = fn;
 	}
 
-	toString() {
+	asString() {
 		return this.str;
 	}
 }

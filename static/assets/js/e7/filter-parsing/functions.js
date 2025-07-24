@@ -19,7 +19,7 @@ class globalFilterFn extends Fn {
 		super();
 	}
 
-	toString(prefix = "") {
+	asString(prefix = "") {
 		return `${prefix}${this.str}`;
 	}
 }
@@ -56,13 +56,13 @@ class ClauseFn extends Fn {
 		console.log("Clause Fn constructor got fns:", fns);
 	}
 
-	toString(prefix = "") {
+	asString(prefix = "") {
 		let output = "";
 		const newPrefix = prefix + PRINT_PREFIX;
 		this.fns.localFilters.forEach(
-			(fn) => (output += `${fn.toString(newPrefix)},\n`)
+			(fn) => (output += `${fn.asString(newPrefix)},\n`)
 		);
-		console.log("Clause Fn toString got output:", output);
+		console.log("Clause Fn asString got output:", output);
 		return `${prefix}${this.str}(\n${output.trimEnd()}\n${prefix})`;
 	}
 }
@@ -116,7 +116,7 @@ class NOT extends ClauseFn {
 
 // Direct functions resolve to a single base filter ; they cannot contain nested filters
 class DirectFn extends Fn {
-	toString(prefix = "") {
+	asString(prefix = "") {
 		return `${prefix}${this.str}`;
 	}
 }
@@ -170,7 +170,7 @@ class EquipmentFn extends DirectFn {
 		this.equipmentArr = [...equipmentSet.data];
 		this.str =
 			(p1Flag ? "p1" : "p2") +
-			`.equipment(${hero}, ${equipmentSet.toString()})`;
+			`.equipment(${hero.asString()}, ${equipmentSet.asString()})`;
 		this.isPlayer1 = p1Flag;
 	}
 
@@ -241,7 +241,7 @@ class ArtifactFn extends DirectFn {
 		this.hero = hero.data;
 		this.artifactArr = [...artifactSet.data];
 		this.str =
-			(p1Flag ? "p1" : "p2") + `.artifact(${hero}, ${artifactSet.toString()})`;
+			(p1Flag ? "p1" : "p2") + `.artifact(${hero.asString()}, ${artifactSet.asString()})`;
 		this.isPlayer1 = p1Flag;
 	}
 
@@ -303,11 +303,11 @@ class CombatReadinessGeqFn extends DirectFn {
 	}
 
 	constructor(hero, crMinValue, p1Flag) {
-		console.log(`Received CR-GEQ fn args`, hero, crMinValue, p1Flag);
+		console.log(`Received CR-GEQ fn args`, hero.asString(), crMinValue.asString(), p1Flag);
 		super();
 		this.hero = hero.data;
 		this.crMinValue = crMinValue;
-		this.str = (p1Flag ? "p1" : "p2") + `.CR-GEQ(${hero}, ${crMinValue})`;
+		this.str = (p1Flag ? "p1" : "p2") + `.CR-GEQ(${hero.asString()}, ${crMinValue.asString()})`;
 		this.isPlayer1 = p1Flag;
 	}
 

@@ -863,7 +863,8 @@ var Keys = _objectSpread(_objectSpread({}, USER_DATA_KEYS), {}, {
   // map of artifact codes to names
   ARTIFACTS_LOWERCASE_NAMES_SET: "artifacts-lowercase-names-set",
   // set of artifact lowercase names
-  HOME_PAGE_STATE: "home-page-state"
+  HOME_PAGE_STATE: "home-page-state",
+  INTER_PAGE_MANAGER: "inter-page-manager"
 });
 var FlagsToKeys = {
   "autoZoom": Keys.AUTO_ZOOM_FLAG,
@@ -2302,8 +2303,8 @@ var DataType = /*#__PURE__*/function () {
     }
   }
   return _createClass(DataType, [{
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       return "".concat(this.data);
     }
   }]);
@@ -2361,8 +2362,8 @@ var StringType = /*#__PURE__*/function (_DataType) {
       throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid string; All strings must either be a valid [".concat(kwargs.types.join(", "), "]; got: '").concat(str, "'"));
     }
   }, {
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       return "\"".concat(this.data, "\"");
     }
   }]);
@@ -2380,8 +2381,8 @@ var DateType = /*#__PURE__*/function (_DataType2) {
       return _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].parseDate(str);
     }
   }, {
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       return "".concat(this.data);
     }
   }]);
@@ -2406,8 +2407,8 @@ var IntType = /*#__PURE__*/function (_DataType3) {
       return parsedInt;
     }
   }, {
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       return "".concat(this.data);
     }
   }]);
@@ -2428,8 +2429,8 @@ var BoolType = /*#__PURE__*/function (_DataType4) {
       return str === "true" ? 1 : 0;
     }
   }, {
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       return "".concat(this.data ? "true" : "false");
     }
   }]);
@@ -2486,8 +2487,8 @@ var RangeType = /*#__PURE__*/function (_DataType5) {
       return output;
     }
   }, {
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       var rangeSymb = this.data.endInclusive ? "...=" : "...";
       if (this.data.type === "Date") {
         return "".concat(this.data.start.toISOString()).concat(rangeSymb).concat(this.data.end.toISOString(), ")");
@@ -2547,16 +2548,17 @@ var SetType = /*#__PURE__*/function (_DataType6) {
         throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid set; all set elements must have the same data type; \n                got: types: [".concat(types.join(", "), "]"));
       }
       this.type = types[0];
+      this.str = "{".concat(elements.map(function (data) {
+        return data.asString();
+      }).join(", "), "}");
       return new Set(elements.map(function (data) {
         return data.data;
       }));
     }
   }, {
-    key: "toString",
-    value: function toString() {
-      return "{".concat(_toConsumableArray(this.data).map(function (data) {
-        return data.toString();
-      }).join(", "), "}");
+    key: "asString",
+    value: function asString() {
+      return this.str;
     }
   }]);
 }(DataType);
@@ -2680,8 +2682,8 @@ var FieldType = /*#__PURE__*/function () {
     this.extractData = fn;
   }
   return _createClass(FieldType, [{
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       return this.str;
     }
   }]);
@@ -2900,8 +2902,8 @@ var BaseFilter = /*#__PURE__*/function () {
       return this.fn(battle);
     }
   }, {
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
       return "".concat(prefix).concat(this.str);
     }
@@ -2934,12 +2936,12 @@ var FilterSyntaxParser = /*#__PURE__*/function () {
     }
   }
   return _createClass(FilterSyntaxParser, [{
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       var filters = _toConsumableArray(this.filters.localFilters);
       filters.push.apply(filters, _toConsumableArray(this.filters.globalFilters));
       return "[\n".concat(filters.map(function (filter) {
-        return filter.toString(_filter_parse_references_js__WEBPACK_IMPORTED_MODULE_5__.PRINT_PREFIX);
+        return filter.asString(_filter_parse_references_js__WEBPACK_IMPORTED_MODULE_5__.PRINT_PREFIX);
       }).join(";\n"), "\n]");
     }
   }, {
@@ -3069,9 +3071,11 @@ var FilterSyntaxParser = /*#__PURE__*/function () {
           return opFn(left.extractData(battle), right.extractData(battle));
         };
       }
-      console.log("Returning base local filter", [new BaseFilter(str, filterFn).toString()]);
+      var cleanFilterStr = "".concat(left.asString(), " ").concat(operator, " ").concat(right.asString());
+      var filter = new BaseFilter(cleanFilterStr, filterFn);
+      console.log("Returning base local filter", [filter.asString()]);
       return {
-        localFilters: [new BaseFilter(str, filterFn)],
+        localFilters: [filter],
         globalFilters: []
       };
     }
@@ -3201,7 +3205,7 @@ var FilterSyntaxParser = /*#__PURE__*/function () {
               parser.globalFilters = [];
               parser.filters = parser.parseFilters(parser.preParsedString);
               console.log("Got Filters\n");
-              console.log(parser.toString());
+              console.log(parser.asString());
               return _context.a(2, parser);
           }
         }, _callee);
@@ -3588,8 +3592,8 @@ var globalFilterFn = /*#__PURE__*/function (_Fn) {
   }
   _inherits(globalFilterFn, _Fn);
   return _createClass(globalFilterFn, [{
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
       return "".concat(prefix).concat(this.str);
     }
@@ -3634,15 +3638,15 @@ var ClauseFn = /*#__PURE__*/function (_Fn2) {
   }
   _inherits(ClauseFn, _Fn2);
   return _createClass(ClauseFn, [{
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
       var output = "";
       var newPrefix = prefix + _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_1__.PRINT_PREFIX;
       this.fns.localFilters.forEach(function (fn) {
-        return output += "".concat(fn.toString(newPrefix), ",\n");
+        return output += "".concat(fn.asString(newPrefix), ",\n");
       });
-      console.log("Clause Fn toString got output:", output);
+      console.log("Clause Fn asString got output:", output);
       return "".concat(prefix).concat(this.str, "(\n").concat(output.trimEnd(), "\n").concat(prefix, ")");
     }
   }]);
@@ -3736,8 +3740,8 @@ var DirectFn = /*#__PURE__*/function (_Fn3) {
   }
   _inherits(DirectFn, _Fn3);
   return _createClass(DirectFn, [{
-    key: "toString",
-    value: function toString() {
+    key: "asString",
+    value: function asString() {
       var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
       return "".concat(prefix).concat(this.str);
     }
@@ -3760,7 +3764,7 @@ var EquipmentFn = /*#__PURE__*/function (_DirectFn) {
     _this7 = _callSuper(this, EquipmentFn);
     _this7.hero = hero.data;
     _this7.equipmentArr = _toConsumableArray(equipmentSet.data);
-    _this7.str = (p1Flag ? "p1" : "p2") + ".equipment(".concat(hero, ", ").concat(equipmentSet.toString(), ")");
+    _this7.str = (p1Flag ? "p1" : "p2") + ".equipment(".concat(hero.asString(), ", ").concat(equipmentSet.asString(), ")");
     _this7.isPlayer1 = p1Flag;
     return _this7;
   }
@@ -3825,7 +3829,7 @@ var ArtifactFn = /*#__PURE__*/function (_DirectFn2) {
     _this8 = _callSuper(this, ArtifactFn);
     _this8.hero = hero.data;
     _this8.artifactArr = _toConsumableArray(artifactSet.data);
-    _this8.str = (p1Flag ? "p1" : "p2") + ".artifact(".concat(hero, ", ").concat(artifactSet.toString(), ")");
+    _this8.str = (p1Flag ? "p1" : "p2") + ".artifact(".concat(hero.asString(), ", ").concat(artifactSet.asString(), ")");
     _this8.isPlayer1 = p1Flag;
     return _this8;
   }
@@ -3878,11 +3882,11 @@ var CombatReadinessGeqFn = /*#__PURE__*/function (_DirectFn3) {
   function CombatReadinessGeqFn(hero, crMinValue, p1Flag) {
     var _this9;
     _classCallCheck(this, CombatReadinessGeqFn);
-    console.log("Received CR-GEQ fn args", hero, crMinValue, p1Flag);
+    console.log("Received CR-GEQ fn args", hero.asString(), crMinValue.asString(), p1Flag);
     _this9 = _callSuper(this, CombatReadinessGeqFn);
     _this9.hero = hero.data;
     _this9.crMinValue = crMinValue;
-    _this9.str = (p1Flag ? "p1" : "p2") + ".CR-GEQ(".concat(hero, ", ").concat(crMinValue, ")");
+    _this9.str = (p1Flag ? "p1" : "p2") + ".CR-GEQ(".concat(hero.asString(), ", ").concat(crMinValue.asString(), ")");
     _this9.isPlayer1 = p1Flag;
     return _this9;
   }

@@ -16,7 +16,7 @@ class DataType {
 		}
 	}
 
-	toString() {
+	asString() {
 		return `${this.data}`;
 	}
 }
@@ -65,7 +65,7 @@ class StringType extends DataType {
 		);
 	}
 
-	toString() {
+	asString() {
 		return `"${this.data}"`;
 	}
 }
@@ -75,7 +75,7 @@ class DateType extends DataType {
 		return Futils.parseDate(str);
 	}
 
-	toString() {
+	asString() {
 		return `${this.data}`;
 	}
 }
@@ -95,7 +95,7 @@ class IntType extends DataType {
 		}
 		return parsedInt;
 	}
-	toString() {
+	asString() {
 		return `${this.data}`;
 	}
 }
@@ -109,7 +109,7 @@ class BoolType extends DataType {
 		}
 		return str === "true" ? 1 : 0;
 	}
-	toString() {
+	asString() {
 		return `${this.data ? "true" : "false"}`;
 	}
 }
@@ -179,7 +179,7 @@ class RangeType extends DataType {
 		console.log(`Built Range: ${JSON.stringify(output)}`);
 		return output;
 	}
-	toString() {
+	asString() {
 		const rangeSymb = this.data.endInclusive ? "...=" : "...";
 		if (this.data.type === "Date") {
 			return `${this.data.start.toISOString()}${rangeSymb}${this.data.end.toISOString()})`;
@@ -232,10 +232,11 @@ class SetType extends DataType {
 			);
 		}
 		this.type = types[0];
+		this.str = `{${elements.map((data) => data.asString()).join(", ")}}`;
 		return new Set(elements.map((data) => data.data));
 	}
-	toString() {
-		return `{${[...this.data].map((data) => data.toString()).join(", ")}}`;
+	asString() {
+		return this.str;
 	}
 }
 

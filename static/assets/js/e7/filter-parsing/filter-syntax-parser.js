@@ -34,7 +34,7 @@ class BaseFilter {
 	call(battle) {
 		return this.fn(battle);
 	}
-	toString(prefix = "") {
+	asString(prefix = "") {
 		return `${prefix}${this.str}`;
 	}
 }
@@ -99,15 +99,15 @@ class FilterSyntaxParser {
 		parser.globalFilters = [];
 		parser.filters = parser.parseFilters(parser.preParsedString);
 		console.log("Got Filters\n");
-		console.log(parser.toString());
+		console.log(parser.asString());
 		return parser;
 	}
 
-	toString() {
+	asString() {
 		const filters = [...this.filters.localFilters];
 		filters.push(...this.filters.globalFilters);
 		return `[\n${filters
-			.map((filter) => filter.toString(PRINT_PREFIX))
+			.map((filter) => filter.asString(PRINT_PREFIX))
 			.join(";\n")}\n]`;
 	}
 
@@ -270,10 +270,12 @@ class FilterSyntaxParser {
 				return opFn(left.extractData(battle), right.extractData(battle));
 			};
 		}
+		const cleanFilterStr = `${left.asString()} ${operator} ${right.asString()}`;
+		const filter = new BaseFilter(cleanFilterStr, filterFn);
 		console.log("Returning base local filter", [
-			new BaseFilter(str, filterFn).toString(),
+			filter.asString(),
 		]);
-		return { localFilters: [new BaseFilter(str, filterFn)], globalFilters: [] };
+		return { localFilters: [filter], globalFilters: [] };
 	}
 
 	parseFilters(str) {

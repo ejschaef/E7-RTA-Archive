@@ -206,7 +206,7 @@ async function runStatsLogic(stateDispatcher) {
 	const checked = await ContentManager.ClientCache.getFlag("autoZoom");
 	autoZoomCheckbox.checked = checked;
 	const stats = await ContentManager.ClientCache.getStats();
-	
+
 	const filterBattleTableCheckbox = DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE;
 	if (filterBattleTableCheckbox.checked) {
 		Tables.functions.replaceBattleData(stats.filteredBattles);
