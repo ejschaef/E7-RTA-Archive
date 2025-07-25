@@ -13,7 +13,7 @@ async function getArtifactMapFromE7Server() {
 	}
 	console.log(`Got artifact map from E7 server for language: 'en'`);
 	return Object.fromEntries(
-		rawJSON.map((artifact) => [artifact.code, artifact.name])
+		rawJSON.filter((artifact) => artifact.name !== null).map((artifact) => [artifact.code, artifact.name])
 	);
 }
 

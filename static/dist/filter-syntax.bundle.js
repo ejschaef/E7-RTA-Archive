@@ -1494,7 +1494,7 @@ var CSVParse = {
     }
 
     // Check file size (optional, e.g. <5MB)
-    var maxMB = 10;
+    var maxMB = 50;
     var maxSize = maxMB * 1024 * 1024;
     if (upload_file.size > maxSize) {
       throw new Error("File must be smaller than ".concat(maxMB, "mb, got ").concat(upload_file.size / (1024 * 1024), "mb File."));
@@ -1548,7 +1548,9 @@ function _getArtifactMapFromE7Server() {
           return _context5.a(2, null);
         case 2:
           console.log("Got artifact map from E7 server for language: 'en'");
-          return _context5.a(2, Object.fromEntries(rawJSON.map(function (artifact) {
+          return _context5.a(2, Object.fromEntries(rawJSON.filter(function (artifact) {
+            return artifact.name !== null;
+          }).map(function (artifact) {
             return [artifact.code, artifact.name];
           })));
       }
@@ -1697,11 +1699,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
-/* harmony import */ var _plots_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./plots.js */ "./static/assets/js/e7/plots.js");
-/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
-/* harmony import */ var _filter_parsing_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filter-parsing/filter-syntax-parser.js */ "./static/assets/js/e7/filter-parsing/filter-syntax-parser.js");
-/* harmony import */ var _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stats-builder.js */ "./static/assets/js/e7/stats-builder.js");
-/* harmony import */ var _battle_transform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./battle-transform.js */ "./static/assets/js/e7/battle-transform.js");
+/* harmony import */ var _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stats-builder.js */ "./static/assets/js/e7/stats-builder.js");
+/* harmony import */ var _battle_transform_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./battle-transform.js */ "./static/assets/js/e7/battle-transform.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -1723,12 +1722,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
-
-
-
-var HERO_COLUMNS = _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS.filter(function (col) {
-  return col.includes(" Pick ") || col.includes("ban ");
-});
 var BattleManager = {
   loaded_servers: new Set(),
   // gets battles (upload and/or queried) and returns as list in clean format; used directly to populate battles table
@@ -1969,7 +1962,7 @@ var BattleManager = {
             return _context7.a(2, []);
           case 1:
             console.log("Caching queried battles: ".concat(battleList.length, " battles; modified [BATTLES]"));
-            cleanBattleMap = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_5__.buildFormattedBattleMap)(battleList, HM, artifacts);
+            cleanBattleMap = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_2__.buildFormattedBattleMap)(battleList, HM, artifacts);
             _context7.n = 2;
             return this.extendBattles(cleanBattleMap);
           case 2:
@@ -1998,7 +1991,7 @@ var BattleManager = {
             console.error("No uploaded battles provided to cacheUpload");
             return _context8.a(2, {});
           case 1:
-            cleanBattles = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_5__.parsedCSVToFormattedBattleMap)(rawParsedBattleList, HM);
+            cleanBattles = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_2__.parsedCSVToFormattedBattleMap)(rawParsedBattleList, HM);
             _context8.n = 2;
             return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.UPLOADED_BATTLES, cleanBattles);
           case 2:
@@ -2017,62 +2010,61 @@ var BattleManager = {
     return cacheUpload;
   }(),
   getStats: function () {
-    var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(battles, user, filters, HM, autoZoom) {
-      var numFilters, filteredBattles, battlesList, filteredBattlesList, plotContent, prebanStats, firstPickStats, generalStats, heroStats, serverStats;
+    var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(battles, filters, HM) {
+      var numFilters, battlesList, filteredBattles, filteredBattlesList, prebanStats, firstPickStats, generalStats, heroStats, serverStats;
       return _regenerator().w(function (_context9) {
         while (1) switch (_context9.n) {
           case 0:
             console.log("Getting stats");
             numFilters = filters.localFilters.length + filters.globalFilters.length;
             console.log("Applying ".concat(numFilters, " filters"));
+            battlesList = Object.values(battles);
             _context9.n = 1;
             return this.applyFilter(filters);
           case 1:
             filteredBattles = _context9.v;
-            battlesList = Object.values(battles);
             filteredBattlesList = Object.values(filteredBattles);
-            plotContent = (0,_plots_js__WEBPACK_IMPORTED_MODULE_1__.generateRankPlot)(battlesList, user, numFilters > 0 ? filteredBattles : null, autoZoom);
             console.log("Getting preban stats");
             _context9.n = 2;
-            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getPrebanStats(filteredBattles, HM);
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getPrebanStats(filteredBattlesList, HM);
           case 2:
             prebanStats = _context9.v;
             console.log("Getting first pick stats");
             _context9.n = 3;
-            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getFirstPickStats(filteredBattles, HM);
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getFirstPickStats(filteredBattlesList, HM);
           case 3:
             firstPickStats = _context9.v;
             console.log("Getting general stats");
             _context9.n = 4;
-            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getGeneralStats(filteredBattles, HM);
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getGeneralStats(filteredBattlesList, HM);
           case 4:
             generalStats = _context9.v;
             console.log("Getting hero stats");
             _context9.n = 5;
-            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getHeroStats(filteredBattles, HM);
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getHeroStats(filteredBattlesList, HM);
           case 5:
             heroStats = _context9.v;
             console.log("Getting server stats");
             _context9.n = 6;
-            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_4__["default"].getServerStats(filteredBattlesList);
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getServerStats(filteredBattlesList);
           case 6:
             serverStats = _context9.v;
             console.log("Returning stats");
             return _context9.a(2, {
               battles: battlesList,
-              filteredBattles: filteredBattlesList,
-              plotContent: plotContent,
+              filteredBattlesObj: filteredBattles,
               prebanStats: prebanStats,
               generalStats: generalStats,
               firstPickStats: firstPickStats,
               playerHeroStats: heroStats.playerHeroStats,
               enemyHeroStats: heroStats.enemyHeroStats,
-              serverStats: serverStats
+              serverStats: serverStats,
+              numFilters: numFilters
             });
         }
       }, _callee8, this);
     }));
-    function getStats(_x8, _x9, _x0, _x1, _x10) {
+    function getStats(_x8, _x9, _x0) {
       return _getStats.apply(this, arguments);
     }
     return getStats;
@@ -2434,7 +2426,7 @@ var StringType = /*#__PURE__*/function (_DataType) {
       str = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].trimSurroundingQuotes(str);
       str = str.trim();
       if (!_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_RE.test(str)) {
-        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_LITERAL_RE.source, " ); got: '").concat(str, "'"));
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_LITERAL_RE.source, " ); got: [").concat(str, "]"));
       }
       function parseFn(type, str) {
         var _HeroManager$getHeroB;
@@ -2460,7 +2452,7 @@ var StringType = /*#__PURE__*/function (_DataType) {
           var type = _step.value;
           var parsed = parseFn(type, str);
           if (parsed) {
-            console.log("Parsed string: '".concat(str, "' to '").concat(parsed, "'"));
+            console.log("Parsed string: [".concat(str, "] to [").concat(parsed, "]"));
             return (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.toTitleCase)(parsed);
           }
         }
@@ -2469,7 +2461,7 @@ var StringType = /*#__PURE__*/function (_DataType) {
       } finally {
         _iterator.f();
       }
-      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid string; All strings must either be a valid [".concat(kwargs.types.join(", "), "]; got: '").concat(str, "'"));
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid string; All strings must either be a valid [".concat(kwargs.types.join(", "), "]; got: [").concat(str, "]"));
     }
   }, {
     key: "asString",
@@ -2493,7 +2485,7 @@ var DateType = /*#__PURE__*/function (_DataType2) {
   }, {
     key: "asString",
     value: function asString() {
-      return "".concat(this.data);
+      return "".concat(this.rawString);
     }
   }]);
 }(DataType);
@@ -2601,11 +2593,11 @@ var RangeType = /*#__PURE__*/function (_DataType5) {
     value: function asString() {
       var rangeSymb = this.data.endInclusive ? "...=" : "...";
       if (this.data.type === "Date") {
-        return "".concat(this.data.start.toISOString()).concat(rangeSymb).concat(this.data.end.toISOString(), ")");
+        return "".concat(this.data.start.toISOString().slice(0, 10)).concat(rangeSymb).concat(this.data.end.toISOString().slice(0, 10));
       } else if (this.data.type === "Int") {
-        return "".concat(this.data.start, "...").concat(rangeSymb).concat(this.data.end);
+        return "".concat(this.data.start).concat(rangeSymb).concat(this.data.end);
       } else {
-        return "Error Converting Range to String => < ".concat(this.data.start, "...").concat(rangeSymb).concat(this.data.end, " >");
+        return "Error Converting Range to String => < ".concat(this.data.start).concat(rangeSymb).concat(this.data.end, " >");
       }
     }
   }]);
@@ -2625,11 +2617,7 @@ var SetType = /*#__PURE__*/function (_DataType6) {
       if (!_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_SET_RE.test(str)) {
         throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_SET_RE.source, " ) (Just chat gpt this one bro); got: '").concat(str, "'"));
       }
-      var elements = str.replace(/^\{|\}$/g, "").split(",").map(function (e) {
-        return e.trim();
-      }).filter(function (e) {
-        return e !== "";
-      }).map(function (elt) {
+      var elements = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true).map(function (elt) {
         if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_RE.test(elt)) {
           return new StringType(elt, REFS, kwargs);
         } else if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_DATE_LITERAL_RE.test(elt)) {
@@ -2661,9 +2649,10 @@ var SetType = /*#__PURE__*/function (_DataType6) {
       this.str = "{".concat(elements.map(function (data) {
         return data.asString();
       }).join(", "), "}");
-      return new Set(elements.map(function (data) {
+      this.list = elements.map(function (data) {
         return data.data;
-      }));
+      });
+      return new Set(this.list);
     }
   }, {
     key: "asString",
@@ -2762,6 +2751,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_FIELDS: () => (/* binding */ SET_FIELDS)
 /* harmony export */ });
 /* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../references.js */ "./static/assets/js/e7/references.js");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -2776,7 +2766,8 @@ function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
-var INT_FIELDS = new Set(["victory-points"]);
+
+var INT_FIELDS = new Set(["victory-points", "point-gain"]);
 
 // Fields that will extract arrays and can be used with the 'in' operators
 var SET_FIELDS = new Set(["prebans", "p1.picks", "p2.picks", "p1.prebans", "p2.prebans"]);
@@ -2802,104 +2793,107 @@ var FieldType = /*#__PURE__*/function () {
 // FNS that take in a clean format battle and return the appropriate data
 _defineProperty(FieldType, "FIELD_EXTRACT_FN_MAP", {
   date: function date(battle) {
-    var _battle$DateTime;
-    return battle["Date/Time"] ? new Date("".concat((_battle$DateTime = battle["Date/Time"]) === null || _battle$DateTime === void 0 ? void 0 : _battle$DateTime.slice(0, 10), "T00:00:00")) : "N/A";
+    var _battle$COLUMNS_MAP$D;
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME] ? new Date("".concat((_battle$COLUMNS_MAP$D = battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME]) === null || _battle$COLUMNS_MAP$D === void 0 ? void 0 : _battle$COLUMNS_MAP$D.slice(0, 10), "T00:00:00")) : "N/A";
   },
   "is-first-pick": function isFirstPick(battle) {
-    return battle["First Pick"] ? 1 : 0;
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK] ? 1 : 0;
   },
   "is-win": function isWin(battle) {
-    return battle["Win"] ? 1 : 0;
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN] ? 1 : 0;
   },
   "victory-points": function victoryPoints(battle) {
-    return battle["P1 Points"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS];
   },
   "p1.picks": function p1Picks(battle) {
-    return battle["P1 Picks"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS];
   },
   "p2.picks": function p2Picks(battle) {
-    return battle["P2 Picks"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS];
   },
   "p1.prebans": function p1Prebans(battle) {
-    return battle["P1 Prebans"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS];
   },
   "p2.prebans": function p2Prebans(battle) {
-    return battle["P2 Prebans"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PREBANS];
   },
   "p1.postban": function p1Postban(battle) {
-    return battle["P1 Postban"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN];
   },
   "p2.postban": function p2Postban(battle) {
-    return battle["P2 Postban"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN];
   },
   prebans: function prebans(battle) {
-    return [].concat(_toConsumableArray(battle["P1 Prebans"]), _toConsumableArray(battle["P2 Prebans"]));
+    return [].concat(_toConsumableArray(battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS]), _toConsumableArray(battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PREBANS]));
   },
   "p1.pick1": function p1Pick1(battle) {
-    return battle["P1 Picks"][0];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][0];
   },
   "p1.pick2": function p1Pick2(battle) {
-    return battle["P1 Picks"][1];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][1];
   },
   "p1.pick3": function p1Pick3(battle) {
-    return battle["P1 Picks"][2];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][2];
   },
   "p1.pick4": function p1Pick4(battle) {
-    return battle["P1 Picks"][3];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][3];
   },
   "p1.pick5": function p1Pick5(battle) {
-    return battle["P1 Picks"][4];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][4];
   },
   "p2.pick1": function p2Pick1(battle) {
-    return battle["P2 Picks"][0];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][0];
   },
   "p2.pick2": function p2Pick2(battle) {
-    return battle["P2 Picks"][1];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][1];
   },
   "p2.pick3": function p2Pick3(battle) {
-    return battle["P2 Picks"][2];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][2];
   },
   "p2.pick4": function p2Pick4(battle) {
-    return battle["P2 Picks"][3];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][3];
   },
   "p2.pick5": function p2Pick5(battle) {
-    return battle["P2 Picks"][4];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][4];
   },
   "p1.league": function p1League(battle) {
-    return battle["P1 League"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_LEAGUE];
   },
   "p2.league": function p2League(battle) {
-    return battle["P2 League"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE];
   },
   "p1.server": function p1Server(battle) {
-    return battle["P1 Server"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_SERVER];
   },
   "p2.server": function p2Server(battle) {
-    return battle["P2 Server"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER];
   },
   "p1.id": function p1Id(battle) {
-    return Number(battle["P1 ID"]);
+    return Number(battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_ID]);
   },
   "p2.id": function p2Id(battle) {
-    return Number(battle["P2 ID"]);
+    return Number(battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_ID]);
   },
   "p1.mvp": function p1Mvp(battle) {
-    return battle["P1 MVP"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_MVP];
   },
   "p2.mvp": function p2Mvp(battle) {
-    return battle["P2 MVP"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_MVP];
   },
   "is-first-turn": function isFirstTurn(battle) {
-    return battle["First Turn"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN];
   },
   "first-turn-hero": function firstTurnHero(battle) {
-    return battle["First Turn Hero"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN_HERO];
   },
   turns: function turns(battle) {
-    return battle["Turns"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS];
   },
   seconds: function seconds(battle) {
-    return battle["Seconds"];
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.SECONDS];
+  },
+  "point-gain": function pointGain(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN];
   }
 });
 
@@ -3542,7 +3536,12 @@ function tokenizeWithNestedEnclosures(input) {
         if (stack[stack.length - 1] === expected) {
           stack.pop();
         } else {
-          throw new Error("Unbalanced closing brace at position ".concat(i));
+          var charCounts = getCharCounts(input);
+          if ((charCounts["'"] || 0) % 2 !== 0 || (charCounts['"'] || 0) % 2 !== 0) {
+            throw new SyntaxException("Error tokenizing: Unbalanced closing character at position ".concat(i, "; got string: '").concat(input, "' ; if a str type has quote characters in it, wrap it in the opposite quote character."));
+          } else {
+            throw new SyntaxException("Error tokenizing: Unbalanced closing character at position ".concat(i, "; got string: '").concat(input, "'"));
+          }
         }
       } else {
         if (stack.length >= enclosureLevel) {
@@ -3664,10 +3663,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
 /* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
 /* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils.js */ "./static/assets/js/utils.js");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
@@ -3684,6 +3688,7 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -3878,7 +3883,7 @@ var EquipmentFn = /*#__PURE__*/function (_DirectFn) {
     console.log("Received equipment fn args", hero, equipmentSet, p1Flag);
     _this7 = _callSuper(this, EquipmentFn);
     _this7.hero = hero.data;
-    _this7.equipmentArr = _toConsumableArray(equipmentSet.data);
+    _this7.equipmentCounts = (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.strArrToCountMap)(equipmentSet.list);
     _this7.str = (p1Flag ? "p1" : "p2") + ".equipment(".concat(hero.asString(), ", ").concat(equipmentSet.asString(), ")");
     _this7.isPlayer1 = p1Flag;
     return _this7;
@@ -3890,12 +3895,15 @@ var EquipmentFn = /*#__PURE__*/function (_DirectFn) {
       var equipment = this.isPlayer1 ? battle["P1 Equipment"] : battle["P2 Equipment"];
       var picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
       var equipped = getHeroEquipment(this.hero, picks, equipment);
-      console.log("Got equipped: ".concat(equipped, ", hero: ").concat(this.hero, ", picks: ").concat(JSON.stringify(picks), ", equipment: ").concat(JSON.stringify(equipment)));
       if (!equipped) {
         return false;
       }
-      return this.equipmentArr.every(function (eq) {
-        return equipped.includes(eq);
+      var equippedCounts = (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.strArrToCountMap)(equipped);
+      return Object.entries(this.equipmentCounts).every(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+          eq = _ref2[0],
+          count = _ref2[1];
+        return equippedCounts[eq] === count;
       });
     }
   }], [{
@@ -3994,14 +4002,14 @@ var ArtifactFn = /*#__PURE__*/function (_DirectFn2) {
   }]);
 }(DirectFn); // filters for battles where a hero as greater or equal starting CR as the passed integer value (indicating the percentage value)
 var CombatReadinessGeqFn = /*#__PURE__*/function (_DirectFn3) {
-  function CombatReadinessGeqFn(hero, crMinValue, p1Flag) {
+  function CombatReadinessGeqFn(hero, crThreshold, p1Flag) {
     var _this9;
     _classCallCheck(this, CombatReadinessGeqFn);
-    console.log("Received CR-GEQ fn args", hero.asString(), crMinValue.asString(), p1Flag);
+    console.log("Received CR-GEQ fn args", hero.asString(), crThreshold.asString(), p1Flag);
     _this9 = _callSuper(this, CombatReadinessGeqFn);
     _this9.hero = hero.data;
-    _this9.crMinValue = crMinValue;
-    _this9.str = (p1Flag ? "p1" : "p2") + ".CR-GEQ(".concat(hero.asString(), ", ").concat(crMinValue.asString(), ")");
+    _this9.crThreshold = crThreshold.data;
+    _this9.str = (p1Flag ? "p1" : "p2") + ".CR-GEQ(".concat(hero.asString(), ", ").concat(crThreshold.asString(), ")");
     _this9.isPlayer1 = p1Flag;
     return _this9;
   }
@@ -4011,14 +4019,14 @@ var CombatReadinessGeqFn = /*#__PURE__*/function (_DirectFn3) {
     value: function call(battle) {
       var _this0 = this;
       var findFn = function findFn(entry, picks) {
-        return picks.includes(entry[0]) && entry[1] >= _this0.crMinValue && entry[0] === _this0.hero;
+        return picks.includes(entry[0]) && entry[1] >= _this0.crThreshold && entry[0] === _this0.hero;
       };
       var result = this.isPlayer1 ? battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
         return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P1_PICKS]);
       }) : battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
         return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P2_PICKS]);
       });
-      console.log("Got CR Result: ".concat(result, ", hero: ").concat(this.hero, ", minValue: ").concat(this.crMinValue));
+      console.log("Got CR Result: ".concat(result, ", hero: ").concat(this.hero, ", minValue: ").concat(this.crThreshold));
       return !!result;
     }
   }], [{
@@ -4033,20 +4041,77 @@ var CombatReadinessGeqFn = /*#__PURE__*/function (_DirectFn3) {
       } else if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
         throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-GEQ function call ; second argument must be a valid integer literal ; got: '".concat(args[1], "' from str: ").concat(str));
       }
-      var crMinValueStr = args[1];
+      var crThresholdStr = args[1];
       var hero = null,
-        crMinValue = null;
+        crThreshold = null;
       try {
         hero = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.String(args[0], REFS, {
           types: ["hero"]
         });
-        crMinValue = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Int(crMinValueStr);
+        crThreshold = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Int(crThresholdStr);
       } catch (e) {
         throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid type in CR-GEQ function call; got str: ".concat(str, " ; error: ").concat(e));
       }
       var p1Flag = str.split(".")[0] === "p1";
-      console.log("Sending CR-GEQ fn args", hero, crMinValue, p1Flag);
-      return new CombatReadinessGeqFn(hero, crMinValue, p1Flag);
+      console.log("Sending CR fn args", hero, crThreshold, p1Flag);
+      return new CombatReadinessGeqFn(hero, crThreshold, p1Flag);
+    }
+  }]);
+}(DirectFn);
+var CombatReadinessLtFn = /*#__PURE__*/function (_DirectFn4) {
+  function CombatReadinessLtFn(hero, crThreshold, p1Flag) {
+    var _this1;
+    _classCallCheck(this, CombatReadinessLtFn);
+    console.log("Received CR-LT fn args", hero.asString(), crThreshold.asString(), p1Flag);
+    _this1 = _callSuper(this, CombatReadinessLtFn);
+    _this1.hero = hero.data;
+    _this1.crThreshold = crThreshold.data;
+    _this1.str = (p1Flag ? "p1" : "p2") + ".CR-LT(".concat(hero.asString(), ", ").concat(crThreshold.asString(), ")");
+    _this1.isPlayer1 = p1Flag;
+    return _this1;
+  }
+  _inherits(CombatReadinessLtFn, _DirectFn4);
+  return _createClass(CombatReadinessLtFn, [{
+    key: "call",
+    value: function call(battle) {
+      var _this10 = this;
+      var findFn = function findFn(entry, picks) {
+        return picks.includes(entry[0]) && entry[1] < _this10.crThreshold && entry[0] === _this10.hero;
+      };
+      var result = this.isPlayer1 ? battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+        return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P1_PICKS]);
+      }) : battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+        return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P2_PICKS]);
+      });
+      console.log("Got CR Result: ".concat(result, ", hero: ").concat(this.hero, ", minValue: ").concat(this.crThreshold));
+      return !!result;
+    }
+  }], [{
+    key: "fromFilterStr",
+    value: function fromFilterStr(str, REFS) {
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true);
+      if (!(args.length === 2)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(args, "] from str: ").concat(str));
+      }
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-LT function call ; first argument must be a valid string literal ; got: '".concat(args[0], "' from str: ").concat(str));
+      } else if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-LT function call ; second argument must be a valid integer literal ; got: '".concat(args[1], "' from str: ").concat(str));
+      }
+      var crThresholdStr = args[1];
+      var hero = null,
+        crThreshold = null;
+      try {
+        hero = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.String(args[0], REFS, {
+          types: ["hero"]
+        });
+        crThreshold = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Int(crThresholdStr);
+      } catch (e) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid type in CR-LT function call; got str: ".concat(str, " ; error: ").concat(e));
+      }
+      var p1Flag = str.split(".")[0] === "p1";
+      console.log("Sending CR fn args", hero, crThreshold, p1Flag);
+      return new CombatReadinessLtFn(hero, crThreshold, p1Flag);
     }
   }]);
 }(DirectFn);
@@ -4061,7 +4126,9 @@ var FN_MAP = {
   "p1.artifact": ArtifactFn,
   "p2.artifact": ArtifactFn,
   "p1.cr-geq": CombatReadinessGeqFn,
-  "p2.cr-geq": CombatReadinessGeqFn
+  "p2.cr-geq": CombatReadinessGeqFn,
+  "p1.cr-lt": CombatReadinessLtFn,
+  "p2.cr-lt": CombatReadinessLtFn
 };
 
 
@@ -4435,9 +4502,9 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function generateRankPlot(battles, user) {
-  var filteredBattles = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-  var zoomFiltered = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+function generateRankPlot(container, battles, user) {
+  var filteredBattles = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  var zoomFiltered = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
   // Sort battles chronologically by time
   // console.log("Creating plot HTML for:", JSON.stringify(battles));
   // console.log("received Filtered Battles:", JSON.stringify(filteredBattles));
@@ -4578,10 +4645,12 @@ function generateRankPlot(battles, user) {
   };
 
   // Generate HTML string
-  var divId = "rank-plot-container";
-  var containerDiv = "<div id=\"".concat(divId, "\"></div>");
-  var plotScript = "\n<script>\n    Plotly.newPlot('".concat(divId, "', [").concat(JSON.stringify(trace), "], ").concat(JSON.stringify(layout), ", ").concat(JSON.stringify(config), ");\n</script>\n");
-  return containerDiv + plotScript;
+  var plotDiv = document.createElement("div");
+  plotDiv.id = "rank-plot"; // or use a dynamic ID if needed
+  plotDiv.style.width = "100%";
+  plotDiv.style.height = "100%";
+  container.appendChild(plotDiv);
+  Plotly.newPlot(plotDiv, [trace], layout, config);
 }
 
 /***/ }),
@@ -4777,23 +4846,23 @@ function orRegex(patterns) {
 var escapeRegex = function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
-var VALID_FIELD_WORDS = ["date", "is-first-pick", "is-win", "victory-points", "p1.picks", "p2.picks", "p1.prebans", "p2.prebans", "p1.postban", "p2.postban", "prebans", "p1.id", "p2.id", "p1.league", "p2.league", "p1.server", "p2.server", "p1.pick1", "p1.pick2", "p1.pick3", "p1.pick4", "p1.pick5", "p2.pick1", "p2.pick2", "p2.pick3", "p2.pick4", "p2.pick5", "p1.mvp", "p2.mvp", "first-turn", "first-turn-hero", "turns", "seconds"];
+var VALID_FIELD_WORDS = ["date", "is-first-pick", "is-win", "victory-points", "p1.picks", "p2.picks", "p1.prebans", "p2.prebans", "p1.postban", "p2.postban", "prebans", "p1.id", "p2.id", "p1.league", "p2.league", "p1.server", "p2.server", "p1.pick1", "p1.pick2", "p1.pick3", "p1.pick4", "p1.pick5", "p2.pick1", "p2.pick2", "p2.pick3", "p2.pick4", "p2.pick5", "p1.mvp", "p2.mvp", "first-turn", "first-turn-hero", "turns", "seconds", "point-gain"];
 var VALID_FIELD_WORD_RE = new RegExp("^(?:".concat(VALID_FIELD_WORDS.map(escapeRegex).join("|"), ")"), "i");
 var VALID_CLAUSE_FUNCTIONS = ["and", "or", "xor", "not"];
 var VALID_GLOBAL_FUNCTIONS = ["last-n"];
-var VALID_DIRECT_FUNCTIONS = ["p1.equipment", "p2.equipment", "p1.artifact", "p2.artifact", "p1.cr-geq", "p2.cr-geq"];
+var VALID_DIRECT_FUNCTIONS = ["p1.equipment", "p2.equipment", "p1.artifact", "p2.artifact", "p1.cr-geq", "p2.cr-geq", "p1.cr-lt", "p2.cr-lt"];
 var VALID_CLAUSE_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_CLAUSE_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
 var VALID_GLOBAL_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_GLOBAL_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
 var VALID_DIRECT_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_DIRECT_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
 var VALID_FUNCTIONS_RE = orRegex([VALID_CLAUSE_FUNCTIONS_RE, VALID_GLOBAL_FUNCTIONS_RE, VALID_DIRECT_FUNCTIONS_RE]);
-var VALID_STRING_RE = /[a-z0-9.][a-z0-9.\s']*/i;
+var VALID_STRING_RE = /.*/i;
 var VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
 var EMPTY_SET_RE = /\{\s*\}/;
-var VALID_INT_RE = /\d+/;
+var VALID_INT_RE = /-?\d+/;
 var VALID_SEASON_RE = /season-[1-9]+[0-9]*(\.[1-9]*)?|current-season/i;
 var VALID_GLOBAL_FILTER_RE = /last-n\(\d+\)/i;
 var VALID_DATE_LITERAL_RE = new RegExp("^".concat(VALID_DATE_RE.source, "$"), "i");
-var VALID_INT_LITERAL_RE = /^\d+$/;
+var VALID_INT_LITERAL_RE = /^-?\d+$/;
 var VALID_BOOL_LITERAL_RE = /^(true|false)$/i;
 var VALID_DATA_WORD_RE = new RegExp("(?:".concat(VALID_SEASON_RE.source, ")"), "i");
 
@@ -4841,7 +4910,7 @@ function tokenMatch(stream) {
     console.log("Matched stream as range:", stream);
     return "range";
   }
-  if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
+  if (stream.match(/[^(,\s;.=0-9\-]+\d+/i)) {
     console.log("Matched stream as non-num null", stream);
     return null;
   }
@@ -5199,10 +5268,10 @@ function queryStats(battleList, totalBattles, heroName) {
   var avgCR = divideToPercentString(crTotal / 100, gamesConsidered);
   return _ref = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME, heroName), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.BATTLES, gamesAppeared), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PICK_RATE, toPercent(appearanceRate)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WINS, gamesWon), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WIN_RATE, toPercent(winRate)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBANS, postBanned), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBAN_RATE, divideToPercentString(postBanned, gamesAppeared)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.SUCCESS_RATE, divideToPercentString(successes, gamesAppeared)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PLUS_MINUS, 2 * gamesWon - gamesAppeared), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POINT_GAIN, pointGain), _defineProperty(_defineProperty(_defineProperty(_ref, _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.AVG_CR, avgCR), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURNS, firstTurns), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE, divideToPercentString(firstTurns, gamesConsidered));
 }
-function getPrimes(battles) {
+function getPrimes(battleList) {
   var isP1 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   var primeSet = new Set();
-  for (var _i = 0, _Object$values = Object.values(battles); _i < _Object$values.length; _i++) {
+  for (var _i = 0, _Object$values = Object.values(battleList); _i < _Object$values.length; _i++) {
     var battle = _Object$values[_i];
     var picks = isP1 ? battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES] : battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIMES];
     picks.forEach(function (element) {
@@ -5211,8 +5280,7 @@ function getPrimes(battles) {
   }
   return primeSet;
 }
-function getHeroStats(battles, HM) {
-  var battleList = Object.values(battles);
+function getHeroStats(battleList, HM) {
   if (battleList.length === 0) {
     return {
       playerHeroStats: [],
@@ -5276,8 +5344,8 @@ function getHeroStats(battles, HM) {
     })
   };
 }
-function getFirstPickStats(battles, HM) {
-  var battleList = getFirstPickSubset(Object.values(battles));
+function getFirstPickStats(battleList, HM) {
+  battleList = getFirstPickSubset(Object.values(battleList));
   if (battleList.length === 0) {
     return [];
   }
@@ -5321,11 +5389,10 @@ function getFirstPickStats(battles, HM) {
   });
   return result;
 }
-function getPrebanStats(battles, HM) {
+function getPrebanStats(battleList, HM) {
   //console.log(`Got HM: ${HM}`);
 
   var emptyPrime = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName("Empty", HM).prime;
-  var battleList = Object.values(battles);
   if (battleList.length === 0) {
     return [];
   }
@@ -5421,8 +5488,7 @@ function secondsToTimeStr(inputSeconds) {
   }
   return timeStr;
 }
-function getGeneralStats(battles, HM) {
-  var battleList = Object.values(battles);
+function getGeneralStats(battleList, HM) {
   battleList.sort(function (b1, b2) {
     return new Date(b1["Date/Time"]) - new Date(b2["Date/Time"]);
   });
@@ -5483,17 +5549,25 @@ function getGeneralStats(battles, HM) {
     maxLossStreak = 0,
     winStreak = 0,
     lossStreak = 0;
-  for (var _i3 = 0, _battleList = battleList; _i3 < _battleList.length; _i3++) {
-    var b = _battleList[_i3];
-    if (b.Win) {
-      winStreak += 1;
-      maxWinStreak = Math.max(maxWinStreak, winStreak);
-      lossStreak = 0;
-    } else {
-      winStreak = 0;
-      lossStreak += 1;
-      maxLossStreak = Math.max(maxLossStreak, lossStreak);
+  var _iterator8 = _createForOfIteratorHelper(battleList),
+    _step8;
+  try {
+    for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+      var b = _step8.value;
+      if (b.Win) {
+        winStreak += 1;
+        maxWinStreak = Math.max(maxWinStreak, winStreak);
+        lossStreak = 0;
+      } else {
+        winStreak = 0;
+        lossStreak += 1;
+        maxLossStreak = Math.max(maxLossStreak, lossStreak);
+      }
     }
+  } catch (err) {
+    _iterator8.e(err);
+  } finally {
+    _iterator8.f();
   }
   var NA = "N/A";
   return {
@@ -5521,7 +5595,7 @@ function getServerStats(battlesList) {
   var allServerStats = [];
   var totalBattles = battlesList.length;
   var _loop4 = function _loop4() {
-    var server = _Object$values2[_i4];
+    var server = _Object$values2[_i3];
     var subset = battlesList.filter(function (b) {
       return b["P2 Server"] === server;
     });
@@ -5556,7 +5630,7 @@ function getServerStats(battlesList) {
       sp_wr: secondPickGames.length > 0 ? toPercent(spWins / secondPickGames.length) : "N/A"
     });
   };
-  for (var _i4 = 0, _Object$values2 = Object.values(_references_js__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR); _i4 < _Object$values2.length; _i4++) {
+  for (var _i3 = 0, _Object$values2 = Object.values(_references_js__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR); _i3 < _Object$values2.length; _i3++) {
     _loop4();
   }
   allServerStats.sort(function (a, b) {
@@ -6011,7 +6085,7 @@ function initializeCodeBlocksAndAddListeners() {
   makeExFilter("exFilter3", ex3Str);
   var ex4Str = "\ndate in season-16.5;\nis-win = true;";
   makeExFilter("exFilter4", ex4Str);
-  var ex5Str = "\np1.equipment(\"belian\", {immunity, counter});\np1.artifact(\"belian\", {3f, elbris ritual sword});\np2.cr-geq(\"New Moon Luna\", 100);\np2.server in {global, asia, Japan};\n";
+  var ex5Str = "\np1.equipment(\"belian\", {immunity, counter});\np1.artifact(\"belian\", {3f, elbris ritual sword});\np2.cr-geq(\"New Moon Luna\", 100);\np2.server in {global, asia, Japan};";
   makeExFilter("exFilter5", ex5Str);
   var textarea = document.getElementById("codeArea");
   var editor = CodeMirror.fromTextArea(textarea, {
@@ -7001,9 +7075,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Tables: () => (/* binding */ Tables)
 /* harmony export */ });
 /* harmony import */ var _e7_references__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./e7/references */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _e7_plots__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7/plots */ "./static/assets/js/e7/plots.js");
+/* harmony import */ var _cache_manager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cache-manager */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _e7_user_manager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./e7/user-manager */ "./static/assets/js/e7/user-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+
+
+
 
 function destroyDataTable(tableid) {
   var tableSelector = $("#".concat(tableid));
@@ -7264,25 +7348,33 @@ CardContent.functions = {
     document.getElementById("first-turn-games").textContent = general_stats.first_turn_games;
     document.getElementById("first-turn-rate").textContent = general_stats.first_turn_rate;
   },
-  populateRankPlot: function populateRankPlot(rank_plot_html) {
-    var container = document.getElementById("rank-plot-container");
-    container.innerHTML = rank_plot_html;
-
-    // Extract and re-execute any <script> in the injected HTML
-    var scripts = container.querySelectorAll("script");
-    scripts.forEach(function (script) {
-      var newScript = document.createElement("script");
-      if (script.src) {
-        newScript.src = script.src;
-      } else {
-        newScript.textContent = script.textContent;
-      }
-      document.body.appendChild(newScript); // or container.appendChild if it's inline
-    });
-    setTimeout(function () {
-      window.dispatchEvent(new Event("resize"));
-    }, 10);
-  }
+  populateRankPlot: function () {
+    var _populateRankPlot = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(stats) {
+      var container, user, autoZoom;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            container = document.getElementById("rank-plot-container");
+            container.innerHTML = "";
+            _context.n = 1;
+            return _e7_user_manager__WEBPACK_IMPORTED_MODULE_3__["default"].getUser();
+          case 1:
+            user = _context.v;
+            _context.n = 2;
+            return _cache_manager__WEBPACK_IMPORTED_MODULE_2__["default"].get(_cache_manager__WEBPACK_IMPORTED_MODULE_2__["default"].Keys.AUTO_ZOOM_FLAG);
+          case 2:
+            autoZoom = _context.v;
+            (0,_e7_plots__WEBPACK_IMPORTED_MODULE_1__.generateRankPlot)(container, stats.battles, user, stats.numFilters > 0 ? stats.filteredBattlesObj : null, autoZoom);
+          case 3:
+            return _context.a(2);
+        }
+      }, _callee);
+    }));
+    function populateRankPlot(_x) {
+      return _populateRankPlot.apply(this, arguments);
+    }
+    return populateRankPlot;
+  }()
 };
 
 
@@ -7297,12 +7389,19 @@ CardContent.functions = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   strArrToCountMap: () => (/* binding */ strArrToCountMap),
 /* harmony export */   toTitleCase: () => (/* binding */ toTitleCase)
 /* harmony export */ });
 function toTitleCase(str) {
   return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
+}
+function strArrToCountMap(strArr) {
+  return strArr.reduce(function (acc, elt) {
+    acc[elt] = (acc[elt] || 0) + 1;
+    return acc;
+  }, {});
 }
 
 /***/ })

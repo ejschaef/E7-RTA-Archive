@@ -42,7 +42,7 @@ let CSVParse = {
         }
 
         // Check file size (optional, e.g. <5MB)
-        const maxMB = 10;
+        const maxMB = 50;
         const maxSize = maxMB * 1024 * 1024;
         if (upload_file.size > maxSize) {
             throw new Error(`File must be smaller than ${maxMB}mb, got ${upload_file.size / (1024 * 1024)}mb File.`);

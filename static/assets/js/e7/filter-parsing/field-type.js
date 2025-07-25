@@ -1,6 +1,7 @@
 import Futils from "./filter-utils.js";
+import { COLUMNS_MAP } from "../references.js";
 
-const INT_FIELDS = new Set(["victory-points"]);
+const INT_FIELDS = new Set(["victory-points", "point-gain"]);
 
 // Fields that will extract arrays and can be used with the 'in' operators
 const SET_FIELDS = new Set([
@@ -15,41 +16,42 @@ class FieldType {
 	// FNS that take in a clean format battle and return the appropriate data
 	static FIELD_EXTRACT_FN_MAP = {
 		date: (battle) =>
-			battle["Date/Time"]
-				? new Date(`${battle["Date/Time"]?.slice(0, 10)}T00:00:00`)
+			battle[COLUMNS_MAP.DATE_TIME]
+				? new Date(`${battle[COLUMNS_MAP.DATE_TIME]?.slice(0, 10)}T00:00:00`)
 				: "N/A",
-		"is-first-pick": (battle) => (battle["First Pick"] ? 1 : 0),
-		"is-win": (battle) => (battle["Win"] ? 1 : 0),
-		"victory-points": (battle) => battle["P1 Points"],
-		"p1.picks": (battle) => battle["P1 Picks"],
-		"p2.picks": (battle) => battle["P2 Picks"],
-		"p1.prebans": (battle) => battle["P1 Prebans"],
-		"p2.prebans": (battle) => battle["P2 Prebans"],
-		"p1.postban": (battle) => battle["P1 Postban"],
-		"p2.postban": (battle) => battle["P2 Postban"],
-		prebans: (battle) => [...battle["P1 Prebans"], ...battle["P2 Prebans"]],
-		"p1.pick1": (battle) => battle["P1 Picks"][0],
-		"p1.pick2": (battle) => battle["P1 Picks"][1],
-		"p1.pick3": (battle) => battle["P1 Picks"][2],
-		"p1.pick4": (battle) => battle["P1 Picks"][3],
-		"p1.pick5": (battle) => battle["P1 Picks"][4],
-		"p2.pick1": (battle) => battle["P2 Picks"][0],
-		"p2.pick2": (battle) => battle["P2 Picks"][1],
-		"p2.pick3": (battle) => battle["P2 Picks"][2],
-		"p2.pick4": (battle) => battle["P2 Picks"][3],
-		"p2.pick5": (battle) => battle["P2 Picks"][4],
-		"p1.league": (battle) => battle["P1 League"],
-		"p2.league": (battle) => battle["P2 League"],
-		"p1.server": (battle) => battle["P1 Server"],
-		"p2.server": (battle) => battle["P2 Server"],
-		"p1.id": (battle) => Number(battle["P1 ID"]),
-		"p2.id": (battle) => Number(battle["P2 ID"]),
-		"p1.mvp": (battle) => battle["P1 MVP"],
-		"p2.mvp": (battle) => battle["P2 MVP"],
-		"is-first-turn": (battle) => battle["First Turn"],
-		"first-turn-hero": (battle) => battle["First Turn Hero"],
-		turns: (battle) => battle["Turns"],
-		seconds: (battle) => battle["Seconds"],
+		"is-first-pick": (battle) => (battle[COLUMNS_MAP.FIRST_PICK] ? 1 : 0),
+		"is-win": (battle) => (battle[COLUMNS_MAP.WIN] ? 1 : 0),
+		"victory-points": (battle) => battle[COLUMNS_MAP.P1_POINTS],
+		"p1.picks": (battle) => battle[COLUMNS_MAP.P1_PICKS],
+		"p2.picks": (battle) => battle[COLUMNS_MAP.P2_PICKS],
+		"p1.prebans": (battle) => battle[COLUMNS_MAP.P1_PREBANS],
+		"p2.prebans": (battle) => battle[COLUMNS_MAP.P2_PREBANS],
+		"p1.postban": (battle) => battle[COLUMNS_MAP.P1_POSTBAN],
+		"p2.postban": (battle) => battle[COLUMNS_MAP.P2_POSTBAN],
+		prebans: (battle) => [...battle[COLUMNS_MAP.P1_PREBANS], ...battle[COLUMNS_MAP.P2_PREBANS]],
+		"p1.pick1": (battle) => battle[COLUMNS_MAP.P1_PICKS][0],
+		"p1.pick2": (battle) => battle[COLUMNS_MAP.P1_PICKS][1],
+		"p1.pick3": (battle) => battle[COLUMNS_MAP.P1_PICKS][2],
+		"p1.pick4": (battle) => battle[COLUMNS_MAP.P1_PICKS][3],
+		"p1.pick5": (battle) => battle[COLUMNS_MAP.P1_PICKS][4],
+		"p2.pick1": (battle) => battle[COLUMNS_MAP.P2_PICKS][0],
+		"p2.pick2": (battle) => battle[COLUMNS_MAP.P2_PICKS][1],
+		"p2.pick3": (battle) => battle[COLUMNS_MAP.P2_PICKS][2],
+		"p2.pick4": (battle) => battle[COLUMNS_MAP.P2_PICKS][3],
+		"p2.pick5": (battle) => battle[COLUMNS_MAP.P2_PICKS][4],
+		"p1.league": (battle) => battle[COLUMNS_MAP.P1_LEAGUE],
+		"p2.league": (battle) => battle[COLUMNS_MAP.P2_LEAGUE],
+		"p1.server": (battle) => battle[COLUMNS_MAP.P1_SERVER],
+		"p2.server": (battle) => battle[COLUMNS_MAP.P2_SERVER],
+		"p1.id": (battle) => Number(battle[COLUMNS_MAP.P1_ID]),
+		"p2.id": (battle) => Number(battle[COLUMNS_MAP.P2_ID]),
+		"p1.mvp": (battle) => battle[COLUMNS_MAP.P1_MVP],
+		"p2.mvp": (battle) => battle[COLUMNS_MAP.P2_MVP],
+		"is-first-turn": (battle) => battle[COLUMNS_MAP.FIRST_TURN],
+		"first-turn-hero": (battle) => battle[COLUMNS_MAP.FIRST_TURN_HERO],
+		turns: (battle) => battle[COLUMNS_MAP.TURNS],
+		seconds: (battle) => battle[COLUMNS_MAP.SECONDS],
+		"point-gain": (battle) => battle[COLUMNS_MAP.POINT_GAIN],
 	};
 
 	constructor(str) {

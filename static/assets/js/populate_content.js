@@ -2,8 +2,10 @@ import {
 	COLUMNS_MAP,
 	ARRAY_COLUMNS,
 	HERO_STATS_COLUMN_MAP,
-	P2_HERO_STATS_COLUMN_MAP,
 } from "./e7/references";
+import { generateRankPlot } from "./e7/plots";
+import ClientCache from "./cache-manager";
+import UserManager from "./e7/user-manager";
 
 function destroyDataTable(tableid) {
 	const tableSelector = $(`#${tableid}`);
@@ -343,26 +345,19 @@ CardContent.functions = {
 			general_stats.first_turn_rate;
 	},
 
-	populateRankPlot: function (rank_plot_html) {
+	populateRankPlot: async function (stats) {
 		const container = document.getElementById("rank-plot-container");
+		container.innerHTML = "";
+		const user = await UserManager.getUser();
+		const autoZoom = await ClientCache.get(ClientCache.Keys.AUTO_ZOOM_FLAG);
 
-		container.innerHTML = rank_plot_html;
-
-		// Extract and re-execute any <script> in the injected HTML
-		const scripts = container.querySelectorAll("script");
-		scripts.forEach((script) => {
-			const newScript = document.createElement("script");
-			if (script.src) {
-				newScript.src = script.src;
-			} else {
-				newScript.textContent = script.textContent;
-			}
-			document.body.appendChild(newScript); // or container.appendChild if it's inline
-		});
-
-		setTimeout(() => {
-			window.dispatchEvent(new Event("resize"));
-		}, 10);
+		generateRankPlot(
+			container,
+			stats.battles,
+			user,
+			stats.numFilters > 0 ? stats.filteredBattlesObj : null,
+			autoZoom
+		);
 	},
 };
 

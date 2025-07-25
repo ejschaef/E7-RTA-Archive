@@ -26,7 +26,7 @@ const VALID_FIELD_WORDS = [
     "p2.pick1", "p2.pick2", "p2.pick3", "p2.pick4", "p2.pick5",
     "p1.mvp", "p2.mvp",
     "first-turn", "first-turn-hero",
-    "turns", "seconds",
+    "turns", "seconds", "point-gain",
 ]
 
 const VALID_FIELD_WORD_RE = new RegExp(`^(?:${VALID_FIELD_WORDS.map(escapeRegex).join("|")})`, "i");
@@ -43,6 +43,7 @@ const VALID_DIRECT_FUNCTIONS = [
     "p1.equipment", "p2.equipment",
     "p1.artifact", "p2.artifact",
     "p1.cr-geq", "p2.cr-geq",
+    "p1.cr-lt", "p2.cr-lt",
 ]
 
 const VALID_CLAUSE_FUNCTIONS_RE = new RegExp(`(?:${VALID_CLAUSE_FUNCTIONS.map(escapeRegex).join("|")})(?=\\()`, "i");
@@ -52,16 +53,16 @@ const VALID_DIRECT_FUNCTIONS_RE = new RegExp(`(?:${VALID_DIRECT_FUNCTIONS.map(es
 const VALID_FUNCTIONS_RE = orRegex([VALID_CLAUSE_FUNCTIONS_RE, VALID_GLOBAL_FUNCTIONS_RE, VALID_DIRECT_FUNCTIONS_RE]);
 
 
-const VALID_STRING_RE = /[a-z0-9.][a-z0-9.\s']*/i;
+const VALID_STRING_RE = /.*/i;
 const VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
 const EMPTY_SET_RE = /\{\s*\}/;
-const VALID_INT_RE = /\d+/;
+const VALID_INT_RE = /-?\d+/;
 const VALID_SEASON_RE = /season-[1-9]+[0-9]*(\.[1-9]*)?|current-season/i;
 
 const VALID_GLOBAL_FILTER_RE = /last-n\(\d+\)/i
 
 const VALID_DATE_LITERAL_RE = new RegExp(`^${VALID_DATE_RE.source}$`, "i");
-const VALID_INT_LITERAL_RE = /^\d+$/;
+const VALID_INT_LITERAL_RE = /^-?\d+$/;
 const VALID_BOOL_LITERAL_RE = /^(true|false)$/i;
 
 const VALID_DATA_WORD_RE = new RegExp(`(?:${VALID_SEASON_RE.source})`, "i");
@@ -121,7 +122,7 @@ function tokenMatch(stream){
         console.log("Matched stream as range:", stream);
         return "range"; 
     }
-    if (stream.match(/[^(,\s;.=0-9]+\d+/i)) {
+    if (stream.match(/[^(,\s;.=0-9\-]+\d+/i)) {
         console.log("Matched stream as non-num null", stream);
         return null
     }

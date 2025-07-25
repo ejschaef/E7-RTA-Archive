@@ -3,10 +3,29 @@ import PYAPI from "../apis/py-API.js";
 import ContentManager from "../content-manager.js";
 import { buildFormattedBattleMap } from "../e7/battle-transform.js";
 
-document.addEventListener("DOMContentLoaded", async () => {
-	await ContentManager.ClientCache.clearUserData();
 
-    await ContentManager.UserManager.clearUserDataLists();
+function ingestStringChars(set, strings) {
+	console.log("Ingesting strings:", typeof strings, strings);
+	let length = set.size;
+	for (let str of strings) {
+		for (let char of str) {
+			set.add(char);
+			let newLength = set.size;
+			if (length !== newLength) {
+				console.log("New chars in string:", str, char);
+			}
+			length = newLength;
+		}
+	}
+	
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+	// await ContentManager.ClientCache.clearUserData();
+
+    // await ContentManager.UserManager.clearUserDataLists();
+
+	await ContentManager.ArtifactManager.clearArtifactData();
 
     let global_users = await ContentManager.UserManager.getUserMap("world_global");
     let first_ten = Object.values(global_users).slice(0, 10);
@@ -17,15 +36,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	let HM = await ContentManager.HeroManager.getHeroManager();
 	let artifacts = await ContentManager.ArtifactManager.getArtifacts();
-	console.log(`Got artifacts: ${JSON.stringify(artifacts)}`);
+	console.log(`Got artifacts:`, artifacts, typeof artifacts, artifacts.length);
 
-	if (response.ok) {
-		let data = await response.json();
-		console.log(data);
-		let rawBattles = data.battles;
-		let formattedBattles = buildFormattedBattleMap(rawBattles, HM, artifacts);
-		console.log(formattedBattles);
-	} else {
-		console.error("Error:", response.error);
-	}
+
+
+	let charSet = new Set();
+	ingestStringChars(charSet, Object.values(artifacts));
+	ingestStringChars(charSet, HM.heroes.map(hero => hero.name));
+	console.log(charSet);
 });

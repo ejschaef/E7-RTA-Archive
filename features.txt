@@ -1,4 +1,5 @@
-Compression                 : nginx handles compression with gzip
+Compression                 : gzip (nginx)
+Server routing              : Flask
 Server backend              : redis
 Server multi-threading      : celery
 Server job scheduling       : celery beat

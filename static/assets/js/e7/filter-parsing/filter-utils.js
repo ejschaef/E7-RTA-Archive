@@ -143,7 +143,16 @@ function tokenizeWithNestedEnclosures(
 				if (stack[stack.length - 1] === expected) {
 					stack.pop();
 				} else {
-					throw new Error(`Unbalanced closing brace at position ${i}`);
+					const charCounts = getCharCounts(input);
+					if ((charCounts["'"] || 0) % 2 !== 0 || (charCounts['"'] || 0) % 2 !== 0) {
+						throw new SyntaxException(
+							`Error tokenizing: Unbalanced closing character at position ${i}; got string: '${input}' ; if a str type has quote characters in it, wrap it in the opposite quote character.`
+						)
+					} else {
+						throw new SyntaxException(
+							`Error tokenizing: Unbalanced closing character at position ${i}; got string: '${input}'`
+						)
+					}
 				}
 			} else {
 				if (stack.length >= enclosureLevel) {

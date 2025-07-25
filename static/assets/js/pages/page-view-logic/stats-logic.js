@@ -55,13 +55,13 @@ async function populateContent() {
 		);
 		if (DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE.checked) {
 			console.log("POPULATING AS FILTERED BATTLES TABLE");
-			Tables.functions.populateFullBattlesTable("BattlesTable", stats.filteredBattles, user);
+			Tables.functions.populateFullBattlesTable("BattlesTable", Object.values(stats.filteredBattlesObj), user);
 		} else {
 			console.log("POPULATING AS FULL BATTLES TABLE");
 			Tables.functions.populateFullBattlesTable("BattlesTable", stats.battles, user);
 		}
 		CardContent.functions.populateGeneralStats(stats.generalStats);
-		CardContent.functions.populateRankPlot(stats.plotContent);
+		await CardContent.functions.populateRankPlot(stats);
 		console.log("FINISHED POPULATING");
 		console.timeEnd("populateTables");
 	} catch (err) {
@@ -183,7 +183,7 @@ function addBattleTableFilterToggleListener() {
 		if (!filterBattleTableCheckbox.checked) {
 			Tables.functions.replaceBattleData(stats.battles);
 		} else {
-			Tables.functions.replaceBattleData(stats.filteredBattles);
+			Tables.functions.replaceBattleData(Object.values(stats.filteredBattlesObj));
 		}
 	});
 }
@@ -209,7 +209,7 @@ async function runStatsLogic(stateDispatcher) {
 
 	const filterBattleTableCheckbox = DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE;
 	if (filterBattleTableCheckbox.checked) {
-		Tables.functions.replaceBattleData(stats.filteredBattles);
+		Tables.functions.replaceBattleData(Object.values(stats.filteredBattlesObj));
 	}
 
 	const user = await ContentManager.UserManager.getUser();
@@ -235,4 +235,12 @@ async function runStatsLogic(stateDispatcher) {
 	DOC_ELEMENTS.HOME_PAGE.USER_QUERY_FORM_NAME.value = "";
 }
 
-export { initializeStatsLogic, postFirstRenderLogic, runStatsLogic, populateContent, preFirstRenderLogic };
+let StatsViewFns = { 
+	initializeStatsLogic, 
+	postFirstRenderLogic, 
+	runStatsLogic, 
+	populateContent, 
+	preFirstRenderLogic,
+};
+
+export { StatsViewFns };

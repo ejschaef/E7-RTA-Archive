@@ -1,16 +1,9 @@
 import ClientCache from "../cache-manager.js";
-import { generateRankPlot } from "./plots.js";
-import { COLUMNS } from "./references.js";
-import FilterSyntaxParser from "./filter-parsing/filter-syntax-parser.js";
 import StatsBuilder from "./stats-builder.js";
 import {
 	buildFormattedBattleMap,
 	parsedCSVToFormattedBattleMap,
 } from "./battle-transform.js";
-
-const HERO_COLUMNS = COLUMNS.filter(
-	(col) => col.includes(" Pick ") || col.includes("ban ")
-);
 
 let BattleManager = {
 	loaded_servers: new Set(),
@@ -131,50 +124,44 @@ let BattleManager = {
 		return battles;
 	},
 
-	getStats: async function (battles, user, filters, HM, autoZoom) {
+	getStats: async function (battles, filters, HM) {
 		console.log("Getting stats");
 		const numFilters =
 			filters.localFilters.length + filters.globalFilters.length;
 
 		console.log(`Applying ${numFilters} filters`);
-		const filteredBattles = await this.applyFilter(filters);
 		const battlesList = Object.values(battles);
+		const filteredBattles = await this.applyFilter(filters);
 		const filteredBattlesList = Object.values(filteredBattles);
-		const plotContent = generateRankPlot(
-			battlesList,
-			user,
-			numFilters > 0 ? filteredBattles : null,
-			autoZoom
-		);
 
 		console.log("Getting preban stats");
-		const prebanStats = await StatsBuilder.getPrebanStats(filteredBattles, HM);
+		const prebanStats = await StatsBuilder.getPrebanStats(filteredBattlesList, HM);
 		console.log("Getting first pick stats");
 		const firstPickStats = await StatsBuilder.getFirstPickStats(
-			filteredBattles,
+			filteredBattlesList,
 			HM
 		);
 		console.log("Getting general stats");
 		const generalStats = await StatsBuilder.getGeneralStats(
-			filteredBattles,
+			filteredBattlesList,
 			HM
 		);
 		console.log("Getting hero stats");
-		const heroStats = await StatsBuilder.getHeroStats(filteredBattles, HM);
+		const heroStats = await StatsBuilder.getHeroStats(filteredBattlesList, HM);
 		console.log("Getting server stats");
 		const serverStats = await StatsBuilder.getServerStats(filteredBattlesList);
 
 		console.log("Returning stats");
 		return {
 			battles: battlesList,
-			filteredBattles: filteredBattlesList,
-			plotContent: plotContent,
+			filteredBattlesObj: filteredBattles,
 			prebanStats: prebanStats,
 			generalStats: generalStats,
 			firstPickStats: firstPickStats,
 			playerHeroStats: heroStats.playerHeroStats,
 			enemyHeroStats: heroStats.enemyHeroStats,
 			serverStats: serverStats,
+			numFilters: numFilters,
 		};
 	},
 };

@@ -319,6 +319,61 @@
                     </tr>
                   </tbody>
                 </table>
+                <P>Direct Functions</P>
+                <P class="text-sm">
+                  Direct functions are compound filters that perform a specific operation which would be otherwise
+                  impossible to express using the standard filter syntax. They include functions for filtering 
+                  based on equipment, artifacts, and CR.
+                </P>
+                <table class="table filter-syntax-table" style="width: 100%;">
+                  <tbody>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">[p1/p2].equipment(hero, str/set)</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Creates a a filter that checks if the specified hero has the specified equipment.
+                        Call using the syntax '[p1/p2].equipment(hero, equip str or set)' where [p1/p2] is replaced with
+                        either 'p1' or 'p2' to specify the player to check. Hero must be a string literal of any valid hero name,
+                        and the second argument must either be a string literal of a valid equipment set name or a set of equipment sets.
+                        When a set is passed, the filter will return true if the hero has all of the sets equipped (it will always be false
+                        if more than 2 unique sets are passed). You can pass a set like {torrent, torrent, torrent} to filter for 2 piece sets
+                        equipped multiple times. As long as the passed equipment is equipped by the specified hero, the function will return true
+                        even if the hero has an additional set equipped (ie if only Torrent is passed in the filter, but the hero has Torrent and 
+                        Destruction set equipped the filter will return true). Example function call: p1.equipment("Arbiter Vildred", {Torrent, Torrent, Immunity})
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">[p1/p2].artifact(hero, str/set)</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Creates a a filter that checks if the specified hero has the specified artifact equipped.
+                        It is called symmetrically to the equipment function. The only difference is that if a set of artifacts is passed,
+                        unlike the equipment filter, the artifact filter will return true if the hero has any of the artifacts equipped, whereas
+                        the equipment filter requires all of the equipment sets to be equipped.
+                        Example function call: p1.artifact("Arbiter Vildred", "Alexa's Basket")
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">[p1/p2].CR-GEQ(hero, integer)</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        Creates a a filter that checks if the specified hero had greater or equal to the integer passed as a CR percentage when
+                        the battle began. Call using the syntax '[p1 or p2].cr-geq(hero, integer)' where [p1 or p2] is replaced with
+                        either 'p1' or 'p2' to specify the player to check. This filter will return false if the hero specified was post banned. 
+                        Note that this function implicitly includes the filter "hero in [p1 or p2].picks", therefore, negating this filter with a NOT
+                        clause will not simply return games where the hero had less than the specific CR. It will also include games where the specified
+                        player did not pick the hero. We therefore provide the complementary function CR-LT which is the intuitive opposite.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="cm-keyword" style="white-space: nowrap;">[p1/p2].CR-LT(hero, integer)</td>
+                      <td class="cm-def">&rarr;</td>
+                      <td class="cm-default">
+                        An identical function to CR-GEQ except that it filters for when the specified hero started with less than the specified CR.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
                 <P>Global Filter Functions</P>
                 <P class="text-sm">
                   Global filter functions are context aware, meaning that they cannot be applied to one battle in a vacuum.

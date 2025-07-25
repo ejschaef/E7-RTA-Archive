@@ -32,7 +32,7 @@ class StringType extends DataType {
 		str = str.trim();
 		if (!RegExps.VALID_STRING_RE.test(str)) {
 			throw new Futils.SyntaxException(
-				`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ${RegExps.VALID_STRING_LITERAL_RE.source} ); got: '${str}'`
+				`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ${RegExps.VALID_STRING_LITERAL_RE.source} ); got: [${str}]`
 			);
 		}
 		function parseFn(type, str) {
@@ -54,14 +54,14 @@ class StringType extends DataType {
 		for (const type of kwargs.types) {
 			const parsed = parseFn(type, str);
 			if (parsed) {
-				console.log(`Parsed string: '${str}' to '${parsed}'`);
+				console.log(`Parsed string: [${str}] to [${parsed}]`);
 				return toTitleCase(parsed);
 			}
 		}
 		throw new Futils.SyntaxException(
 			`Invalid string; All strings must either be a valid [${kwargs.types.join(
 				", "
-			)}]; got: '${str}'`
+			)}]; got: [${str}]`
 		);
 	}
 
@@ -76,7 +76,7 @@ class DateType extends DataType {
 	}
 
 	asString() {
-		return `${this.data}`;
+		return `${this.rawString}`;
 	}
 }
 
@@ -182,11 +182,11 @@ class RangeType extends DataType {
 	asString() {
 		const rangeSymb = this.data.endInclusive ? "...=" : "...";
 		if (this.data.type === "Date") {
-			return `${this.data.start.toISOString()}${rangeSymb}${this.data.end.toISOString()})`;
+			return `${this.data.start.toISOString().slice(0, 10)}${rangeSymb}${this.data.end.toISOString().slice(0, 10)}`;
 		} else if (this.data.type === "Int") {
-			return `${this.data.start}...${rangeSymb}${this.data.end}`;
+			return `${this.data.start}${rangeSymb}${this.data.end}`;
 		} else {
-			return `Error Converting Range to String => < ${this.data.start}...${rangeSymb}${this.data.end} >`;
+			return `Error Converting Range to String => < ${this.data.start}${rangeSymb}${this.data.end} >`;
 		}
 	}
 }
@@ -202,11 +202,7 @@ class SetType extends DataType {
 				`Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ${RegExps.VALID_SET_RE.source} ) (Just chat gpt this one bro); got: '${str}'`
 			);
 		}
-		const elements = str
-			.replace(/^\{|\}$/g, "")
-			.split(",")
-			.map((e) => e.trim())
-			.filter((e) => e !== "")
+		const elements = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true)
 			.map((elt) => {
 				if (RegExps.VALID_STRING_RE.test(elt)) {
 					return new StringType(elt, REFS, kwargs);
@@ -233,7 +229,8 @@ class SetType extends DataType {
 		}
 		this.type = types[0];
 		this.str = `{${elements.map((data) => data.asString()).join(", ")}}`;
-		return new Set(elements.map((data) => data.data));
+		this.list = elements.map((data) => data.data);
+		return new Set(this.list);
 	}
 	asString() {
 		return this.str;

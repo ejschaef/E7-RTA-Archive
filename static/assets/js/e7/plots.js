@@ -1,4 +1,4 @@
-export function generateRankPlot(battles, user, filteredBattles = null, zoomFiltered = false) {
+export function generateRankPlot(container, battles, user, filteredBattles = null, zoomFiltered = false) {
     // Sort battles chronologically by time
     // console.log("Creating plot HTML for:", JSON.stringify(battles));
     // console.log("received Filtered Battles:", JSON.stringify(filteredBattles));
@@ -113,13 +113,10 @@ export function generateRankPlot(battles, user, filteredBattles = null, zoomFilt
     };
 
     // Generate HTML string
-    const divId = `rank-plot-container`;
-    const containerDiv = `<div id="${divId}"></div>`;
-    const plotScript = `
-<script>
-    Plotly.newPlot('${divId}', [${JSON.stringify(trace)}], ${JSON.stringify(layout)}, ${JSON.stringify(config)});
-</script>
-`;
-
-    return containerDiv + plotScript;
+    const plotDiv = document.createElement("div");
+	plotDiv.id = "rank-plot"; // or use a dynamic ID if needed
+	plotDiv.style.width = "100%";
+	plotDiv.style.height = "100%";
+	container.appendChild(plotDiv);
+    Plotly.newPlot(plotDiv, [trace], layout, config);
 }

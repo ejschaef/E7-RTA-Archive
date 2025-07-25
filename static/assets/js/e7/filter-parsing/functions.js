@@ -3,6 +3,7 @@ import { PRINT_PREFIX } from "./filter-parse-references.js";
 import Futils from "./filter-utils.js";
 import { RegExps } from "../regex.js";
 import { COLUMNS_MAP } from "../references.js";
+import { strArrToCountMap } from "../../utils.js";
 
 class Fn {
 	constructor() {}
@@ -167,7 +168,7 @@ class EquipmentFn extends DirectFn {
 		console.log(`Received equipment fn args`, hero, equipmentSet, p1Flag);
 		super();
 		this.hero = hero.data;
-		this.equipmentArr = [...equipmentSet.data];
+		this.equipmentCounts = strArrToCountMap(equipmentSet.list);
 		this.str =
 			(p1Flag ? "p1" : "p2") +
 			`.equipment(${hero.asString()}, ${equipmentSet.asString()})`;
@@ -180,15 +181,11 @@ class EquipmentFn extends DirectFn {
 			: battle["P2 Equipment"];
 		const picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
 		const equipped = getHeroEquipment(this.hero, picks, equipment);
-		console.log(
-			`Got equipped: ${equipped}, hero: ${this.hero}, picks: ${JSON.stringify(
-				picks
-			)}, equipment: ${JSON.stringify(equipment)}`
-		);
 		if (!equipped) {
 			return false;
 		}
-		return this.equipmentArr.every((eq) => equipped.includes(eq));
+		const equippedCounts = strArrToCountMap(equipped);
+		return Object.entries(this.equipmentCounts).every(([eq, count]) => equippedCounts[eq] === count);
 	}
 }
 
@@ -285,12 +282,12 @@ class CombatReadinessGeqFn extends DirectFn {
 				`Invalid CR-GEQ function call ; second argument must be a valid integer literal ; got: '${args[1]}' from str: ${str}`
 			);
 		}
-		const crMinValueStr = args[1];
-		let [hero, crMinValue] = [null, null];
+		const crThresholdStr = args[1];
+		let [hero, crThreshold] = [null, null];
 		try {
-			[hero, crMinValue] = [
+			[hero, crThreshold] = [
 				new TYPES.String(args[0], REFS, { types: ["hero"] }),
-				new TYPES.Int(crMinValueStr),
+				new TYPES.Int(crThresholdStr),
 			];
 		} catch (e) {
 			throw new Futils.TypeException(
@@ -298,23 +295,23 @@ class CombatReadinessGeqFn extends DirectFn {
 			);
 		}
 		const p1Flag = str.split(".")[0] === "p1";
-		console.log(`Sending CR-GEQ fn args`, hero, crMinValue, p1Flag);
-		return new CombatReadinessGeqFn(hero, crMinValue, p1Flag);
+		console.log(`Sending CR fn args`, hero, crThreshold, p1Flag);
+		return new CombatReadinessGeqFn(hero, crThreshold, p1Flag);
 	}
 
-	constructor(hero, crMinValue, p1Flag) {
-		console.log(`Received CR-GEQ fn args`, hero.asString(), crMinValue.asString(), p1Flag);
+	constructor(hero, crThreshold, p1Flag) {
+		console.log(`Received CR-GEQ fn args`, hero.asString(), crThreshold.asString(), p1Flag);
 		super();
 		this.hero = hero.data;
-		this.crMinValue = crMinValue;
-		this.str = (p1Flag ? "p1" : "p2") + `.CR-GEQ(${hero.asString()}, ${crMinValue.asString()})`;
+		this.crThreshold = crThreshold.data;
+		this.str = (p1Flag ? "p1" : "p2") + `.CR-GEQ(${hero.asString()}, ${crThreshold.asString()})`;
 		this.isPlayer1 = p1Flag;
 	}
 
 	call(battle) {
 		const findFn = (entry, picks) =>
 			picks.includes(entry[0]) &&
-			entry[1] >= this.crMinValue &&
+			entry[1] >= this.crThreshold &&
 			entry[0] === this.hero;
 		const result = this.isPlayer1
 			? battle[COLUMNS_MAP.CR_BAR].find((entry) =>
@@ -324,11 +321,75 @@ class CombatReadinessGeqFn extends DirectFn {
 					findFn(entry, battle[COLUMNS_MAP.P2_PICKS])
 			  );
 		console.log(
-			`Got CR Result: ${result}, hero: ${this.hero}, minValue: ${this.crMinValue}`
+			`Got CR Result: ${result}, hero: ${this.hero}, minValue: ${this.crThreshold}`
 		);
 		return !!result;
 	}
 }
+
+class CombatReadinessLtFn extends DirectFn {
+	static fromFilterStr(str, REFS) {
+		const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
+		if (!(args.length === 2)) {
+			throw new Futils.SyntaxException(
+				`Invalid artifact function call ; accepts exactly 2 arguments ; got: [${args}] from str: ${str}`
+			);
+		}
+		if (!RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
+			throw new Futils.TypeException(
+				`Invalid CR-LT function call ; first argument must be a valid string literal ; got: '${args[0]}' from str: ${str}`
+			);
+		} else if (!RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
+			throw new Futils.TypeException(
+				`Invalid CR-LT function call ; second argument must be a valid integer literal ; got: '${args[1]}' from str: ${str}`
+			);
+		}
+		const crThresholdStr = args[1];
+		let [hero, crThreshold] = [null, null];
+		try {
+			[hero, crThreshold] = [
+				new TYPES.String(args[0], REFS, { types: ["hero"] }),
+				new TYPES.Int(crThresholdStr),
+			];
+		} catch (e) {
+			throw new Futils.TypeException(
+				`Invalid type in CR-LT function call; got str: ${str} ; error: ${e}`
+			);
+		}
+		const p1Flag = str.split(".")[0] === "p1";
+		console.log(`Sending CR fn args`, hero, crThreshold, p1Flag);
+		return new CombatReadinessLtFn(hero, crThreshold, p1Flag);
+	}
+
+	constructor(hero, crThreshold, p1Flag) {
+		console.log(`Received CR-LT fn args`, hero.asString(), crThreshold.asString(), p1Flag);
+		super();
+		this.hero = hero.data;
+		this.crThreshold = crThreshold.data;
+		this.str = (p1Flag ? "p1" : "p2") + `.CR-LT(${hero.asString()}, ${crThreshold.asString()})`;
+		this.isPlayer1 = p1Flag;
+	}
+
+	call(battle) {
+		const findFn = (entry, picks) =>
+			picks.includes(entry[0]) &&
+			entry[1] < this.crThreshold &&
+			entry[0] === this.hero;
+		const result = this.isPlayer1
+			? battle[COLUMNS_MAP.CR_BAR].find((entry) =>
+					findFn(entry, battle[COLUMNS_MAP.P1_PICKS])
+			  )
+			: battle[COLUMNS_MAP.CR_BAR].find((entry) =>
+					findFn(entry, battle[COLUMNS_MAP.P2_PICKS])
+			  );
+		console.log(
+			`Got CR Result: ${result}, hero: ${this.hero}, minValue: ${this.crThreshold}`
+		);
+		return !!result;
+	}
+}
+
+
 
 const FN_MAP = {
 	and: AND,
@@ -342,6 +403,9 @@ const FN_MAP = {
 	"p2.artifact": ArtifactFn,
 	"p1.cr-geq": CombatReadinessGeqFn,
 	"p2.cr-geq": CombatReadinessGeqFn,
+	"p1.cr-lt": CombatReadinessLtFn,
+	"p2.cr-lt": CombatReadinessLtFn,
+
 };
 
 export {

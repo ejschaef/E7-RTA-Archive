@@ -65,8 +65,7 @@ is-win = true;`;
 p1.equipment("belian", {immunity, counter});
 p1.artifact("belian", {3f, elbris ritual sword});
 p2.cr-geq("New Moon Luna", 100);
-p2.server in {global, asia, Japan};
-`;
+p2.server in {global, asia, Japan};`;
 
   makeExFilter("exFilter5", ex5Str);
 

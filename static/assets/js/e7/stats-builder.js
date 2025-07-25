@@ -97,9 +97,9 @@ function queryStats(battleList, totalBattles, heroName) {
 	};
 }
 
-function getPrimes(battles, isP1 = true) {
+function getPrimes(battleList, isP1 = true) {
 	const primeSet = new Set();
-	for (const battle of Object.values(battles)) {
+	for (const battle of Object.values(battleList)) {
 		const picks = isP1
 			? battle[COLUMNS_MAP.P1_PICKS_PRIMES]
 			: battle[COLUMNS_MAP.P2_PICKS_PRIMES];
@@ -110,8 +110,7 @@ function getPrimes(battles, isP1 = true) {
 	return primeSet;
 }
 
-function getHeroStats(battles, HM) {
-	const battleList = Object.values(battles);
+function getHeroStats(battleList, HM) {
 
 	if (battleList.length === 0) {
 		return { playerHeroStats: [], enemyHeroStats: [] };
@@ -154,8 +153,8 @@ function getHeroStats(battles, HM) {
 	};
 }
 
-function getFirstPickStats(battles, HM) {
-	const battleList = getFirstPickSubset(Object.values(battles));
+function getFirstPickStats(battleList, HM) {
+	battleList = getFirstPickSubset(Object.values(battleList));
 
 	if (battleList.length === 0) {
 		return [];
@@ -188,12 +187,13 @@ function getFirstPickStats(battles, HM) {
 	return result;
 }
 
-function getPrebanStats(battles, HM) {
+
+
+function getPrebanStats(battleList, HM) {
 	//console.log(`Got HM: ${HM}`);
 
 	const emptyPrime = HeroManager.getHeroByName("Empty", HM).prime;
 
-	const battleList = Object.values(battles);
 
 	if (battleList.length === 0) {
 		return [];
@@ -263,8 +263,7 @@ function secondsToTimeStr(inputSeconds) {
 	return timeStr;
 }
 
-function getGeneralStats(battles, HM) {
-	const battleList = Object.values(battles);
+function getGeneralStats(battleList, HM) {
 	battleList.sort(
 		(b1, b2) => new Date(b1["Date/Time"]) - new Date(b2["Date/Time"])
 	);

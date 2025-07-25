@@ -5,8 +5,7 @@ import {
 } from "../page-utilities/page-state-manager.js";
 import { ContentManager, CSVParse } from "../../exports.js";
 import { PageUtils } from "../../exports.js";
-import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
-import { populateContent } from "./stats-logic.js";
+import { StatsViewFns } from "./stats-logic.js";
 
 async function handleUploadAndSetUser(HM) {
 	const selectedFile = await ContentManager.ClientCache.get(
@@ -81,14 +80,12 @@ async function runLoadDataLogic(stateDispatcher) {
 		console.log(`Received Filters: ${JSON.stringify(filters)}`);
 		const stats = await ContentManager.BattleManager.getStats(
 			battles,
-			user,
 			filters,
 			HM,
-			autoZoom
 		);
 		await ContentManager.ClientCache.setStats(stats);
 
-		await populateContent();  // populates tables and plots in show stats view before showing
+		await StatsViewFns.populateContent();  // populates tables and plots in show stats view before showing
 		CONTEXT.STATS_PRE_RENDER_COMPLETED = true;
 		stateDispatcher(HOME_PAGE_STATES.SHOW_STATS);
 		console.log("REACHED END OF LOAD DATA LOGIC");

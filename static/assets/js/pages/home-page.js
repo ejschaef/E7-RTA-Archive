@@ -9,10 +9,7 @@ import {
 	runSelectDataLogic,
 } from "./page-view-logic/select-data-logic.js";
 import {
-	initializeStatsLogic,
-	runStatsLogic,
-	postFirstRenderLogic,
-	preFirstRenderLogic,
+	StatsViewFns,
 } from "./page-view-logic/stats-logic.js";
 import { runLoadDataLogic } from "./page-view-logic/load-data-logic.js";
 import { CONTEXT } from "./page-utilities/home-page-context.js";
@@ -25,21 +22,21 @@ import IPM from "./page-utilities/inter-page-manager.js";
 async function resolveShowStatsDispatch(stateDispatcher) {
 	if (!CONTEXT.STATS_PRE_RENDER_COMPLETED) {
 		console.log("Running stats pre render logic");
-		await preFirstRenderLogic(stateDispatcher); // if stats page is accessed from outside home page, must populate, otherwise load data logic will
+		await StatsViewFns.preFirstRenderLogic(stateDispatcher); // if stats page is accessed from outside home page, must populate, otherwise load data logic will
 		CONTEXT.STATS_PRE_RENDER_COMPLETED = true;
 		console.log("Completed stats pre render logic");
 	}
-	await runStatsLogic(stateDispatcher);
+	await StatsViewFns.runStatsLogic(stateDispatcher);
 	await HOME_PAGE_FNS.homePageSetView(HOME_PAGE_STATES.SHOW_STATS);
 	if (!CONTEXT.STATS_POST_RENDER_COMPLETED) {
 		console.log("Running stats post render logic");
-		await postFirstRenderLogic(stateDispatcher); // code mirror can only be initialized after element is rendered
-		setTimeout(() => {
-			Plotly.Plots.resize(document.getElementById("rank-plot-container"));
-		}, 0);
+		await StatsViewFns.postFirstRenderLogic(stateDispatcher); // code mirror can only be initialized after element is rendered
 		CONTEXT.STATS_POST_RENDER_COMPLETED = true;
 		console.log("Completed stats post render logic");
 	}
+	setTimeout(() => {
+			Plotly.Plots.resize(document.getElementById("rank-plot"));
+	}, 20);
 }
 
 // switches among view states for the home page
@@ -161,7 +158,7 @@ async function homePageLogic() {
 	addNavListeners();
 	addClearDataBtnListener();
 	await initializeSelectDataLogic(stateDispatcher);
-	await initializeStatsLogic(stateDispatcher);
+	await StatsViewFns.initializeStatsLogic(stateDispatcher);
 	const user = await ContentManager.UserManager.getUser();
 	HOME_PAGE_FNS.homePageDrawUserInfo(user);
 	let state = await PageStateManager.getState();
