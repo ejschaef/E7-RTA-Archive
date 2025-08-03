@@ -1,14 +1,13 @@
 let SavedFilters = {
     "Current Season" : "date in current-season",
-    "Wins" : "is-win = true",
-    "Losses" : "is-win = false",
     "First Pick" : "is-first-pick = true",
     "Second Pick" : "is-first-pick = false",
     "Champion+ Opponent" : "p2.league in {champion, warlord, emperor, legend}",
     "Warlord+ Opponent" : "p2.league in {warlord, emperor, legend}",
     "Emperor+ Opponent" : "p2.league in {emperor, legend}",
     "Legend Opponent" : "p2.league = 'legend'",
-
+    "Wins" : "is-win = true",
+    "Losses" : "is-win = false",
 
     extendFilters: function(currFilterStr, filterName) {
         const filter = SavedFilters[filterName];

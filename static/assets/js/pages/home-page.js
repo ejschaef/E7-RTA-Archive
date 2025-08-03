@@ -19,6 +19,13 @@ import DOC_ELEMENTS from "./page-utilities/doc-element-references.js";
 import IPM from "./page-utilities/inter-page-manager.js";
 
 
+function resizeRankPlot() {
+	setTimeout(() => {
+		Plotly.Plots.resize(document.getElementById("rank-plot"));
+	}, 20);
+}
+
+
 async function resolveShowStatsDispatch(stateDispatcher) {
 	if (!CONTEXT.STATS_PRE_RENDER_COMPLETED) {
 		console.log("Running stats pre render logic");
@@ -34,9 +41,8 @@ async function resolveShowStatsDispatch(stateDispatcher) {
 		CONTEXT.STATS_POST_RENDER_COMPLETED = true;
 		console.log("Completed stats post render logic");
 	}
-	setTimeout(() => {
-			Plotly.Plots.resize(document.getElementById("rank-plot"));
-	}, 20);
+	resizeRankPlot();
+	
 }
 
 // switches among view states for the home page
@@ -127,6 +133,16 @@ function addClearDataBtnListener() {
 	);
 }
 
+function addSideBarHideListener() {
+	DOC_ELEMENTS.NAV_BAR.SIDEBAR_HIDE_BTN.addEventListener(
+		"click",
+		function (_event) {
+			console.log("Triggered sidebar listener");
+			resizeRankPlot();
+		}
+	);
+}
+
 async function handleAction(action) {
 	switch (action) {
 		case IPM.ACTIONS.CLEAR_USER:
@@ -150,16 +166,29 @@ async function handleAction(action) {
 				"User not found; Must either query a valid user or upload battles to view hero stats"
 			)
 			return;
+		case IPM.ACTIONS.QUERY_USER:
+			CONTEXT.AUTO_QUERY = true;
+			stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
+			return;
+		default:
+			console.error(`Invalid action: ${action}`);
+			return;
 	}
+}
+
+function addAllListeners() {
+	addNavListeners();
+	addClearDataBtnListener();
+	addSideBarHideListener();
 }
 
 async function homePageLogic() {
 	console.log("Initialized CONTEXT", CONTEXT);
-	addNavListeners();
-	addClearDataBtnListener();
+	addAllListeners();
 	await initializeSelectDataLogic(stateDispatcher);
 	await StatsViewFns.initializeStatsLogic(stateDispatcher);
 	const user = await ContentManager.UserManager.getUser();
+	console.log("GOT USER", user);
 	HOME_PAGE_FNS.homePageDrawUserInfo(user);
 	let state = await PageStateManager.getState();
 	if (state == HOME_PAGE_STATES.LOAD_DATA) {

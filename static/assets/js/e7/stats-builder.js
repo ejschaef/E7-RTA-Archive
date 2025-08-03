@@ -276,12 +276,16 @@ function getGeneralStats(battleList, HM) {
 	const totalTurns = battleList.reduce((acc, b) => acc + b["Turns"], 0);
 	const avgTurns = totalBattles > 0 ? totalTurns / totalBattles : 0;
 
-	const maxTurns = Math.max(...battleList.map((b) => b["Turns"]));
+	const maxTurns = battleList.length > 0 
+		? Math.max(...battleList.map((b) => b["Turns"]))
+		: 0;
 
 	const totalSeconds = battleList.reduce((acc, b) => acc + b["Seconds"], 0);
 	const avgSeconds = totalBattles > 0 ? totalSeconds / totalBattles : 0;
 
-	const maxSeconds = Math.max(...battleList.map((b) => b["Seconds"]));
+	const maxSeconds = battleList.length > 0 
+		? Math.max(...battleList.map((b) => b["Seconds"]))
+		: 0;
 
 	let avgTimeStr = secondsToTimeStr(avgSeconds);
 	let maxTimeStr = secondsToTimeStr(maxSeconds);

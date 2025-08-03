@@ -32,6 +32,7 @@ const Keys = {
   KOR_USERS: "kor-users",
   ARTIFACTS: "artifacts", // map of artifact codes to names
   ARTIFACTS_LOWERCASE_NAMES_SET: "artifacts-lowercase-names-set", // set of artifact lowercase names
+  ARTIFACT_OBJECT_LIST: "artifact-object-list",
   HOME_PAGE_STATE: "home-page-state",
   INTER_PAGE_MANAGER: "inter-page-manager",
 };

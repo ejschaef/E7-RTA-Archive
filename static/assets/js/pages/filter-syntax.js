@@ -1,6 +1,6 @@
-import { RegExps, PageUtils } from "../exports.js";
+import { RegExps } from "../e7/regex.js";
+import PageUtils from "./page-utilities/page-utils.js";
 import { NavBarUtils } from "./page-utilities/nav-bar-utils.js";
-import UserManager from "../e7/user-manager.js";
 
 function makeExFilter(textAreaID, str) {
 	const textArea = document.getElementById(textAreaID);

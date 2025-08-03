@@ -36,3 +36,21 @@ class FileUploadForm(FlaskForm):
 class CodeForm(FlaskForm):
     code = TextAreaField("Code", validators=[DataRequired()])
 
+
+class SearchForm(FlaskForm):
+    searchTerm = StringField('Search',
+                         id='search-term',
+                         validators=[DataRequired()])
+    
+    searchDomain = SelectField('Search Domain',
+                             id='search-domains',
+                             choices=["Global Server",
+                                      "Korea Server",
+                                      "Japan Server",
+                                      "Asia Server",
+                                      "Europe Server",
+                                      "Heroes",
+                                      "Artifacts"
+                                      ],
+                             validators=[DataRequired()])
+

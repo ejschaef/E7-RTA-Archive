@@ -19,7 +19,7 @@ from apps.tasks import *
 from apps.authentication.models import Users
 from flask_wtf import FlaskForm
 from werkzeug.exceptions import RequestEntityTooLarge
-from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm
+from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm, SearchForm
 from apps.e7_utils.user_manager import User
 from apps.e7_utils.query_user_battles import get_transformed_battles
 from apps.content_manager import get_mngr
@@ -88,6 +88,11 @@ def sample_page():
 def test():
     season_details = get_mngr().get_season_details_json()
     return render_template('pages/test.html', segment='test', season_details=season_details)
+
+@blueprint.route('/search')
+def search():
+    form = SearchForm()
+    return render_template('pages/search.html', segment='search', search_form=form)
 
 @blueprint.route('/test_upload')
 def test_upload():

@@ -47,7 +47,7 @@ let SeasonManager = {
 			const preSeason = {
 				"Season Number": lastSeason["Season Number"] + 0.5,
 				Code: null,
-				Season: `Pre-Season: ${season["Season"]}`,
+				Season: `Active Pre-Season`,
 				Start: start.toISOString().slice(0, 10),
 				End: "N/A",
 				Status: "Active",

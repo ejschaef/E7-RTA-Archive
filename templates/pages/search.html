@@ -1,0 +1,65 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Icon Feather{% endblock title %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pc-container" data-bs-theme="dark">
+  <div class="pc-content" data-bs-theme="dark">
+    <!-- [ breadcrumb ] start -->
+
+    <!-- [ breadcrumb ] end -->
+
+    <!-- [ Main Content ] start -->
+    <div class="row justify-content-center">
+      <!-- [ filter code mirror ] start -->
+      <div class="col-sm-9 min-width-450 min-height-500">
+        <div class="card mb-2">
+          <div class="card-header kpi-header d-flex flex-column">
+            <h5 class="me-2">Search for Users, Heroes, or Artifacts</h5>
+            <p class="f-10 mt-0">(click on a user to automatically query)</p>
+          </div>
+          <div class="card-body text-center tight-fit rel-height-100">
+            <div class="row justify-content-start align-items-center d-flex flex-row">
+              <form method="post" id="searchForm" class="p-3 d-flex flex-row">
+                {{ search_form.hidden_tag() }}
+                <div class="form-group mb-0 rel-width-30 me-3">
+                  {{ search_form.searchDomain(placeholder="Domain", class="form-control ") }}
+                </div>
+                <div class="form-group mb-0 rel-width-60 me-3">
+                  {{ search_form.searchTerm(placeholder="Search for Term", class="form-control
+                  custom-input")
+                  }}
+                </div>
+                <button type="submit" id="search-submit-btn" class="btn shadow px-sm-1 filter-pane-btn">Search</button>
+              </form>
+            </div>
+            <div class="row justify-content-center d-flex d-none" id="search-table-container">
+              <table id="search-table" class="display compact cell-border" style="width:100%">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Search Score</th>
+                    <th scope="col">Raw Search Result</th>
+                  </tr>
+                </thead>
+                <tbody id="search-table-body">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- [ filter code mirror ] end -->
+    </div>
+    <!-- [ Main Content ] end -->
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script type="module" src="{{ url_for('static', filename='dist/search.bundle.js') }}"></script>
+{% endblock extra_js %}

@@ -37,6 +37,18 @@ let ArtifactManager = {
         return artiSet;
     },
 
+	getArtifactObjectList: async function () {
+		let objectList = await ClientCache.get(ClientCache.Keys.ARTIFACT_OBJECT_LIST);
+		if (objectList !== null) {
+			console.log("Got artifact object list from cache");
+			return objectList;
+		}
+		const artifacts = await this.getArtifacts();
+		objectList = Object.entries(artifacts).map(([id, name]) => ({ id, name }));
+		await ClientCache.cache(ClientCache.Keys.ARTIFACT_OBJECT_LIST, objectList);
+		return objectList;
+	},
+
 	fetchAndCacheArtifacts: async function () {
 		console.log(
 			`ArtifactManager not found in cache, fetching from server and caching it`

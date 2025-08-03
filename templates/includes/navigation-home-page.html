@@ -29,6 +29,13 @@
             <span class="nav-label">Stats</span>
           </span>
         </button>
+        <a href="{{ url_for('home_blueprint.search') }}" data-nav="search" class="nav-link">
+          <div class="nav-cell">
+            <img src="{{ url_for('static', filename='assets/images/search-icon.svg') }}" class="img-fluid nav-icon"
+              alt="search">
+            <div class="nav-label">Search</div>
+          </div>
+        </a>
         <a href="{{ url_for('home_blueprint.filter_syntax') }}" data-nav="filter-syntax" class="nav-link">
           <div class="nav-cell">
             <img src="{{ url_for('static', filename='assets/images/filter-icon.svg') }}" class="img-fluid nav-icon"

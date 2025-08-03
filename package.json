@@ -25,6 +25,7 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
+    "fuse.js": "^7.1.0",
     "idb": "^8.0.3",
     "papaparse": "^5.5.3"
   }

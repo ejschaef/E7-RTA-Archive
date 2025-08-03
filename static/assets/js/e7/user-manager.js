@@ -1,14 +1,14 @@
-import { WORLD_CODES, WORLD_CODE_TO_CLEAN_STR } from "./references.js";
+import { WORLD_CODES, WORLD_CODE_TO_CLEAN_STR, WORLD_CODE_ENUM } from "./references.js";
 import ClientCache from "../cache-manager.js";
 import E7API from "../apis/e7-API.js";
 import PYAPI from "../apis/py-API.js";
 
 const userMapCacheKeyMap = {
-	world_global: ClientCache.Keys.GLOBAL_USERS,
-	world_eu: ClientCache.Keys.EU_USERS,
-	world_asia: ClientCache.Keys.ASIA_USERS,
-	world_jpn: ClientCache.Keys.JPN_USERS,
-	world_kor: ClientCache.Keys.KOR_USERS,
+	[WORLD_CODE_ENUM.GLOBAL]: ClientCache.Keys.GLOBAL_USERS,
+	[WORLD_CODE_ENUM.EU]: ClientCache.Keys.EU_USERS,
+	[WORLD_CODE_ENUM.ASIA]: ClientCache.Keys.ASIA_USERS,
+	[WORLD_CODE_ENUM.JPN]: ClientCache.Keys.JPN_USERS,
+	[WORLD_CODE_ENUM.KOR]: ClientCache.Keys.KOR_USERS,
 };
 
 function createUser(userJSON, world_code) {

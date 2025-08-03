@@ -3,7 +3,8 @@ import ClientCache from "../../cache-manager.js";
 const ACTIONS = {
     CLEAR_USER : "CLEAR_USER",
     SHOW_NO_USER_MSG : "SHOW_NO_USER_MSG",
-    SHOW_DATA_ALREADY_CLEARED_MSG : "SHOW_DATA_ALREADY_CLEARED_MSG"
+    SHOW_DATA_ALREADY_CLEARED_MSG : "SHOW_DATA_ALREADY_CLEARED_MSG",
+    QUERY_USER : "QUERY_USER",
 }
 
 let InterPageManager = {

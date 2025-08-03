@@ -74,8 +74,36 @@ class HomePageElements {
     }
 }
 
+class NavBarElements {
+    get SIDEBAR_HIDE_BTN() {
+        return this._SIDEBAR_HIDE_BTN ||= document.getElementById("sidebar-hide");
+    }
+}
+
+class SEARCH_PAGE_ELEMENTS {
+
+    get SEARCH_DOMAINS() {
+        return this._SEARCH_DOMAINS ||= document.getElementById("search-domains");
+    }
+
+    get SEARCH_SUBMIT_BTN() {
+        return this._SEARCH_SUBMIT_BTN ||= document.getElementById("search-submit-btn");
+    }
+
+    get SEARCH_FORM() {
+        return this._SEARCH_FORM ||= document.getElementById("searchForm");
+    }
+
+    get SEARCH_TABLE_CONTAINER() {
+        return this._SEARCH_TABLE_CONTAINER ||= document.getElementById("search-table-container");
+    }
+
+}
+
 let DOC_ELEMENTS = {
 	HOME_PAGE: new HomePageElements(),
+    NAV_BAR: new NavBarElements(),
+    SEARCH_PAGE: new SEARCH_PAGE_ELEMENTS(),
 };
 
 export default DOC_ELEMENTS;

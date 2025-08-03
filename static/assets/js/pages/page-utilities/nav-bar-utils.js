@@ -56,7 +56,6 @@ function addClearDataBtnListener() {
     );
 }
 
-
 function writeUserInfo(user) {
 	if (user) {
 		DOC_ELEMENTS.HOME_PAGE.USER_NAME.innerText = user.name;
@@ -81,7 +80,8 @@ let NavBarUtils = {
     addNavListeners: addNavListeners,
     addClearDataBtnListener: addClearDataBtnListener,
     writeUserInfo: writeUserInfo,
-    initialize: initialize
+    initialize: initialize,
+    navToHome: navToHome,
 };
 
 export { NavBarUtils };
