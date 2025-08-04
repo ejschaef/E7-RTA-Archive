@@ -24,6 +24,16 @@ SEASON_DETAILS_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'season_details.
 ARTIFACT_JSON_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'artifact_json.pickle')
 
 def try_load(obj_name, fetch_fn, pickle_path):
+     # load from pickle if backup is recent
+    if os.path.exists(pickle_path):
+        modified_time = os.path.getmtime(pickle_path)
+        modified_datetime = datetime.fromtimestamp(modified_time)
+        age = datetime.now() - modified_datetime
+
+        if age < timedelta(days=1):
+            print(f"{obj_name} Loading From Recent Pickle Backup (Last updated: {modified_datetime})")
+            return load_pickle(pickle_path)
+
     try:
         # raise Exception("USING BACKUPS: MUST REMOVE WHEN DEPLOYING PROD INSTANCE")
         obj = fetch_fn()

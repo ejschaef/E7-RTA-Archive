@@ -41,7 +41,7 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: e7-nginx
+    container_name: e7-nginx-dev
     ports:
       - "80:80"
     volumes:

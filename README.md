@@ -3,7 +3,9 @@
 Open-source **Flask** project utilizing **Datta Able Dashboard** as a base, an open-source `Bootstrap` design.
 The web app is designed to provide Epic 7 players the ability to maintain their RTA History past 100 battles,
 view additional stats that the official website doesn't provide, and easily filter to a specific subset of battles.
-<br />
+<br/>
+The web app is not meant to be viewed in portrait mode. The site will work, but the html components may not be properly sized or easily accessible.
+<br/>
 
 ## Features
 
@@ -28,6 +30,8 @@ view additional stats that the official website doesn't provide, and easily filt
 - server proxy                : nginx
 - JS bundling                 : webpack
 - front end framework         : vanilla JS
+- Domain hosting              : cloudflare
+- instance hosting            : lightsail
 
 ## Design
 
