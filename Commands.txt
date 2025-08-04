@@ -28,3 +28,21 @@ docker ps -a | grep nginx
 
 #Push prod to docker repository; repository tag is defined in file
 docker-compose -f docker-compose.prod.yaml push
+
+#Light Sail
+
+# Install Docker
+sudo apt update && sudo apt install -y docker.io
+
+# Enable and start Docker
+sudo systemctl enable docker
+sudo systemctl start docker
+
+# Install Docker Compose v2
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Test it
+docker-compose version
+
+git clone https://github.com/ejschaef/E7-Ventus-Archive
