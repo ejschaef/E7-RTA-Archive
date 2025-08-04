@@ -27,6 +27,8 @@ WORKDIR /code
 # Copy project files
 COPY . /code
 
+RUN mkdir -p /code/logs
+
 # Install maturin
 RUN pip install maturin
 

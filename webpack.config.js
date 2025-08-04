@@ -11,8 +11,8 @@ module.exports = {
     filename: '[name].bundle.js',         // Output bundled files
     path: path.resolve(__dirname, 'static/dist'),  // Output folder
   },
-  //mode: 'production',             // Enables minification
-  mode: 'development',
+  mode: 'production',             // Enables minification
+  //mode: 'development',
   devtool: 'source-map',
   module: {
     rules: [

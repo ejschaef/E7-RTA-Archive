@@ -20,7 +20,8 @@ services:
     container_name: e7-celery-worker
     image: ejschaef/e7-celery-worker:latest
     command: celery -A apps.tasks worker --loglevel=info
-    user: "nobody"
+    volumes:
+      - ./apps/app_data:/code/apps/app_data
     depends_on:
       - redis
 
@@ -40,5 +41,6 @@ services:
       - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/code/static:ro
     depends_on:
       - flask-app
