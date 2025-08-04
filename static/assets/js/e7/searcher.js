@@ -73,8 +73,7 @@ class Searcher {
                 }
             }
         }
-        console.log("Got Domain", this.DOMAIN_CACHE[domain].slice(0, 10));
-        return this.DOMAIN_CACHE[domain];
+        return await this.DOMAIN_CACHE[domain];
     }
 
     async search(domain, searchTerm) {

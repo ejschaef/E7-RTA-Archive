@@ -3,12 +3,14 @@ from apps.e7_utils.hero_manager import HeroManager
 from apps.e7_utils.user_manager import UserManager
 from apps.e7_utils.season_details import get_rta_seasons_df
 from apps.e7_utils.utils import load_pickle, save_pickle
+from apps.e7_utils.artifact_manager import get_artifacts
 from apps.references.cached_var_keys import CONTENT_MNGR_KEY
 import pickle
 import pandas as pd
 from apps.redis_manager import GLOBAL_DB
 from apps.config import *
 from datetime import datetime
+import json
 
 GLOBAL_CLIENT = GLOBAL_DB.get_client()
 
@@ -19,11 +21,14 @@ _reference_loaded_at = 0
 HERO_MANAGER_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'hero_manager.pickle')
 USER_MANAGER_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'user_manager.pickle')
 SEASON_DETAILS_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'season_details.pickle')
+ARTIFACT_JSON_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'artifact_json.pickle')
 
 def try_load(obj_name, fetch_fn, pickle_path):
     try:
         raise Exception("USING BACKUPS: MUST REMOVE WHEN DEPLOYING PROD INSTANCE")
         obj = fetch_fn()
+        if obj is None:
+            raise Exception("Object is None")
         print(f"{obj_name} Loaded From E7 API")
         save_pickle(obj, pickle_path)
         print(f"{obj_name} Saved To Pickle Backup")
@@ -39,10 +44,11 @@ class ContentManager:
 
     def __init__(self):
         print("Initializing ContentManager")
-        self.HeroManager     : HeroManager  = try_load("HeroManager", lambda: HeroManager(), HERO_MANAGER_PICKLE_PATH)
-        self.UserManager     : UserManager  = try_load("UserManager", lambda: UserManager(load_all=True), USER_MANAGER_PICKLE_PATH)
-        self.SeasonDetails   : pd.DataFrame = try_load("SeasonDetails", get_rta_seasons_df, SEASON_DETAILS_PICKLE_PATH)
-        self.SeasonDetailsJSON = self.get_season_details_json()
+        self.HeroManager       : HeroManager  = try_load("HeroManager", lambda: HeroManager(), HERO_MANAGER_PICKLE_PATH)
+        self.UserManager       : UserManager  = try_load("UserManager", lambda: UserManager(load_all=True), USER_MANAGER_PICKLE_PATH)
+        self.SeasonDetails     : pd.DataFrame = try_load("SeasonDetails", get_rta_seasons_df, SEASON_DETAILS_PICKLE_PATH)
+        self.SeasonDetailsJSON : str          = self.get_season_details_json()
+        self.ArtifactJson      : str          = try_load("ArtifactJson", lambda: json.dumps(get_artifacts(), default=str), ARTIFACT_JSON_PICKLE_PATH)
 
     @classmethod
     def decode(cls, str) -> Self:

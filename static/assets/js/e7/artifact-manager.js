@@ -2,16 +2,20 @@ import ClientCache from "../cache-manager.js";
 import E7API from "../apis/e7-API.js";
 import PYAPI from "../apis/py-API.js";
 
-async function getArtifactMapFromE7Server() {
+async function getArtifactMap() {
 	console.log(`Getting artifact map from E7 server...`);
 	const rawJSON = await E7API.fetchArtifactJSON("en");
-	if (!rawJSON) {
+	if (rawJSON === null) {
+		console.log(`Getting artifact map from flask server...`);
+		rawJSON = await PYAPI.fetchArtifactJson();
+	}
+	if (rawJSON === null) {
 		console.error(
-			`Could not get user map from E7 server for world code: ${world_code}`
+			`Could not get artifact Json map from E7 server or flask server`
 		);
 		return null;
 	}
-	console.log(`Got artifact map from E7 server for language: 'en'`);
+	console.log(`Got artifact Json for language: 'en'`);
 	return Object.fromEntries(
 		rawJSON.filter((artifact) => artifact.name !== null).map((artifact) => [artifact.code, artifact.name])
 	);
@@ -53,7 +57,7 @@ let ArtifactManager = {
 		console.log(
 			`ArtifactManager not found in cache, fetching from server and caching it`
 		);
-		const artifactMap = await getArtifactMapFromE7Server();
+		const artifactMap = await getArtifactMap();
 		await ClientCache.cache(ClientCache.Keys.ARTIFACTS, artifactMap);
 		console.log(`Cached ArtifactManager using raw data recieved from server`);
 		return artifactMap;

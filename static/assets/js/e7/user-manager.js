@@ -159,10 +159,6 @@ let UserManager = {
 		await ClientCache.delete(ClientCache.Keys.JPN_USERS);
 		await ClientCache.delete(ClientCache.Keys.KOR_USERS);
 	},
-
-	convertServerStr: function (serverStr) {
-		return WORLD_CODE_TO_CLEAN_STR[serverStr];
-	},
 };
 
 export default UserManager;

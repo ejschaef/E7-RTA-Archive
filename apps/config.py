@@ -45,6 +45,8 @@ class Config(object):
     # Set up the App SECRET_KEY
     SECRET_KEY  = os.getenv('SECRET_KEY', secrets.token_hex(32))
 
+    LOGGER_NAME = 'e7-rta-analyzer-logger'
+
     # Social AUTH context
     SOCIAL_AUTH_GITHUB  = False
 

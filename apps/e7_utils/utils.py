@@ -43,8 +43,7 @@ def load_json_from_url(url):
         json_data = json.loads(response.text)
         return json_data
     else:
-        print(f"Failed to fetch data from {url}. Status code: {response.status_code}")
-        return None
+        raise Exception(f"Failed to fetch JSON data from {url}. Status code: {response.status_code}")
 
 
 def list_of_dicts_to_dataframe(data, index_key=None):

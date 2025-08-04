@@ -1,8 +1,8 @@
-const BATTLE_URL = '/api/get_battle_data';
 const RS_BATTLE_URL = '/api/rs_get_battle_data';
 const HERO_URL = '/api/get_hero_data';
 const USER_URL = '/api/get_user_data';
 const SEASON_URL = '/api/get_season_details';
+const ARTIFACT_JSON_URL = '/api/get_artifact_json';
 
 let PYAPI = {
 
@@ -23,19 +23,6 @@ let PYAPI = {
 
     fetchHeroData: async function () {
         return await this.fetchFromPython(HERO_URL);
-    },
-
-    fetchBattleData: async function (user) {
-        if (!user) {
-            throw new Error("Must pass user to fetch battles data");
-        }
-        return await fetch(BATTLE_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ user: user })
-          })
     },
 
     // uses the new API endpoint that utilizes Rust for fetching and processing the battles
@@ -60,6 +47,17 @@ let PYAPI = {
             return { seasonDetails: seasonDetails, error: false};
         } else {
             return { seasonDetails: null, error: data.error};
+        }
+    },
+
+    fetchArtifactJson: async function () {
+        const response = await fetch(ARTIFACT_JSON_URL);
+        const data = await response.json();
+        if (data.success) {
+            const artifactJson = JSON.parse(data.artifactJson);
+            return artifactJson
+        } else {
+            return null
         }
     },
 

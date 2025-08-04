@@ -4,6 +4,7 @@ import ContentManager from "../content-manager.js";
 import { buildFormattedBattleMap } from "../e7/battle-transform.js";
 import { getStrMatches } from "../utils.js";
 import { Searcher } from "../e7/searcher.js";
+import ArtifactManager from "../e7/artifact-manager.js";
 
 
 function ingestStringChars(set, strings) {
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // await ContentManager.UserManager.clearUserDataLists();
 
-	// await ContentManager.ArtifactManager.clearArtifactData();
+	await ContentManager.ArtifactManager.clearArtifactData();
 
     let global_users = await ContentManager.UserManager.getUserMap("world_global");
     // let first_ten = Object.values(global_users).slice(0, 10);
@@ -46,6 +47,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const searcher = new Searcher();
 
 	let wolf = await searcher.search("Global Server", "wolf");
+
+	let artiList = await ArtifactManager.getArtifactObjectList()
+
+	console.log(artiList);
+
 	let elbris = await searcher.search(Searcher.DOMAINS.ARTIFACTS, "elbris");
 
 	console.log(wolf.map(user => [user.item.name, user.item.id]));

@@ -2328,11 +2328,11 @@ function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present,
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-var BATTLE_URL = '/api/get_battle_data';
 var RS_BATTLE_URL = '/api/rs_get_battle_data';
 var HERO_URL = '/api/get_hero_data';
 var USER_URL = '/api/get_user_data';
 var SEASON_URL = '/api/get_season_details';
+var ARTIFACT_JSON_URL = '/api/get_artifact_json';
 var PYAPI = {
   test: function test(data) {
     // test the fetching works properly
@@ -2388,8 +2388,9 @@ var PYAPI = {
     }
     return fetchHeroData;
   }(),
-  fetchBattleData: function () {
-    var _fetchBattleData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(user) {
+  // uses the new API endpoint that utilizes Rust for fetching and processing the battles
+  rsFetchBattleData: function () {
+    var _rsFetchBattleData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(user) {
       return _regenerator().w(function (_context3) {
         while (1) switch (_context3.n) {
           case 0:
@@ -2400,7 +2401,7 @@ var PYAPI = {
             throw new Error("Must pass user to fetch battles data");
           case 1:
             _context3.n = 2;
-            return fetch(BATTLE_URL, {
+            return fetch(RS_BATTLE_URL, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -2414,51 +2415,57 @@ var PYAPI = {
         }
       }, _callee3);
     }));
-    function fetchBattleData(_x2) {
-      return _fetchBattleData.apply(this, arguments);
-    }
-    return fetchBattleData;
-  }(),
-  // uses the new API endpoint that utilizes Rust for fetching and processing the battles
-  rsFetchBattleData: function () {
-    var _rsFetchBattleData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(user) {
-      return _regenerator().w(function (_context4) {
-        while (1) switch (_context4.n) {
-          case 0:
-            if (user) {
-              _context4.n = 1;
-              break;
-            }
-            throw new Error("Must pass user to fetch battles data");
-          case 1:
-            _context4.n = 2;
-            return fetch(RS_BATTLE_URL, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                user: user
-              })
-            });
-          case 2:
-            return _context4.a(2, _context4.v);
-        }
-      }, _callee4);
-    }));
-    function rsFetchBattleData(_x3) {
+    function rsFetchBattleData(_x2) {
       return _rsFetchBattleData.apply(this, arguments);
     }
     return rsFetchBattleData;
   }(),
   fetchSeasonDetails: function () {
-    var _fetchSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+    var _fetchSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
       var response, data, seasonDetails;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return fetch(SEASON_URL);
+          case 1:
+            response = _context4.v;
+            _context4.n = 2;
+            return response.json();
+          case 2:
+            data = _context4.v;
+            if (!data.success) {
+              _context4.n = 3;
+              break;
+            }
+            seasonDetails = JSON.parse(data.seasonDetails);
+            return _context4.a(2, {
+              seasonDetails: seasonDetails,
+              error: false
+            });
+          case 3:
+            return _context4.a(2, {
+              seasonDetails: null,
+              error: data.error
+            });
+          case 4:
+            return _context4.a(2);
+        }
+      }, _callee4);
+    }));
+    function fetchSeasonDetails() {
+      return _fetchSeasonDetails.apply(this, arguments);
+    }
+    return fetchSeasonDetails;
+  }(),
+  fetchArtifactJson: function () {
+    var _fetchArtifactJson = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      var response, data, artifactJson;
       return _regenerator().w(function (_context5) {
         while (1) switch (_context5.n) {
           case 0:
             _context5.n = 1;
-            return fetch(SEASON_URL);
+            return fetch(ARTIFACT_JSON_URL);
           case 1:
             response = _context5.v;
             _context5.n = 2;
@@ -2469,25 +2476,19 @@ var PYAPI = {
               _context5.n = 3;
               break;
             }
-            seasonDetails = JSON.parse(data.seasonDetails);
-            return _context5.a(2, {
-              seasonDetails: seasonDetails,
-              error: false
-            });
+            artifactJson = JSON.parse(data.artifactJson);
+            return _context5.a(2, artifactJson);
           case 3:
-            return _context5.a(2, {
-              seasonDetails: null,
-              error: data.error
-            });
+            return _context5.a(2, null);
           case 4:
             return _context5.a(2);
         }
       }, _callee5);
     }));
-    function fetchSeasonDetails() {
-      return _fetchSeasonDetails.apply(this, arguments);
+    function fetchArtifactJson() {
+      return _fetchArtifactJson.apply(this, arguments);
     }
-    return fetchSeasonDetails;
+    return fetchArtifactJson;
   }(),
   fetchUser: function () {
     var _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(userData) {
@@ -2581,7 +2582,7 @@ var PYAPI = {
         }
       }, _callee6, null, [[4, 11]]);
     }));
-    function fetchUser(_x4) {
+    function fetchUser(_x3) {
       return _fetchUser.apply(this, arguments);
     }
     return fetchUser;
@@ -2613,7 +2614,7 @@ var PYAPI = {
         }
       }, _callee7);
     }));
-    function fetchDataFromID(_x5) {
+    function fetchDataFromID(_x4) {
       return _fetchDataFromID.apply(this, arguments);
     }
     return fetchDataFromID;
@@ -3341,28 +3342,28 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
-function getArtifactMapFromE7Server() {
-  return _getArtifactMapFromE7Server.apply(this, arguments);
+function getArtifactMap() {
+  return _getArtifactMap.apply(this, arguments);
 }
-function _getArtifactMapFromE7Server() {
-  _getArtifactMapFromE7Server = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+function _getArtifactMap() {
+  _getArtifactMap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
     var rawJSON;
     return _regenerator().w(function (_context6) {
       while (1) switch (_context6.n) {
         case 0:
           console.log("Getting artifact map from E7 server...");
           _context6.n = 1;
-          return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].fetchArtifactJSON("en");
+          return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_2__["default"].fetchArtifactJson();
         case 1:
           rawJSON = _context6.v;
-          if (rawJSON) {
+          if (!(rawJSON === null)) {
             _context6.n = 2;
             break;
           }
-          console.error("Could not get user map from E7 server for world code: ".concat(world_code));
+          console.error("Could not get artifact Json map from E7 server or flask server");
           return _context6.a(2, null);
         case 2:
-          console.log("Got artifact map from E7 server for language: 'en'");
+          console.log("Got artifact Json for language: 'en'");
           return _context6.a(2, Object.fromEntries(rawJSON.filter(function (artifact) {
             return artifact.name !== null;
           }).map(function (artifact) {
@@ -3371,7 +3372,7 @@ function _getArtifactMapFromE7Server() {
       }
     }, _callee6);
   }));
-  return _getArtifactMapFromE7Server.apply(this, arguments);
+  return _getArtifactMap.apply(this, arguments);
 }
 var ArtifactManager = {
   getArtifacts: function () {
@@ -3502,7 +3503,7 @@ var ArtifactManager = {
           case 0:
             console.log("ArtifactManager not found in cache, fetching from server and caching it");
             _context4.n = 1;
-            return getArtifactMapFromE7Server();
+            return getArtifactMap();
           case 1:
             artifactMap = _context4.v;
             _context4.n = 2;

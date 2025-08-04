@@ -1,0 +1,47 @@
+{
+    "version" : 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+        },
+        "json" : {
+            "()": "apps.json_log_formatter.JsonLogFormatter",
+            "fmt_keys": {
+                "level"      : "levelname",
+                "timestamp"  : "timestamp",
+                "msg"        : "message",
+                "fnName"     : "funcName",
+                "line"       : "lineno"
+            }
+        }
+    },
+    "handlers": {
+        "stdout": {
+            "level": "WARNING",
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+            "stream": "ext://sys.stdout"
+        },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "json",
+            "filename": "logs/e7_rta_analyzer.jsonl",
+            "maxBytes": 10000000,
+            "backupCount": 3
+        },
+        "queue_handler": {
+            "class": "logging.handlers.QueueHandler",
+            "handlers": ["stdout", "file"],
+            "respect_handler_level": true
+        }
+    },
+    "loggers": {
+        "e7-rta-analyzer-logger": {
+            "handlers": ["queue_handler"],
+            "level": "DEBUG"
+        }
+    }
+}
+

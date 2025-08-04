@@ -6,6 +6,7 @@ env/
 venv/
 **/target/
 node_modules/
+logs/
 .git
 .gitignore
 .vscode

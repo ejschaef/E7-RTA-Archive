@@ -22,6 +22,7 @@ from werkzeug.exceptions import RequestEntityTooLarge
 from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm, SearchForm
 from apps.e7_utils.user_manager import User
 from apps.e7_utils.query_user_battles import get_transformed_battles
+from apps.e7_utils.artifact_manager import get_artifacts
 from apps.content_manager import get_mngr
 from apps.references import cached_var_keys as KEYS
 from e7_rs_tools import get_battle_array
@@ -29,6 +30,11 @@ import traceback
 
 from apps.tasks import celery_app
 from celery.result import AsyncResult
+
+import logging
+
+
+LOGGER = logging.getLogger(config.Config.LOGGER_NAME)
 
 ########################################################################################################
 # START HELPERS
@@ -39,28 +45,6 @@ def generate_short_id():
     short = base64.urlsafe_b64encode(uid.bytes).rstrip(b'=').decode('utf-8')
     return short
 
-def forget_user_task_data():
-    task = AsyncResult(session[KEYS.USER_DATA_TASK_ID_KEY], app=celery_app)
-    task.forget()
-    session.pop(KEYS.USER_DATA_TASK_ID_KEY)
-
-def session_remove_user():
-    assert "user" in session, "Tried to remove user when none is stored in session"
-    session.pop('server')
-    session.pop('username')
-    session.pop('user')
-    session.pop(KEYS.UPLOADED_BATTLES_DF, None)
-    session.pop("KEY_DICT", None)
-    session.pop(KEYS.CACHED_DATA_FLAG, None)
-    if KEYS.USER_DATA_TASK_ID_KEY in session:
-        forget_user_task_data()
-
-def session_add_user(user: User):
-    session['user']     = jsonpickle.encode(user)
-    session['username'] = user.name
-    session['server']   = user.world_code
-    session["KEY_DICT"] = KEYS.KEY_DICT
-    
 
 ########################################################################################################
 # END HELPERS
@@ -107,25 +91,6 @@ def typography():
 # START JS PYAPI DATA SECTION: used for getting data from E7 server to cache client side ; called from PYAPI.js file
 ########################################################################################################
 
-@blueprint.route('api/get_battle_data', methods=["POST"])
-def get_battle_data():
-    try:
-        MNGR = get_mngr()
-        data = request.get_json()
-        print(f"Got: {data}")
-        userjson = data["user"]
-        username = userjson["name"]
-        server = userjson["world_code"]
-        print(f"Got: username: {username}, server: {server}")
-        user = MNGR.UserManager.get_user_from_name(username, server, all_servers=False)
-        print(f"SERVER QUERYING: <name={user.name}, server={user.world_code}>, id={user.id}")
-        battle_data = get_transformed_battles(user)
-        return jsonify({ 'battles' : battle_data, 'success' : True}), 200 #Http status code Ok
-    except Exception as e:
-        traceback.print_exc()
-        print(f"SERVER ERROR WHEN RETURNING BATTLE DATA: {str(e)}")
-        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
-    
 
 @blueprint.route('api/rs_get_battle_data', methods=["POST"])
 def rs_get_battle_data():
@@ -137,10 +102,16 @@ def rs_get_battle_data():
         print(f"SERVER QUERYING: <name={name}, server={world_code}>, id={uid} using RS")
         battle_data = get_battle_array(int(uid), world_code)
         print(f"Got {len(battle_data)} battles for {name} on {world_code}")
+        log_msg = {
+            "len" : len(battle_data),
+            "world"   : world_code.split("_")[1],
+            "id"      : uid,
+        }
+        LOGGER.info(f'{log_msg}')
         return jsonify({ 'battles' : battle_data }), 200 #Http status code Ok
     except Exception as e:
         traceback.print_exc()
-        print(f"SERVER ERROR WHEN RETURNING BATTLE DATA: {str(e)}")
+        LOGGER.exception(f"Error when fetching battle data: {str(e)}")
         return jsonify({ 'error' : str(e) }), 500 #Http status code Internal Server Error
 
 
@@ -156,6 +127,20 @@ def get_season_details():
             ), 200 #Http status code Ok
     except Exception as e:
         print(f"SERVER ERROR WHEN RETURNING SEASON DETAILS: {str(e)}")
+        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
+    
+@blueprint.route('api/get_artifact_json')
+def get_artifact_json():
+    try:
+        MNGR = get_mngr()
+        print("SERVER RETURNING SEASON DETAILS")
+        return jsonify({
+                    "artifactJson" : MNGR.ArtifactJson,
+                    'success'       : True 
+                }
+            ), 200 #Http status code Ok
+    except Exception as e:
+        print(f"SERVER ERROR WHEN RETURNING ARTIFACT JSON: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 @blueprint.route('api/get_hero_data')
@@ -195,23 +180,6 @@ def get_user_data():
         traceback.print_exc()
         print(f"SERVER ERROR WHEN RETURNING USER DATA: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
-
-@blueprint.route('api/get_battle_data_from_id', methods=["POST"])
-def get_battle_data_from_id():
-    try:
-        MNGR = get_mngr()
-        data = request.get_json()
-        print(f"SERVER RECEIVED UPLOAD DETAILS: {data}")
-        user_id = int(data['id'])
-        user = MNGR.UserManager.get_user_from_id(user_id)
-        session_add_user(user)
-        print(f"SERVER RECEIVED AND SET FOLLOWING USER FROM UPLOADED FORM: <name={user.name}, server={user.world_code}>, id={user.id}")
-        battles = get_transformed_battles(user)
-        return jsonify({ 'user' : user.to_dict(), 'battles' : battles , 'success' : True }), 200 #Http status code Ok
-    except Exception as e:
-        print(f"SERVER ERROR WHEN PROCESSING UPLOAD DETAILS: {str(e)}")
-        return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
-
 
 
 ########################################################################################################
