@@ -19,7 +19,7 @@ services:
     build: ./
     container_name: e7-celery-worker
     image: ejschaef/e7-celery-worker:latest
-    command: celery -A apps.tasks worker --loglevel=info
+    command: celery -A apps.tasks worker --loglevel=info --concurrency=1
     volumes:
       - ./apps/app_data:/code/apps/app_data
     depends_on:
@@ -29,7 +29,7 @@ services:
     build: ./
     container_name: e7-celery-beat
     image: ejschaef/e7-celery-beat:latest
-    command: celery -A apps.tasks beat --loglevel=info --concurrency=1
+    command: celery -A apps.tasks beat --loglevel=info
     depends_on:
       - celery-worker
       - redis
