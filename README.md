@@ -39,10 +39,23 @@ served through client-side calls and cached whenever possible.
 The app does not utilize a JS framework. All functionality related to page and state management is implemented in with
 Vanilla JS and Index DB. 
 
-## Running
-- Option 1: install docker then run the docker-compose.prod.yaml file found in this repo
-- Option 2: locally install the repository to a directory, install docker, then run the docker-compose.dev.yaml file within the directory
-
+## Running Locally
+- Option 1: 
+install docker then run the docker-compose.prod.yaml file found in this repo
+<br>
+- Option 2 (use if want to make custom changes to the app): 
+locally install the repository to a directory, install docker, then run the docker-compose.dev.yaml 
+file within the directory
+<br>
+- Option 3 (use if want to make custom changes and don't want to use docker): 
+    - locally install the repository
+    - install all requirements of Node and Python (see requirements.txt and package.json)
+    - install rust and cargo with rust up
+    - install maturin and develop the rust package to install into the desired Python environment.
+    - run npx webpack to build JS if any changes are made to existing JS
+    - make necessary changes to config files to remove docker specific dependencies
+    - run the commands for the celery, celery beat, redis, and nginx services locally (to mimick the docker services)
+    - use Python to run run.py
 <br />
 
 ---

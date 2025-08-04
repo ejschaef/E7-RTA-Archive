@@ -1,5 +1,5 @@
 {
-  "name": "e7-rta-analyzer",
+  "name": "e7-ventus-archive",
   "version": "1.0.0",
   "description": "Open-source **Flask** project crafted on top of **Datta Able Dashboard**, an open-source `Bootstrap` design. The product is designed to deliver the best possible user experience with highly customizable feature-rich pages.",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ejschaef/E7-RTA-Analyzer.git"
+    "url": "git+https://github.com/ejschaef/E7-Ventus-Archive.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ejschaef/E7-RTA-Analyzer/issues"
+    "url": "https://github.com/ejschaef/E7-Ventus-Archive/issues"
   },
-  "homepage": "https://github.com/ejschaef/E7-RTA-Analyzer#readme",
+  "homepage": "https://github.com/ejschaef/E7-Ventus-Archive#readme",
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
