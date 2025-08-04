@@ -22,19 +22,11 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Create non-root user and group; allows celery to read/write local files
-RUN groupadd -g 1001 celery && \
-    useradd -u 1001 -g celery -m celery
+RUN groupadd -g 1001 e7_user && \
+    useradd -u 1001 -g e7_user -m e7_user
 
 # Set working directory
 WORKDIR /code
-
-# Copy project files
-COPY . /code
-
-# Let celery user own files
-RUN chown -R celery:celery /code
-
-RUN mkdir -p /code/logs
 
 # Install maturin
 RUN pip install maturin
@@ -49,8 +41,18 @@ RUN pip install target/wheels/*.whl
 # Set working directory to flask folder
 WORKDIR /code
 
+RUN mkdir -p /code/logs
+
 # Install dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Let celery user own files
+RUN chown -R e7_user:e7_user /code
+
+USER e7_user
+
+# Copy project files
+COPY . /code
 
 # Default command to run Flask
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app"]
