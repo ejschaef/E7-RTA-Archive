@@ -15,7 +15,7 @@ view additional stats that the official website doesn't provide, and easily filt
 - Search feature allowing users to find player names
 
 
-## Web App Components
+## Tech Stack
 
 - compression                 : gzip (nginx)
 - server routing              : Flask
@@ -38,6 +38,10 @@ served through client-side calls and cached whenever possible.
 
 The app does not utilize a JS framework. All functionality related to page and state management is implemented in with
 Vanilla JS and Index DB. 
+
+## Running
+- Option 1: install docker then run the docker-compose.prod.yaml file found in this repo
+- Option 2: locally install the repository to a directory, install docker, then run the docker-compose.dev.yaml file within the directory
 
 <br />
 
