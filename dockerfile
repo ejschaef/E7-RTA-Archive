@@ -34,6 +34,7 @@ RUN pip install maturin
 RUN mkdir -p /code/logs
 
 # Install dependencies
+COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy project files
