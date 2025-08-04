@@ -3,7 +3,6 @@
 Open-source **Flask** project utilizing **Datta Able Dashboard** as a base, an open-source `Bootstrap` design.
 The web app is designed to provide Epic 7 players the ability to maintain their RTA History past 100 battles,
 view additional stats that the official website doesn't provide, and easily filter to a specific subset of battles.
-
 <br />
 
 ## Features
@@ -40,14 +39,12 @@ The app does not utilize a JS framework. All functionality related to page and s
 Vanilla JS and Index DB. 
 
 ## Running Locally
-- Option 1: 
+- **Option 1**: 
 install docker then run the docker-compose.prod.yaml file found in this repo
-<br>
-- Option 2 (use if want to make custom changes to the app): 
+- **Option 2** (use if want to make custom changes to the app): 
 locally install the repository to a directory, install docker, then run the docker-compose.dev.yaml 
 file within the directory
-<br>
-- Option 3 (use if want to make custom changes and don't want to use docker): 
+- **Option 3** (use if want to make custom changes and don't want to use docker): 
     - locally install the repository
     - install all requirements of Node and Python (see requirements.txt and package.json)
     - install rust and cargo with rust up
