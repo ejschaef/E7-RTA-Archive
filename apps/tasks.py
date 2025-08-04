@@ -33,12 +33,12 @@ celery_app = Celery(Config.CELERY_HOSTMACHINE,
 celery_app.conf.beat_schedule = {
     'run_celery_beat_test_every_minute': {
         'task': 'celery_beat_test',
-        'schedule': crontab(minute='*/1'),  # Runs every 1 minute
+        'schedule': crontab(minute='*/45'),  # Runs every 45 minutes
         'args': (json.dumps({'test': 'data'}),)
     },
     'load_reference_content' : {
         'task': 'load_reference_content',
-        'schedule': crontab(minute=0, hour='*/2'),  # Runs at minute 0 of every 2 hours
+        'schedule': crontab(minute=0, hour='3'),  # Runs once per day at hour 3
         'args': ()
     },
 }

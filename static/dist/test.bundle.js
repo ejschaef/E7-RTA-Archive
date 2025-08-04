@@ -1,3 +1,7961 @@
-/*! For license information please see test.bundle.js.LICENSE.txt */
-(()=>{"use strict";var t=new Set(["world_kor","world_global","world_jpn","world_asia","world_eu"]),e="world_global",n="world_kor",r="world_jpn",o="world_asia",i="world_eu",a={world_global:"Global",world_kor:"Korea",world_jpn:"Japan",world_asia:"Asia",world_eu:"Europe"},c={set_speed:"Speed",set_acc:"Hit",set_cri:"Critical",set_res:"Resist",set_def:"Defense",set_att:"Attack",set_max_hp:"Health",set_cri_dmg:"Destruction",set_coop:"Unity",set_immune:"Immunity",set_rage:"Rage",set_vampire:"Lifesteal",set_shield:"Protection",set_revenge:"Revenge",set_penetrate:"Penetration",set_torrent:"Torrent",set_counter:"Counter",set_scar:"Injury"},u=864e5,s={bronze:0,silver:1,gold:2,master:3,challenger:4,champion:5,warlord:6,emperor:7,legend:8},l="Date/Time",f="Seconds",p="Turns",h="P1 ID",d="P1 Server",y="P2 ID",g="P2 Server",v="P1 League",m="P2 League",b="P1 Points",w="Point Gain",S="Win",E="First Pick",A="First Turn",_="First Turn Hero",O="CR Bar",T="P1 Prebans",I="P2 Prebans",j="P1 Picks",D="P2 Picks",R="P1 Postban",k="P2 Postban",P="P1 Equipment",C="P2 Equipment",F="P1 Artifacts",x="P2 Artifacts",L="P1 MVP",M="P2 MVP",N="P1 Picks Primes",B="P1 Picks Prime Product",G="P2 Picks Primes",U="P2 Picks Prime Product",V="P1 Prebans Primes",H="P2 Prebans Primes",K=[P,C,F,x,O,T,I,j,D],$=[E,A,S],W=[f,p,b,w],q=[v,m],J="Hero Name",z=function(t){for(var e=new Uint8Array(30001),n=[],r=2;r<=t;r++)if(!e[r]){n.push(r);for(var o=r*r;o<=t;o+=r)e[o]=1}return n}(3e4);function Q(t){return function(t){if(Array.isArray(t))return Y(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||function(t,e){if(t){if("string"==typeof t)return Y(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Y(t,e):void 0}}(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function Y(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function X(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Z(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Z(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Z(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Z(f,"constructor",s),Z(s,"constructor",u),u.displayName="GeneratorFunction",Z(s,o,"GeneratorFunction"),Z(f),Z(f,o,"Generator"),Z(f,r,function(){return this}),Z(f,"toString",function(){return"[object Generator]"}),(X=function(){return{w:i,m:p}})()}function Z(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Z=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){Z(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},Z(t,e,n,r)}function tt(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function et(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){tt(i,r,o,a,c,"next",t)}function c(t){tt(i,r,o,a,c,"throw",t)}a(void 0)})}}function nt(t){return rt.apply(this,arguments)}function rt(){return(rt=et(X().m(function t(e){var n,r,o;return X().w(function(t){for(;;)switch(t.n){case 0:return t.p=0,t.n=1,fetch(e);case 1:if((n=t.v).ok){t.n=2;break}throw new Error("HTTP error: status: ".concat(n.status));case 2:return t.n=3,n.json();case 3:return r=t.v,console.log("Fetched data from E7 Server; keys:",Object.keys(r)),t.a(2,r);case 4:return t.p=4,o=t.v,console.error("Error fetching global user data:",o),t.a(2,null)}},t,null,[[0,4]])}))).apply(this,arguments)}function ot(){return ot=et(X().m(function t(){var e,n,r=arguments;return X().w(function(t){for(;;)switch(t.n){case 0:return e=r.length>0&&void 0!==r[0]?r[0]:null,console.log("Fetching hero data (lang=".concat(null!=e?e:"all",") from E7 Server...")),t.n=1,nt("https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json");case 1:return n=t.v,e&&n[e]?n=n[e]:e&&!n[e]&&(console.error("Could not find hero data for language:",e),n=null),t.a(2,n)}},t)})),ot.apply(this,arguments)}function it(){return it=et(X().m(function t(){var e,n,r=arguments;return X().w(function(t){for(;;)switch(t.n){case 0:return e=r.length>0&&void 0!==r[0]?r[0]:null,console.log("Fetching hero data (lang=".concat(null!=e?e:"all",") from E7 Server...")),t.n=1,nt("https://static.smilegatemegaport.com/gameRecord/epic7/epic7_artifact.json");case 1:return n=t.v,e&&n[e]?n=n[e]:e&&!n[e]&&(console.error("Could not find artifact data for language:",e),n=null),t.a(2,n)}},t)})),it.apply(this,arguments)}function at(){return(at=et(X().m(function e(n){var r,o;return X().w(function(e){for(;;)switch(e.n){case 0:if(n=n.replace("world_",""),Q(t).some(function(t){return t.replace("world_","")===n})){e.n=1;break}return console.error("Could not find world code: ".concat(n)),e.a(2,null);case 1:return console.log("Fetching users for world code: ".concat(n," from E7 Server...")),r="https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(n,".json"),e.n=2,nt(r);case 2:return(o=e.v)&&console.log("Got user data for world: ".concat(n," ; Found ").concat(o.users.length," users")),e.a(2,o)}},e)}))).apply(this,arguments)}const ct={fetchHeroJSON:function(){return ot.apply(this,arguments)},fetchUserJSON:function(t){return at.apply(this,arguments)},fetchArtifactJSON:function(){return it.apply(this,arguments)}};function ut(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return st(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(st(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,st(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,st(f,"constructor",s),st(s,"constructor",u),u.displayName="GeneratorFunction",st(s,o,"GeneratorFunction"),st(f),st(f,o,"Generator"),st(f,r,function(){return this}),st(f,"toString",function(){return"[object Generator]"}),(ut=function(){return{w:i,m:p}})()}function st(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}st=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){st(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},st(t,e,n,r)}function lt(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function ft(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){lt(i,r,o,a,c,"next",t)}function c(t){lt(i,r,o,a,c,"throw",t)}a(void 0)})}}var pt,ht,dt,yt,gt,vt,mt;const bt={test:function(t){console.log("Got data in test:",t.rank_plot)},fetchFromPython:(mt=ft(ut().m(function t(e){var n,r;return ut().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,fetch(e);case 1:if((n=t.v).ok){t.n=3;break}return console.log("Retrying Fetch..."),t.n=2,fetch(e);case 2:n=t.v;case 3:return t.n=4,n.json();case 4:return r=t.v,t.a(2,r||null)}},t)})),function(t){return mt.apply(this,arguments)}),fetchHeroData:(vt=ft(ut().m(function t(){return ut().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.fetchFromPython("/api/get_hero_data");case 1:return t.a(2,t.v)}},t,this)})),function(){return vt.apply(this,arguments)}),rsFetchBattleData:(gt=ft(ut().m(function t(e){return ut().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}throw new Error("Must pass user to fetch battles data");case 1:return t.n=2,fetch("/api/rs_get_battle_data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:e})});case 2:return t.a(2,t.v)}},t)})),function(t){return gt.apply(this,arguments)}),fetchSeasonDetails:(yt=ft(ut().m(function t(){var e,n,r;return ut().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,fetch("/api/get_season_details");case 1:return e=t.v,t.n=2,e.json();case 2:if(!(n=t.v).success){t.n=3;break}return r=JSON.parse(n.seasonDetails),t.a(2,{seasonDetails:r,error:!1});case 3:return t.a(2,{seasonDetails:null,error:n.error});case 4:return t.a(2)}},t)})),function(){return yt.apply(this,arguments)}),fetchArtifactJson:(dt=ft(ut().m(function t(){var e,n,r;return ut().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,fetch("/api/get_artifact_json");case 1:return e=t.v,t.n=2,e.json();case 2:if(!(n=t.v).success){t.n=3;break}return r=JSON.parse(n.artifactJson),t.a(2,r);case 3:return t.a(2,null);case 4:return t.a(2)}},t)})),function(){return dt.apply(this,arguments)}),fetchUser:(ht=ft(ut().m(function t(e){var n,r,o,i,a;return ut().w(function(t){for(;;)switch(t.n){case 0:if(e.name&&e.world_code||e.id){t.n=1;break}throw new Error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");case 1:return t.n=2,fetch("/api/get_user_data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({userData:e})});case 2:return n=t.v,t.n=3,n.json();case 3:if(r=t.v,t.p=4,!n.ok){t.n=9;break}if(r.foundUser){t.n=7;break}if(!e.name){t.n=5;break}return o=e.world_code.replace("world_",""),t.a(2,{user:null,error:'Could not find user: "'.concat(e.name,'" in world_code: ').concat(o)});case 5:if(!e.id){t.n=6;break}return t.a(2,{user:null,error:"Could not find user with ID: ".concat(e.id)});case 6:t.n=8;break;case 7:return i=r.user,console.log("Server communication successful; received response data for user"),console.log("Found user: ".concat(JSON.stringify(i))),t.a(2,{user:i,error:!1});case 8:t.n=10;break;case 9:return console.log("Server communication unsuccessful"),t.a(2,{user:null,error:r.error});case 10:t.n=12;break;case 11:return t.p=11,a=t.v,console.error("Error fetching and caching user: ".concat(a)),t.a(2,{user:null,error:a.message});case 12:return t.a(2)}},t,null,[[4,11]])})),function(t){return ht.apply(this,arguments)}),fetchDataFromID:(pt=ft(ut().m(function t(e){return ut().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}throw new Error("Must pass ID to fetch user");case 1:return t.n=2,fetch("/api/get_battle_data_from_id",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:e})});case 2:return t.a(2,t.v)}},t)})),function(t){return pt.apply(this,arguments)})},wt=(t,e)=>e.some(e=>t instanceof e);let St,Et;const At=new WeakMap,_t=new WeakMap,Ot=new WeakMap;let Tt={get(t,e,n){if(t instanceof IDBTransaction){if("done"===e)return At.get(t);if("store"===e)return n.objectStoreNames[1]?void 0:n.objectStore(n.objectStoreNames[0])}return Dt(t[e])},set:(t,e,n)=>(t[e]=n,!0),has:(t,e)=>t instanceof IDBTransaction&&("done"===e||"store"===e)||e in t};function It(t){Tt=t(Tt)}function jt(t){return"function"==typeof t?(e=t,(Et||(Et=[IDBCursor.prototype.advance,IDBCursor.prototype.continue,IDBCursor.prototype.continuePrimaryKey])).includes(e)?function(...t){return e.apply(Rt(this),t),Dt(this.request)}:function(...t){return Dt(e.apply(Rt(this),t))}):(t instanceof IDBTransaction&&function(t){if(At.has(t))return;const e=new Promise((e,n)=>{const r=()=>{t.removeEventListener("complete",o),t.removeEventListener("error",i),t.removeEventListener("abort",i)},o=()=>{e(),r()},i=()=>{n(t.error||new DOMException("AbortError","AbortError")),r()};t.addEventListener("complete",o),t.addEventListener("error",i),t.addEventListener("abort",i)});At.set(t,e)}(t),wt(t,St||(St=[IDBDatabase,IDBObjectStore,IDBIndex,IDBCursor,IDBTransaction]))?new Proxy(t,Tt):t);var e}function Dt(t){if(t instanceof IDBRequest)return function(t){const e=new Promise((e,n)=>{const r=()=>{t.removeEventListener("success",o),t.removeEventListener("error",i)},o=()=>{e(Dt(t.result)),r()},i=()=>{n(t.error),r()};t.addEventListener("success",o),t.addEventListener("error",i)});return Ot.set(e,t),e}(t);if(_t.has(t))return _t.get(t);const e=jt(t);return e!==t&&(_t.set(t,e),Ot.set(e,t)),e}const Rt=t=>Ot.get(t);function kt(t,e,{blocked:n,upgrade:r,blocking:o,terminated:i}={}){const a=indexedDB.open(t,e),c=Dt(a);return r&&a.addEventListener("upgradeneeded",t=>{r(Dt(a.result),t.oldVersion,t.newVersion,Dt(a.transaction),t)}),n&&a.addEventListener("blocked",t=>n(t.oldVersion,t.newVersion,t)),c.then(t=>{i&&t.addEventListener("close",()=>i()),o&&t.addEventListener("versionchange",t=>o(t.oldVersion,t.newVersion,t))}).catch(()=>{}),c}const Pt=["get","getKey","getAll","getAllKeys","count"],Ct=["put","add","delete","clear"],Ft=new Map;function xt(t,e){if(!(t instanceof IDBDatabase)||e in t||"string"!=typeof e)return;if(Ft.get(e))return Ft.get(e);const n=e.replace(/FromIndex$/,""),r=e!==n,o=Ct.includes(n);if(!(n in(r?IDBIndex:IDBObjectStore).prototype)||!o&&!Pt.includes(n))return;const i=async function(t,...e){const i=this.transaction(t,o?"readwrite":"readonly");let a=i.store;return r&&(a=a.index(e.shift())),(await Promise.all([a[n](...e),o&&i.done]))[0]};return Ft.set(e,i),i}It(t=>({...t,get:(e,n,r)=>xt(e,n)||t.get(e,n,r),has:(e,n)=>!!xt(e,n)||t.has(e,n)}));const Lt=["continue","continuePrimaryKey","advance"],Mt={},Nt=new WeakMap,Bt=new WeakMap,Gt={get(t,e){if(!Lt.includes(e))return t[e];let n=Mt[e];return n||(n=Mt[e]=function(...t){Nt.set(this,Bt.get(this)[e](...t))}),n}};async function*Ut(...t){let e=this;if(e instanceof IDBCursor||(e=await e.openCursor(...t)),!e)return;const n=new Proxy(e,Gt);for(Bt.set(n,e),Ot.set(n,Rt(e));e;)yield n,e=await(Nt.get(n)||e.continue()),Nt.delete(n)}function Vt(t,e){return e===Symbol.asyncIterator&&wt(t,[IDBIndex,IDBObjectStore,IDBCursor])||"iterate"===e&&wt(t,[IDBIndex,IDBObjectStore])}function Ht(t){return Ht="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Ht(t)}function Kt(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return $t(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):($t(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,$t(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,$t(f,"constructor",s),$t(s,"constructor",u),u.displayName="GeneratorFunction",$t(s,o,"GeneratorFunction"),$t(f),$t(f,o,"Generator"),$t(f,r,function(){return this}),$t(f,"toString",function(){return"[object Generator]"}),(Kt=function(){return{w:i,m:p}})()}function $t(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}$t=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){$t(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},$t(t,e,n,r)}function Wt(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),n.push.apply(n,r)}return n}function qt(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?Wt(Object(n),!0).forEach(function(e){Jt(t,e,n[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):Wt(Object(n)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))})}return t}function Jt(t,e,n){return(e=function(t){var e=function(t){if("object"!=Ht(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=Ht(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==Ht(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function zt(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Qt(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){zt(i,r,o,a,c,"next",t)}function c(t){zt(i,r,o,a,c,"throw",t)}a(void 0)})}}function Yt(t,e){return Xt.apply(this,arguments)}function Xt(){return(Xt=Qt(Kt().m(function t(e,n){var r;return Kt().w(function(t){for(;;)switch(t.n){case 0:return(r=e.transaction(n,"readwrite")).objectStore(n).clear(),t.n=1,r.done;case 1:return t.a(2)}},t)}))).apply(this,arguments)}It(t=>({...t,get:(e,n,r)=>Vt(e,n)?Ut:t.get(e,n,r),has:(e,n)=>Vt(e,n)||t.has(e,n)}));var Zt,te,ee,ne,re,oe,ie,ae,ce,ue,se,le,fe,pe,he,de,ye,ge,ve={USER:"current-user",BATTLES:"battles",RAW_UPLOAD:"raw-upload",UPLOADED_BATTLES:"uploaded-battles",FILTERED_BATTLES:"filtered-battles",STATS:"stats",FILTER_STR:"filter-str"},me=qt(qt({},ve),{},{HERO_MANAGER:"hero-manager",SEASON_DETAILS:"season-details",AUTO_ZOOM_FLAG:"auto-zoom",AUTO_QUERY_FLAG:"auto-query",ID_SEARCH_FLAG:"id-search",GLOBAL_USERS:"global-users",EU_USERS:"eu-users",ASIA_USERS:"asia-users",JPN_USERS:"jpn-users",KOR_USERS:"kor-users",ARTIFACTS:"artifacts",ARTIFACTS_LOWERCASE_NAMES_SET:"artifacts-lowercase-names-set",ARTIFACT_OBJECT_LIST:"artifact-object-list",HOME_PAGE_STATE:"home-page-state",INTER_PAGE_MANAGER:"inter-page-manager"}),be={autoZoom:me.AUTO_ZOOM_FLAG,autoQuery:me.AUTO_QUERY_FLAG,idSearch:me.ID_SEARCH_FLAG},we={consts:{DB_NAME:"E7ArenaStatsClientDB",DB_VERSION:1,STORE_NAME:"DataStore",META_STORE_NAME:"MetaStore",CACHE_TIMEOUT:1728e5},Keys:qt({},me),MetaKeys:{TIMESTAMP:"timestamp"},loaded_UM:new Set,openDB:(ge=Qt(Kt().m(function t(){return Kt().w(function(t){for(;;)if(0===t.n)return t.a(2,kt(we.consts.DB_NAME,we.consts.DB_VERSION,{upgrade:function(t){t.objectStoreNames.contains(we.consts.STORE_NAME)&&(t.deleteObjectStore(we.consts.STORE_NAME),console.log("Old store deleted")),t.objectStoreNames.contains(we.consts.STORE_NAME)||(console.log("Created data store"),t.createObjectStore(we.consts.STORE_NAME)),t.objectStoreNames.contains(we.consts.META_STORE_NAME)||(console.log("Created meta data store"),t.createObjectStore(we.consts.META_STORE_NAME))}}))},t)})),function(){return ge.apply(this,arguments)}),get:(ye=Qt(Kt().m(function t(e){var n,r;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,t.n=2,n.get(this.consts.STORE_NAME,e);case 2:if(null===(r=t.v)){t.n=3;break}console.log("Found ".concat(e," in cache")),t.n=4;break;case 3:return console.log("".concat(e," not found in cache; returning null")),t.a(2,null);case 4:return t.n=5,this.checkCacheTimeout(e);case 5:if(!t.v){t.n=6;break}return t.a(2,r);case 6:return t.a(2,null);case 7:return t.a(2)}},t,this)})),function(t){return ye.apply(this,arguments)}),cache:(de=Qt(Kt().m(function t(e,n){var r;return Kt().w(function(t){for(;;)switch(t.n){case 0:return console.log("Caching ".concat(e," with data: ").concat(n)),t.n=1,this.openDB();case 1:return r=t.v,t.n=2,r.put(this.consts.STORE_NAME,n,e);case 2:return t.n=3,this.setTimestamp(e,Date.now());case 3:return t.a(2)}},t,this)})),function(t,e){return de.apply(this,arguments)}),delete:(he=Qt(Kt().m(function t(e){var n;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,t.n=2,n.delete(this.consts.STORE_NAME,e);case 2:return t.n=3,this.deleteTimestamp(e);case 3:return t.a(2)}},t,this)})),function(t){return he.apply(this,arguments)}),deleteDB:(pe=Qt(Kt().m(function t(){return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,indexedDB.deleteDatabase(this.consts.DB_NAME);case 1:console.log("Database deleted");case 2:return t.a(2)}},t,this)})),function(){return pe.apply(this,arguments)}),getTimestamp:(fe=Qt(Kt().m(function t(e){var n,r,o;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,r="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,n.get(this.consts.META_STORE_NAME,r);case 2:return o=t.v,t.a(2,null!=o?o:null)}},t,this)})),function(t){return fe.apply(this,arguments)}),setTimestamp:(le=Qt(Kt().m(function t(e,n){var r,o;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return r=t.v,o="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,r.put(this.consts.META_STORE_NAME,n,o);case 2:return t.n=3,r.get(this.consts.META_STORE_NAME,o);case 3:t.v;case 4:return t.a(2)}},t,this)})),function(t,e){return le.apply(this,arguments)}),deleteTimestamp:(se=Qt(Kt().m(function t(e){var n,r;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return n=t.v,r="".concat(e+this.MetaKeys.TIMESTAMP),t.n=2,n.delete(this.consts.META_STORE_NAME,r);case 2:return t.a(2)}},t,this)})),function(t){return se.apply(this,arguments)}),clearData:(ue=Qt(Kt().m(function t(){var e;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.openDB();case 1:return e=t.v,t.n=2,Yt(e,this.consts.STORE_NAME);case 2:return t.n=3,Yt(e,this.consts.META_STORE_NAME);case 3:console.log("All data cleared from data cache and meta data cache");case 4:return t.a(2)}},t,this)})),function(){return ue.apply(this,arguments)}),clearUserData:(ce=Qt(Kt().m(function t(){var e,n=this;return Kt().w(function(t){for(;;)switch(t.n){case 0:return e=Object.values(ve),t.n=1,Promise.all(e.map(function(t){return n.delete(t)}));case 1:console.log("User data cleared from data cache");case 2:return t.a(2)}},t)})),function(){return ce.apply(this,arguments)}),clearSeasonData:(ae=Qt(Kt().m(function t(){return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.delete(me.SEASON_DETAILS);case 1:console.log("Season data cleared from data cache");case 2:return t.a(2)}},t,this)})),function(){return ae.apply(this,arguments)}),checkCacheTimeout:(ie=Qt(Kt().m(function t(e){var n,r;return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.getTimestamp(e);case 1:if(n=t.v,r=Date.now(),n&&!(r-n>we.consts.CACHE_TIMEOUT)){t.n=3;break}return console.log("Cache timeout for ".concat(e)),t.n=2,this.delete(e);case 2:return t.a(2,!1);case 3:return t.a(2,!0)}},t,this)})),function(t){return ie.apply(this,arguments)}),getFilterStr:(oe=Qt(Kt().m(function t(){return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.get(we.Keys.FILTER_STR);case 1:return t.a(2,t.v)}},t,this)})),function(){return oe.apply(this,arguments)}),setFilterStr:(re=Qt(Kt().m(function t(e){return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.cache(we.Keys.FILTER_STR,e);case 1:return t.a(2)}},t,this)})),function(t){return re.apply(this,arguments)}),getStats:(ne=Qt(Kt().m(function t(){return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.get(we.Keys.STATS);case 1:return t.a(2,t.v)}},t,this)})),function(){return ne.apply(this,arguments)}),setStats:(ee=Qt(Kt().m(function t(e){return Kt().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.cache(me.STATS,e);case 1:return t.a(2)}},t,this)})),function(t){return ee.apply(this,arguments)}),getFlag:(te=Qt(Kt().m(function t(e){var n;return Kt().w(function(t){for(;;)switch(t.n){case 0:if(n=be[e]){t.n=1;break}throw new Error("No key found for flag <".concat(e,">"));case 1:return t.n=2,this.get(n);case 2:return t.a(2,t.v)}},t,this)})),function(t){return te.apply(this,arguments)}),setFlag:(Zt=Qt(Kt().m(function t(e,n){var r;return Kt().w(function(t){for(;;)switch(t.n){case 0:if(r=be[e]){t.n=1;break}throw new Error("No key found for flag <".concat(e,">"));case 1:return t.n=2,this.cache(r,n);case 2:return t.a(2)}},t,this)})),function(t,e){return Zt.apply(this,arguments)})};const Se=we;function Ee(t){var e={};for(var n in t)Array.isArray(t[n])&&t[n].length>0?e[n]=[t[n][0],"Length: ".concat(t[n].length)]:e[n]=t[n];console.log(e)}function Ae(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,c=[],u=!0,s=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=i.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(s)throw o}}return c}}(t,e)||_e(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function _e(t,e){if(t){if("string"==typeof t)return Oe(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Oe(t,e):void 0}}function Oe(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Te(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Ie(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Ie(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Ie(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Ie(f,"constructor",s),Ie(s,"constructor",u),u.displayName="GeneratorFunction",Ie(s,o,"GeneratorFunction"),Ie(f),Ie(f,o,"Generator"),Ie(f,r,function(){return this}),Ie(f,"toString",function(){return"[object Generator]"}),(Te=function(){return{w:i,m:p}})()}function Ie(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Ie=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){Ie(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},Ie(t,e,n,r)}function je(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function De(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){je(i,r,o,a,c,"next",t)}function c(t){je(i,r,o,a,c,"throw",t)}a(void 0)})}}var Re,ke,Pe,Ce,Fe={getHeroManager:(Ce=De(Te().m(function t(){var e,n,r,o;return Te().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.get(Se.Keys.HERO_MANAGER);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=4;break;case 3:o=this.fetchAndCacheHeroManager();case 4:return t.a(2,o)}},t,this)})),function(){return Ce.apply(this,arguments)}),createHeroManager:function(t){var e,n=function(t){var e="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!e){if(Array.isArray(t)||(e=_e(t))){e&&(t=e);var n=0,r=function(){};return{s:r,n:function(){return n>=t.length?{done:!0}:{done:!1,value:t[n++]}},e:function(t){throw t},f:r}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,i=!0,a=!1;return{s:function(){e=e.call(t)},n:function(){var t=e.next();return i=t.done,t},e:function(t){a=!0,o=t},f:function(){try{i||null==e.return||e.return()}finally{if(a)throw o}}}}(t.entries());try{for(n.s();!(e=n.n()).done;){var r=Ae(e.value,2),o=r[0],i=r[1],a=z[o];i.prime=a}}catch(t){n.e(t)}finally{n.f()}var c={heroes:t};return c=function(t){console.log("Adding Lookup Dicts"),console.log("\tAdding name lookup"),t.name_lookup=t.heroes.reduce(function(t,e){return t[e.name.toLowerCase().replace(/\s+/g,"")]=e,t},{}),console.log("\tAdding prime lookup"),t.prime_lookup=t.heroes.reduce(function(t,e){return t[e.prime]=e,t},{}),console.log("\tAdding code lookup"),t.code_lookup=t.heroes.reduce(function(t,e){return t[e.code]=e,t},{}),console.log("\tAdding prime pair lookup");var e=t.heroes.reduce(function(t,e){return t[e.prime]=e.name,t},{}),n=Object.keys(t.prime_lookup).length-1;console.log("\tAdding prime pair lookup; primes to process",n);for(var r=0;r<n-1;r++)for(var o=z[r],i=r+1;i<n;i++){var a=z[i],c=o*a,u=t.prime_lookup[o].name,s=t.prime_lookup[a].name;e[c]=[u,s].sort().join(", ")}return e[t.Fodder.prime*t.Fodder.prime]=[t.Fodder.name,t.Fodder.prime],t.prime_pair_lookup=e,t}(c=function(t){var e=t.heroes.length,n={attribute_cd:"N/A",code:"N/A",grade:"N/A",job_cd:"N/A",name:"Empty",prime:1},r={attribute_cd:"N/A",code:"N/A",grade:"2/3",job_cd:"N/A",name:"Fodder",prime:z[e]};return t.heroes.push(n),t.heroes.push(r),t.Fodder=r,t.Empty=n,t}(c)),c},fetchHeroManager:(Pe=De(Te().m(function t(){var e,n,r,o,i,a;return Te().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,ct.fetchHeroJSON();case 1:if(i=e=t.v,!(o=null!==i)){t.n=2;break}o=void 0!==e;case 2:if(!o){t.n=3;break}a=e,t.n=5;break;case 3:return t.n=4,bt.fetchHeroData();case 4:a=t.v;case 5:return n=a.en,r=this.createHeroManager(n),console.log("Created HeroManager using raw data received from server"),t.a(2,r)}},t,this)})),function(){return Pe.apply(this,arguments)}),fetchAndCacheHeroManager:(ke=De(Te().m(function t(){var e;return Te().w(function(t){for(;;)switch(t.n){case 0:return console.log("HeroManager not found in cache, fetching from server and caching it"),t.n=1,this.fetchHeroManager();case 1:return e=t.v,t.n=2,Se.cache(Se.Keys.HERO_MANAGER,e);case 2:return console.log("Cached HeroManager using raw data recieved from server"),Ee(e),t.a(2,e)}},t,this)})),function(){return ke.apply(this,arguments)}),deleteHeroManager:(Re=De(Te().m(function t(){return Te().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.delete(Se.Keys.HERO_MANAGER);case 1:console.log("Removed hero manager from cache");case 2:return t.a(2)}},t)})),function(){return Re.apply(this,arguments)}),getHeroByName:function(t,e){var n;if(!e)throw new Error("HeroManager instance must be passed to lookup functions");if(!t)return e.Empty;var r=t.toLowerCase().replace(/\s+/g,"");return null!==(n=e.name_lookup[r])&&void 0!==n?n:null},getHeroByPrime:function(t,e){if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return e.prime_lookup[t]},getHeroByCode:function(t,e){var n;if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return t?null!==(n=e.code_lookup[t])&&void 0!==n?n:null:e.Empty},getPairNamesByProduct:function(t,e){if(!e)throw new Error("HeroManager instance must be passed to lookup functions");return e.prime_pair_lookup[t]}};const xe=Fe;function Le(t){return Le="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Le(t)}function Me(t){return function(t){if(Array.isArray(t))return Ue(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||Ge(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function Ne(t,e,n){return(e=function(t){var e=function(t){if("object"!=Le(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=Le(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==Le(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function Be(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=Ge(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return a=t.done,t},e:function(t){c=!0,i=t},f:function(){try{a||null==n.return||n.return()}finally{if(c)throw i}}}}function Ge(t,e){if(t){if("string"==typeof t)return Ue(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Ue(t,e):void 0}}function Ue(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}var Ve=function(t){return t.filter(function(t){return t[E]})};function He(t){return(100*t).toFixed(2)+"%"}function Ke(t,e){return He(0!==e?t/e:0)}function $e(t,e){var n=t[O].find(function(t){return t[0]===e});return n?n[1]:null}function We(t,e,n){var r,o,i=function(t){return t.filter(function(t){return t[S]})}(t).length,a=t.length,c=0!==e?a/e:0,u=0!==a?i/a:0,s=t.reduce(function(t,e){return t+(e[R]===n||e[k]===n)},0),l=t.reduce(function(t,e){return t+(e[S]||e[R]===n||e[k]===n)},0),f=t.reduce(function(t,e){return t+e[w]},0),p=0,h=0,d=0,y=Be(t);try{for(y.s();!(o=y.n()).done;){var g=$e(o.value,n);null!==g&&0!==g&&(p+=1,h+=g,100===g&&(d+=1))}}catch(t){y.e(t)}finally{y.f()}var v=Ke(h/100,p);return Ne(Ne(Ne(Ne(Ne(Ne(Ne(Ne(Ne(Ne(r={},J,n),"Battles",a),"Pick Rate",He(c)),"Wins",i),"Win rate",He(u)),"Postbans",s),"Postban Rate",Ke(s,a)),"Success Rate",Ke(l,a)),"+/-",2*i-a),"Point Gain",f),Ne(Ne(Ne(r,"Avg CR",v),"First Turns",d),"First Turn Rate",Ke(d,p))}function qe(t){for(var e=!(arguments.length>1&&void 0!==arguments[1])||arguments[1],n=new Set,r=0,o=Object.values(t);r<o.length;r++){var i=o[r];(e?i[N]:i[G]).forEach(function(t){n.add(t)})}return n}function Je(t){var e=Math.floor(t/60),n=(t%60).toFixed(1);return 0===e?"".concat(n," secs"):"".concat(e," : ").concat(n,"s")}const ze=function(t,e){if(0===t.length)return{playerHeroStats:[],enemyHeroStats:[]};var n,r=t.length,o=qe(t,!0),i=qe(t,!1),a=[],c=[],u=Be(o);try{var s=function(){var o=n.value,i=xe.getHeroByPrime(o,e),c=t.filter(function(t){return t[B]%o===0});c.length>0&&a.push(We(c,r,i.name))};for(u.s();!(n=u.n()).done;)s()}catch(t){u.e(t)}finally{u.f()}var l,f=Be(i);try{var p=function(){var n=l.value,o=xe.getHeroByPrime(n,e),i=t.filter(function(t){return t[U]%n===0});i.length>0&&c.push(We(i,r,o.name))};for(f.s();!(l=f.n()).done;)p()}catch(t){f.e(t)}finally{f.f()}var h=J;return{playerHeroStats:a.sort(function(t,e){return t[h].localeCompare(e[h])}),enemyHeroStats:c.sort(function(t,e){return t[h].localeCompare(e[h])})}},Qe=function(t,e){if(0===(t=Ve(Object.values(t))).length)return[];var n,r=t.length,o={},i=Be(t);try{for(i.s();!(n=i.n()).done;){var a=n.value;if(0!==a[N].length){var c=a[N][0];c in o||(o[c]={wins:0,appearances:0}),o[c].wins+=a[S],o[c].appearances+=1}}}catch(t){i.e(t)}finally{i.f()}var u=Object.entries(o).map(function(t){var n=function(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,c=[],u=!0,s=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=i.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(s)throw o}}return c}}(t,e)||Ge(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}(t,2),o=n[0],i=n[1];return{hero:xe.getHeroByPrime(o,e).name,wins:i.wins,appearances:i.appearances,win_rate:He(i.wins/i.appearances),appearance_rate:He(i.appearances/r),"+/-":2*i.wins-i.appearances}});return u.sort(function(t,e){return e.appearances-t.appearances}),u},Ye=function(t,e){var n=xe.getHeroByName("Empty",e).prime;if(0===t.length)return[];var r,o=function(e,r){return Me(new Set(t.map(function(t){return t[e][r]}).filter(function(t){return t&&t!==n})))},i=o(V,0),a=o(V,1),c=new Set([].concat(Me(i),Me(a))),u=[],s=Be(c);try{for(s.s();!(r=s.n()).done;){var l=r.value;u.push(l)}}catch(t){s.e(t)}finally{s.f()}var f,p=Be(c);try{for(p.s();!(f=p.n()).done;){var h,d=f.value,y=Be(c);try{for(y.s();!(h=y.n()).done;){var g=h.value;d<g&&u.push(d*g)}}catch(t){y.e(t)}finally{y.f()}}}catch(t){p.e(t)}finally{p.f()}console.log("Prebans:",u);for(var v=t.length,m=[],b=function(){var n=S[w],r=t.filter(function(t){return t["P1 Prebans Prime Product"]%n===0}),o=r.length;if(o<1)return 1;var i=r.reduce(function(t,e){return t+e.Win},0),a=v>0?o/v:0,c=o>0?i/o:0,u=2*i-o;m.push({preban:e.prime_pair_lookup[n],wins:i,appearances:o,appearance_rate:He(a),win_rate:He(c),"+/-":u})},w=0,S=u;w<S.length;w++)b();return m.sort(function(t,e){return e.appearances-t.appearances}),m},Xe=function(t){for(var e=[],n=t.length,r=function(){var r=i[o],a=t.filter(function(t){return t["P2 Server"]===r}),c=a.length,u=a.reduce(function(t,e){return t+e.Win},0),s=c>0?u/c:"N/A",l=n>0?c/n:"N/A",f=a.filter(function(t){return t["First Pick"]}),p=f.reduce(function(t,e){return t+e.Win},0),h=a.filter(function(t){return!t["First Pick"]}),d=h.reduce(function(t,e){return t+e.Win},0);e.push({server:r,count:c,wins:u,win_rate:"N/A"===s?"N/A":He(s),frequency:He(l),"+/-":2*u-c,fp_games:f.length,sp_games:h.length,fp_wr:f.length>0?He(p/f.length):"N/A",sp_wr:h.length>0?He(d/h.length):"N/A"})},o=0,i=Object.values(a);o<i.length;o++)r();return e.sort(function(t,e){return t.server.localeCompare(e.server)}),e},Ze=function(t,e){t.sort(function(t,e){return new Date(t["Date/Time"])-new Date(e["Date/Time"])});var n,r=t.length,o=t.reduce(function(t,e){return t+e["Point Gain"]},0),i=r>0?o/r:0,a=t.reduce(function(t,e){return t+e.Turns},0),c=r>0?a/r:0,u=t.length>0?Math.max.apply(Math,Me(t.map(function(t){return t.Turns}))):0,s=t.reduce(function(t,e){return t+e.Seconds},0),l=r>0?s/r:0,f=t.length>0?Math.max.apply(Math,Me(t.map(function(t){return t.Seconds}))):0,p=Je(l),h=Je(f),d=t.reduce(function(t,e){return t+e["First Turn"]},0),y=Ve(t),g=function(t){return t.filter(function(t){return!t[E]})}(t),v=y.length,m=g.length,b=y.reduce(function(t,e){return t+e.Win},0),w=g.reduce(function(t,e){return t+e.Win},0),S=r?v/r:0,A=r?m/r:0,_=v?b/v:0,O=m?w/m:0,T=r?(b+w)/r:0,I=0,j=0,D=0,R=0,k=Be(t);try{for(k.s();!(n=k.n()).done;)n.value.Win?(D+=1,I=Math.max(I,D),R=0):(D=0,R+=1,j=Math.max(j,R))}catch(t){k.e(t)}finally{k.f()}var P="N/A";return{first_pick_count:v,second_pick_count:m,first_pick_rate:v?He(S):P,second_pick_rate:m?He(A):P,first_pick_winrate:v?He(_):P,second_pick_winrate:m?He(O):P,total_winrate:r?He(T):P,total_battles:r,total_wins:b+w,max_win_streak:I,max_loss_streak:j,avg_ppg:i.toFixed(2),avg_turns:c.toFixed(2),avg_time:p,max_turns:u,max_time:h,first_turn_games:d,first_turn_rate:r?He(d/r):P}};function tn(t){throw new TypeError('"'+t+'" is read-only')}function en(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,c=[],u=!0,s=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=i.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(s)throw o}}return c}}(t,e)||function(t,e){if(t){if("string"==typeof t)return nn(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?nn(t,e):void 0}}(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function nn(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function rn(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return on(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(on(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,on(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,on(f,"constructor",s),on(s,"constructor",u),u.displayName="GeneratorFunction",on(s,o,"GeneratorFunction"),on(f),on(f,o,"Generator"),on(f,r,function(){return this}),on(f,"toString",function(){return"[object Generator]"}),(rn=function(){return{w:i,m:p}})()}function on(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}on=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){on(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},on(t,e,n,r)}function an(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function cn(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){an(i,r,o,a,c,"next",t)}function c(t){an(i,r,o,a,c,"throw",t)}a(void 0)})}}function un(){return sn.apply(this,arguments)}function sn(){return(sn=cn(rn().m(function t(){var e;return rn().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting artifact map from E7 server..."),t.n=1,ct.fetchArtifactJSON("en");case 1:if(null!==(e=t.v)){t.n=3;break}return console.log("Getting artifact map from flask server..."),t.n=2,bt.fetchArtifactJson();case 2:tn("rawJSON");case 3:if(null!==e){t.n=4;break}return console.error("Could not get artifact Json map from E7 server or flask server"),t.a(2,null);case 4:return console.log("Got artifact Json for language: 'en'"),t.a(2,Object.fromEntries(e.filter(function(t){return null!==t.name}).map(function(t){return[t.code,t.name]})))}},t)}))).apply(this,arguments)}var ln,fn,pn,hn,dn;const yn={getArtifacts:(dn=cn(rn().m(function t(){var e,n,r,o;return rn().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.get(Se.Keys.ARTIFACTS);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=5;break;case 3:return t.n=4,this.fetchAndCacheArtifacts();case 4:o=t.v;case 5:return t.a(2,o)}},t,this)})),function(){return dn.apply(this,arguments)}),getArtifactLowercaseNameSet:(hn=cn(rn().m(function t(){var e,n;return rn().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.get(Se.Keys.ARTIFACTS_LOWERCASE_NAMES_SET);case 1:if(null===(e=t.v)){t.n=2;break}return console.log("Got artifact lowercase name set from cache"),t.a(2,e);case 2:return t.n=3,this.getArtifacts();case 3:return n=t.v,e=new Set(Object.values(n).filter(function(t){return null!==t}).map(function(t){return t.toLowerCase()})),t.n=4,Se.cache(Se.Keys.ARTIFACTS_LOWERCASE_NAMES_SET,e);case 4:return t.a(2,e)}},t,this)})),function(){return hn.apply(this,arguments)}),getArtifactObjectList:(pn=cn(rn().m(function t(){var e,n;return rn().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.get(Se.Keys.ARTIFACT_OBJECT_LIST);case 1:if(null===(e=t.v)){t.n=2;break}return console.log("Got artifact object list from cache"),t.a(2,e);case 2:return t.n=3,this.getArtifacts();case 3:return n=t.v,e=Object.entries(n).map(function(t){var e=en(t,2);return{id:e[0],name:e[1]}}),t.n=4,Se.cache(Se.Keys.ARTIFACT_OBJECT_LIST,e);case 4:return t.a(2,e)}},t,this)})),function(){return pn.apply(this,arguments)}),fetchAndCacheArtifacts:(fn=cn(rn().m(function t(){var e;return rn().w(function(t){for(;;)switch(t.n){case 0:return console.log("ArtifactManager not found in cache, fetching from server and caching it"),t.n=1,un();case 1:return e=t.v,t.n=2,Se.cache(Se.Keys.ARTIFACTS,e);case 2:return console.log("Cached ArtifactManager using raw data recieved from server"),t.a(2,e)}},t)})),function(){return fn.apply(this,arguments)}),clearArtifactData:(ln=cn(rn().m(function t(){return rn().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.delete(Se.Keys.ARTIFACTS);case 1:return t.a(2)}},t)})),function(){return ln.apply(this,arguments)}),convertCodeToName:function(t,e){return e[t]||t}};function gn(t){return Array.isArray?Array.isArray(t):"[object Array]"===En(t)}function vn(t){return"string"==typeof t}function mn(t){return"number"==typeof t}function bn(t){return"object"==typeof t}function wn(t){return null!=t}function Sn(t){return!t.trim().length}function En(t){return null==t?void 0===t?"[object Undefined]":"[object Null]":Object.prototype.toString.call(t)}const An=Object.prototype.hasOwnProperty;class _n{constructor(t){this._keys=[],this._keyMap={};let e=0;t.forEach(t=>{let n=On(t);this._keys.push(n),this._keyMap[n.id]=n,e+=n.weight}),this._keys.forEach(t=>{t.weight/=e})}get(t){return this._keyMap[t]}keys(){return this._keys}toJSON(){return JSON.stringify(this._keys)}}function On(t){let e=null,n=null,r=null,o=1,i=null;if(vn(t)||gn(t))r=t,e=Tn(t),n=In(t);else{if(!An.call(t,"name"))throw new Error("Missing name property in key");const a=t.name;if(r=a,An.call(t,"weight")&&(o=t.weight,o<=0))throw new Error((t=>`Property 'weight' in key '${t}' must be a positive integer`)(a));e=Tn(a),n=In(a),i=t.getFn}return{path:e,id:n,weight:o,src:r,getFn:i}}function Tn(t){return gn(t)?t:t.split(".")}function In(t){return gn(t)?t.join("."):t}var jn={isCaseSensitive:!1,ignoreDiacritics:!1,includeScore:!1,keys:[],shouldSort:!0,sortFn:(t,e)=>t.score===e.score?t.idx<e.idx?-1:1:t.score<e.score?-1:1,includeMatches:!1,findAllMatches:!1,minMatchCharLength:1,location:0,threshold:.6,distance:100,useExtendedSearch:!1,getFn:function(t,e){let n=[],r=!1;const o=(t,e,i)=>{if(wn(t))if(e[i]){const a=t[e[i]];if(!wn(a))return;if(i===e.length-1&&(vn(a)||mn(a)||function(t){return!0===t||!1===t||function(t){return bn(t)&&null!==t}(t)&&"[object Boolean]"==En(t)}(a)))n.push(function(t){return null==t?"":function(t){if("string"==typeof t)return t;let e=t+"";return"0"==e&&1/t==-1/0?"-0":e}(t)}(a));else if(gn(a)){r=!0;for(let t=0,n=a.length;t<n;t+=1)o(a[t],e,i+1)}else e.length&&o(a,e,i+1)}else n.push(t)};return o(t,vn(e)?e.split("."):e,0),r?n:n[0]},ignoreLocation:!1,ignoreFieldNorm:!1,fieldNormWeight:1};const Dn=/[^ ]+/g;class Rn{constructor({getFn:t=jn.getFn,fieldNormWeight:e=jn.fieldNormWeight}={}){this.norm=function(t=1,e=3){const n=new Map,r=Math.pow(10,e);return{get(e){const o=e.match(Dn).length;if(n.has(o))return n.get(o);const i=1/Math.pow(o,.5*t),a=parseFloat(Math.round(i*r)/r);return n.set(o,a),a},clear(){n.clear()}}}(e,3),this.getFn=t,this.isCreated=!1,this.setIndexRecords()}setSources(t=[]){this.docs=t}setIndexRecords(t=[]){this.records=t}setKeys(t=[]){this.keys=t,this._keysMap={},t.forEach((t,e)=>{this._keysMap[t.id]=e})}create(){!this.isCreated&&this.docs.length&&(this.isCreated=!0,vn(this.docs[0])?this.docs.forEach((t,e)=>{this._addString(t,e)}):this.docs.forEach((t,e)=>{this._addObject(t,e)}),this.norm.clear())}add(t){const e=this.size();vn(t)?this._addString(t,e):this._addObject(t,e)}removeAt(t){this.records.splice(t,1);for(let e=t,n=this.size();e<n;e+=1)this.records[e].i-=1}getValueForItemAtKeyId(t,e){return t[this._keysMap[e]]}size(){return this.records.length}_addString(t,e){if(!wn(t)||Sn(t))return;let n={v:t,i:e,n:this.norm.get(t)};this.records.push(n)}_addObject(t,e){let n={i:e,$:{}};this.keys.forEach((e,r)=>{let o=e.getFn?e.getFn(t):this.getFn(t,e.path);if(wn(o))if(gn(o)){let t=[];const e=[{nestedArrIndex:-1,value:o}];for(;e.length;){const{nestedArrIndex:n,value:r}=e.pop();if(wn(r))if(vn(r)&&!Sn(r)){let e={v:r,i:n,n:this.norm.get(r)};t.push(e)}else gn(r)&&r.forEach((t,n)=>{e.push({nestedArrIndex:n,value:t})})}n.$[r]=t}else if(vn(o)&&!Sn(o)){let t={v:o,n:this.norm.get(o)};n.$[r]=t}}),this.records.push(n)}toJSON(){return{keys:this.keys,records:this.records}}}function kn(t,e,{getFn:n=jn.getFn,fieldNormWeight:r=jn.fieldNormWeight}={}){const o=new Rn({getFn:n,fieldNormWeight:r});return o.setKeys(t.map(On)),o.setSources(e),o.create(),o}function Pn(t,{errors:e=0,currentLocation:n=0,expectedLocation:r=0,distance:o=jn.distance,ignoreLocation:i=jn.ignoreLocation}={}){const a=e/t.length;if(i)return a;const c=Math.abs(r-n);return o?a+c/o:c?1:a}const Cn=32;function Fn(t){let e={};for(let n=0,r=t.length;n<r;n+=1){const o=t.charAt(n);e[o]=(e[o]||0)|1<<r-n-1}return e}const xn=String.prototype.normalize?t=>t.normalize("NFD").replace(/[\u0300-\u036F\u0483-\u0489\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u0711\u0730-\u074A\u07A6-\u07B0\u07EB-\u07F3\u07FD\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u08D3-\u08E1\u08E3-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09CB-\u09CD\u09D7\u09E2\u09E3\u09FE\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A70\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2\u0AE3\u0AFA-\u0AFF\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B56\u0B57\u0B62\u0B63\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0C00-\u0C04\u0C3E-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C81-\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2\u0CE3\u0D00-\u0D03\u0D3B\u0D3C\u0D3E-\u0D44\u0D46-\u0D48\u0D4A-\u0D4D\u0D57\u0D62\u0D63\u0D82\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DF2\u0DF3\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0EB1\u0EB4-\u0EB9\u0EBB\u0EBC\u0EC8-\u0ECD\u0F18\u0F19\u0F35\u0F37\u0F39\u0F3E\u0F3F\u0F71-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102B-\u103E\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F\u109A-\u109D\u135D-\u135F\u1712-\u1714\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4-\u17D3\u17DD\u180B-\u180D\u1885\u1886\u18A9\u1920-\u192B\u1930-\u193B\u1A17-\u1A1B\u1A55-\u1A5E\u1A60-\u1A7C\u1A7F\u1AB0-\u1ABE\u1B00-\u1B04\u1B34-\u1B44\u1B6B-\u1B73\u1B80-\u1B82\u1BA1-\u1BAD\u1BE6-\u1BF3\u1C24-\u1C37\u1CD0-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF2-\u1CF4\u1CF7-\u1CF9\u1DC0-\u1DF9\u1DFB-\u1DFF\u20D0-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302F\u3099\u309A\uA66F-\uA672\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA823-\uA827\uA880\uA881\uA8B4-\uA8C5\uA8E0-\uA8F1\uA8FF\uA926-\uA92D\uA947-\uA953\uA980-\uA983\uA9B3-\uA9C0\uA9E5\uAA29-\uAA36\uAA43\uAA4C\uAA4D\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEB-\uAAEF\uAAF5\uAAF6\uABE3-\uABEA\uABEC\uABED\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F]/g,""):t=>t;class Ln{constructor(t,{location:e=jn.location,threshold:n=jn.threshold,distance:r=jn.distance,includeMatches:o=jn.includeMatches,findAllMatches:i=jn.findAllMatches,minMatchCharLength:a=jn.minMatchCharLength,isCaseSensitive:c=jn.isCaseSensitive,ignoreDiacritics:u=jn.ignoreDiacritics,ignoreLocation:s=jn.ignoreLocation}={}){if(this.options={location:e,threshold:n,distance:r,includeMatches:o,findAllMatches:i,minMatchCharLength:a,isCaseSensitive:c,ignoreDiacritics:u,ignoreLocation:s},t=c?t:t.toLowerCase(),t=u?xn(t):t,this.pattern=t,this.chunks=[],!this.pattern.length)return;const l=(t,e)=>{this.chunks.push({pattern:t,alphabet:Fn(t),startIndex:e})},f=this.pattern.length;if(f>Cn){let t=0;const e=f%Cn,n=f-e;for(;t<n;)l(this.pattern.substr(t,Cn),t),t+=Cn;if(e){const t=f-Cn;l(this.pattern.substr(t),t)}}else l(this.pattern,0)}searchIn(t){const{isCaseSensitive:e,ignoreDiacritics:n,includeMatches:r}=this.options;if(t=e?t:t.toLowerCase(),t=n?xn(t):t,this.pattern===t){let e={isMatch:!0,score:0};return r&&(e.indices=[[0,t.length-1]]),e}const{location:o,distance:i,threshold:a,findAllMatches:c,minMatchCharLength:u,ignoreLocation:s}=this.options;let l=[],f=0,p=!1;this.chunks.forEach(({pattern:e,alphabet:n,startIndex:h})=>{const{isMatch:d,score:y,indices:g}=function(t,e,n,{location:r=jn.location,distance:o=jn.distance,threshold:i=jn.threshold,findAllMatches:a=jn.findAllMatches,minMatchCharLength:c=jn.minMatchCharLength,includeMatches:u=jn.includeMatches,ignoreLocation:s=jn.ignoreLocation}={}){if(e.length>Cn)throw new Error("Pattern length exceeds max of 32.");const l=e.length,f=t.length,p=Math.max(0,Math.min(r,f));let h=i,d=p;const y=c>1||u,g=y?Array(f):[];let v;for(;(v=t.indexOf(e,d))>-1;){let t=Pn(e,{currentLocation:v,expectedLocation:p,distance:o,ignoreLocation:s});if(h=Math.min(t,h),d=v+l,y){let t=0;for(;t<l;)g[v+t]=1,t+=1}}d=-1;let m=[],b=1,w=l+f;const S=1<<l-1;for(let r=0;r<l;r+=1){let i=0,c=w;for(;i<c;)Pn(e,{errors:r,currentLocation:p+c,expectedLocation:p,distance:o,ignoreLocation:s})<=h?i=c:w=c,c=Math.floor((w-i)/2+i);w=c;let u=Math.max(1,p-c+1),v=a?f:Math.min(p+c,f)+l,E=Array(v+2);E[v+1]=(1<<r)-1;for(let i=v;i>=u;i-=1){let a=i-1,c=n[t.charAt(a)];if(y&&(g[a]=+!!c),E[i]=(E[i+1]<<1|1)&c,r&&(E[i]|=(m[i+1]|m[i])<<1|1|m[i+1]),E[i]&S&&(b=Pn(e,{errors:r,currentLocation:a,expectedLocation:p,distance:o,ignoreLocation:s}),b<=h)){if(h=b,d=a,d<=p)break;u=Math.max(1,2*p-d)}}if(Pn(e,{errors:r+1,currentLocation:p,expectedLocation:p,distance:o,ignoreLocation:s})>h)break;m=E}const E={isMatch:d>=0,score:Math.max(.001,b)};if(y){const t=function(t=[],e=jn.minMatchCharLength){let n=[],r=-1,o=-1,i=0;for(let a=t.length;i<a;i+=1){let a=t[i];a&&-1===r?r=i:a||-1===r||(o=i-1,o-r+1>=e&&n.push([r,o]),r=-1)}return t[i-1]&&i-r>=e&&n.push([r,i-1]),n}(g,c);t.length?u&&(E.indices=t):E.isMatch=!1}return E}(t,e,n,{location:o+h,distance:i,threshold:a,findAllMatches:c,minMatchCharLength:u,includeMatches:r,ignoreLocation:s});d&&(p=!0),f+=y,d&&g&&(l=[...l,...g])});let h={isMatch:p,score:p?f/this.chunks.length:1};return p&&r&&(h.indices=l),h}}class Mn{constructor(t){this.pattern=t}static isMultiMatch(t){return Nn(t,this.multiRegex)}static isSingleMatch(t){return Nn(t,this.singleRegex)}search(){}}function Nn(t,e){const n=t.match(e);return n?n[1]:null}class Bn extends Mn{constructor(t,{location:e=jn.location,threshold:n=jn.threshold,distance:r=jn.distance,includeMatches:o=jn.includeMatches,findAllMatches:i=jn.findAllMatches,minMatchCharLength:a=jn.minMatchCharLength,isCaseSensitive:c=jn.isCaseSensitive,ignoreDiacritics:u=jn.ignoreDiacritics,ignoreLocation:s=jn.ignoreLocation}={}){super(t),this._bitapSearch=new Ln(t,{location:e,threshold:n,distance:r,includeMatches:o,findAllMatches:i,minMatchCharLength:a,isCaseSensitive:c,ignoreDiacritics:u,ignoreLocation:s})}static get type(){return"fuzzy"}static get multiRegex(){return/^"(.*)"$/}static get singleRegex(){return/^(.*)$/}search(t){return this._bitapSearch.searchIn(t)}}class Gn extends Mn{constructor(t){super(t)}static get type(){return"include"}static get multiRegex(){return/^'"(.*)"$/}static get singleRegex(){return/^'(.*)$/}search(t){let e,n=0;const r=[],o=this.pattern.length;for(;(e=t.indexOf(this.pattern,n))>-1;)n=e+o,r.push([e,n-1]);const i=!!r.length;return{isMatch:i,score:i?0:1,indices:r}}}const Un=[class extends Mn{constructor(t){super(t)}static get type(){return"exact"}static get multiRegex(){return/^="(.*)"$/}static get singleRegex(){return/^=(.*)$/}search(t){const e=t===this.pattern;return{isMatch:e,score:e?0:1,indices:[0,this.pattern.length-1]}}},Gn,class extends Mn{constructor(t){super(t)}static get type(){return"prefix-exact"}static get multiRegex(){return/^\^"(.*)"$/}static get singleRegex(){return/^\^(.*)$/}search(t){const e=t.startsWith(this.pattern);return{isMatch:e,score:e?0:1,indices:[0,this.pattern.length-1]}}},class extends Mn{constructor(t){super(t)}static get type(){return"inverse-prefix-exact"}static get multiRegex(){return/^!\^"(.*)"$/}static get singleRegex(){return/^!\^(.*)$/}search(t){const e=!t.startsWith(this.pattern);return{isMatch:e,score:e?0:1,indices:[0,t.length-1]}}},class extends Mn{constructor(t){super(t)}static get type(){return"inverse-suffix-exact"}static get multiRegex(){return/^!"(.*)"\$$/}static get singleRegex(){return/^!(.*)\$$/}search(t){const e=!t.endsWith(this.pattern);return{isMatch:e,score:e?0:1,indices:[0,t.length-1]}}},class extends Mn{constructor(t){super(t)}static get type(){return"suffix-exact"}static get multiRegex(){return/^"(.*)"\$$/}static get singleRegex(){return/^(.*)\$$/}search(t){const e=t.endsWith(this.pattern);return{isMatch:e,score:e?0:1,indices:[t.length-this.pattern.length,t.length-1]}}},class extends Mn{constructor(t){super(t)}static get type(){return"inverse-exact"}static get multiRegex(){return/^!"(.*)"$/}static get singleRegex(){return/^!(.*)$/}search(t){const e=-1===t.indexOf(this.pattern);return{isMatch:e,score:e?0:1,indices:[0,t.length-1]}}},Bn],Vn=Un.length,Hn=/ +(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/,Kn=new Set([Bn.type,Gn.type]);const $n=[];function Wn(t,e){for(let n=0,r=$n.length;n<r;n+=1){let r=$n[n];if(r.condition(t,e))return new r(t,e)}return new Ln(t,e)}const qn="$and",Jn="$path",zn=t=>!(!t[qn]&&!t.$or),Qn=t=>({[qn]:Object.keys(t).map(e=>({[e]:t[e]}))});function Yn(t,e,{auto:n=!0}={}){const r=t=>{let o=Object.keys(t);const i=(t=>!!t[Jn])(t);if(!i&&o.length>1&&!zn(t))return r(Qn(t));if((t=>!gn(t)&&bn(t)&&!zn(t))(t)){const r=i?t[Jn]:o[0],a=i?t.$val:t[r];if(!vn(a))throw new Error((t=>`Invalid value for key ${t}`)(r));const c={keyId:In(r),pattern:a};return n&&(c.searcher=Wn(a,e)),c}let a={children:[],operator:o[0]};return o.forEach(e=>{const n=t[e];gn(n)&&n.forEach(t=>{a.children.push(r(t))})}),a};return zn(t)||(t=Qn(t)),r(t)}function Xn(t,e){const n=t.matches;e.matches=[],wn(n)&&n.forEach(t=>{if(!wn(t.indices)||!t.indices.length)return;const{indices:n,value:r}=t;let o={indices:n,value:r};t.key&&(o.key=t.key.src),t.idx>-1&&(o.refIndex=t.idx),e.matches.push(o)})}function Zn(t,e){e.score=t.score}class tr{constructor(t,e={},n){this.options={...jn,...e},this.options.useExtendedSearch,this._keyStore=new _n(this.options.keys),this.setCollection(t,n)}setCollection(t,e){if(this._docs=t,e&&!(e instanceof Rn))throw new Error("Incorrect 'index' type");this._myIndex=e||kn(this.options.keys,this._docs,{getFn:this.options.getFn,fieldNormWeight:this.options.fieldNormWeight})}add(t){wn(t)&&(this._docs.push(t),this._myIndex.add(t))}remove(t=()=>!1){const e=[];for(let n=0,r=this._docs.length;n<r;n+=1){const o=this._docs[n];t(o,n)&&(this.removeAt(n),n-=1,r-=1,e.push(o))}return e}removeAt(t){this._docs.splice(t,1),this._myIndex.removeAt(t)}getIndex(){return this._myIndex}search(t,{limit:e=-1}={}){const{includeMatches:n,includeScore:r,shouldSort:o,sortFn:i,ignoreFieldNorm:a}=this.options;let c=vn(t)?vn(this._docs[0])?this._searchStringList(t):this._searchObjectList(t):this._searchLogical(t);return function(t,{ignoreFieldNorm:e=jn.ignoreFieldNorm}){t.forEach(t=>{let n=1;t.matches.forEach(({key:t,norm:r,score:o})=>{const i=t?t.weight:null;n*=Math.pow(0===o&&i?Number.EPSILON:o,(i||1)*(e?1:r))}),t.score=n})}(c,{ignoreFieldNorm:a}),o&&c.sort(i),mn(e)&&e>-1&&(c=c.slice(0,e)),function(t,e,{includeMatches:n=jn.includeMatches,includeScore:r=jn.includeScore}={}){const o=[];return n&&o.push(Xn),r&&o.push(Zn),t.map(t=>{const{idx:n}=t,r={item:e[n],refIndex:n};return o.length&&o.forEach(e=>{e(t,r)}),r})}(c,this._docs,{includeMatches:n,includeScore:r})}_searchStringList(t){const e=Wn(t,this.options),{records:n}=this._myIndex,r=[];return n.forEach(({v:t,i:n,n:o})=>{if(!wn(t))return;const{isMatch:i,score:a,indices:c}=e.searchIn(t);i&&r.push({item:t,idx:n,matches:[{score:a,value:t,norm:o,indices:c}]})}),r}_searchLogical(t){const e=Yn(t,this.options),n=(t,e,r)=>{if(!t.children){const{keyId:n,searcher:o}=t,i=this._findMatches({key:this._keyStore.get(n),value:this._myIndex.getValueForItemAtKeyId(e,n),searcher:o});return i&&i.length?[{idx:r,item:e,matches:i}]:[]}const o=[];for(let i=0,a=t.children.length;i<a;i+=1){const a=t.children[i],c=n(a,e,r);if(c.length)o.push(...c);else if(t.operator===qn)return[]}return o},r=this._myIndex.records,o={},i=[];return r.forEach(({$:t,i:r})=>{if(wn(t)){let a=n(e,t,r);a.length&&(o[r]||(o[r]={idx:r,item:t,matches:[]},i.push(o[r])),a.forEach(({matches:t})=>{o[r].matches.push(...t)}))}}),i}_searchObjectList(t){const e=Wn(t,this.options),{keys:n,records:r}=this._myIndex,o=[];return r.forEach(({$:t,i:r})=>{if(!wn(t))return;let i=[];n.forEach((n,r)=>{i.push(...this._findMatches({key:n,value:t[r],searcher:e}))}),i.length&&o.push({idx:r,item:t,matches:i})}),o}_findMatches({key:t,value:e,searcher:n}){if(!wn(e))return[];let r=[];if(gn(e))e.forEach(({v:e,i:o,n:i})=>{if(!wn(e))return;const{isMatch:a,score:c,indices:u}=n.searchIn(e);a&&r.push({score:c,key:t,value:e,idx:o,norm:i,indices:u})});else{const{v:o,n:i}=e,{isMatch:a,score:c,indices:u}=n.searchIn(o);a&&r.push({score:c,key:t,value:o,norm:i,indices:u})}return r}}function er(t){return er="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},er(t)}function nr(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),n.push.apply(n,r)}return n}function rr(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?nr(Object(n),!0).forEach(function(e){or(t,e,n[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):nr(Object(n)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))})}return t}function or(t,e,n){return(e=function(t){var e=function(t){if("object"!=er(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=er(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==er(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function ir(t){return t.replace(/\w\S*/g,function(t){return t.charAt(0).toUpperCase()+t.substr(1).toLowerCase()})}function ar(t){return t.reduce(function(t,e){return t[e]=(t[e]||0)+1,t},{})}function cr(t,e){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null,r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:null,o={includeScore:!0,threshold:.3},i=new tr(e,r?rr(rr({},o),r):o).search(t);return null!==n?i.slice(0,n):i}function ur(t){return ur="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},ur(t)}function sr(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=function(t,e){if(t){if("string"==typeof t)return lr(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?lr(t,e):void 0}}(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return a=t.done,t},e:function(t){c=!0,i=t},f:function(){try{a||null==n.return||n.return()}finally{if(c)throw i}}}}function lr(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function fr(t,e,n){return(e=function(t){var e=function(t){if("object"!=ur(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=ur(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==ur(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function pr(t,e){var n=function(t){var n,r;return null!==(n=null===(r=xe.getHeroByName(t,e))||void 0===r?void 0:r.prime)&&void 0!==n?n:e.Fodder.prime},r=function(t,e){return t*e};t[N]=t[j].map(n),t[G]=t[D].map(n),t[B]=t[N].reduce(r,1),t[U]=t[G].reduce(r,1),t[V]=t[T].map(n),t[H]=t[I].map(n),t["P1 Prebans Prime Product"]=t[V].reduce(r,1),t["P2 Prebans Prime Product"]=t[H].reduce(r,1)}function hr(t,e,n){return n=null!=n?n:yn.getArtifacts(),Object.fromEntries(t.map(function(t){var r=function(t,e,n){var r,o=function(t){var n,r;return null!==(n=null===(r=xe.getHeroByCode(t,e))||void 0===r?void 0:r.name)&&void 0!==n?n:e.Fodder.name},i=function(e,r){return r.map(function(r,o){return r?function(t){return yn.convertCodeToName(t,n)||"None"}(r):function(e,n){return"p1"===e?t.p2_postban===t.p1_picks[n]:t.p1_postban===t.p2_picks[n]}(e,o)?"n/a":"None"})},u=function(t){return t.map(function(t){return t.map(function(t){return c[t]||t})})},s=t.cr_bar.find(function(t){return 100===t[1]}),N=!!s&&t.p1_picks.includes(s[0]),B=(fr(fr(fr(fr(fr(fr(fr(fr(fr(fr(r={},"Season",t.season_name||"None"),l,t.date_time),f,t.seconds),p,t.turns),"Seq Num",t.seq_num),h,t.p1_id.toString()),d,a[t.p1_server]||t.p1_server||"None"),y,t.p2_id.toString()),g,a[t.p2_server]||t.p2_server||"None"),v,ir(t.p1_league)||"None"),fr(fr(fr(fr(fr(fr(fr(fr(fr(fr(r,m,ir(t.p2_league)||"None"),b,t.p1_win_score||null),w,t.p1_point_delta||null),S,1===t.win),E,1===t.first_pick),A,!!N),_,s?o(s[0]):"n/a"),O,t.cr_bar.map(function(t){return t&&2==t.length?[o(t[0]),t[1]]:["n/a",0]})),T,t.p1_prebans.map(o)),I,t.p2_prebans.map(o)),fr(fr(fr(fr(fr(fr(fr(fr(fr(fr(r,j,t.p1_picks.map(o)),D,t.p2_picks.map(o)),R,o(t.p1_postban)),k,o(t.p2_postban)),P,u(t.p1_equipment)),C,u(t.p2_equipment)),F,i("p1",t.p1_artifacts)),x,i("p2",t.p2_artifacts)),L,o(t.p1_mvp)),M,o(t.p2_mvp)));return pr(B,e),B}(t,e,n);return[r["Seq Num"],r]}))}function dr(t,e){var n=t.map(function(t){var n,r=sr(K);try{for(r.s();!(n=r.n()).done;){var o=n.value;t[o]=JSON.parse(t[o])}}catch(t){r.e(t)}finally{r.f()}var i,a=sr($);try{for(a.s();!(i=a.n()).done;){var c=i.value;t[c]="true"===t[c].toLowerCase()}}catch(t){a.e(t)}finally{a.f()}var u,s=sr(W);try{for(s.s();!(u=s.n()).done;){var l=u.value;t[l]=Number(t[l].replace("'",""))}}catch(t){s.e(t)}finally{s.f()}var f,p=sr(q);try{for(p.s();!(f=p.n()).done;){var h=f.value;t[h]=ir(t[h])}}catch(t){p.e(t)}finally{p.f()}return pr(t,e),t});return Object.fromEntries(n.map(function(t){return[t["Seq Num"],t]}))}function yr(t){return yr="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},yr(t)}function gr(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),n.push.apply(n,r)}return n}function vr(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?gr(Object(n),!0).forEach(function(e){mr(t,e,n[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):gr(Object(n)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))})}return t}function mr(t,e,n){return(e=function(t){var e=function(t){if("object"!=yr(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=yr(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==yr(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function br(t){if(null!=t){var e=t["function"==typeof Symbol&&Symbol.iterator||"@@iterator"],n=0;if(e)return e.call(t);if("function"==typeof t.next)return t;if(!isNaN(t.length))return{next:function(){return t&&n>=t.length&&(t=void 0),{value:t&&t[n++],done:!t}}}}throw new TypeError(yr(t)+" is not iterable")}function wr(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,c=[],u=!0,s=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=i.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(s)throw o}}return c}}(t,e)||Er(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function Sr(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=Er(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return a=t.done,t},e:function(t){c=!0,i=t},f:function(){try{a||null==n.return||n.return()}finally{if(c)throw i}}}}function Er(t,e){if(t){if("string"==typeof t)return Ar(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Ar(t,e):void 0}}function Ar(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function _r(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Or(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Or(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Or(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Or(f,"constructor",s),Or(s,"constructor",u),u.displayName="GeneratorFunction",Or(s,o,"GeneratorFunction"),Or(f),Or(f,o,"Generator"),Or(f,r,function(){return this}),Or(f,"toString",function(){return"[object Generator]"}),(_r=function(){return{w:i,m:p}})()}function Or(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Or=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){Or(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},Or(t,e,n,r)}function Tr(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Ir(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){Tr(i,r,o,a,c,"next",t)}function c(t){Tr(i,r,o,a,c,"throw",t)}a(void 0)})}}tr.version="7.1.0",tr.createIndex=kn,tr.parseIndex=function(t,{getFn:e=jn.getFn,fieldNormWeight:n=jn.fieldNormWeight}={}){const{keys:r,records:o}=t,i=new Rn({getFn:e,fieldNormWeight:n});return i.setKeys(r),i.setIndexRecords(o),i},tr.config=jn,tr.parseQuery=Yn,function(...t){$n.push(...t)}(class{constructor(t,{isCaseSensitive:e=jn.isCaseSensitive,ignoreDiacritics:n=jn.ignoreDiacritics,includeMatches:r=jn.includeMatches,minMatchCharLength:o=jn.minMatchCharLength,ignoreLocation:i=jn.ignoreLocation,findAllMatches:a=jn.findAllMatches,location:c=jn.location,threshold:u=jn.threshold,distance:s=jn.distance}={}){this.query=null,this.options={isCaseSensitive:e,ignoreDiacritics:n,includeMatches:r,minMatchCharLength:o,findAllMatches:a,ignoreLocation:i,location:c,threshold:u,distance:s},t=e?t:t.toLowerCase(),t=n?xn(t):t,this.pattern=t,this.query=function(t,e={}){return t.split("|").map(t=>{let n=t.trim().split(Hn).filter(t=>t&&!!t.trim()),r=[];for(let t=0,o=n.length;t<o;t+=1){const o=n[t];let i=!1,a=-1;for(;!i&&++a<Vn;){const t=Un[a];let n=t.isMultiMatch(o);n&&(r.push(new t(n,e)),i=!0)}if(!i)for(a=-1;++a<Vn;){const t=Un[a];let n=t.isSingleMatch(o);if(n){r.push(new t(n,e));break}}}return r})}(this.pattern,this.options)}static condition(t,e){return e.useExtendedSearch}searchIn(t){const e=this.query;if(!e)return{isMatch:!1,score:1};const{includeMatches:n,isCaseSensitive:r,ignoreDiacritics:o}=this.options;t=r?t:t.toLowerCase(),t=o?xn(t):t;let i=0,a=[],c=0;for(let r=0,o=e.length;r<o;r+=1){const o=e[r];a.length=0,i=0;for(let e=0,r=o.length;e<r;e+=1){const r=o[e],{isMatch:u,indices:s,score:l}=r.search(t);if(!u){c=0,i=0,a.length=0;break}if(i+=1,c+=l,n){const t=r.constructor.type;Kn.has(t)?a=[...a,...s]:a.push(s)}}if(i){let t={isMatch:!0,score:c/i};return n&&(t.indices=a),t}}return{isMatch:!1,score:1}}});var jr,Dr,Rr,kr,Pr,Cr,Fr,xr={loaded_servers:new Set,getBattles:(Fr=Ir(_r().m(function t(){var e,n,r,o;return _r().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting battles"),t.n=1,Se.get(Se.Keys.BATTLES);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=4;break;case 3:o=null;case 4:return t.a(2,o)}},t)})),function(){return Fr.apply(this,arguments)}),removeBattles:(Cr=Ir(_r().m(function t(){return _r().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.delete(Se.Keys.BATTLES);case 1:return t.n=2,Se.delete(Se.Keys.UPLOADED_BATTLES);case 2:return t.n=3,Se.delete(Se.Keys.FILTERED_BATTLES);case 3:console.log("Removed battle data from cache; cleared ['BATTLES', 'UPLOADED_BATTLES', 'FILTERED_BATTLES']");case 4:return t.a(2)}},t)})),function(){return Cr.apply(this,arguments)}),removeFilteredBattles:(Pr=Ir(_r().m(function t(){return _r().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.delete(Se.Keys.FILTERED_BATTLES);case 1:console.log("Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']");case 2:return t.a(2)}},t)})),function(){return Pr.apply(this,arguments)}),applyFilter:(kr=Ir(_r().m(function t(e){var n,r,o,i,a,c,u,s,l,f,p,h;return _r().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,this.getBattles();case 1:n=t.v,r=e.localFilters||[],o=e.globalFilters||[],i=Object.values(n),a=Sr(o);try{for(a.s();!(c=a.n()).done;)u=c.value,console.log("Applying global filter: ".concat(u)),s=i.length,i=u.call(i),n=Object.fromEntries(i.map(function(t){return[t["Seq Num"],t]})),console.log("Filtered ".concat(s-i.length," out of ").concat(s,"; new total = ").concat(i.length))}catch(t){a.e(t)}finally{a.f()}l=Sr(r),t.p=2,p=_r().m(function t(){var e,r;return _r().w(function(t){for(;;)switch(t.n){case 0:e=f.value,console.log("Applying local filter: ".concat(e)),r=Object.keys(n).length,n=Object.fromEntries(Object.entries(n).filter(function(t){var n=wr(t,2),r=(n[0],n[1]);return e.call(r)})),console.log("Filtered ".concat(r-Object.keys(n).length," out of ").concat(r,"; new total = ").concat(Object.keys(n).length));case 1:return t.a(2)}},t)}),l.s();case 3:if((f=l.n()).done){t.n=5;break}return t.d(br(p()),4);case 4:t.n=3;break;case 5:t.n=7;break;case 6:t.p=6,h=t.v,l.e(h);case 7:return t.p=7,l.f(),t.f(7);case 8:return console.log("Caching filtered battles ; total = ".concat(Object.keys(n).length)),t.n=9,Se.cache(Se.Keys.FILTERED_BATTLES,n);case 9:return console.log("Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <".concat(r.length+o.length,"> filters")),t.a(2,n)}},t,this,[[2,6,7,8]])})),function(t){return kr.apply(this,arguments)}),extendBattles:(Rr=Ir(_r().m(function t(e){var n,r,o,i,a;return _r().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.get(Se.Keys.BATTLES);case 1:if(i=n=t.v,!(o=null!==i)){t.n=2;break}o=void 0!==n;case 2:if(!o){t.n=3;break}a=n,t.n=4;break;case 3:a={};case 4:return r=vr(vr({},a),e),t.n=5,Se.cache(Se.Keys.BATTLES,r);case 5:return console.log("Extended user data in cache"),t.a(2,r)}},t)})),function(t){return Rr.apply(this,arguments)}),cacheQuery:(Dr=Ir(_r().m(function t(e,n,r){var o,i;return _r().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}return console.log("No query battles provided to cacheQuery"),t.a(2,[]);case 1:return console.log("Caching queried battles: ".concat(e.length," battles; modified [BATTLES]")),o=hr(e,n,r),t.n=2,this.extendBattles(o);case 2:return i=t.v,console.log("Cached queried battles in cache; modified [BATTLES]"),t.a(2,i)}},t,this)})),function(t,e,n){return Dr.apply(this,arguments)}),cacheUpload:(jr=Ir(_r().m(function t(e,n){var r,o;return _r().w(function(t){for(;;)switch(t.n){case 0:if(e){t.n=1;break}return console.error("No uploaded battles provided to cacheUpload"),t.a(2,{});case 1:return r=dr(e,n),t.n=2,Se.cache(Se.Keys.UPLOADED_BATTLES,r);case 2:return t.n=3,this.extendBattles(r);case 3:return o=t.v,console.log("Ingested uploaded battle data into cache; modified [BATTLES] and overwrote [UPLOADED_BATTLES]"),t.a(2,o)}},t,this)})),function(t,e){return jr.apply(this,arguments)}),getStats:function(){var t=Ir(_r().m(function t(e,n,r){var o,i,a,c,u,s,l,f,p;return _r().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting stats"),o=n.localFilters.length+n.globalFilters.length,console.log("Applying ".concat(o," filters")),i=Object.values(e),t.n=1,this.applyFilter(n);case 1:return a=t.v,c=Object.values(a),console.log("Getting preban stats"),t.n=2,Ye(c,r);case 2:return u=t.v,console.log("Getting first pick stats"),t.n=3,Qe(c,r);case 3:return s=t.v,console.log("Getting general stats"),t.n=4,Ze(c,r);case 4:return l=t.v,console.log("Getting hero stats"),t.n=5,ze(c,r);case 5:return f=t.v,console.log("Getting server stats"),t.n=6,Xe(c);case 6:return p=t.v,console.log("Returning stats"),t.a(2,{battles:i,filteredBattlesObj:a,prebanStats:u,generalStats:l,firstPickStats:s,playerHeroStats:f.playerHeroStats,enemyHeroStats:f.enemyHeroStats,serverStats:p,numFilters:o})}},t,this)}));return function(e,n,r){return t.apply(this,arguments)}}()};const Lr=xr;function Mr(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Nr(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Nr(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Nr(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Nr(f,"constructor",s),Nr(s,"constructor",u),u.displayName="GeneratorFunction",Nr(s,o,"GeneratorFunction"),Nr(f),Nr(f,o,"Generator"),Nr(f,r,function(){return this}),Nr(f,"toString",function(){return"[object Generator]"}),(Mr=function(){return{w:i,m:p}})()}function Nr(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Nr=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){Nr(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},Nr(t,e,n,r)}function Br(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Gr(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){Br(i,r,o,a,c,"next",t)}function c(t){Br(i,r,o,a,c,"throw",t)}a(void 0)})}}var Ur,Vr,Hr,Kr={fetchAndCacheSeasonDetails:(Hr=Gr(Mr().m(function t(){var e,n,r,o,i,a;return Mr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,bt.fetchSeasonDetails();case 1:if(!(e=t.v).error){t.n=2;break}throw new Error("Could not fetch season details: ".concat(e.error));case 2:return(n=e.seasonDetails).forEach(function(t){t.range=[t.Start,t.End].map(function(t){return new Date("".concat(t.split(" ")[0],"T00:00:00"))})}),n.sort(function(t,e){return t["Season Number"]-e["Season Number"]}),r=[n[0]],o=n[0],n.slice(1).forEach(function(t){var e=new Date(+o.range[1]+u),n=new Date(+t.range[0]-u),i={"Season Number":o["Season Number"]+.5,Code:null,Season:"Pre-Season: ".concat(t.Season),Start:e.toISOString().slice(0,10),End:n.toISOString().slice(0,10),Status:"Complete",range:[e,n]};r.push(i),r.push(t),o=t}),o.range[1]<new Date&&(i=new Date(+r.at(-1).range[1]+u),a={"Season Number":o["Season Number"]+.5,Code:null,Season:"Active Pre-Season",Start:i.toISOString().slice(0,10),End:"N/A",Status:"Active",range:[i,new Date]},r.push(a)),r.reverse(),t.n=3,Se.cache(Se.Keys.SEASON_DETAILS,r);case 3:return t.a(2,r)}},t)})),function(){return Hr.apply(this,arguments)}),getSeasonDetails:(Vr=Gr(Mr().m(function t(){var e,n,r,o;return Mr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.get(Se.Keys.SEASON_DETAILS);case 1:if(r=e=t.v,!(n=null!==r)){t.n=2;break}n=void 0!==e;case 2:if(!n){t.n=3;break}o=e,t.n=5;break;case 3:return t.n=4,Kr.fetchAndCacheSeasonDetails();case 4:o=t.v;case 5:return t.a(2,o)}},t)})),function(){return Vr.apply(this,arguments)}),clearSeasonDetails:(Ur=Gr(Mr().m(function t(){return Mr().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.delete(Se.Keys.SEASON_DETAILS);case 1:console.log("Season details cleared from data cache");case 2:return t.a(2)}},t)})),function(){return Ur.apply(this,arguments)})};const $r=Kr;function Wr(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"i";return new RegExp("^(?:".concat(t.source,")(?=[,)\\s;]|$)"),e)}function qr(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"i";return new RegExp("^(?:".concat(t.source,")$"),e)}function Jr(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"i";if(t.length<1)throw new Error("orRegex must have at least one pattern");for(var n="(?:".concat(t[0].source,")"),r=1;r<t.length;r++)n+="|(?:".concat(t[r].source,")");return new RegExp(n,e)}var zr=function(t){return t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")},Qr=new RegExp("^(?:".concat(["date","is-first-pick","is-win","victory-points","p1.picks","p2.picks","p1.prebans","p2.prebans","p1.postban","p2.postban","prebans","p1.id","p2.id","p1.league","p2.league","p1.server","p2.server","p1.pick1","p1.pick2","p1.pick3","p1.pick4","p1.pick5","p2.pick1","p2.pick2","p2.pick3","p2.pick4","p2.pick5","p1.mvp","p2.mvp","first-turn","first-turn-hero","turns","seconds","point-gain"].map(zr).join("|"),")"),"i"),Yr=new RegExp("(?:".concat(["and","or","xor","not"].map(zr).join("|"),")(?=\\()"),"i"),Xr=new RegExp("(?:".concat(["last-n"].map(zr).join("|"),")(?=\\()"),"i"),Zr=new RegExp("(?:".concat(["p1.equipment","p2.equipment","p1.artifact","p2.artifact","p1.cr-geq","p2.cr-geq","p1.cr-lt","p2.cr-lt"].map(zr).join("|"),")(?=\\()"),"i"),to=Jr([Yr,Xr,Zr]),eo=/.*/i,no=/\d{4}-\d{2}-\d{2}/,ro=/\{\s*\}/,oo=/-?\d+/,io=/season-[1-9]+[0-9]*(\.[1-9]*)?|current-season/i,ao=new RegExp("^".concat(no.source,"$"),"i"),co=new RegExp("(?:".concat(io.source,")"),"i"),uo=eo.source,so=oo.source,lo=no.source,fo=Qr.source,po=co.source,ho=new RegExp('"('.concat(uo,")\"|'(").concat(uo,")'"),"i"),yo=new RegExp(qr(ho),"i"),go=ho.source,vo=new RegExp("(?:".concat(go,"|").concat(uo,"|").concat(lo,")"),"i"),mo=new RegExp("(?:".concat(fo,"|").concat(po,")"),"i"),bo=vo.source,wo=new RegExp("\\{\\s*(?:".concat(bo,"\\s*)(?:,\\s*").concat(bo,"\\s*)*,?\\s*\\}|").concat(ro.source),"i"),So=new RegExp("".concat(so,"\\.\\.\\.").concat(so,"|").concat(lo,"\\.\\.\\.").concat(lo,"|").concat(so,"\\.\\.\\.=").concat(so,"|").concat(lo,"\\.\\.\\.=").concat(lo)),Eo=new RegExp("^".concat(So.source,"$")),Ao={VALID_STRING_RE:eo,VALID_DATE_RE:no,VALID_INT_RE:oo,EMPTY_SET_RE:ro,SET_ELEMENT_RE:vo,VALID_SET_RE:wo,VALID_STRING_LITERAL_RE:yo,VALID_DATE_LITERAL_RE:ao,VALID_INT_LITERAL_RE:/^-?\d+$/,VALID_BOOL_LITERAL_RE:/^(true|false)$/i,VALID_RANGE_RE:So,VALID_RANGE_LITERAL_RE:Eo,VALID_SEASON_RE:io,VALID_SEASON_LITERAL_RE:qr(io),VALID_DATA_WORD_RE:co,VALID_DATA_WORD_LITERAL_RE:qr(co),VALID_FIELD_WORD_RE:Qr,VALID_DATAFIELD_RE:mo,VALID_GLOBAL_FILTER_RE:/last-n\(\d+\)/i,ANCHORED_STR_LITERAL_RE:qr(yo),VALID_CLAUSE_FUNCTIONS_RE:Yr,VALID_DIRECT_FUNCTIONS_RE:Zr,VALID_GLOBAL_FUNCTIONS_RE:Xr,VALID_FUNCTIONS_RE:to,padRegex:Wr,anchorExp:qr,tokenMatch:function(t){return t.match(to)?(console.log("Matched stream as clause:",t),"keyword"):t.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)?(console.log("Matched stream as operator:",t),"operator"):t.match(new RegExp("[a-z0-9.\"'}=)-]".concat(mo.source,"(?=[,)\\s;]|$)"),"i"))?(console.log("Matched stream as field with preceding fragment:",t),null):t.match(Wr(mo))?(console.log("Matched stream as Data Field:",t),"datafield"):t.match(Wr(ho))?(console.log("Matched stream as string:",t),"string"):t.match(Wr(wo))?(console.log("Matched stream as set:",t),"set"):t.match(Wr(So))?(console.log("Matched stream as range:",t),"range"):t.match(/[^(,\s;.=0-9\-]+\d+/i)?(console.log("Matched stream as non-num null",t),null):t.match(Wr(oo))?(console.log("Matched stream as number:",t),"number"):t.match(Wr(no))?(console.log("Matched stream as date:",t),"date"):t.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)?(console.log("Matched stream as bool:",t),"bool"):t.match(/[\(\)\{\}\;\,]/)?(console.log("Matched stream as bracket:",t),"bracket"):(t.next(),console.log("Matched stream as null:",t),null)},orRegex:Jr,escapeRegex:zr};function _o(t){return _o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},_o(t)}function Oo(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,c=[],u=!0,s=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=i.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(s)throw o}}return c}}(t,e)||Io(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function To(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=Io(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return a=t.done,t},e:function(t){c=!0,i=t},f:function(){try{a||null==n.return||n.return()}finally{if(c)throw i}}}}function Io(t,e){if(t){if("string"==typeof t)return jo(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?jo(t,e):void 0}}function jo(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Do(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,ko(r.key),r)}}function Ro(t,e,n){return e&&Do(t.prototype,e),n&&Do(t,n),Object.defineProperty(t,"prototype",{writable:!1}),t}function ko(t){var e=function(t){if("object"!=_o(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=_o(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==_o(e)?e:e+""}function Po(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function Co(t,e,n){return e=No(e),function(t,e){if(e&&("object"==_o(e)||"function"==typeof e))return e;if(void 0!==e)throw new TypeError("Derived constructors may only return object or undefined");return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(t,Lo()?Reflect.construct(e,n||[],No(t).constructor):e.apply(t,n))}function Fo(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),Object.defineProperty(t,"prototype",{writable:!1}),e&&Mo(t,e)}function xo(t){var e="function"==typeof Map?new Map:void 0;return xo=function(t){if(null===t||!function(t){try{return-1!==Function.toString.call(t).indexOf("[native code]")}catch(e){return"function"==typeof t}}(t))return t;if("function"!=typeof t)throw new TypeError("Super expression must either be null or a function");if(void 0!==e){if(e.has(t))return e.get(t);e.set(t,n)}function n(){return function(t,e,n){if(Lo())return Reflect.construct.apply(null,arguments);var r=[null];r.push.apply(r,e);var o=new(t.bind.apply(t,r));return n&&Mo(o,n.prototype),o}(t,arguments,No(this).constructor)}return n.prototype=Object.create(t.prototype,{constructor:{value:n,enumerable:!1,writable:!0,configurable:!0}}),Mo(n,t)},xo(t)}function Lo(){try{var t=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(t){}return(Lo=function(){return!!t})()}function Mo(t,e){return Mo=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(t,e){return t.__proto__=e,t},Mo(t,e)}function No(t){return No=Object.setPrototypeOf?Object.getPrototypeOf.bind():function(t){return t.__proto__||Object.getPrototypeOf(t)},No(t)}var Bo=function(t){function e(t){var n;return Po(this,e),(n=Co(this,e,[t])).name="Filter Syntax Exception",n}return Fo(e,t),Ro(e)}(xo(Error)),Go=function(t){function e(t){var n;return Po(this,e),(n=Co(this,e,[t])).name="Filter Type Exception",n}return Fo(e,t),Ro(e)}(xo(Error)),Uo=function(t){function e(t){var n;return Po(this,e),(n=Co(this,e,[t])).name="Filter Validation Error",n}return Fo(e,t),Ro(e)}(xo(Error)),Vo={"(":")","{":"}",'"':'"',"'":"'"},Ho={"'":'"','"':"'"},Ko=Object.fromEntries(Object.entries(Vo).filter(function(t){var e=Oo(t,2);return e[0]!==e[1]}).map(function(t){var e=Oo(t,2),n=e[0];return[e[1],n]}));function $o(t){var e,n={},r=To(t);try{for(r.s();!(e=r.n()).done;){var o=e.value;n[o]=(n[o]||0)+1}}catch(t){r.e(t)}finally{r.f()}return n}const Wo={SyntaxException:Bo,TypeException:Go,ValidationError:Uo,retrieveEnclosure:function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"(",n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:")";if(e===n)throw new Error("Enclosure characters must be different: ".concat(e," = ").concat(n));var r,o=!1,i=0,a="",c=To(function(t){return function(t){if(Array.isArray(t))return jo(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||Io(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}(t).entries());try{for(c.s();!(r=c.n()).done;){var u=Oo(r.value,2),s=u[0],l=u[1];if(l===e){if(i+=1,!o){o=!0;continue}}else l===n&&(i-=1);if(0===i&&o){if(s!=t.length-1)throw new Bo("Enclosure should not be resolved before end of string; resolved at index: ".concat(s,"; input string: ").concat(t));return a}if(i<0)throw new Bo("Unbalanced enclosure at index: ".concat(s," of input string: ").concat(t,'; balance of "').concat(e,"...").concat(n,'" enclosures became negative.'));o&&(a+=l)}}catch(t){c.e(t)}finally{c.f()}if(!o)throw new Bo("Enclosure of type ".concat(e,"...").concat(n," not found in string; input string: ").concat(t));if(i>0)throw new Bo("Enclosure could not be resolved; too many '".concat(n,"'; balance = +{count}; input string {string}"))},retrieveArgs:function(t){var e,n=0,r=[],o="",i=To(t);try{for(i.s();!(e=i.n()).done;){var a=e.value;if("("===a){if(1===(n+=1))continue}else")"===a&&(n-=1);1===n&&","===a?(r.push(o.trim()),o=""):n>=1&&(o+=a)}}catch(t){i.e(t)}finally{i.f()}return o.trim()&&r.push(o.trim()),r},getCharCounts:$o,tokenizeWithNestedEnclosures:function(t){for(var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:" ",n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0,r=!(arguments.length>3&&void 0!==arguments[3])||arguments[3],o=[],i="",a=[],c=0;c<t.length;c++){var u=t[c];if(e.includes(u)&&a.length===n)i&&(o.push(r?i.trim():i),i="");else if(Ko[u]){var s=Ko[u];if(a.length>n&&(i+=u),a[a.length-1]!==s){var l=$o(t);throw(l["'"]||0)%2!=0||(l['"']||0)%2!=0?new Bo("Error tokenizing: Unbalanced closing character at position ".concat(c,"; got string: '").concat(t,"' ; if a str type has quote characters in it, wrap it in the opposite quote character.")):new Bo("Error tokenizing: Unbalanced closing character at position ".concat(c,"; got string: '").concat(t,"'"))}a.pop()}else a.length>=n&&(i+=u),!Vo[u]||Ho[u]&&a[a.length-1]===Ho[u]||(a[a.length-1]===Vo[u]&&u===Vo[u]?a.pop():a.push(u))}if(a.length>0)throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: [ ".concat(a.join(", ")," ]"));return i&&o.push(r?i.trim():i),o},parseDate:function(t){if(!Ao.VALID_DATE_LITERAL_RE.test(t))throw new Bo("Invalid date; must be in the format: YYYY-MM-DD ( regex: ".concat(Ao.VALID_DATE_LITERAL_RE.source," ); got: '").concat(t,"'"));var e=t.split(" ")[0],n=new Date("".concat(e,"T00:00:00"));if(isNaN(n.getTime()))throw new Bo("Invalid date; could not be parsed as a valid date; got: '".concat(t,"'"));var r=Oo(n.toISOString().split("T")[0].split("-").map(Number),3),o=r[0],i=r[1],a=r[2];if(n.getFullYear()!==o||n.getMonth()+1!==i||n.getDate()!==a)throw new Bo("Invalid date; parsed date: ".concat(n.toISOString()," does not match passed in string: ").concat(e));return console.log("Parsed date: ".concat(n.toISOString()," ; ").concat(n.constructor.name)),n},tryConvert:function(t,e,n){var r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:null;null===r&&(r="Could not convert ".concat(n," to ").concat(e));try{return t(n)}catch(t){throw new Go("".concat(r,": ").concat(t.message))}},trimSurroundingQuotes:function(t){return t.replace(/^"(.*)"$/,"$1").replace(/^'(.*)'$/,"$1")}};var qo=new Set("'\"(),-.=; ><!1234567890{}abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"),Jo=new Set(Object.values(c).map(function(t){return t.toLowerCase()}));function zo(t){return function(t){if(Array.isArray(t))return Qo(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||function(t,e){if(t){if("string"==typeof t)return Qo(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Qo(t,e):void 0}}(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function Qo(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Yo(t){return Yo="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Yo(t)}function Xo(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,Zo(r.key),r)}}function Zo(t){var e=function(t){if("object"!=Yo(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=Yo(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==Yo(e)?e:e+""}var ti,ei,ni,ri=new Set(["victory-points","point-gain"]),oi=new Set(["prebans","p1.picks","p2.picks","p1.prebans","p2.prebans"]),ii=function(){return t=function t(e){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t);var n=t.FIELD_EXTRACT_FN_MAP[e];if(!n)throw new Wo.ValidationError("Invalid field type: '".concat(e,"'; valid types are: ").concat(Object.keys(t.FIELD_EXTRACT_FN_MAP).join(", ")));console.log("Found valid field type: ",e),this.str=e,this.extractData=n},(e=[{key:"asString",value:function(){return this.str}}])&&Xo(t.prototype,e),Object.defineProperty(t,"prototype",{writable:!1}),t;var t,e}();function ai(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,c=[],u=!0,s=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=i.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(s)throw o}}return c}}(t,e)||ui(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function ci(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=ui(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return a=t.done,t},e:function(t){c=!0,i=t},f:function(){try{a||null==n.return||n.return()}finally{if(c)throw i}}}}function ui(t,e){if(t){if("string"==typeof t)return si(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?si(t,e):void 0}}function si(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function li(t,e,n){return e=pi(e),function(t,e){if(e&&("object"==yi(e)||"function"==typeof e))return e;if(void 0!==e)throw new TypeError("Derived constructors may only return object or undefined");return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(t,fi()?Reflect.construct(e,n||[],pi(t).constructor):e.apply(t,n))}function fi(){try{var t=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(t){}return(fi=function(){return!!t})()}function pi(t){return pi=Object.setPrototypeOf?Object.getPrototypeOf.bind():function(t){return t.__proto__||Object.getPrototypeOf(t)},pi(t)}function hi(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),Object.defineProperty(t,"prototype",{writable:!1}),e&&di(t,e)}function di(t,e){return di=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(t,e){return t.__proto__=e,t},di(t,e)}function yi(t){return yi="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},yi(t)}function gi(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function vi(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,bi(r.key),r)}}function mi(t,e,n){return e&&vi(t.prototype,e),n&&vi(t,n),Object.defineProperty(t,"prototype",{writable:!1}),t}function bi(t){var e=function(t){if("object"!=yi(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=yi(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==yi(e)?e:e+""}ti=ii,ni={date:function(t){var e;return t[l]?new Date("".concat(null===(e=t[l])||void 0===e?void 0:e.slice(0,10),"T00:00:00")):"N/A"},"is-first-pick":function(t){return t[E]?1:0},"is-win":function(t){return t[S]?1:0},"victory-points":function(t){return t[b]},"p1.picks":function(t){return t[j]},"p2.picks":function(t){return t[D]},"p1.prebans":function(t){return t[T]},"p2.prebans":function(t){return t[I]},"p1.postban":function(t){return t[R]},"p2.postban":function(t){return t[k]},prebans:function(t){return[].concat(zo(t[T]),zo(t[I]))},"p1.pick1":function(t){return t[j][0]},"p1.pick2":function(t){return t[j][1]},"p1.pick3":function(t){return t[j][2]},"p1.pick4":function(t){return t[j][3]},"p1.pick5":function(t){return t[j][4]},"p2.pick1":function(t){return t[D][0]},"p2.pick2":function(t){return t[D][1]},"p2.pick3":function(t){return t[D][2]},"p2.pick4":function(t){return t[D][3]},"p2.pick5":function(t){return t[D][4]},"p1.league":function(t){return t[v]},"p2.league":function(t){return t[m]},"p1.server":function(t){return t[d]},"p2.server":function(t){return t[g]},"p1.id":function(t){return Number(t[h])},"p2.id":function(t){return Number(t[y])},"p1.mvp":function(t){return t[L]},"p2.mvp":function(t){return t[M]},"is-first-turn":function(t){return t[A]},"first-turn-hero":function(t){return t[_]},turns:function(t){return t[p]},seconds:function(t){return t[f]},"point-gain":function(t){return t[w]}},(ei=Zo(ei="FIELD_EXTRACT_FN_MAP"))in ti?Object.defineProperty(ti,ei,{value:ni,enumerable:!0,configurable:!0,writable:!0}):ti[ei]=ni;var wi=function(){return mi(function t(e){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null;gi(this,t),this.rawString=e,this.data=null===r?this.getData(e,n):this.getData(e,n,r)},[{key:"asString",value:function(){return"".concat(this.data)}}])}(),Si=function(t){function e(){return gi(this,e),li(this,e,arguments)}return hi(e,t),mi(e,[{key:"getData",value:function(t,e){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{types:["hero","league","server","equipment","artifact"]};if(t=(t=Wo.trimSurroundingQuotes(t)).trim(),!Ao.VALID_STRING_RE.test(t))throw new Wo.SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(Ao.VALID_STRING_LITERAL_RE.source," ); got: [").concat(t,"]"));function r(t,n){var r;switch(t){case"hero":return null===(r=xe.getHeroByName(n,e.HM))||void 0===r?void 0:r.name;case"league":return s[n]?n:null;case"server":return Object.values(a).find(function(t){return t.toLowerCase()===n});case"equipment":return Jo.has(n)?n:null;case"artifact":return e.ARTIFACT_LOWERCASE_STRINGS_SET.has(n)?n:null}}var o,i=ci(n.types);try{for(i.s();!(o=i.n()).done;){var c=r(o.value,t);if(c)return console.log("Parsed string: [".concat(t,"] to [").concat(c,"]")),ir(c)}}catch(t){i.e(t)}finally{i.f()}throw new Wo.SyntaxException("Invalid string; All strings must either be a valid [".concat(n.types.join(", "),"]; got: [").concat(t,"]"))}},{key:"asString",value:function(){return'"'.concat(this.data,'"')}}])}(wi),Ei=function(t){function e(){return gi(this,e),li(this,e,arguments)}return hi(e,t),mi(e,[{key:"getData",value:function(t){return Wo.parseDate(t)}},{key:"asString",value:function(){return"".concat(this.rawString)}}])}(wi),Ai=function(t){function e(){return gi(this,e),li(this,e,arguments)}return hi(e,t),mi(e,[{key:"getData",value:function(t){if(!Ao.VALID_INT_LITERAL_RE.test(t))throw new Wo.SyntaxException("Invalid integer; must be a number; got: '".concat(t,"'"));var e=parseInt(t);if(isNaN(e))throw new Wo.SyntaxException("Invalid integer; must be a number; got: '".concat(t,"'"));return e}},{key:"asString",value:function(){return"".concat(this.data)}}])}(wi),_i=function(t){function e(){return gi(this,e),li(this,e,arguments)}return hi(e,t),mi(e,[{key:"getData",value:function(t){if(!Ao.VALID_BOOL_LITERAL_RE.test(t))throw new Wo.SyntaxException("Invalid boolean; must be 'true' or 'false'; got: '".concat(t,"'"));return"true"===t?1:0}},{key:"asString",value:function(){return"".concat(this.data?"true":"false")}}])}(wi),Oi=function(t){function e(){return gi(this,e),li(this,e,arguments)}return hi(e,t),mi(e,[{key:"getData",value:function(t){var e=t.split("...");if(2!==e.length)throw new Wo.SyntaxException("Invalid range; ranges must be of the format x...y or x...=y ; got more than two values when splitting string: '".concat(t,"'"));var n=ai(e,2),r=n[0],o=n[1],i=!1;o.includes("=")&&(o=o.replace("=",""),i=!0);var a={start:null,end:null,endInclusive:i};if(Ao.VALID_DATE_LITERAL_RE.test(r)){if(a.start=Wo.tryConvert(Wo.parseDate,"Date",r,"Could not convert '".concat(r,"' to Date in declared range: '").concat(t,"'")),a.end=Wo.tryConvert(Wo.parseDate,"Date",o,"Could not convert '".concat(o,"' to Date in declared range: '").concat(t,"' ; Ranges must have homogenous types")),a.start>a.end)throw new Wo.SyntaxException("Invalid range; start date must be on or before end date; ".concat(a.start," > ").concat(a.end));a.type="Date"}else{if(!Ao.VALID_INT_LITERAL_RE.test(r))throw new Wo.SyntaxException("Invalid range; must be of the format x...y or x...=y ; got: '".concat(t,"'"));if(a.start=Wo.tryConvert(function(t){return new Ai(t)},"Int",r,"Could not convert '".concat(r,"' to Int in declared range: '").concat(t,"'")).data,a.end=Wo.tryConvert(function(t){return new Ai(t)},"Int",o,"Could not convert '".concat(o,"' to Int in declared range: '").concat(t,"' ; Ranges must have homogenous types")).data,a.start>a.end)throw new Wo.SyntaxException("Invalid range; start integer must be equal to or less than end integer; ".concat(a.start," > ").concat(a.end));a.type="Int"}return console.log("Built Range: ".concat(JSON.stringify(a))),a}},{key:"asString",value:function(){var t=this.data.endInclusive?"...=":"...";return"Date"===this.data.type?"".concat(this.data.start.toISOString().slice(0,10)).concat(t).concat(this.data.end.toISOString().slice(0,10)):"Int"===this.data.type?"".concat(this.data.start).concat(t).concat(this.data.end):"Error Converting Range to String => < ".concat(this.data.start).concat(t).concat(this.data.end," >")}}])}(wi),Ti=function(t){function e(){return gi(this,e),li(this,e,arguments)}return hi(e,t),mi(e,[{key:"getData",value:function(t,e){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{types:["hero","league","server","equipment","artifact"]};if(!Ao.VALID_SET_RE.test(t))throw new Wo.SyntaxException("Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ".concat(Ao.VALID_SET_RE.source," ) (Just chat gpt this one bro); got: '").concat(t,"'"));var r=Wo.tokenizeWithNestedEnclosures(t,",",1,!0).map(function(t){if(Ao.VALID_STRING_RE.test(t))return new Si(t,e,n);if(Ao.VALID_DATE_LITERAL_RE.test(t))return new Ei(t);throw new Wo.SyntaxException("Invalid set element; must be a string or date; got: '".concat(t,"'"))});console.log("GOT ELEMENTS: ",r);var o,i=new Set,a=ci(r);try{for(a.s();!(o=a.n()).done;){var c=o.value;i.add(c.constructor.name)}}catch(t){a.e(t)}finally{a.f()}if(i=function(t){return function(t){if(Array.isArray(t))return si(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||ui(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}(i),console.log("GOT TYPES: ",i),i.size>1)throw new Wo.SyntaxException("Invalid set; all set elements must have the same data type; \n                got: types: [".concat(i.join(", "),"]"));return this.type=i[0],this.str="{".concat(r.map(function(t){return t.asString()}).join(", "),"}"),this.list=r.map(function(t){return t.data}),new Set(this.list)}},{key:"asString",value:function(){return this.str}}])}(wi);var Ii={Date:Ei,String:Si,Int:Ai,Bool:_i,Set:Ti,Range:Oi};function ji(t,e){if(t){if("string"==typeof t)return Di(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Di(t,e):void 0}}function Di(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Ri(t,e,n){return e=Pi(e),function(t,e){if(e&&("object"==xi(e)||"function"==typeof e))return e;if(void 0!==e)throw new TypeError("Derived constructors may only return object or undefined");return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(t,ki()?Reflect.construct(e,n||[],Pi(t).constructor):e.apply(t,n))}function ki(){try{var t=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(t){}return(ki=function(){return!!t})()}function Pi(t){return Pi=Object.setPrototypeOf?Object.getPrototypeOf.bind():function(t){return t.__proto__||Object.getPrototypeOf(t)},Pi(t)}function Ci(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),Object.defineProperty(t,"prototype",{writable:!1}),e&&Fi(t,e)}function Fi(t,e){return Fi=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(t,e){return t.__proto__=e,t},Fi(t,e)}function xi(t){return xi="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},xi(t)}function Li(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function Mi(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,Bi(r.key),r)}}function Ni(t,e,n){return e&&Mi(t.prototype,e),n&&Mi(t,n),Object.defineProperty(t,"prototype",{writable:!1}),t}function Bi(t){var e=function(t){if("object"!=xi(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=xi(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==xi(e)?e:e+""}var Gi=function(){return Ni(function t(){Li(this,t)},[{key:"call",value:function(t){throw new Error("Base class ".concat(this.constructor.name," does not implement the 'call' method. Implement this method in a subclass."))}}])}(),Ui=function(t){function e(t){var n;if(Li(this,e),(n=Ri(this,e)).name="last-N",1!==t.length)throw new Wo.SyntaxException("".concat(n.name," expects 1 argument, got ").concat(t.length));var r=Number(t[0]);if(!Number.isInteger(r))throw new Wo.TypeException("".concat(n.name," expects an integer argument, could not parse '").concat(t[0],"' as integer"));return n.str="".concat(n.name,"(").concat(r,")"),n.n=r,n}return Ci(e,t),Ni(e,[{key:"call",value:function(t){return t.sort(function(t,e){return t["Seq Num"]-e["Seq Num"]}),t.slice(-this.n)}}])}(function(t){function e(){return Li(this,e),Ri(this,e)}return Ci(e,t),Ni(e,[{key:"asString",value:function(){return"".concat(arguments.length>0&&void 0!==arguments[0]?arguments[0]:"").concat(this.str)}}])}(Gi)),Vi=function(t){function e(t){var n;return Li(this,e),(n=Ri(this,e)).fns=t,console.log("Clause Fn constructor got fns:",t),n}return Ci(e,t),Ni(e,[{key:"asString",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",e="",n=t+"   ";return this.fns.localFilters.forEach(function(t){return e+="".concat(t.asString(n),",\n")}),console.log("Clause Fn asString got output:",e),"".concat(t).concat(this.str,"(\n").concat(e.trimEnd(),"\n").concat(t,")")}}])}(Gi),Hi=function(t){function e(t){var n;return Li(this,e),(n=Ri(this,e,[t])).str="AND",n}return Ci(e,t),Ni(e,[{key:"call",value:function(t){return this.fns.localFilters.every(function(e){return e.call(t)})}}])}(Vi),Ki=function(t){function e(t){var n;return Li(this,e),(n=Ri(this,e,[t])).str="OR",n}return Ci(e,t),Ni(e,[{key:"call",value:function(t){return this.fns.localFilters.some(function(e){return e.call(t)})}}])}(Vi),$i=function(t){function e(t){var n;return Li(this,e),(n=Ri(this,e,[t])).str="XOR",n}return Ci(e,t),Ni(e,[{key:"call",value:function(t){var e,n=!1,r=function(t){var e="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!e){if(Array.isArray(t)||(e=ji(t))){e&&(t=e);var n=0,r=function(){};return{s:r,n:function(){return n>=t.length?{done:!0}:{done:!1,value:t[n++]}},e:function(t){throw t},f:r}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,i=!0,a=!1;return{s:function(){e=e.call(t)},n:function(){var t=e.next();return i=t.done,t},e:function(t){a=!0,o=t},f:function(){try{i||null==e.return||e.return()}finally{if(a)throw o}}}}(this.fns.localFilters);try{for(r.s();!(e=r.n()).done;){var o=e.value;n=!n&&o.call(t)||n&&!o.call(t)}}catch(t){r.e(t)}finally{r.f()}return n}}])}(Vi),Wi=function(t){function e(t){var n;return Li(this,e),(n=Ri(this,e,[t])).str="NOT",n}return Ci(e,t),Ni(e,[{key:"call",value:function(t){return!this.fns.localFilters[0].call(t)}}])}(Vi),qi=function(t){function e(){return Li(this,e),Ri(this,e,arguments)}return Ci(e,t),Ni(e,[{key:"asString",value:function(){return"".concat(arguments.length>0&&void 0!==arguments[0]?arguments[0]:"").concat(this.str)}}])}(Gi),Ji=function(t){function e(t,n,r){var o;return Li(this,e),console.log("Received equipment fn args",t,n,r),(o=Ri(this,e)).hero=t.data,o.equipmentCounts=ar(n.list),o.str=(r?"p1":"p2")+".equipment(".concat(t.asString(),", ").concat(n.asString(),")"),o.isPlayer1=r,o}return Ci(e,t),Ni(e,[{key:"call",value:function(t){var e=this.isPlayer1?t["P1 Equipment"]:t["P2 Equipment"],n=this.isPlayer1?t["P1 Picks"]:t["P2 Picks"],r=function(t,e,n){for(var r=0;r<e.length;r++)if(e[r]===t)return n[r];return null}(this.hero,n,e);if(!r)return!1;var o=ar(r);return Object.entries(this.equipmentCounts).every(function(t){var e=function(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,c=[],u=!0,s=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=i.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(s)throw o}}return c}}(t,e)||ji(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}(t,2),n=e[0],r=e[1];return o[n]===r})}}],[{key:"fromFilterStr",value:function(t,n){var r=Wo.tokenizeWithNestedEnclosures(t,",",1,!0);if(2!==r.length)throw new Wo.SyntaxException("Invalid equipment function call ; accepts exactly 2 arguments ; got: [".concat(r,"] from str: ").concat(t));if(!Ao.VALID_STRING_LITERAL_RE.test(r[0]))throw new Wo.TypeException("Invalid equipment function call ; first argument must be a valid string literal ; got: '".concat(r[0],"' from str: ").concat(t));var o=/^\{[",'a-z\s]*\}$/i.test(r[1])?r[1]:"{".concat(r[1],"}"),i=null,a=null;try{i=new Ii.String(r[0],n,{types:["hero"]}),a=new Ii.Set(o,n,{types:["equipment"]})}catch(e){throw new Wo.TypeException("Invalid type in equipment function call; got str: ".concat(t," ; error: ").concat(e))}var c="p1"===t.split(".")[0];return console.log("Sending equipment fn args",i,a,c),new e(i,a,c)}}])}(qi),zi=function(t){function e(t,n,r){var o;return Li(this,e),console.log("Received artifact fn args",t,n,r),(o=Ri(this,e)).hero=t.data,o.artifactArr=function(t){return function(t){if(Array.isArray(t))return Di(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||ji(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}(n.data),o.str=(r?"p1":"p2")+".artifact(".concat(t.asString(),", ").concat(n.asString(),")"),o.isPlayer1=r,o}return Ci(e,t),Ni(e,[{key:"call",value:function(t){var e=this.isPlayer1?t["P1 Artifacts"]:t["P2 Artifacts"],n=this.isPlayer1?t["P1 Picks"]:t["P2 Picks"],r=function(t,e,n){for(var r=0;r<e.length;r++)if(e[r]===t)return n[r];return null}(this.hero,n,e);return console.log("Got equipped Artifact: ".concat(r,", hero: ").concat(this.hero,", picks: ").concat(JSON.stringify(n),", artifacts: ").concat(JSON.stringify(e))),!!r&&this.artifactArr.some(function(t){return r.toLowerCase()===t.toLowerCase()})}}],[{key:"fromFilterStr",value:function(t,n){var r=Wo.tokenizeWithNestedEnclosures(t,",",1,!0);if(2!==r.length)throw new Wo.SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(r,"] from str: ").concat(t));if(!Ao.anchorExp(Ao.VALID_STRING_LITERAL_RE).test(r[0]))throw new Wo.TypeException("Invalid artifact function call ; first argument must be a valid string literal ; got: '".concat(r[0],"' from str: ").concat(t));var o=Ao.VALID_SET_RE.test(r[1])?r[1]:"{".concat(r[1],"}"),i=null,a=null;try{i=new Ii.String(r[0],n,{types:["hero"]}),a=new Ii.Set(o,n,{types:["artifact"]})}catch(e){throw console.error(e),new Wo.TypeException("Invalid type in artifact function call; got str: ".concat(t," ; error: ").concat(e))}var c="p1"===t.split(".")[0];return console.log("Sending artifact fn args",i,a,c),new e(i,a,c)}}])}(qi),Qi=function(t){function e(t,n,r){var o;return Li(this,e),console.log("Received CR-GEQ fn args",t.asString(),n.asString(),r),(o=Ri(this,e)).hero=t.data,o.crThreshold=n.data,o.str=(r?"p1":"p2")+".CR-GEQ(".concat(t.asString(),", ").concat(n.asString(),")"),o.isPlayer1=r,o}return Ci(e,t),Ni(e,[{key:"call",value:function(t){var e=this,n=function(t,n){return n.includes(t[0])&&t[1]>=e.crThreshold&&t[0]===e.hero},r=this.isPlayer1?t[O].find(function(e){return n(e,t[j])}):t[O].find(function(e){return n(e,t[D])});return console.log("Got CR Result: ".concat(r,", hero: ").concat(this.hero,", minValue: ").concat(this.crThreshold)),!!r}}],[{key:"fromFilterStr",value:function(t,n){var r=Wo.tokenizeWithNestedEnclosures(t,",",1,!0);if(2!==r.length)throw new Wo.SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(r,"] from str: ").concat(t));if(!Ao.VALID_STRING_LITERAL_RE.test(r[0]))throw new Wo.TypeException("Invalid CR-GEQ function call ; first argument must be a valid string literal ; got: '".concat(r[0],"' from str: ").concat(t));if(!Ao.VALID_INT_LITERAL_RE.test(r[1]))throw new Wo.TypeException("Invalid CR-GEQ function call ; second argument must be a valid integer literal ; got: '".concat(r[1],"' from str: ").concat(t));var o=r[1],i=null,a=null;try{i=new Ii.String(r[0],n,{types:["hero"]}),a=new Ii.Int(o)}catch(e){throw new Wo.TypeException("Invalid type in CR-GEQ function call; got str: ".concat(t," ; error: ").concat(e))}var c="p1"===t.split(".")[0];return console.log("Sending CR fn args",i,a,c),new e(i,a,c)}}])}(qi),Yi=function(t){function e(t,n,r){var o;return Li(this,e),console.log("Received CR-LT fn args",t.asString(),n.asString(),r),(o=Ri(this,e)).hero=t.data,o.crThreshold=n.data,o.str=(r?"p1":"p2")+".CR-LT(".concat(t.asString(),", ").concat(n.asString(),")"),o.isPlayer1=r,o}return Ci(e,t),Ni(e,[{key:"call",value:function(t){var e=this,n=function(t,n){return n.includes(t[0])&&t[1]<e.crThreshold&&t[0]===e.hero},r=this.isPlayer1?t[O].find(function(e){return n(e,t[j])}):t[O].find(function(e){return n(e,t[D])});return console.log("Got CR Result: ".concat(r,", hero: ").concat(this.hero,", minValue: ").concat(this.crThreshold)),!!r}}],[{key:"fromFilterStr",value:function(t,n){var r=Wo.tokenizeWithNestedEnclosures(t,",",1,!0);if(2!==r.length)throw new Wo.SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(r,"] from str: ").concat(t));if(!Ao.VALID_STRING_LITERAL_RE.test(r[0]))throw new Wo.TypeException("Invalid CR-LT function call ; first argument must be a valid string literal ; got: '".concat(r[0],"' from str: ").concat(t));if(!Ao.VALID_INT_LITERAL_RE.test(r[1]))throw new Wo.TypeException("Invalid CR-LT function call ; second argument must be a valid integer literal ; got: '".concat(r[1],"' from str: ").concat(t));var o=r[1],i=null,a=null;try{i=new Ii.String(r[0],n,{types:["hero"]}),a=new Ii.Int(o)}catch(e){throw new Wo.TypeException("Invalid type in CR-LT function call; got str: ".concat(t," ; error: ").concat(e))}var c="p1"===t.split(".")[0];return console.log("Sending CR fn args",i,a,c),new e(i,a,c)}}])}(qi),Xi={and:Hi,or:Ki,xor:$i,not:Wi,"last-n":Ui,"p1.equipment":Ji,"p2.equipment":Ji,"p1.artifact":zi,"p2.artifact":zi,"p1.cr-geq":Qi,"p2.cr-geq":Qi,"p1.cr-lt":Yi,"p2.cr-lt":Yi};function Zi(t){return Zi="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Zi(t)}function ta(t,e){if(e instanceof Set)return e.has(t);if("object"===Zi(e)&&null!==e&&!Array.isArray(e)&&["start","end","endInclusive","type"].every(function(t){return e.hasOwnProperty(t)}))return t>=e.start&&(e.endInclusive?t<=e.end:t<e.end);if(Array.isArray(e))return e.includes(t);throw new Error("Invalid match pattern for 'in' operators; got: '".concat(t,"' and '").concat(JSON.stringify(e),"}' (").concat(e.constructor.name,")"))}var ea={">":function(t,e){return t>e},"<":function(t,e){return t<e},"=":function(t,e){return t===e},in:function(t,e){return ta(t,e)},">=":function(t,e){return t>=e},"<=":function(t,e){return t<=e},"!=":function(t,e){return t!==e},"!in":function(t,e){return!ta(t,e)}};function na(t){return na="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},na(t)}function ra(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return oa(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(oa(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,oa(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,oa(f,"constructor",s),oa(s,"constructor",u),u.displayName="GeneratorFunction",oa(s,o,"GeneratorFunction"),oa(f),oa(f,o,"Generator"),oa(f,r,function(){return this}),oa(f,"toString",function(){return"[object Generator]"}),(ra=function(){return{w:i,m:p}})()}function oa(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}oa=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){oa(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},oa(t,e,n,r)}function ia(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function aa(t){return function(t){if(Array.isArray(t))return ha(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||pa(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function ca(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function ua(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,la(r.key),r)}}function sa(t,e,n){return e&&ua(t.prototype,e),n&&ua(t,n),Object.defineProperty(t,"prototype",{writable:!1}),t}function la(t){var e=function(t){if("object"!=na(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=na(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==na(e)?e:e+""}function fa(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=pa(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return a=t.done,t},e:function(t){c=!0,i=t},f:function(){try{a||null==n.return||n.return()}finally{if(c)throw i}}}}function pa(t,e){if(t){if("string"==typeof t)return ha(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?ha(t,e):void 0}}function ha(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function da(t){return function(t,e){var n,r=fa(t);try{for(r.s();!(n=r.n()).done;){var o=n.value;if(!e.has(o))throw new Wo.SyntaxException("Invalid character within <".concat("Main Filter String","> ; ' ").concat(o," ' is not allowed; got string: '").concat(t,"'"))}}catch(t){r.e(t)}finally{r.f()}}(t=t.replace(/[\n\t\r]/g," ").replace(/\s+/g," "),qo),t.toLowerCase()}var ya=function(){return sa(function t(e,n){ca(this,t),this.str=e,this.fn=n},[{key:"call",value:function(t){return this.fn(t)}},{key:"asString",value:function(){return"".concat(arguments.length>0&&void 0!==arguments[0]?arguments[0]:"").concat(this.str)}}])}();function ga(t,e,n,r){var o=null;try{o=e in ii.FIELD_EXTRACT_FN_MAP?new ii(e):function(t,e){if(console.log("Trying to Parse DataType: ".concat(t)),Ao.VALID_STRING_LITERAL_RE.test(t))return console.log("Parsing as StringType"),new Si(t,e);if(Ao.VALID_DATE_LITERAL_RE.test(t))return console.log("Parsing as DateType"),new Ei(t);if(Ao.VALID_INT_LITERAL_RE.test(t))return console.log("Parsing as IntType"),new Ai(t);if(Ao.VALID_BOOL_LITERAL_RE.test(t))return console.log("Parsing as BoolType"),new _i(t);if(/\{.*\}/.test(t))return console.log("Parsing as SetType"),new Ti(t,e);if(Ao.VALID_RANGE_LITERAL_RE.test(t))return console.log("Parsing as RangeType"),new Oi(t);if(Ao.VALID_DATA_WORD_LITERAL_RE.test(t))return console.log("Parsing as DataWord"),function(t,e){if(Ao.VALID_SEASON_LITERAL_RE.test(t)){var n=function(t){return t.toISOString().slice(0,10)};if(e.SeasonDetails.length<1)throw new Error("Did not recieve any season details; failed on: '".concat(t,"'"));if("current-season"===t){var r=ai(e.SeasonDetails.find(function(t){return"Active"===t.Status}).range,2),o=r[0],i=r[1];return new Oi("".concat(n(o),"...=").concat(n("N/A"===i?new Date:i)))}var a=Number(t.split("-")[1]),c=e.SeasonDetails.find(function(t){return t["Season Number"]===a});if(!c)throw new Error("Invalid season specified; ".concat(a," is not a valid season number; failed on str: '").concat(t,"'"));var u=ai(c.range,2),s=u[0],l=u[1];return new Oi("".concat(n(s),"...=").concat(n(l)))}}(t,e);if(console.log("Failed to parse DataType"),Ao.VALID_STRING_LITERAL_RE.test("'".concat(t,"'")))throw new Wo.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; did you forget to wrap string literals in double or single quotes?"));if(t.includes("'")&&t.includes('"'))throw new Wo.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; did you encase in mismatching quote types?"));if(t.includes(".=")||t.includes(".."))throw new Wo.SyntaxException("Invalid DataType declaration; got: '".concat(t,"'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only be int-int or date-date"));throw new Wo.SyntaxException("Invalid DataType declaration; could not parse to valid Field or Declared Data Type; got: '".concat(t,"'"))}(e,r)}catch(r){for(var i in ii.FIELD_EXTRACT_FN_MAP)if(e.includes(i)||i.includes(e))throw new Wo.SyntaxException("Could not parse ".concat(t,' side of filter; got: "').concat(e,'" from filter: [').concat(n,"], did you mean to use '").concat(i,"' as a field instead?"));throw console.error(r),new Wo.SyntaxException("Could not parse ".concat(t,' side of filter; got: "').concat(e,'" from filter: [').concat(n,"]; error: ").concat(r.message))}return o}var va=function(){function t(e){if(ca(this,t),e!==ma._)throw new Error("Cannot instantiate FilterSyntaxParser directly; use createAndParse method instead.")}return sa(t,[{key:"asString",value:function(){var t=aa(this.filters.localFilters);return t.push.apply(t,aa(this.filters.globalFilters)),"[\n".concat(t.map(function(t){return t.asString("   ")}).join(";\n"),"\n]")}},{key:"parseGlobalFilterFn",value:function(t,e){var n=Ao.anchorExp(Ao.VALID_GLOBAL_FILTER_RE);if(!n.test(e))throw new Wo.SyntaxException('Invalid global filter format; must follow the case insensitive regex format "'.concat(n.source,"\" ; got: '").concat(e,"'"));var r=Wo.tokenizeWithNestedEnclosures(e,",",1);if(t===Ui)return{localFilters:[],globalFilters:[new Ui(r)]};throw new Wo.SyntaxException("Global filter function ".concat(t.str," not mapped in parseGlobalFilterFn"))}},{key:"parseClauseFn",value:function(e,n){var r=this;console.log("Parsing clause fn:",e.str,n);var o=Wo.tokenizeWithNestedEnclosures(n,",",1).filter(function(t){return t.length>0});if(console.log("Got argArr:",o),e===$i&&o.length<2)throw new Wo.SyntaxException("XOR clause must have at least two arguments; got: ".concat(o.length,' arguments from string: "').concat(n,'"'));if(e===Wi&&1!==o.length)throw new Wo.SyntaxException("NOT clause must have exactly one argument; got: ".concat(o.length,' arguments from string: "').concat(n,'"'));var i=o.reduce(function(t,e){var n,o;return(n=t.localFilters).push.apply(n,aa(r.parseFilters(e).localFilters)),(o=t.globalFilters).push.apply(o,aa(r.parseFilters(e).globalFilters)),t},t.getEmptyFilters());if(i.globalFilters.length>0)throw new Wo.SyntaxException("Global filters not allowed in clause functions; got: ".concat(i.globalFilters,' from string: "').concat(n,'"'));if(e===Wi&&1!==i.localFilters.length)throw new Wo.SyntaxException("NOT clause must have exactly one argument; got: ".concat(i.length,' arguments from string: "').concat(n,'"'));return{localFilters:[new e(i)],globalFilters:[]}}},{key:"parseDirectFn",value:function(t,e){return{localFilters:[t.fromFilterStr(e,this.REFS)],globalFilters:[]}}},{key:"parseBaseFilter",value:function(t){console.log("Parsing base filter:",t);var e=Wo.tokenizeWithNestedEnclosures(t," ",0,!0);if(console.log("Got tokens: ",e,"; Length: ".concat(e.length)),3!==e.length)throw new Wo.SyntaxException("Invalid base filter format; all filters must be of the form: ['X', operator, 'Y']; got tokens: [".concat(e.join(", "),"]"));var n=function(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,c=[],u=!0,s=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;u=!1}else for(;!(u=(r=i.call(n)).done)&&(c.push(r.value),c.length!==e);u=!0);}catch(t){s=!0,o=t}finally{try{if(!u&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(s)throw o}}return c}}(t,e)||pa(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}(e,3),r=n[0],o=n[1],i=n[2];if(!ea[o])throw new Wo.SyntaxException('Invalid operator in base filter; got: "'.concat(o,'" as the operator in filter: [').concat(t,"]"));var a=ea[o];if(r=ga("left",r,t,this.REFS,this.SeasonDetails),i=ga("right",i,t,this.REFS,this.SeasonDetails),("in"===o||"!in"===o)&&!(i instanceof Ii.Set||i instanceof Ii.Range||i instanceof ii&&oi.has(i.str)))throw new Wo.TypeException("When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '".concat(t,"'"));if(i instanceof Ii.Range)if("Date"===i.data.type){if(!r.str.includes("date"))throw new Wo.TypeException("When using a Date Range, the left side of the operator must be a date field; ".concat(r.str," is not a date field; error found in filter: '").concat(t,"'"))}else if("Int"===i.data.type&&!ri.has(r.str))throw new Wo.TypeException("When using an Int Range, the left side of the operator must be an integer field; ".concat(r.str," is not an integer field; error found in filter: '").concat(t,"'"));if(i instanceof wi&&r instanceof wi)throw new Wo.SyntaxException("Either left or right side of filter must be a data field (a property of a battle); both ".concat(r," and ").concat(i,' are user declared data types in filter: "').concat(t,'"'));var c;c=r instanceof wi?function(t){return a(r.data,i.extractData(t))}:i instanceof wi?function(t){return a(r.extractData(t),i.data)}:function(t){return a(r.extractData(t),i.extractData(t))};var u="".concat(r.asString()," ").concat(o," ").concat(i.asString()),s=new ya(u,c);return console.log("Returning base local filter",[s.asString()]),{localFilters:[s],globalFilters:[]}}},{key:"parseFilters",value:function(e){var n=this;if(console.log('Parsing filter string: "'.concat(e||this.preParsedString,'"')),""===e)return console.log("Empty filter string; Returning empty filters"),t.getEmptyFilters();var r,o=(e=e.trim()).split(";").filter(function(t){return t.length>0}),i=fa(o);try{for(i.s();!(r=i.n()).done;){var a=r.value,c=Wo.getCharCounts(a);if(c["("]!==c[")"])throw new Wo.SyntaxException('Imbalanced parentheses in following string: "'.concat(a,'"'));if(c["{"]!==c["}"])throw new Wo.SyntaxException("Imbalanced braces ('{', '}') in following string: \"".concat(a,'"'))}}catch(t){i.e(t)}finally{i.f()}if(o.length>1)return console.log("Processing <".concat(o.length,"> filters; filters: ").concat(o)),o.reduce(function(t,e){var r,o;return(r=t.localFilters).push.apply(r,aa(n.parseFilters(e).localFilters)),(o=t.globalFilters).push.apply(o,aa(n.parseFilters(e).globalFilters)),t},t.getEmptyFilters());var u=o[0].trim();if(u.length<4)throw new Wo.SyntaxException("Filter string cannot be valid (less than 4 characters); got filter string: [".concat(u,"]"));var s=u.split("("),l=Xi[s[0]];if(console.log("Trying to look for Fn ; got string:",u),l){if(Ao.VALID_CLAUSE_FUNCTIONS_RE.test(u))return console.log("Found clause fn; dispatching to clause fn parser"),this.parseClauseFn(l,u);if(Ao.VALID_GLOBAL_FUNCTIONS_RE.test(u))return console.log("Found global filter fn; dispatching to global filter fn parser"),this.parseGlobalFilterFn(l,u);if(Ao.VALID_DIRECT_FUNCTIONS_RE.test(u))return this.parseDirectFn(l,u);throw new Error('could not parse filter string as Fn: "'.concat(e,'" ; did not map to any known function ; check filter-syntax page'))}return console.log("Did not find Fn; dispatching to base filter parser"),this.parseBaseFilter(u)}}],[{key:"getEmptyFilters",value:function(){return{localFilters:[],globalFilters:[]}}},{key:"createAndParse",value:(e=ra().m(function e(n){var r,o,i,a,c,u=arguments;return ra().w(function(e){for(;;)switch(e.n){case 0:if(r=u.length>1&&void 0!==u[1]?u[1]:null,o=u.length>2&&void 0!==u[2]?u[2]:null,console.log("Initialized parsing of string:",n),i=new t(ma._),a=r){e.n=2;break}return e.n=1,xe.getHeroManager();case 1:a=e.v;case 2:if(r=a,c=o){e.n=4;break}return e.n=3,$r.getSeasonDetails();case 3:c=e.v;case 4:return o=c,i.rawString=n,i.HM=r,e.n=5,yn.getArtifactLowercaseNameSet();case 5:return i.ARTIFACT_LOWERCASE_STRINGS_SET=e.v,console.log("Got Artifact Lowercase Strings Set"),console.log(i.ARTIFACT_LOWERCASE_STRINGS_SET),i.SeasonDetails=o,i.REFS={HM:i.HM,ARTIFACT_LOWERCASE_STRINGS_SET:i.ARTIFACT_LOWERCASE_STRINGS_SET,SeasonDetails:i.SeasonDetails},i.preParsedString=da(n),i.globalFilters=[],i.filters=i.parseFilters(i.preParsedString),console.log("Got Filters\n"),console.log(i.asString()),e.a(2,i)}},e)}),n=function(){var t=this,n=arguments;return new Promise(function(r,o){var i=e.apply(t,n);function a(t){ia(i,r,o,a,c,"next",t)}function c(t){ia(i,r,o,a,c,"throw",t)}a(void 0)})},function(t){return n.apply(this,arguments)})}]);var e,n}(),ma={_:Symbol("internal")};const ba=va;function wa(t){return wa="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},wa(t)}function Sa(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=function(t,e){if(t){if("string"==typeof t)return Ea(t,e);var n={}.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?Ea(t,e):void 0}}(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return a=t.done,t},e:function(t){c=!0,i=t},f:function(){try{a||null==n.return||n.return()}finally{if(c)throw i}}}}function Ea(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=Array(e);n<e;n++)r[n]=t[n];return r}function Aa(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return _a(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(_a(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,_a(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,_a(f,"constructor",s),_a(s,"constructor",u),u.displayName="GeneratorFunction",_a(s,o,"GeneratorFunction"),_a(f),_a(f,o,"Generator"),_a(f,r,function(){return this}),_a(f,"toString",function(){return"[object Generator]"}),(Aa=function(){return{w:i,m:p}})()}function _a(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}_a=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){_a(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},_a(t,e,n,r)}function Oa(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Ta(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){Oa(i,r,o,a,c,"next",t)}function c(t){Oa(i,r,o,a,c,"throw",t)}a(void 0)})}}function Ia(t,e,n){return(e=function(t){var e=function(t){if("object"!=wa(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=wa(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==wa(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}var ja=Ia(Ia(Ia(Ia(Ia({},e,Se.Keys.GLOBAL_USERS),i,Se.Keys.EU_USERS),o,Se.Keys.ASIA_USERS),r,Se.Keys.JPN_USERS),n,Se.Keys.KOR_USERS);function Da(t,e){return{id:t.nick_no,name:t.nick_nm,code:t.code,rank:t.rank,world_code:e}}function Ra(t){return ka.apply(this,arguments)}function ka(){return(ka=Ta(Aa().m(function t(e){var n;return Aa().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting user map for world code from E7 server: ".concat(e)),t.n=1,ct.fetchUserJSON(e);case 1:if(n=t.v){t.n=2;break}return console.log("Could not get user map from E7 server for world code: ".concat(e)),t.a(2,null);case 2:return console.log("Got user map from E7 server for world code: ".concat(e)),t.a(2,Object.fromEntries(n.users.map(function(t){return[t.nick_no,Da(t,e)]})))}},t)}))).apply(this,arguments)}var Pa,Ca,Fa,xa,La,Ma={getUserMap:(La=Ta(Aa().m(function t(e){var n,r;return Aa().w(function(t){for(;;)switch(t.n){case 0:return console.log("Getting user map for world code: ".concat(e)),t.n=1,Se.get(ja[e]);case 1:if(null===(n=t.v)){t.n=2;break}return console.log("Got user map from cache"),t.a(2,n);case 2:return t.n=3,Ra(e);case 3:return r=t.v,t.n=4,Se.cache(ja[e],r);case 4:return t.a(2,r)}},t)})),function(t){return La.apply(this,arguments)}),findUser:(xa=Ta(Aa().m(function e(n){var r,o,i,c,u,s,l,f,p,h,d,y,g,v,m,b,w;return Aa().w(function(e){for(;;)switch(e.n){case 0:if(r=!1,o=function(t){return a[t]},console.log("Attempting to find user: ".concat(JSON.stringify(n))),!n.id){e.n=12;break}i=Sa(t),e.p=1,i.s();case 2:if((c=i.n()).done){e.n=8;break}if(u=c.value,!n.world_code||n.world_code===u){e.n=3;break}return e.a(3,7);case 3:return e.n=4,this.getUserMap(u);case 4:if(s=e.v,(l=Object.values(s))&&0!==l.length){e.n=5;break}return console.log("User map had no users, falling back to flask server for world code: ".concat(o(u))),r=!0,e.a(3,7);case 5:if(!(f=l.find(function(t){return t.id===n.id}))){e.n=6;break}return console.log("Found user: ".concat(JSON.stringify(f)," in world code: ").concat(o(u))),e.a(2,{user:f,error:!1});case 6:console.log("Could not find user with ID: ".concat(n.id," in world code: ").concat(o(u)," from client-side means"));case 7:e.n=2;break;case 8:e.n=10;break;case 9:e.p=9,w=e.v,i.e(w);case 10:return e.p=10,i.f(),e.f(10);case 11:e.n=18;break;case 12:if(!n.name||!n.world_code){e.n=17;break}return p=[n.name,n.world_code],h=p[0],d=p[1],e.n=13,this.getUserMap(d);case 13:if(y=e.v,(g=Object.values(y))&&0!==g.length){e.n=14;break}console.log("User map had no users, falling back to flask server for world code: ".concat(o(d))),r=!0,e.n=16;break;case 14:if(v=h.toLowerCase(),m=g.find(function(t){return v===t.name.toLowerCase()}),!m){e.n=15;break}return console.log("Found user: ".concat(JSON.stringify(m)," in world code: ").concat(o(d))),e.a(2,{user:m,error:!1});case 15:console.log("Could not find user with ID: ".concat(n.id," in world code: ").concat(o(d)," from client-side means"));case 16:e.n=18;break;case 17:return console.error("Must pass a user object with either user.name and user.world_code or user.id to fetch user"),e.a(2,{user:null,error:"Must pass a user object with either user.name and user.world_code or user.id to fetch user"});case 18:if(!r){e.n=21;break}return console.log("Failed to find user through client-side means; falling back to flask server"),e.n=19,bt.fetchUser(n);case 19:if(!(b=e.v).error){e.n=20;break}return e.a(2,{user:null,error:b.error});case 20:return e.a(2,{user:b.user,error:!1});case 21:return e.a(2,{user:null,error:"Could not find user"});case 22:return e.a(2)}},e,this,[[1,9,10,11]])})),function(t){return xa.apply(this,arguments)}),setUser:(Fa=Ta(Aa().m(function t(e){return Aa().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.cache(Se.Keys.USER,e);case 1:return t.a(2)}},t)})),function(t){return Fa.apply(this,arguments)}),getUser:(Ca=Ta(Aa().m(function t(){return Aa().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.get(Se.Keys.USER);case 1:return t.a(2,t.v)}},t)})),function(){return Ca.apply(this,arguments)}),clearUserData:function(){var t=Ta(Aa().m(function t(){return Aa().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.clearUserData();case 1:return t.a(2)}},t)}));return function(){return t.apply(this,arguments)}}(),clearUserDataLists:(Pa=Ta(Aa().m(function t(){return Aa().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.delete(Se.Keys.GLOBAL_USERS);case 1:return t.n=2,Se.delete(Se.Keys.EU_USERS);case 2:return t.n=3,Se.delete(Se.Keys.ASIA_USERS);case 3:return t.n=4,Se.delete(Se.Keys.JPN_USERS);case 4:return t.n=5,Se.delete(Se.Keys.KOR_USERS);case 5:return t.a(2)}},t)})),function(){return Pa.apply(this,arguments)})};const Na=Ma;function Ba(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Ga(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Ga(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Ga(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Ga(f,"constructor",s),Ga(s,"constructor",u),u.displayName="GeneratorFunction",Ga(s,o,"GeneratorFunction"),Ga(f),Ga(f,o,"Generator"),Ga(f,r,function(){return this}),Ga(f,"toString",function(){return"[object Generator]"}),(Ba=function(){return{w:i,m:p}})()}function Ga(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Ga=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){Ga(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},Ga(t,e,n,r)}function Ua(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}var Va,Ha,Ka={HeroManager:xe,BattleManager:Lr,SeasonManager:$r,UserManager:Na,ClientCache:Se,ArtifactManager:yn,getFilters:(Va=Ba().m(function t(e){var n,r,o;return Ba().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,Se.getFilterStr();case 1:if(n=t.v){t.n=2;break}return t.a(2,ba.getEmptyFilters());case 2:return t.n=3,$r.getSeasonDetails();case 3:return r=t.v,t.n=4,ba.createAndParse(n,e,r);case 4:return o=t.v,t.a(2,o.filters)}},t)}),Ha=function(){var t=this,e=arguments;return new Promise(function(n,r){var o=Va.apply(t,e);function i(t){Ua(o,n,r,i,a,"next",t)}function a(t){Ua(o,n,r,i,a,"throw",t)}i(void 0)})},function(t){return Ha.apply(this,arguments)})};const $a=Ka;function Wa(t){return Wa="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Wa(t)}function qa(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return Ja(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(Ja(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,Ja(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,Ja(f,"constructor",s),Ja(s,"constructor",u),u.displayName="GeneratorFunction",Ja(s,o,"GeneratorFunction"),Ja(f),Ja(f,o,"Generator"),Ja(f,r,function(){return this}),Ja(f,"toString",function(){return"[object Generator]"}),(qa=function(){return{w:i,m:p}})()}function Ja(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}Ja=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){Ja(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},Ja(t,e,n,r)}function za(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function Qa(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){za(i,r,o,a,c,"next",t)}function c(t){za(i,r,o,a,c,"throw",t)}a(void 0)})}}function Ya(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,Za(r.key),r)}}function Xa(t,e,n){return(e=Za(e))in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}function Za(t){var e=function(t){if("object"!=Wa(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var n=e.call(t,"string");if("object"!=Wa(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==Wa(e)?e:e+""}var tc={GLOBAL_SERVER:"Global Server",KOR_SERVER:"Korea Server",JPN_SERVER:"Japan Server",ASIA_SERVER:"Asia Server",EU_SERVER:"Europe Server",HEROES:"Heroes",ARTIFACTS:"Artifacts"},ec={keys:["name"],threshold:.2},nc={keys:["name"],threshold:.2},rc={keys:["name"],threshold:.2};function oc(t,e){return cr(t,e,null,ec)}function ic(t,e){return cr(t,e,null,nc)}function ac(t,e){return cr(t,e,null,rc)}var cc=function(){return function(t,e){return e&&Ya(t.prototype,e),Object.defineProperty(t,"prototype",{writable:!1}),t}(function t(){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),Xa(this,"DOMAIN_CACHE",{})},[{key:"get_domain",value:(a=Qa(qa().m(function t(a){var c,u;return qa().w(function(t){for(;;)switch(t.n){case 0:if(this.DOMAIN_CACHE[a]){t.n=10;break}u=a,t.n=u===tc.GLOBAL_SERVER?1:u===tc.KOR_SERVER?2:u===tc.JPN_SERVER?3:u===tc.ASIA_SERVER?4:u===tc.EU_SERVER?5:u===tc.HEROES?6:u===tc.ARTIFACTS?7:8;break;case 1:return this.DOMAIN_CACHE[a]=Na.getUserMap(e),t.a(3,8);case 2:return this.DOMAIN_CACHE[a]=Na.getUserMap(n),t.a(3,8);case 3:return this.DOMAIN_CACHE[a]=Na.getUserMap(r),t.a(3,8);case 4:return this.DOMAIN_CACHE[a]=Na.getUserMap(o),t.a(3,8);case 5:return this.DOMAIN_CACHE[a]=Na.getUserMap(i),t.a(3,8);case 6:return this.DOMAIN_CACHE[a]=xe.getHeroManager(),t.a(3,8);case 7:return this.DOMAIN_CACHE[a]=yn.getArtifactObjectList(),t.a(3,8);case 8:return t.n=9,this.DOMAIN_CACHE[a];case 9:c=t.v,Array.isArray(c)||(this.DOMAIN_CACHE[a]=a===tc.HEROES?c.heroes:Object.values(c));case 10:return t.n=11,this.DOMAIN_CACHE[a];case 11:return t.a(2,t.v)}},t,this)})),function(t){return a.apply(this,arguments)})},{key:"search",value:(t=Qa(qa().m(function t(e,n){var r,o;return qa().w(function(t){for(;;)switch(t.n){case 0:console.log("Searching ".concat(e," for ").concat(n)),o=e,t.n=o===tc.GLOBAL_SERVER?1:o===tc.KOR_SERVER?3:o===tc.JPN_SERVER?5:o===tc.ASIA_SERVER?7:o===tc.EU_SERVER?9:o===tc.HEROES?11:o===tc.ARTIFACTS?13:15;break;case 1:return t.n=2,this.get_domain(e);case 2:case 4:case 6:case 8:case 10:return r=t.v,t.a(2,ic(n,r));case 3:return t.n=4,this.get_domain(e);case 5:return t.n=6,this.get_domain(e);case 7:return t.n=8,this.get_domain(e);case 9:return t.n=10,this.get_domain(e);case 11:return t.n=12,this.get_domain(e);case 12:return r=t.v,t.a(2,oc(n,r));case 13:return t.n=14,this.get_domain(e);case 14:return r=t.v,t.a(2,ac(n,r));case 15:throw new Error("Unknown domain: ".concat(e));case 16:return t.a(2)}},t,this)})),function(e,n){return t.apply(this,arguments)})}]);var t,a}();function uc(){var t,e,n="function"==typeof Symbol?Symbol:{},r=n.iterator||"@@iterator",o=n.toStringTag||"@@toStringTag";function i(n,r,o,i){var u=r&&r.prototype instanceof c?r:c,s=Object.create(u.prototype);return sc(s,"_invoke",function(n,r,o){var i,c,u,s=0,l=o||[],f=!1,p={p:0,n:0,v:t,a:h,f:h.bind(t,4),d:function(e,n){return i=e,c=0,u=t,p.n=n,a}};function h(n,r){for(c=n,u=r,e=0;!f&&s&&!o&&e<l.length;e++){var o,i=l[e],h=p.p,d=i[2];n>3?(o=d===r)&&(u=i[(c=i[4])?5:(c=3,3)],i[4]=i[5]=t):i[0]<=h&&((o=n<2&&h<i[1])?(c=0,p.v=r,p.n=i[1]):h<d&&(o=n<3||i[0]>r||r>d)&&(i[4]=n,i[5]=r,p.n=d,c=0))}if(o||n>1)return a;throw f=!0,r}return function(o,l,d){if(s>1)throw TypeError("Generator is already running");for(f&&1===l&&h(l,d),c=l,u=d;(e=c<2?t:u)||!f;){i||(c?c<3?(c>1&&(p.n=-1),h(c,u)):p.n=u:p.v=u);try{if(s=2,i){if(c||(o="next"),e=i[o]){if(!(e=e.call(i,u)))throw TypeError("iterator result is not an object");if(!e.done)return e;u=e.value,c<2&&(c=0)}else 1===c&&(e=i.return)&&e.call(i),c<2&&(u=TypeError("The iterator does not provide a '"+o+"' method"),c=1);i=t}else if((e=(f=p.n<0)?u:n.call(r,p))!==a)break}catch(e){i=t,c=1,u=e}finally{s=1}}return{value:e,done:f}}}(n,o,i),!0),s}var a={};function c(){}function u(){}function s(){}e=Object.getPrototypeOf;var l=[][r]?e(e([][r]())):(sc(e={},r,function(){return this}),e),f=s.prototype=c.prototype=Object.create(l);function p(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,s):(t.__proto__=s,sc(t,o,"GeneratorFunction")),t.prototype=Object.create(f),t}return u.prototype=s,sc(f,"constructor",s),sc(s,"constructor",u),u.displayName="GeneratorFunction",sc(s,o,"GeneratorFunction"),sc(f),sc(f,o,"Generator"),sc(f,r,function(){return this}),sc(f,"toString",function(){return"[object Generator]"}),(uc=function(){return{w:i,m:p}})()}function sc(t,e,n,r){var o=Object.defineProperty;try{o({},"",{})}catch(t){o=0}sc=function(t,e,n,r){if(e)o?o(t,e,{value:n,enumerable:!r,configurable:!r,writable:!r}):t[e]=n;else{var i=function(e,n){sc(t,e,function(t){return this._invoke(e,n,t)})};i("next",0),i("throw",1),i("return",2)}},sc(t,e,n,r)}function lc(t,e,n,r,o,i,a){try{var c=t[i](a),u=c.value}catch(t){return void n(t)}c.done?e(u):Promise.resolve(u).then(r,o)}function fc(t){return function(){var e=this,n=arguments;return new Promise(function(r,o){var i=t.apply(e,n);function a(t){lc(i,r,o,a,c,"next",t)}function c(t){lc(i,r,o,a,c,"throw",t)}a(void 0)})}}function pc(t){return pc="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},pc(t)}Xa(cc,"DOMAINS",tc),document.addEventListener("DOMContentLoaded",fc(uc().m(function t(){var e,n,r,o,i,a;return uc().w(function(t){for(;;)switch(t.n){case 0:return t.n=1,$a.ArtifactManager.clearArtifactData();case 1:return t.n=2,$a.UserManager.getUserMap("world_global");case 2:return e=t.v,t.n=3,$a.HeroManager.getHeroManager();case 3:return t.v,t.n=4,$a.ArtifactManager.getArtifacts();case 4:return n=t.v,console.log("Got artifacts:",n,pc(n),n.length),console.log(cr("wolf",Object.values(e),10,{keys:["name"],distance:4})),r=new cc,t.n=5,r.search("Global Server","wolf");case 5:return o=t.v,t.n=6,yn.getArtifactObjectList();case 6:return i=t.v,console.log(i),t.n=7,r.search(cc.DOMAINS.ARTIFACTS,"elbris");case 7:a=t.v,console.log(o.map(function(t){return[t.item.name,t.item.id]})),console.log(a);case 8:return t.a(2)}},t)})))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/fuse.js/dist/fuse.mjs":
+/*!********************************************!*\
+  !*** ./node_modules/fuse.js/dist/fuse.mjs ***!
+  \********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Fuse)
+/* harmony export */ });
+/**
+ * Fuse.js v7.1.0 - Lightweight fuzzy-search (http://fusejs.io)
+ *
+ * Copyright (c) 2025 Kiro Risk (http://kiro.me)
+ * All Rights Reserved. Apache Software License 2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+function isArray(value) {
+  return !Array.isArray
+    ? getTag(value) === '[object Array]'
+    : Array.isArray(value)
+}
+
+// Adapted from: https://github.com/lodash/lodash/blob/master/.internal/baseToString.js
+const INFINITY = 1 / 0;
+function baseToString(value) {
+  // Exit early for strings to avoid a performance hit in some environments.
+  if (typeof value == 'string') {
+    return value
+  }
+  let result = value + '';
+  return result == '0' && 1 / value == -INFINITY ? '-0' : result
+}
+
+function toString(value) {
+  return value == null ? '' : baseToString(value)
+}
+
+function isString(value) {
+  return typeof value === 'string'
+}
+
+function isNumber(value) {
+  return typeof value === 'number'
+}
+
+// Adapted from: https://github.com/lodash/lodash/blob/master/isBoolean.js
+function isBoolean(value) {
+  return (
+    value === true ||
+    value === false ||
+    (isObjectLike(value) && getTag(value) == '[object Boolean]')
+  )
+}
+
+function isObject(value) {
+  return typeof value === 'object'
+}
+
+// Checks if `value` is object-like.
+function isObjectLike(value) {
+  return isObject(value) && value !== null
+}
+
+function isDefined(value) {
+  return value !== undefined && value !== null
+}
+
+function isBlank(value) {
+  return !value.trim().length
+}
+
+// Gets the `toStringTag` of `value`.
+// Adapted from: https://github.com/lodash/lodash/blob/master/.internal/getTag.js
+function getTag(value) {
+  return value == null
+    ? value === undefined
+      ? '[object Undefined]'
+      : '[object Null]'
+    : Object.prototype.toString.call(value)
+}
+
+const EXTENDED_SEARCH_UNAVAILABLE = 'Extended search is not available';
+
+const INCORRECT_INDEX_TYPE = "Incorrect 'index' type";
+
+const LOGICAL_SEARCH_INVALID_QUERY_FOR_KEY = (key) =>
+  `Invalid value for key ${key}`;
+
+const PATTERN_LENGTH_TOO_LARGE = (max) =>
+  `Pattern length exceeds max of ${max}.`;
+
+const MISSING_KEY_PROPERTY = (name) => `Missing ${name} property in key`;
+
+const INVALID_KEY_WEIGHT_VALUE = (key) =>
+  `Property 'weight' in key '${key}' must be a positive integer`;
+
+const hasOwn = Object.prototype.hasOwnProperty;
+
+class KeyStore {
+  constructor(keys) {
+    this._keys = [];
+    this._keyMap = {};
+
+    let totalWeight = 0;
+
+    keys.forEach((key) => {
+      let obj = createKey(key);
+
+      this._keys.push(obj);
+      this._keyMap[obj.id] = obj;
+
+      totalWeight += obj.weight;
+    });
+
+    // Normalize weights so that their sum is equal to 1
+    this._keys.forEach((key) => {
+      key.weight /= totalWeight;
+    });
+  }
+  get(keyId) {
+    return this._keyMap[keyId]
+  }
+  keys() {
+    return this._keys
+  }
+  toJSON() {
+    return JSON.stringify(this._keys)
+  }
+}
+
+function createKey(key) {
+  let path = null;
+  let id = null;
+  let src = null;
+  let weight = 1;
+  let getFn = null;
+
+  if (isString(key) || isArray(key)) {
+    src = key;
+    path = createKeyPath(key);
+    id = createKeyId(key);
+  } else {
+    if (!hasOwn.call(key, 'name')) {
+      throw new Error(MISSING_KEY_PROPERTY('name'))
+    }
+
+    const name = key.name;
+    src = name;
+
+    if (hasOwn.call(key, 'weight')) {
+      weight = key.weight;
+
+      if (weight <= 0) {
+        throw new Error(INVALID_KEY_WEIGHT_VALUE(name))
+      }
+    }
+
+    path = createKeyPath(name);
+    id = createKeyId(name);
+    getFn = key.getFn;
+  }
+
+  return { path, id, weight, src, getFn }
+}
+
+function createKeyPath(key) {
+  return isArray(key) ? key : key.split('.')
+}
+
+function createKeyId(key) {
+  return isArray(key) ? key.join('.') : key
+}
+
+function get(obj, path) {
+  let list = [];
+  let arr = false;
+
+  const deepGet = (obj, path, index) => {
+    if (!isDefined(obj)) {
+      return
+    }
+    if (!path[index]) {
+      // If there's no path left, we've arrived at the object we care about.
+      list.push(obj);
+    } else {
+      let key = path[index];
+
+      const value = obj[key];
+
+      if (!isDefined(value)) {
+        return
+      }
+
+      // If we're at the last value in the path, and if it's a string/number/bool,
+      // add it to the list
+      if (
+        index === path.length - 1 &&
+        (isString(value) || isNumber(value) || isBoolean(value))
+      ) {
+        list.push(toString(value));
+      } else if (isArray(value)) {
+        arr = true;
+        // Search each item in the array.
+        for (let i = 0, len = value.length; i < len; i += 1) {
+          deepGet(value[i], path, index + 1);
+        }
+      } else if (path.length) {
+        // An object. Recurse further.
+        deepGet(value, path, index + 1);
+      }
+    }
+  };
+
+  // Backwards compatibility (since path used to be a string)
+  deepGet(obj, isString(path) ? path.split('.') : path, 0);
+
+  return arr ? list : list[0]
+}
+
+const MatchOptions = {
+  // Whether the matches should be included in the result set. When `true`, each record in the result
+  // set will include the indices of the matched characters.
+  // These can consequently be used for highlighting purposes.
+  includeMatches: false,
+  // When `true`, the matching function will continue to the end of a search pattern even if
+  // a perfect match has already been located in the string.
+  findAllMatches: false,
+  // Minimum number of characters that must be matched before a result is considered a match
+  minMatchCharLength: 1
+};
+
+const BasicOptions = {
+  // When `true`, the algorithm continues searching to the end of the input even if a perfect
+  // match is found before the end of the same input.
+  isCaseSensitive: false,
+  // When `true`, the algorithm will ignore diacritics (accents) in comparisons
+  ignoreDiacritics: false,
+  // When true, the matching function will continue to the end of a search pattern even if
+  includeScore: false,
+  // List of properties that will be searched. This also supports nested properties.
+  keys: [],
+  // Whether to sort the result list, by score
+  shouldSort: true,
+  // Default sort function: sort by ascending score, ascending index
+  sortFn: (a, b) =>
+    a.score === b.score ? (a.idx < b.idx ? -1 : 1) : a.score < b.score ? -1 : 1
+};
+
+const FuzzyOptions = {
+  // Approximately where in the text is the pattern expected to be found?
+  location: 0,
+  // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
+  // (of both letters and location), a threshold of '1.0' would match anything.
+  threshold: 0.6,
+  // Determines how close the match must be to the fuzzy location (specified above).
+  // An exact letter match which is 'distance' characters away from the fuzzy location
+  // would score as a complete mismatch. A distance of '0' requires the match be at
+  // the exact location specified, a threshold of '1000' would require a perfect match
+  // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
+  distance: 100
+};
+
+const AdvancedOptions = {
+  // When `true`, it enables the use of unix-like search commands
+  useExtendedSearch: false,
+  // The get function to use when fetching an object's properties.
+  // The default will search nested paths *ie foo.bar.baz*
+  getFn: get,
+  // When `true`, search will ignore `location` and `distance`, so it won't matter
+  // where in the string the pattern appears.
+  // More info: https://fusejs.io/concepts/scoring-theory.html#fuzziness-score
+  ignoreLocation: false,
+  // When `true`, the calculation for the relevance score (used for sorting) will
+  // ignore the field-length norm.
+  // More info: https://fusejs.io/concepts/scoring-theory.html#field-length-norm
+  ignoreFieldNorm: false,
+  // The weight to determine how much field length norm effects scoring.
+  fieldNormWeight: 1
+};
+
+var Config = {
+  ...BasicOptions,
+  ...MatchOptions,
+  ...FuzzyOptions,
+  ...AdvancedOptions
+};
+
+const SPACE = /[^ ]+/g;
+
+// Field-length norm: the shorter the field, the higher the weight.
+// Set to 3 decimals to reduce index size.
+function norm(weight = 1, mantissa = 3) {
+  const cache = new Map();
+  const m = Math.pow(10, mantissa);
+
+  return {
+    get(value) {
+      const numTokens = value.match(SPACE).length;
+
+      if (cache.has(numTokens)) {
+        return cache.get(numTokens)
+      }
+
+      // Default function is 1/sqrt(x), weight makes that variable
+      const norm = 1 / Math.pow(numTokens, 0.5 * weight);
+
+      // In place of `toFixed(mantissa)`, for faster computation
+      const n = parseFloat(Math.round(norm * m) / m);
+
+      cache.set(numTokens, n);
+
+      return n
+    },
+    clear() {
+      cache.clear();
+    }
+  }
+}
+
+class FuseIndex {
+  constructor({
+    getFn = Config.getFn,
+    fieldNormWeight = Config.fieldNormWeight
+  } = {}) {
+    this.norm = norm(fieldNormWeight, 3);
+    this.getFn = getFn;
+    this.isCreated = false;
+
+    this.setIndexRecords();
+  }
+  setSources(docs = []) {
+    this.docs = docs;
+  }
+  setIndexRecords(records = []) {
+    this.records = records;
+  }
+  setKeys(keys = []) {
+    this.keys = keys;
+    this._keysMap = {};
+    keys.forEach((key, idx) => {
+      this._keysMap[key.id] = idx;
+    });
+  }
+  create() {
+    if (this.isCreated || !this.docs.length) {
+      return
+    }
+
+    this.isCreated = true;
+
+    // List is Array<String>
+    if (isString(this.docs[0])) {
+      this.docs.forEach((doc, docIndex) => {
+        this._addString(doc, docIndex);
+      });
+    } else {
+      // List is Array<Object>
+      this.docs.forEach((doc, docIndex) => {
+        this._addObject(doc, docIndex);
+      });
+    }
+
+    this.norm.clear();
+  }
+  // Adds a doc to the end of the index
+  add(doc) {
+    const idx = this.size();
+
+    if (isString(doc)) {
+      this._addString(doc, idx);
+    } else {
+      this._addObject(doc, idx);
+    }
+  }
+  // Removes the doc at the specified index of the index
+  removeAt(idx) {
+    this.records.splice(idx, 1);
+
+    // Change ref index of every subsquent doc
+    for (let i = idx, len = this.size(); i < len; i += 1) {
+      this.records[i].i -= 1;
+    }
+  }
+  getValueForItemAtKeyId(item, keyId) {
+    return item[this._keysMap[keyId]]
+  }
+  size() {
+    return this.records.length
+  }
+  _addString(doc, docIndex) {
+    if (!isDefined(doc) || isBlank(doc)) {
+      return
+    }
+
+    let record = {
+      v: doc,
+      i: docIndex,
+      n: this.norm.get(doc)
+    };
+
+    this.records.push(record);
+  }
+  _addObject(doc, docIndex) {
+    let record = { i: docIndex, $: {} };
+
+    // Iterate over every key (i.e, path), and fetch the value at that key
+    this.keys.forEach((key, keyIndex) => {
+      let value = key.getFn ? key.getFn(doc) : this.getFn(doc, key.path);
+
+      if (!isDefined(value)) {
+        return
+      }
+
+      if (isArray(value)) {
+        let subRecords = [];
+        const stack = [{ nestedArrIndex: -1, value }];
+
+        while (stack.length) {
+          const { nestedArrIndex, value } = stack.pop();
+
+          if (!isDefined(value)) {
+            continue
+          }
+
+          if (isString(value) && !isBlank(value)) {
+            let subRecord = {
+              v: value,
+              i: nestedArrIndex,
+              n: this.norm.get(value)
+            };
+
+            subRecords.push(subRecord);
+          } else if (isArray(value)) {
+            value.forEach((item, k) => {
+              stack.push({
+                nestedArrIndex: k,
+                value: item
+              });
+            });
+          } else ;
+        }
+        record.$[keyIndex] = subRecords;
+      } else if (isString(value) && !isBlank(value)) {
+        let subRecord = {
+          v: value,
+          n: this.norm.get(value)
+        };
+
+        record.$[keyIndex] = subRecord;
+      }
+    });
+
+    this.records.push(record);
+  }
+  toJSON() {
+    return {
+      keys: this.keys,
+      records: this.records
+    }
+  }
+}
+
+function createIndex(
+  keys,
+  docs,
+  { getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {}
+) {
+  const myIndex = new FuseIndex({ getFn, fieldNormWeight });
+  myIndex.setKeys(keys.map(createKey));
+  myIndex.setSources(docs);
+  myIndex.create();
+  return myIndex
+}
+
+function parseIndex(
+  data,
+  { getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {}
+) {
+  const { keys, records } = data;
+  const myIndex = new FuseIndex({ getFn, fieldNormWeight });
+  myIndex.setKeys(keys);
+  myIndex.setIndexRecords(records);
+  return myIndex
+}
+
+function computeScore$1(
+  pattern,
+  {
+    errors = 0,
+    currentLocation = 0,
+    expectedLocation = 0,
+    distance = Config.distance,
+    ignoreLocation = Config.ignoreLocation
+  } = {}
+) {
+  const accuracy = errors / pattern.length;
+
+  if (ignoreLocation) {
+    return accuracy
+  }
+
+  const proximity = Math.abs(expectedLocation - currentLocation);
+
+  if (!distance) {
+    // Dodge divide by zero error.
+    return proximity ? 1.0 : accuracy
+  }
+
+  return accuracy + proximity / distance
+}
+
+function convertMaskToIndices(
+  matchmask = [],
+  minMatchCharLength = Config.minMatchCharLength
+) {
+  let indices = [];
+  let start = -1;
+  let end = -1;
+  let i = 0;
+
+  for (let len = matchmask.length; i < len; i += 1) {
+    let match = matchmask[i];
+    if (match && start === -1) {
+      start = i;
+    } else if (!match && start !== -1) {
+      end = i - 1;
+      if (end - start + 1 >= minMatchCharLength) {
+        indices.push([start, end]);
+      }
+      start = -1;
+    }
+  }
+
+  // (i-1 - start) + 1 => i - start
+  if (matchmask[i - 1] && i - start >= minMatchCharLength) {
+    indices.push([start, i - 1]);
+  }
+
+  return indices
+}
+
+// Machine word size
+const MAX_BITS = 32;
+
+function search(
+  text,
+  pattern,
+  patternAlphabet,
+  {
+    location = Config.location,
+    distance = Config.distance,
+    threshold = Config.threshold,
+    findAllMatches = Config.findAllMatches,
+    minMatchCharLength = Config.minMatchCharLength,
+    includeMatches = Config.includeMatches,
+    ignoreLocation = Config.ignoreLocation
+  } = {}
+) {
+  if (pattern.length > MAX_BITS) {
+    throw new Error(PATTERN_LENGTH_TOO_LARGE(MAX_BITS))
+  }
+
+  const patternLen = pattern.length;
+  // Set starting location at beginning text and initialize the alphabet.
+  const textLen = text.length;
+  // Handle the case when location > text.length
+  const expectedLocation = Math.max(0, Math.min(location, textLen));
+  // Highest score beyond which we give up.
+  let currentThreshold = threshold;
+  // Is there a nearby exact match? (speedup)
+  let bestLocation = expectedLocation;
+
+  // Performance: only computer matches when the minMatchCharLength > 1
+  // OR if `includeMatches` is true.
+  const computeMatches = minMatchCharLength > 1 || includeMatches;
+  // A mask of the matches, used for building the indices
+  const matchMask = computeMatches ? Array(textLen) : [];
+
+  let index;
+
+  // Get all exact matches, here for speed up
+  while ((index = text.indexOf(pattern, bestLocation)) > -1) {
+    let score = computeScore$1(pattern, {
+      currentLocation: index,
+      expectedLocation,
+      distance,
+      ignoreLocation
+    });
+
+    currentThreshold = Math.min(score, currentThreshold);
+    bestLocation = index + patternLen;
+
+    if (computeMatches) {
+      let i = 0;
+      while (i < patternLen) {
+        matchMask[index + i] = 1;
+        i += 1;
+      }
+    }
+  }
+
+  // Reset the best location
+  bestLocation = -1;
+
+  let lastBitArr = [];
+  let finalScore = 1;
+  let binMax = patternLen + textLen;
+
+  const mask = 1 << (patternLen - 1);
+
+  for (let i = 0; i < patternLen; i += 1) {
+    // Scan for the best match; each iteration allows for one more error.
+    // Run a binary search to determine how far from the match location we can stray
+    // at this error level.
+    let binMin = 0;
+    let binMid = binMax;
+
+    while (binMin < binMid) {
+      const score = computeScore$1(pattern, {
+        errors: i,
+        currentLocation: expectedLocation + binMid,
+        expectedLocation,
+        distance,
+        ignoreLocation
+      });
+
+      if (score <= currentThreshold) {
+        binMin = binMid;
+      } else {
+        binMax = binMid;
+      }
+
+      binMid = Math.floor((binMax - binMin) / 2 + binMin);
+    }
+
+    // Use the result from this iteration as the maximum for the next.
+    binMax = binMid;
+
+    let start = Math.max(1, expectedLocation - binMid + 1);
+    let finish = findAllMatches
+      ? textLen
+      : Math.min(expectedLocation + binMid, textLen) + patternLen;
+
+    // Initialize the bit array
+    let bitArr = Array(finish + 2);
+
+    bitArr[finish + 1] = (1 << i) - 1;
+
+    for (let j = finish; j >= start; j -= 1) {
+      let currentLocation = j - 1;
+      let charMatch = patternAlphabet[text.charAt(currentLocation)];
+
+      if (computeMatches) {
+        // Speed up: quick bool to int conversion (i.e, `charMatch ? 1 : 0`)
+        matchMask[currentLocation] = +!!charMatch;
+      }
+
+      // First pass: exact match
+      bitArr[j] = ((bitArr[j + 1] << 1) | 1) & charMatch;
+
+      // Subsequent passes: fuzzy match
+      if (i) {
+        bitArr[j] |=
+          ((lastBitArr[j + 1] | lastBitArr[j]) << 1) | 1 | lastBitArr[j + 1];
+      }
+
+      if (bitArr[j] & mask) {
+        finalScore = computeScore$1(pattern, {
+          errors: i,
+          currentLocation,
+          expectedLocation,
+          distance,
+          ignoreLocation
+        });
+
+        // This match will almost certainly be better than any existing match.
+        // But check anyway.
+        if (finalScore <= currentThreshold) {
+          // Indeed it is
+          currentThreshold = finalScore;
+          bestLocation = currentLocation;
+
+          // Already passed `loc`, downhill from here on in.
+          if (bestLocation <= expectedLocation) {
+            break
+          }
+
+          // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
+          start = Math.max(1, 2 * expectedLocation - bestLocation);
+        }
+      }
+    }
+
+    // No hope for a (better) match at greater error levels.
+    const score = computeScore$1(pattern, {
+      errors: i + 1,
+      currentLocation: expectedLocation,
+      expectedLocation,
+      distance,
+      ignoreLocation
+    });
+
+    if (score > currentThreshold) {
+      break
+    }
+
+    lastBitArr = bitArr;
+  }
+
+  const result = {
+    isMatch: bestLocation >= 0,
+    // Count exact matches (those with a score of 0) to be "almost" exact
+    score: Math.max(0.001, finalScore)
+  };
+
+  if (computeMatches) {
+    const indices = convertMaskToIndices(matchMask, minMatchCharLength);
+    if (!indices.length) {
+      result.isMatch = false;
+    } else if (includeMatches) {
+      result.indices = indices;
+    }
+  }
+
+  return result
+}
+
+function createPatternAlphabet(pattern) {
+  let mask = {};
+
+  for (let i = 0, len = pattern.length; i < len; i += 1) {
+    const char = pattern.charAt(i);
+    mask[char] = (mask[char] || 0) | (1 << (len - i - 1));
+  }
+
+  return mask
+}
+
+const stripDiacritics = String.prototype.normalize
+    ? ((str) => str.normalize('NFD').replace(/[\u0300-\u036F\u0483-\u0489\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u0711\u0730-\u074A\u07A6-\u07B0\u07EB-\u07F3\u07FD\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u08D3-\u08E1\u08E3-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09CB-\u09CD\u09D7\u09E2\u09E3\u09FE\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A70\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2\u0AE3\u0AFA-\u0AFF\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B56\u0B57\u0B62\u0B63\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0C00-\u0C04\u0C3E-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C81-\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2\u0CE3\u0D00-\u0D03\u0D3B\u0D3C\u0D3E-\u0D44\u0D46-\u0D48\u0D4A-\u0D4D\u0D57\u0D62\u0D63\u0D82\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DF2\u0DF3\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0EB1\u0EB4-\u0EB9\u0EBB\u0EBC\u0EC8-\u0ECD\u0F18\u0F19\u0F35\u0F37\u0F39\u0F3E\u0F3F\u0F71-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102B-\u103E\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F\u109A-\u109D\u135D-\u135F\u1712-\u1714\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4-\u17D3\u17DD\u180B-\u180D\u1885\u1886\u18A9\u1920-\u192B\u1930-\u193B\u1A17-\u1A1B\u1A55-\u1A5E\u1A60-\u1A7C\u1A7F\u1AB0-\u1ABE\u1B00-\u1B04\u1B34-\u1B44\u1B6B-\u1B73\u1B80-\u1B82\u1BA1-\u1BAD\u1BE6-\u1BF3\u1C24-\u1C37\u1CD0-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF2-\u1CF4\u1CF7-\u1CF9\u1DC0-\u1DF9\u1DFB-\u1DFF\u20D0-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302F\u3099\u309A\uA66F-\uA672\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA823-\uA827\uA880\uA881\uA8B4-\uA8C5\uA8E0-\uA8F1\uA8FF\uA926-\uA92D\uA947-\uA953\uA980-\uA983\uA9B3-\uA9C0\uA9E5\uAA29-\uAA36\uAA43\uAA4C\uAA4D\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEB-\uAAEF\uAAF5\uAAF6\uABE3-\uABEA\uABEC\uABED\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F]/g, ''))
+    : ((str) => str);
+
+class BitapSearch {
+  constructor(
+    pattern,
+    {
+      location = Config.location,
+      threshold = Config.threshold,
+      distance = Config.distance,
+      includeMatches = Config.includeMatches,
+      findAllMatches = Config.findAllMatches,
+      minMatchCharLength = Config.minMatchCharLength,
+      isCaseSensitive = Config.isCaseSensitive,
+      ignoreDiacritics = Config.ignoreDiacritics,
+      ignoreLocation = Config.ignoreLocation
+    } = {}
+  ) {
+    this.options = {
+      location,
+      threshold,
+      distance,
+      includeMatches,
+      findAllMatches,
+      minMatchCharLength,
+      isCaseSensitive,
+      ignoreDiacritics,
+      ignoreLocation
+    };
+
+    pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
+    pattern = ignoreDiacritics ? stripDiacritics(pattern) : pattern;
+    this.pattern = pattern;
+
+    this.chunks = [];
+
+    if (!this.pattern.length) {
+      return
+    }
+
+    const addChunk = (pattern, startIndex) => {
+      this.chunks.push({
+        pattern,
+        alphabet: createPatternAlphabet(pattern),
+        startIndex
+      });
+    };
+
+    const len = this.pattern.length;
+
+    if (len > MAX_BITS) {
+      let i = 0;
+      const remainder = len % MAX_BITS;
+      const end = len - remainder;
+
+      while (i < end) {
+        addChunk(this.pattern.substr(i, MAX_BITS), i);
+        i += MAX_BITS;
+      }
+
+      if (remainder) {
+        const startIndex = len - MAX_BITS;
+        addChunk(this.pattern.substr(startIndex), startIndex);
+      }
+    } else {
+      addChunk(this.pattern, 0);
+    }
+  }
+
+  searchIn(text) {
+    const { isCaseSensitive, ignoreDiacritics, includeMatches } = this.options;
+
+    text = isCaseSensitive ? text : text.toLowerCase();
+    text = ignoreDiacritics ? stripDiacritics(text) : text;
+
+    // Exact match
+    if (this.pattern === text) {
+      let result = {
+        isMatch: true,
+        score: 0
+      };
+
+      if (includeMatches) {
+        result.indices = [[0, text.length - 1]];
+      }
+
+      return result
+    }
+
+    // Otherwise, use Bitap algorithm
+    const {
+      location,
+      distance,
+      threshold,
+      findAllMatches,
+      minMatchCharLength,
+      ignoreLocation
+    } = this.options;
+
+    let allIndices = [];
+    let totalScore = 0;
+    let hasMatches = false;
+
+    this.chunks.forEach(({ pattern, alphabet, startIndex }) => {
+      const { isMatch, score, indices } = search(text, pattern, alphabet, {
+        location: location + startIndex,
+        distance,
+        threshold,
+        findAllMatches,
+        minMatchCharLength,
+        includeMatches,
+        ignoreLocation
+      });
+
+      if (isMatch) {
+        hasMatches = true;
+      }
+
+      totalScore += score;
+
+      if (isMatch && indices) {
+        allIndices = [...allIndices, ...indices];
+      }
+    });
+
+    let result = {
+      isMatch: hasMatches,
+      score: hasMatches ? totalScore / this.chunks.length : 1
+    };
+
+    if (hasMatches && includeMatches) {
+      result.indices = allIndices;
+    }
+
+    return result
+  }
+}
+
+class BaseMatch {
+  constructor(pattern) {
+    this.pattern = pattern;
+  }
+  static isMultiMatch(pattern) {
+    return getMatch(pattern, this.multiRegex)
+  }
+  static isSingleMatch(pattern) {
+    return getMatch(pattern, this.singleRegex)
+  }
+  search(/*text*/) {}
+}
+
+function getMatch(pattern, exp) {
+  const matches = pattern.match(exp);
+  return matches ? matches[1] : null
+}
+
+// Token: 'file
+
+class ExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'exact'
+  }
+  static get multiRegex() {
+    return /^="(.*)"$/
+  }
+  static get singleRegex() {
+    return /^=(.*)$/
+  }
+  search(text) {
+    const isMatch = text === this.pattern;
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, this.pattern.length - 1]
+    }
+  }
+}
+
+// Token: !fire
+
+class InverseExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'inverse-exact'
+  }
+  static get multiRegex() {
+    return /^!"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^!(.*)$/
+  }
+  search(text) {
+    const index = text.indexOf(this.pattern);
+    const isMatch = index === -1;
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, text.length - 1]
+    }
+  }
+}
+
+// Token: ^file
+
+class PrefixExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'prefix-exact'
+  }
+  static get multiRegex() {
+    return /^\^"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^\^(.*)$/
+  }
+  search(text) {
+    const isMatch = text.startsWith(this.pattern);
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, this.pattern.length - 1]
+    }
+  }
+}
+
+// Token: !^fire
+
+class InversePrefixExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'inverse-prefix-exact'
+  }
+  static get multiRegex() {
+    return /^!\^"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^!\^(.*)$/
+  }
+  search(text) {
+    const isMatch = !text.startsWith(this.pattern);
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, text.length - 1]
+    }
+  }
+}
+
+// Token: .file$
+
+class SuffixExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'suffix-exact'
+  }
+  static get multiRegex() {
+    return /^"(.*)"\$$/
+  }
+  static get singleRegex() {
+    return /^(.*)\$$/
+  }
+  search(text) {
+    const isMatch = text.endsWith(this.pattern);
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [text.length - this.pattern.length, text.length - 1]
+    }
+  }
+}
+
+// Token: !.file$
+
+class InverseSuffixExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'inverse-suffix-exact'
+  }
+  static get multiRegex() {
+    return /^!"(.*)"\$$/
+  }
+  static get singleRegex() {
+    return /^!(.*)\$$/
+  }
+  search(text) {
+    const isMatch = !text.endsWith(this.pattern);
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, text.length - 1]
+    }
+  }
+}
+
+class FuzzyMatch extends BaseMatch {
+  constructor(
+    pattern,
+    {
+      location = Config.location,
+      threshold = Config.threshold,
+      distance = Config.distance,
+      includeMatches = Config.includeMatches,
+      findAllMatches = Config.findAllMatches,
+      minMatchCharLength = Config.minMatchCharLength,
+      isCaseSensitive = Config.isCaseSensitive,
+      ignoreDiacritics = Config.ignoreDiacritics,
+      ignoreLocation = Config.ignoreLocation
+    } = {}
+  ) {
+    super(pattern);
+    this._bitapSearch = new BitapSearch(pattern, {
+      location,
+      threshold,
+      distance,
+      includeMatches,
+      findAllMatches,
+      minMatchCharLength,
+      isCaseSensitive,
+      ignoreDiacritics,
+      ignoreLocation
+    });
+  }
+  static get type() {
+    return 'fuzzy'
+  }
+  static get multiRegex() {
+    return /^"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^(.*)$/
+  }
+  search(text) {
+    return this._bitapSearch.searchIn(text)
+  }
+}
+
+// Token: 'file
+
+class IncludeMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'include'
+  }
+  static get multiRegex() {
+    return /^'"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^'(.*)$/
+  }
+  search(text) {
+    let location = 0;
+    let index;
+
+    const indices = [];
+    const patternLen = this.pattern.length;
+
+    // Get all exact matches
+    while ((index = text.indexOf(this.pattern, location)) > -1) {
+      location = index + patternLen;
+      indices.push([index, location - 1]);
+    }
+
+    const isMatch = !!indices.length;
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices
+    }
+  }
+}
+
+// ❗Order is important. DO NOT CHANGE.
+const searchers = [
+  ExactMatch,
+  IncludeMatch,
+  PrefixExactMatch,
+  InversePrefixExactMatch,
+  InverseSuffixExactMatch,
+  SuffixExactMatch,
+  InverseExactMatch,
+  FuzzyMatch
+];
+
+const searchersLen = searchers.length;
+
+// Regex to split by spaces, but keep anything in quotes together
+const SPACE_RE = / +(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/;
+const OR_TOKEN = '|';
+
+// Return a 2D array representation of the query, for simpler parsing.
+// Example:
+// "^core go$ | rb$ | py$ xy$" => [["^core", "go$"], ["rb$"], ["py$", "xy$"]]
+function parseQuery(pattern, options = {}) {
+  return pattern.split(OR_TOKEN).map((item) => {
+    let query = item
+      .trim()
+      .split(SPACE_RE)
+      .filter((item) => item && !!item.trim());
+
+    let results = [];
+    for (let i = 0, len = query.length; i < len; i += 1) {
+      const queryItem = query[i];
+
+      // 1. Handle multiple query match (i.e, once that are quoted, like `"hello world"`)
+      let found = false;
+      let idx = -1;
+      while (!found && ++idx < searchersLen) {
+        const searcher = searchers[idx];
+        let token = searcher.isMultiMatch(queryItem);
+        if (token) {
+          results.push(new searcher(token, options));
+          found = true;
+        }
+      }
+
+      if (found) {
+        continue
+      }
+
+      // 2. Handle single query matches (i.e, once that are *not* quoted)
+      idx = -1;
+      while (++idx < searchersLen) {
+        const searcher = searchers[idx];
+        let token = searcher.isSingleMatch(queryItem);
+        if (token) {
+          results.push(new searcher(token, options));
+          break
+        }
+      }
+    }
+
+    return results
+  })
+}
+
+// These extended matchers can return an array of matches, as opposed
+// to a singl match
+const MultiMatchSet = new Set([FuzzyMatch.type, IncludeMatch.type]);
+
+/**
+ * Command-like searching
+ * ======================
+ *
+ * Given multiple search terms delimited by spaces.e.g. `^jscript .python$ ruby !java`,
+ * search in a given text.
+ *
+ * Search syntax:
+ *
+ * | Token       | Match type                 | Description                            |
+ * | ----------- | -------------------------- | -------------------------------------- |
+ * | `jscript`   | fuzzy-match                | Items that fuzzy match `jscript`       |
+ * | `=scheme`   | exact-match                | Items that are `scheme`                |
+ * | `'python`   | include-match              | Items that include `python`            |
+ * | `!ruby`     | inverse-exact-match        | Items that do not include `ruby`       |
+ * | `^java`     | prefix-exact-match         | Items that start with `java`           |
+ * | `!^earlang` | inverse-prefix-exact-match | Items that do not start with `earlang` |
+ * | `.js$`      | suffix-exact-match         | Items that end with `.js`              |
+ * | `!.go$`     | inverse-suffix-exact-match | Items that do not end with `.go`       |
+ *
+ * A single pipe character acts as an OR operator. For example, the following
+ * query matches entries that start with `core` and end with either`go`, `rb`,
+ * or`py`.
+ *
+ * ```
+ * ^core go$ | rb$ | py$
+ * ```
+ */
+class ExtendedSearch {
+  constructor(
+    pattern,
+    {
+      isCaseSensitive = Config.isCaseSensitive,
+      ignoreDiacritics = Config.ignoreDiacritics,
+      includeMatches = Config.includeMatches,
+      minMatchCharLength = Config.minMatchCharLength,
+      ignoreLocation = Config.ignoreLocation,
+      findAllMatches = Config.findAllMatches,
+      location = Config.location,
+      threshold = Config.threshold,
+      distance = Config.distance
+    } = {}
+  ) {
+    this.query = null;
+    this.options = {
+      isCaseSensitive,
+      ignoreDiacritics,
+      includeMatches,
+      minMatchCharLength,
+      findAllMatches,
+      ignoreLocation,
+      location,
+      threshold,
+      distance
+    };
+
+    pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
+    pattern = ignoreDiacritics ? stripDiacritics(pattern) : pattern;
+    this.pattern = pattern;
+    this.query = parseQuery(this.pattern, this.options);
+  }
+
+  static condition(_, options) {
+    return options.useExtendedSearch
+  }
+
+  searchIn(text) {
+    const query = this.query;
+
+    if (!query) {
+      return {
+        isMatch: false,
+        score: 1
+      }
+    }
+
+    const { includeMatches, isCaseSensitive, ignoreDiacritics } = this.options;
+
+    text = isCaseSensitive ? text : text.toLowerCase();
+    text = ignoreDiacritics ? stripDiacritics(text) : text;
+
+    let numMatches = 0;
+    let allIndices = [];
+    let totalScore = 0;
+
+    // ORs
+    for (let i = 0, qLen = query.length; i < qLen; i += 1) {
+      const searchers = query[i];
+
+      // Reset indices
+      allIndices.length = 0;
+      numMatches = 0;
+
+      // ANDs
+      for (let j = 0, pLen = searchers.length; j < pLen; j += 1) {
+        const searcher = searchers[j];
+        const { isMatch, indices, score } = searcher.search(text);
+
+        if (isMatch) {
+          numMatches += 1;
+          totalScore += score;
+          if (includeMatches) {
+            const type = searcher.constructor.type;
+            if (MultiMatchSet.has(type)) {
+              allIndices = [...allIndices, ...indices];
+            } else {
+              allIndices.push(indices);
+            }
+          }
+        } else {
+          totalScore = 0;
+          numMatches = 0;
+          allIndices.length = 0;
+          break
+        }
+      }
+
+      // OR condition, so if TRUE, return
+      if (numMatches) {
+        let result = {
+          isMatch: true,
+          score: totalScore / numMatches
+        };
+
+        if (includeMatches) {
+          result.indices = allIndices;
+        }
+
+        return result
+      }
+    }
+
+    // Nothing was matched
+    return {
+      isMatch: false,
+      score: 1
+    }
+  }
+}
+
+const registeredSearchers = [];
+
+function register(...args) {
+  registeredSearchers.push(...args);
+}
+
+function createSearcher(pattern, options) {
+  for (let i = 0, len = registeredSearchers.length; i < len; i += 1) {
+    let searcherClass = registeredSearchers[i];
+    if (searcherClass.condition(pattern, options)) {
+      return new searcherClass(pattern, options)
+    }
+  }
+
+  return new BitapSearch(pattern, options)
+}
+
+const LogicalOperator = {
+  AND: '$and',
+  OR: '$or'
+};
+
+const KeyType = {
+  PATH: '$path',
+  PATTERN: '$val'
+};
+
+const isExpression = (query) =>
+  !!(query[LogicalOperator.AND] || query[LogicalOperator.OR]);
+
+const isPath = (query) => !!query[KeyType.PATH];
+
+const isLeaf = (query) =>
+  !isArray(query) && isObject(query) && !isExpression(query);
+
+const convertToExplicit = (query) => ({
+  [LogicalOperator.AND]: Object.keys(query).map((key) => ({
+    [key]: query[key]
+  }))
+});
+
+// When `auto` is `true`, the parse function will infer and initialize and add
+// the appropriate `Searcher` instance
+function parse(query, options, { auto = true } = {}) {
+  const next = (query) => {
+    let keys = Object.keys(query);
+
+    const isQueryPath = isPath(query);
+
+    if (!isQueryPath && keys.length > 1 && !isExpression(query)) {
+      return next(convertToExplicit(query))
+    }
+
+    if (isLeaf(query)) {
+      const key = isQueryPath ? query[KeyType.PATH] : keys[0];
+
+      const pattern = isQueryPath ? query[KeyType.PATTERN] : query[key];
+
+      if (!isString(pattern)) {
+        throw new Error(LOGICAL_SEARCH_INVALID_QUERY_FOR_KEY(key))
+      }
+
+      const obj = {
+        keyId: createKeyId(key),
+        pattern
+      };
+
+      if (auto) {
+        obj.searcher = createSearcher(pattern, options);
+      }
+
+      return obj
+    }
+
+    let node = {
+      children: [],
+      operator: keys[0]
+    };
+
+    keys.forEach((key) => {
+      const value = query[key];
+
+      if (isArray(value)) {
+        value.forEach((item) => {
+          node.children.push(next(item));
+        });
+      }
+    });
+
+    return node
+  };
+
+  if (!isExpression(query)) {
+    query = convertToExplicit(query);
+  }
+
+  return next(query)
+}
+
+// Practical scoring function
+function computeScore(
+  results,
+  { ignoreFieldNorm = Config.ignoreFieldNorm }
+) {
+  results.forEach((result) => {
+    let totalScore = 1;
+
+    result.matches.forEach(({ key, norm, score }) => {
+      const weight = key ? key.weight : null;
+
+      totalScore *= Math.pow(
+        score === 0 && weight ? Number.EPSILON : score,
+        (weight || 1) * (ignoreFieldNorm ? 1 : norm)
+      );
+    });
+
+    result.score = totalScore;
+  });
+}
+
+function transformMatches(result, data) {
+  const matches = result.matches;
+  data.matches = [];
+
+  if (!isDefined(matches)) {
+    return
+  }
+
+  matches.forEach((match) => {
+    if (!isDefined(match.indices) || !match.indices.length) {
+      return
+    }
+
+    const { indices, value } = match;
+
+    let obj = {
+      indices,
+      value
+    };
+
+    if (match.key) {
+      obj.key = match.key.src;
+    }
+
+    if (match.idx > -1) {
+      obj.refIndex = match.idx;
+    }
+
+    data.matches.push(obj);
+  });
+}
+
+function transformScore(result, data) {
+  data.score = result.score;
+}
+
+function format(
+  results,
+  docs,
+  {
+    includeMatches = Config.includeMatches,
+    includeScore = Config.includeScore
+  } = {}
+) {
+  const transformers = [];
+
+  if (includeMatches) transformers.push(transformMatches);
+  if (includeScore) transformers.push(transformScore);
+
+  return results.map((result) => {
+    const { idx } = result;
+
+    const data = {
+      item: docs[idx],
+      refIndex: idx
+    };
+
+    if (transformers.length) {
+      transformers.forEach((transformer) => {
+        transformer(result, data);
+      });
+    }
+
+    return data
+  })
+}
+
+class Fuse {
+  constructor(docs, options = {}, index) {
+    this.options = { ...Config, ...options };
+
+    if (
+      this.options.useExtendedSearch &&
+      !true
+    ) // removed by dead control flow
+{}
+
+    this._keyStore = new KeyStore(this.options.keys);
+
+    this.setCollection(docs, index);
+  }
+
+  setCollection(docs, index) {
+    this._docs = docs;
+
+    if (index && !(index instanceof FuseIndex)) {
+      throw new Error(INCORRECT_INDEX_TYPE)
+    }
+
+    this._myIndex =
+      index ||
+      createIndex(this.options.keys, this._docs, {
+        getFn: this.options.getFn,
+        fieldNormWeight: this.options.fieldNormWeight
+      });
+  }
+
+  add(doc) {
+    if (!isDefined(doc)) {
+      return
+    }
+
+    this._docs.push(doc);
+    this._myIndex.add(doc);
+  }
+
+  remove(predicate = (/* doc, idx */) => false) {
+    const results = [];
+
+    for (let i = 0, len = this._docs.length; i < len; i += 1) {
+      const doc = this._docs[i];
+      if (predicate(doc, i)) {
+        this.removeAt(i);
+        i -= 1;
+        len -= 1;
+
+        results.push(doc);
+      }
+    }
+
+    return results
+  }
+
+  removeAt(idx) {
+    this._docs.splice(idx, 1);
+    this._myIndex.removeAt(idx);
+  }
+
+  getIndex() {
+    return this._myIndex
+  }
+
+  search(query, { limit = -1 } = {}) {
+    const {
+      includeMatches,
+      includeScore,
+      shouldSort,
+      sortFn,
+      ignoreFieldNorm
+    } = this.options;
+
+    let results = isString(query)
+      ? isString(this._docs[0])
+        ? this._searchStringList(query)
+        : this._searchObjectList(query)
+      : this._searchLogical(query);
+
+    computeScore(results, { ignoreFieldNorm });
+
+    if (shouldSort) {
+      results.sort(sortFn);
+    }
+
+    if (isNumber(limit) && limit > -1) {
+      results = results.slice(0, limit);
+    }
+
+    return format(results, this._docs, {
+      includeMatches,
+      includeScore
+    })
+  }
+
+  _searchStringList(query) {
+    const searcher = createSearcher(query, this.options);
+    const { records } = this._myIndex;
+    const results = [];
+
+    // Iterate over every string in the index
+    records.forEach(({ v: text, i: idx, n: norm }) => {
+      if (!isDefined(text)) {
+        return
+      }
+
+      const { isMatch, score, indices } = searcher.searchIn(text);
+
+      if (isMatch) {
+        results.push({
+          item: text,
+          idx,
+          matches: [{ score, value: text, norm, indices }]
+        });
+      }
+    });
+
+    return results
+  }
+
+  _searchLogical(query) {
+
+    const expression = parse(query, this.options);
+
+    const evaluate = (node, item, idx) => {
+      if (!node.children) {
+        const { keyId, searcher } = node;
+
+        const matches = this._findMatches({
+          key: this._keyStore.get(keyId),
+          value: this._myIndex.getValueForItemAtKeyId(item, keyId),
+          searcher
+        });
+
+        if (matches && matches.length) {
+          return [
+            {
+              idx,
+              item,
+              matches
+            }
+          ]
+        }
+
+        return []
+      }
+
+      const res = [];
+      for (let i = 0, len = node.children.length; i < len; i += 1) {
+        const child = node.children[i];
+        const result = evaluate(child, item, idx);
+        if (result.length) {
+          res.push(...result);
+        } else if (node.operator === LogicalOperator.AND) {
+          return []
+        }
+      }
+      return res
+    };
+
+    const records = this._myIndex.records;
+    const resultMap = {};
+    const results = [];
+
+    records.forEach(({ $: item, i: idx }) => {
+      if (isDefined(item)) {
+        let expResults = evaluate(expression, item, idx);
+
+        if (expResults.length) {
+          // Dedupe when adding
+          if (!resultMap[idx]) {
+            resultMap[idx] = { idx, item, matches: [] };
+            results.push(resultMap[idx]);
+          }
+          expResults.forEach(({ matches }) => {
+            resultMap[idx].matches.push(...matches);
+          });
+        }
+      }
+    });
+
+    return results
+  }
+
+  _searchObjectList(query) {
+    const searcher = createSearcher(query, this.options);
+    const { keys, records } = this._myIndex;
+    const results = [];
+
+    // List is Array<Object>
+    records.forEach(({ $: item, i: idx }) => {
+      if (!isDefined(item)) {
+        return
+      }
+
+      let matches = [];
+
+      // Iterate over every key (i.e, path), and fetch the value at that key
+      keys.forEach((key, keyIndex) => {
+        matches.push(
+          ...this._findMatches({
+            key,
+            value: item[keyIndex],
+            searcher
+          })
+        );
+      });
+
+      if (matches.length) {
+        results.push({
+          idx,
+          item,
+          matches
+        });
+      }
+    });
+
+    return results
+  }
+  _findMatches({ key, value, searcher }) {
+    if (!isDefined(value)) {
+      return []
+    }
+
+    let matches = [];
+
+    if (isArray(value)) {
+      value.forEach(({ v: text, i: idx, n: norm }) => {
+        if (!isDefined(text)) {
+          return
+        }
+
+        const { isMatch, score, indices } = searcher.searchIn(text);
+
+        if (isMatch) {
+          matches.push({
+            score,
+            key,
+            value: text,
+            idx,
+            norm,
+            indices
+          });
+        }
+      });
+    } else {
+      const { v: text, n: norm } = value;
+
+      const { isMatch, score, indices } = searcher.searchIn(text);
+
+      if (isMatch) {
+        matches.push({ score, key, value: text, norm, indices });
+      }
+    }
+
+    return matches
+  }
+}
+
+Fuse.version = '7.1.0';
+Fuse.createIndex = createIndex;
+Fuse.parseIndex = parseIndex;
+Fuse.config = Config;
+
+{
+  Fuse.parseQuery = parse;
+}
+
+{
+  register(ExtendedSearch);
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/idb/build/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/idb/build/index.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteDB: () => (/* binding */ deleteDB),
+/* harmony export */   openDB: () => (/* binding */ openDB),
+/* harmony export */   unwrap: () => (/* binding */ unwrap),
+/* harmony export */   wrap: () => (/* binding */ wrap)
+/* harmony export */ });
+const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
+
+let idbProxyableTypes;
+let cursorAdvanceMethods;
+// This is a function to prevent it throwing up in node environments.
+function getIdbProxyableTypes() {
+    return (idbProxyableTypes ||
+        (idbProxyableTypes = [
+            IDBDatabase,
+            IDBObjectStore,
+            IDBIndex,
+            IDBCursor,
+            IDBTransaction,
+        ]));
+}
+// This is a function to prevent it throwing up in node environments.
+function getCursorAdvanceMethods() {
+    return (cursorAdvanceMethods ||
+        (cursorAdvanceMethods = [
+            IDBCursor.prototype.advance,
+            IDBCursor.prototype.continue,
+            IDBCursor.prototype.continuePrimaryKey,
+        ]));
+}
+const transactionDoneMap = new WeakMap();
+const transformCache = new WeakMap();
+const reverseTransformCache = new WeakMap();
+function promisifyRequest(request) {
+    const promise = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            request.removeEventListener('success', success);
+            request.removeEventListener('error', error);
+        };
+        const success = () => {
+            resolve(wrap(request.result));
+            unlisten();
+        };
+        const error = () => {
+            reject(request.error);
+            unlisten();
+        };
+        request.addEventListener('success', success);
+        request.addEventListener('error', error);
+    });
+    // This mapping exists in reverseTransformCache but doesn't exist in transformCache. This
+    // is because we create many promises from a single IDBRequest.
+    reverseTransformCache.set(promise, request);
+    return promise;
+}
+function cacheDonePromiseForTransaction(tx) {
+    // Early bail if we've already created a done promise for this transaction.
+    if (transactionDoneMap.has(tx))
+        return;
+    const done = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            tx.removeEventListener('complete', complete);
+            tx.removeEventListener('error', error);
+            tx.removeEventListener('abort', error);
+        };
+        const complete = () => {
+            resolve();
+            unlisten();
+        };
+        const error = () => {
+            reject(tx.error || new DOMException('AbortError', 'AbortError'));
+            unlisten();
+        };
+        tx.addEventListener('complete', complete);
+        tx.addEventListener('error', error);
+        tx.addEventListener('abort', error);
+    });
+    // Cache it for later retrieval.
+    transactionDoneMap.set(tx, done);
+}
+let idbProxyTraps = {
+    get(target, prop, receiver) {
+        if (target instanceof IDBTransaction) {
+            // Special handling for transaction.done.
+            if (prop === 'done')
+                return transactionDoneMap.get(target);
+            // Make tx.store return the only store in the transaction, or undefined if there are many.
+            if (prop === 'store') {
+                return receiver.objectStoreNames[1]
+                    ? undefined
+                    : receiver.objectStore(receiver.objectStoreNames[0]);
+            }
+        }
+        // Else transform whatever we get back.
+        return wrap(target[prop]);
+    },
+    set(target, prop, value) {
+        target[prop] = value;
+        return true;
+    },
+    has(target, prop) {
+        if (target instanceof IDBTransaction &&
+            (prop === 'done' || prop === 'store')) {
+            return true;
+        }
+        return prop in target;
+    },
+};
+function replaceTraps(callback) {
+    idbProxyTraps = callback(idbProxyTraps);
+}
+function wrapFunction(func) {
+    // Due to expected object equality (which is enforced by the caching in `wrap`), we
+    // only create one new func per func.
+    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
+    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
+    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
+    // with real promises, so each advance methods returns a new promise for the cursor object, or
+    // undefined if the end of the cursor has been reached.
+    if (getCursorAdvanceMethods().includes(func)) {
+        return function (...args) {
+            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+            // the original object.
+            func.apply(unwrap(this), args);
+            return wrap(this.request);
+        };
+    }
+    return function (...args) {
+        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+        // the original object.
+        return wrap(func.apply(unwrap(this), args));
+    };
+}
+function transformCachableValue(value) {
+    if (typeof value === 'function')
+        return wrapFunction(value);
+    // This doesn't return, it just creates a 'done' promise for the transaction,
+    // which is later returned for transaction.done (see idbObjectHandler).
+    if (value instanceof IDBTransaction)
+        cacheDonePromiseForTransaction(value);
+    if (instanceOfAny(value, getIdbProxyableTypes()))
+        return new Proxy(value, idbProxyTraps);
+    // Return the same value back if we're not going to transform it.
+    return value;
+}
+function wrap(value) {
+    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
+    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
+    if (value instanceof IDBRequest)
+        return promisifyRequest(value);
+    // If we've already transformed this value before, reuse the transformed value.
+    // This is faster, but it also provides object equality.
+    if (transformCache.has(value))
+        return transformCache.get(value);
+    const newValue = transformCachableValue(value);
+    // Not all types are transformed.
+    // These may be primitive types, so they can't be WeakMap keys.
+    if (newValue !== value) {
+        transformCache.set(value, newValue);
+        reverseTransformCache.set(newValue, value);
+    }
+    return newValue;
+}
+const unwrap = (value) => reverseTransformCache.get(value);
+
+/**
+ * Open a database.
+ *
+ * @param name Name of the database.
+ * @param version Schema version.
+ * @param callbacks Additional callbacks.
+ */
+function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
+    const request = indexedDB.open(name, version);
+    const openPromise = wrap(request);
+    if (upgrade) {
+        request.addEventListener('upgradeneeded', (event) => {
+            upgrade(wrap(request.result), event.oldVersion, event.newVersion, wrap(request.transaction), event);
+        });
+    }
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event.newVersion, event));
+    }
+    openPromise
+        .then((db) => {
+        if (terminated)
+            db.addEventListener('close', () => terminated());
+        if (blocking) {
+            db.addEventListener('versionchange', (event) => blocking(event.oldVersion, event.newVersion, event));
+        }
+    })
+        .catch(() => { });
+    return openPromise;
+}
+/**
+ * Delete a database.
+ *
+ * @param name Name of the database.
+ */
+function deleteDB(name, { blocked } = {}) {
+    const request = indexedDB.deleteDatabase(name);
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event));
+    }
+    return wrap(request).then(() => undefined);
+}
+
+const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
+const writeMethods = ['put', 'add', 'delete', 'clear'];
+const cachedMethods = new Map();
+function getMethod(target, prop) {
+    if (!(target instanceof IDBDatabase &&
+        !(prop in target) &&
+        typeof prop === 'string')) {
+        return;
+    }
+    if (cachedMethods.get(prop))
+        return cachedMethods.get(prop);
+    const targetFuncName = prop.replace(/FromIndex$/, '');
+    const useIndex = prop !== targetFuncName;
+    const isWrite = writeMethods.includes(targetFuncName);
+    if (
+    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
+    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
+        !(isWrite || readMethods.includes(targetFuncName))) {
+        return;
+    }
+    const method = async function (storeName, ...args) {
+        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
+        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
+        let target = tx.store;
+        if (useIndex)
+            target = target.index(args.shift());
+        // Must reject if op rejects.
+        // If it's a write operation, must reject if tx.done rejects.
+        // Must reject with op rejection first.
+        // Must resolve with op value.
+        // Must handle both promises (no unhandled rejections)
+        return (await Promise.all([
+            target[targetFuncName](...args),
+            isWrite && tx.done,
+        ]))[0];
+    };
+    cachedMethods.set(prop, method);
+    return method;
+}
+replaceTraps((oldTraps) => ({
+    ...oldTraps,
+    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
+    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
+}));
+
+const advanceMethodProps = ['continue', 'continuePrimaryKey', 'advance'];
+const methodMap = {};
+const advanceResults = new WeakMap();
+const ittrProxiedCursorToOriginalProxy = new WeakMap();
+const cursorIteratorTraps = {
+    get(target, prop) {
+        if (!advanceMethodProps.includes(prop))
+            return target[prop];
+        let cachedFunc = methodMap[prop];
+        if (!cachedFunc) {
+            cachedFunc = methodMap[prop] = function (...args) {
+                advanceResults.set(this, ittrProxiedCursorToOriginalProxy.get(this)[prop](...args));
+            };
+        }
+        return cachedFunc;
+    },
+};
+async function* iterate(...args) {
+    // tslint:disable-next-line:no-this-assignment
+    let cursor = this;
+    if (!(cursor instanceof IDBCursor)) {
+        cursor = await cursor.openCursor(...args);
+    }
+    if (!cursor)
+        return;
+    cursor = cursor;
+    const proxiedCursor = new Proxy(cursor, cursorIteratorTraps);
+    ittrProxiedCursorToOriginalProxy.set(proxiedCursor, cursor);
+    // Map this double-proxy back to the original, so other cursor methods work.
+    reverseTransformCache.set(proxiedCursor, unwrap(cursor));
+    while (cursor) {
+        yield proxiedCursor;
+        // If one of the advancing methods was not called, call continue().
+        cursor = await (advanceResults.get(proxiedCursor) || cursor.continue());
+        advanceResults.delete(proxiedCursor);
+    }
+}
+function isIteratorProp(target, prop) {
+    return ((prop === Symbol.asyncIterator &&
+        instanceOfAny(target, [IDBIndex, IDBObjectStore, IDBCursor])) ||
+        (prop === 'iterate' && instanceOfAny(target, [IDBIndex, IDBObjectStore])));
+}
+replaceTraps((oldTraps) => ({
+    ...oldTraps,
+    get(target, prop, receiver) {
+        if (isIteratorProp(target, prop))
+            return iterate;
+        return oldTraps.get(target, prop, receiver);
+    },
+    has(target, prop) {
+        return isIteratorProp(target, prop) || oldTraps.has(target, prop);
+    },
+}));
+
+
+
+
+/***/ }),
+
+/***/ "./static/assets/js/apis/e7-API.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/apis/e7-API.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _e7_references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/references.js */ "./static/assets/js/e7/references.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+var HERO_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json";
+var ARTIFACT_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_artifact.json";
+function fetchE7Data(_x) {
+  return _fetchE7Data.apply(this, arguments);
+}
+function _fetchE7Data() {
+  _fetchE7Data = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+    var response, data, _t;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          _context.p = 0;
+          _context.n = 1;
+          return fetch(url);
+        case 1:
+          response = _context.v;
+          if (response.ok) {
+            _context.n = 2;
+            break;
+          }
+          throw new Error("HTTP error: status: ".concat(response.status));
+        case 2:
+          _context.n = 3;
+          return response.json();
+        case 3:
+          data = _context.v;
+          console.log("Fetched data from E7 Server; keys:", Object.keys(data));
+          return _context.a(2, data);
+        case 4:
+          _context.p = 4;
+          _t = _context.v;
+          console.error("Error fetching global user data:", _t);
+          return _context.a(2, null);
+      }
+    }, _callee, null, [[0, 4]]);
+  }));
+  return _fetchE7Data.apply(this, arguments);
+}
+function fetchHeroJSON() {
+  return _fetchHeroJSON.apply(this, arguments);
+}
+function _fetchHeroJSON() {
+  _fetchHeroJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+    var lang,
+      data,
+      _args2 = arguments;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          lang = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : null;
+          console.log("Fetching hero data (lang=".concat(lang !== null && lang !== void 0 ? lang : "all", ") from E7 Server..."));
+          _context2.n = 1;
+          return fetchE7Data(HERO_URL);
+        case 1:
+          data = _context2.v;
+          if (lang && data[lang]) {
+            data = data[lang];
+          } else if (lang && !data[lang]) {
+            console.error("Could not find hero data for language:", lang);
+            data = null;
+          }
+          return _context2.a(2, data);
+      }
+    }, _callee2);
+  }));
+  return _fetchHeroJSON.apply(this, arguments);
+}
+function fetchArtifactJSON() {
+  return _fetchArtifactJSON.apply(this, arguments);
+}
+function _fetchArtifactJSON() {
+  _fetchArtifactJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+    var lang,
+      data,
+      _args3 = arguments;
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
+        case 0:
+          lang = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : null;
+          console.log("Fetching hero data (lang=".concat(lang !== null && lang !== void 0 ? lang : "all", ") from E7 Server..."));
+          _context3.n = 1;
+          return fetchE7Data(ARTIFACT_URL);
+        case 1:
+          data = _context3.v;
+          if (lang && data[lang]) {
+            data = data[lang];
+          } else if (lang && !data[lang]) {
+            console.error("Could not find artifact data for language:", lang);
+            data = null;
+          }
+          return _context3.a(2, data);
+      }
+    }, _callee3);
+  }));
+  return _fetchArtifactJSON.apply(this, arguments);
+}
+function fetchUserJSON(_x2) {
+  return _fetchUserJSON.apply(this, arguments);
+}
+function _fetchUserJSON() {
+  _fetchUserJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(world_code) {
+    var url, data;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          world_code = world_code.replace("world_", "");
+          if (_toConsumableArray(_e7_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES).some(function (code) {
+            return code.replace("world_", "") === world_code;
+          })) {
+            _context4.n = 1;
+            break;
+          }
+          console.error("Could not find world code: ".concat(world_code));
+          return _context4.a(2, null);
+        case 1:
+          console.log("Fetching users for world code: ".concat(world_code, " from E7 Server..."));
+          url = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(world_code, ".json");
+          _context4.n = 2;
+          return fetchE7Data(url);
+        case 2:
+          data = _context4.v;
+          if (data) {
+            console.log("Got user data for world: ".concat(world_code, " ; Found ").concat(data.users.length, " users"));
+          }
+          return _context4.a(2, data);
+      }
+    }, _callee4);
+  }));
+  return _fetchUserJSON.apply(this, arguments);
+}
+var E7API = {
+  fetchHeroJSON: fetchHeroJSON,
+  fetchUserJSON: fetchUserJSON,
+  fetchArtifactJSON: fetchArtifactJSON
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (E7API);
+
+/***/ }),
+
+/***/ "./static/assets/js/apis/py-API.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/apis/py-API.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+var RS_BATTLE_URL = '/api/rs_get_battle_data';
+var HERO_URL = '/api/get_hero_data';
+var USER_URL = '/api/get_user_data';
+var SEASON_URL = '/api/get_season_details';
+var ARTIFACT_JSON_URL = '/api/get_artifact_json';
+var PYAPI = {
+  test: function test(data) {
+    // test the fetching works properly
+    console.log('Got data in test:', data.rank_plot);
+  },
+  fetchFromPython: function () {
+    var _fetchFromPython = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+      var response, data;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return fetch(url);
+          case 1:
+            response = _context.v;
+            if (response.ok) {
+              _context.n = 3;
+              break;
+            }
+            console.log("Retrying Fetch...");
+            _context.n = 2;
+            return fetch(url);
+          case 2:
+            response = _context.v;
+          case 3:
+            _context.n = 4;
+            return response.json();
+          case 4:
+            data = _context.v;
+            return _context.a(2, data ? data : null);
+        }
+      }, _callee);
+    }));
+    function fetchFromPython(_x) {
+      return _fetchFromPython.apply(this, arguments);
+    }
+    return fetchFromPython;
+  }(),
+  fetchHeroData: function () {
+    var _fetchHeroData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return this.fetchFromPython(HERO_URL);
+          case 1:
+            return _context2.a(2, _context2.v);
+        }
+      }, _callee2, this);
+    }));
+    function fetchHeroData() {
+      return _fetchHeroData.apply(this, arguments);
+    }
+    return fetchHeroData;
+  }(),
+  // uses the new API endpoint that utilizes Rust for fetching and processing the battles
+  rsFetchBattleData: function () {
+    var _rsFetchBattleData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(user) {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            if (user) {
+              _context3.n = 1;
+              break;
+            }
+            throw new Error("Must pass user to fetch battles data");
+          case 1:
+            _context3.n = 2;
+            return fetch(RS_BATTLE_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                user: user
+              })
+            });
+          case 2:
+            return _context3.a(2, _context3.v);
+        }
+      }, _callee3);
+    }));
+    function rsFetchBattleData(_x2) {
+      return _rsFetchBattleData.apply(this, arguments);
+    }
+    return rsFetchBattleData;
+  }(),
+  fetchSeasonDetails: function () {
+    var _fetchSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      var response, data, seasonDetails;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return fetch(SEASON_URL);
+          case 1:
+            response = _context4.v;
+            _context4.n = 2;
+            return response.json();
+          case 2:
+            data = _context4.v;
+            if (!data.success) {
+              _context4.n = 3;
+              break;
+            }
+            seasonDetails = JSON.parse(data.seasonDetails);
+            return _context4.a(2, {
+              seasonDetails: seasonDetails,
+              error: false
+            });
+          case 3:
+            return _context4.a(2, {
+              seasonDetails: null,
+              error: data.error
+            });
+          case 4:
+            return _context4.a(2);
+        }
+      }, _callee4);
+    }));
+    function fetchSeasonDetails() {
+      return _fetchSeasonDetails.apply(this, arguments);
+    }
+    return fetchSeasonDetails;
+  }(),
+  fetchArtifactJson: function () {
+    var _fetchArtifactJson = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      var response, data, artifactJson;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return fetch(ARTIFACT_JSON_URL);
+          case 1:
+            response = _context5.v;
+            _context5.n = 2;
+            return response.json();
+          case 2:
+            data = _context5.v;
+            if (!data.success) {
+              _context5.n = 3;
+              break;
+            }
+            artifactJson = JSON.parse(data.artifactJson);
+            return _context5.a(2, artifactJson);
+          case 3:
+            return _context5.a(2, null);
+          case 4:
+            return _context5.a(2);
+        }
+      }, _callee5);
+    }));
+    function fetchArtifactJson() {
+      return _fetchArtifactJson.apply(this, arguments);
+    }
+    return fetchArtifactJson;
+  }(),
+  fetchUser: function () {
+    var _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(userData) {
+      var response, data, worldCodeStr, user, _t;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            if (!((!userData.name || !userData.world_code) && !userData.id)) {
+              _context6.n = 1;
+              break;
+            }
+            throw new Error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");
+          case 1:
+            _context6.n = 2;
+            return fetch(USER_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                userData: userData
+              })
+            });
+          case 2:
+            response = _context6.v;
+            _context6.n = 3;
+            return response.json();
+          case 3:
+            data = _context6.v;
+            _context6.p = 4;
+            if (!response.ok) {
+              _context6.n = 9;
+              break;
+            }
+            if (data.foundUser) {
+              _context6.n = 7;
+              break;
+            }
+            if (!userData.name) {
+              _context6.n = 5;
+              break;
+            }
+            worldCodeStr = userData.world_code.replace("world_", "");
+            return _context6.a(2, {
+              user: null,
+              error: "Could not find user: \"".concat(userData.name, "\" in world_code: ").concat(worldCodeStr)
+            });
+          case 5:
+            if (!userData.id) {
+              _context6.n = 6;
+              break;
+            }
+            return _context6.a(2, {
+              user: null,
+              error: "Could not find user with ID: ".concat(userData.id)
+            });
+          case 6:
+            _context6.n = 8;
+            break;
+          case 7:
+            user = data.user;
+            console.log("Server communication successful; received response data for user");
+            console.log("Found user: ".concat(JSON.stringify(user)));
+            return _context6.a(2, {
+              user: user,
+              error: false
+            });
+          case 8:
+            _context6.n = 10;
+            break;
+          case 9:
+            console.log("Server communication unsuccessful");
+            return _context6.a(2, {
+              user: null,
+              error: data.error
+            });
+          case 10:
+            ;
+            _context6.n = 12;
+            break;
+          case 11:
+            _context6.p = 11;
+            _t = _context6.v;
+            console.error("Error fetching and caching user: ".concat(_t));
+            return _context6.a(2, {
+              user: null,
+              error: _t.message
+            });
+          case 12:
+            return _context6.a(2);
+        }
+      }, _callee6, null, [[4, 11]]);
+    }));
+    function fetchUser(_x3) {
+      return _fetchUser.apply(this, arguments);
+    }
+    return fetchUser;
+  }(),
+  //returns both user and battles
+  fetchDataFromID: function () {
+    var _fetchDataFromID = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(id) {
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            if (id) {
+              _context7.n = 1;
+              break;
+            }
+            throw new Error("Must pass ID to fetch user");
+          case 1:
+            _context7.n = 2;
+            return fetch('/api/get_battle_data_from_id', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                id: id
+              })
+            });
+          case 2:
+            return _context7.a(2, _context7.v);
+        }
+      }, _callee7);
+    }));
+    function fetchDataFromID(_x4) {
+      return _fetchDataFromID.apply(this, arguments);
+    }
+    return fetchDataFromID;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PYAPI);
+
+/***/ }),
+
+/***/ "./static/assets/js/cache-manager.js":
+/*!*******************************************!*\
+  !*** ./static/assets/js/cache-manager.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+// static/app.js
+
+function clearStore(_x, _x2) {
+  return _clearStore.apply(this, arguments);
+}
+function _clearStore() {
+  _clearStore = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17(db, storeName) {
+    var tx, store;
+    return _regenerator().w(function (_context17) {
+      while (1) switch (_context17.n) {
+        case 0:
+          tx = db.transaction(storeName, 'readwrite');
+          store = tx.objectStore(storeName);
+          store.clear();
+          _context17.n = 1;
+          return tx.done;
+        case 1:
+          return _context17.a(2);
+      }
+    }, _callee17);
+  }));
+  return _clearStore.apply(this, arguments);
+}
+;
+var USER_DATA_KEYS = {
+  USER: "current-user",
+  BATTLES: "battles",
+  RAW_UPLOAD: "raw-upload",
+  UPLOADED_BATTLES: "uploaded-battles",
+  FILTERED_BATTLES: "filtered-battles",
+  STATS: "stats",
+  FILTER_STR: "filter-str"
+};
+var Keys = _objectSpread(_objectSpread({}, USER_DATA_KEYS), {}, {
+  HERO_MANAGER: "hero-manager",
+  SEASON_DETAILS: "season-details",
+  AUTO_ZOOM_FLAG: "auto-zoom",
+  AUTO_QUERY_FLAG: "auto-query",
+  ID_SEARCH_FLAG: "id-search",
+  GLOBAL_USERS: "global-users",
+  EU_USERS: "eu-users",
+  ASIA_USERS: "asia-users",
+  JPN_USERS: "jpn-users",
+  KOR_USERS: "kor-users",
+  ARTIFACTS: "artifacts",
+  // map of artifact codes to names
+  ARTIFACTS_LOWERCASE_NAMES_SET: "artifacts-lowercase-names-set",
+  // set of artifact lowercase names
+  ARTIFACT_OBJECT_LIST: "artifact-object-list",
+  HOME_PAGE_STATE: "home-page-state",
+  INTER_PAGE_MANAGER: "inter-page-manager"
+});
+var FlagsToKeys = {
+  "autoZoom": Keys.AUTO_ZOOM_FLAG,
+  "autoQuery": Keys.AUTO_QUERY_FLAG,
+  "idSearch": Keys.ID_SEARCH_FLAG
+};
+var ClientCache = {
+  consts: {
+    DB_NAME: 'E7ArenaStatsClientDB',
+    DB_VERSION: 1,
+    STORE_NAME: 'DataStore',
+    META_STORE_NAME: 'MetaStore',
+    CACHE_TIMEOUT: 1000 * 60 * 60 * 24 * 2 // 2 day cache timeout
+  },
+  Keys: _objectSpread({}, Keys),
+  MetaKeys: {
+    TIMESTAMP: "timestamp"
+  },
+  loaded_UM: new Set(),
+  openDB: function () {
+    var _openDB2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            return _context.a(2, (0,idb__WEBPACK_IMPORTED_MODULE_0__.openDB)(ClientCache.consts.DB_NAME, ClientCache.consts.DB_VERSION, {
+              upgrade: function upgrade(db) {
+                if (db.objectStoreNames.contains(ClientCache.consts.STORE_NAME)) {
+                  db.deleteObjectStore(ClientCache.consts.STORE_NAME); // 🧹 clear old store
+                  console.log('Old store deleted');
+                }
+                if (!db.objectStoreNames.contains(ClientCache.consts.STORE_NAME)) {
+                  console.log('Created data store');
+                  db.createObjectStore(ClientCache.consts.STORE_NAME);
+                }
+                if (!db.objectStoreNames.contains(ClientCache.consts.META_STORE_NAME)) {
+                  console.log('Created meta data store');
+                  db.createObjectStore(ClientCache.consts.META_STORE_NAME);
+                }
+              }
+            }));
+        }
+      }, _callee);
+    }));
+    function openDB() {
+      return _openDB2.apply(this, arguments);
+    }
+    return openDB;
+  }(),
+  get: function () {
+    var _get = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(id) {
+      var db, result, useCache;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context2.v;
+            _context2.n = 2;
+            return db.get(this.consts.STORE_NAME, id);
+          case 2:
+            result = _context2.v;
+            if (!(result !== null)) {
+              _context2.n = 3;
+              break;
+            }
+            console.log("Found ".concat(id, " in cache"));
+            _context2.n = 4;
+            break;
+          case 3:
+            console.log("".concat(id, " not found in cache; returning null"));
+            return _context2.a(2, null);
+          case 4:
+            _context2.n = 5;
+            return this.checkCacheTimeout(id);
+          case 5:
+            useCache = _context2.v;
+            if (!useCache) {
+              _context2.n = 6;
+              break;
+            }
+            return _context2.a(2, result);
+          case 6:
+            return _context2.a(2, null);
+          case 7:
+            return _context2.a(2);
+        }
+      }, _callee2, this);
+    }));
+    function get(_x3) {
+      return _get.apply(this, arguments);
+    }
+    return get;
+  }(),
+  cache: function () {
+    var _cache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(id, data) {
+      var db;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            console.log("Caching ".concat(id, " with data: ").concat(data));
+            _context3.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context3.v;
+            _context3.n = 2;
+            return db.put(this.consts.STORE_NAME, data, id);
+          case 2:
+            _context3.n = 3;
+            return this.setTimestamp(id, Date.now());
+          case 3:
+            return _context3.a(2);
+        }
+      }, _callee3, this);
+    }));
+    function cache(_x4, _x5) {
+      return _cache.apply(this, arguments);
+    }
+    return cache;
+  }(),
+  "delete": function () {
+    var _delete2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(id) {
+      var db;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context4.v;
+            _context4.n = 2;
+            return db["delete"](this.consts.STORE_NAME, id);
+          case 2:
+            _context4.n = 3;
+            return this.deleteTimestamp(id);
+          case 3:
+            return _context4.a(2);
+        }
+      }, _callee4, this);
+    }));
+    function _delete(_x6) {
+      return _delete2.apply(this, arguments);
+    }
+    return _delete;
+  }(),
+  deleteDB: function () {
+    var _deleteDB = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return indexedDB.deleteDatabase(this.consts.DB_NAME);
+          case 1:
+            console.log('Database deleted');
+          case 2:
+            return _context5.a(2);
+        }
+      }, _callee5, this);
+    }));
+    function deleteDB() {
+      return _deleteDB.apply(this, arguments);
+    }
+    return deleteDB;
+  }(),
+  getTimestamp: function () {
+    var _getTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(id) {
+      var db, key, timestamp;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            _context6.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context6.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context6.n = 2;
+            return db.get(this.consts.META_STORE_NAME, key);
+          case 2:
+            timestamp = _context6.v;
+            return _context6.a(2, timestamp !== null && timestamp !== void 0 ? timestamp : null);
+        }
+      }, _callee6, this);
+    }));
+    function getTimestamp(_x7) {
+      return _getTimestamp.apply(this, arguments);
+    }
+    return getTimestamp;
+  }(),
+  setTimestamp: function () {
+    var _setTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(id, timestamp) {
+      var db, key, val;
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            _context7.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context7.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context7.n = 2;
+            return db.put(this.consts.META_STORE_NAME, timestamp, key);
+          case 2:
+            _context7.n = 3;
+            return db.get(this.consts.META_STORE_NAME, key);
+          case 3:
+            val = _context7.v;
+          case 4:
+            return _context7.a(2);
+        }
+      }, _callee7, this);
+    }));
+    function setTimestamp(_x8, _x9) {
+      return _setTimestamp.apply(this, arguments);
+    }
+    return setTimestamp;
+  }(),
+  deleteTimestamp: function () {
+    var _deleteTimestamp = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(id) {
+      var db, key;
+      return _regenerator().w(function (_context8) {
+        while (1) switch (_context8.n) {
+          case 0:
+            _context8.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context8.v;
+            key = "".concat(id + this.MetaKeys.TIMESTAMP);
+            _context8.n = 2;
+            return db["delete"](this.consts.META_STORE_NAME, key);
+          case 2:
+            return _context8.a(2);
+        }
+      }, _callee8, this);
+    }));
+    function deleteTimestamp(_x0) {
+      return _deleteTimestamp.apply(this, arguments);
+    }
+    return deleteTimestamp;
+  }(),
+  clearData: function () {
+    var _clearData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9() {
+      var db;
+      return _regenerator().w(function (_context9) {
+        while (1) switch (_context9.n) {
+          case 0:
+            _context9.n = 1;
+            return this.openDB();
+          case 1:
+            db = _context9.v;
+            _context9.n = 2;
+            return clearStore(db, this.consts.STORE_NAME);
+          case 2:
+            _context9.n = 3;
+            return clearStore(db, this.consts.META_STORE_NAME);
+          case 3:
+            console.log('All data cleared from data cache and meta data cache');
+          case 4:
+            return _context9.a(2);
+        }
+      }, _callee9, this);
+    }));
+    function clearData() {
+      return _clearData.apply(this, arguments);
+    }
+    return clearData;
+  }(),
+  clearUserData: function () {
+    var _clearUserData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
+      var _this = this;
+      var toDelete;
+      return _regenerator().w(function (_context0) {
+        while (1) switch (_context0.n) {
+          case 0:
+            toDelete = Object.values(USER_DATA_KEYS);
+            _context0.n = 1;
+            return Promise.all(toDelete.map(function (key) {
+              return _this["delete"](key);
+            }));
+          case 1:
+            console.log("User data cleared from data cache");
+          case 2:
+            return _context0.a(2);
+        }
+      }, _callee0);
+    }));
+    function clearUserData() {
+      return _clearUserData.apply(this, arguments);
+    }
+    return clearUserData;
+  }(),
+  clearSeasonData: function () {
+    var _clearSeasonData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
+      return _regenerator().w(function (_context1) {
+        while (1) switch (_context1.n) {
+          case 0:
+            _context1.n = 1;
+            return this["delete"](Keys.SEASON_DETAILS);
+          case 1:
+            console.log("Season data cleared from data cache");
+          case 2:
+            return _context1.a(2);
+        }
+      }, _callee1, this);
+    }));
+    function clearSeasonData() {
+      return _clearSeasonData.apply(this, arguments);
+    }
+    return clearSeasonData;
+  }(),
+  checkCacheTimeout: function () {
+    var _checkCacheTimeout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(id) {
+      var timestamp, currentTime;
+      return _regenerator().w(function (_context10) {
+        while (1) switch (_context10.n) {
+          case 0:
+            _context10.n = 1;
+            return this.getTimestamp(id);
+          case 1:
+            timestamp = _context10.v;
+            currentTime = Date.now();
+            if (!(!timestamp || currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
+              _context10.n = 3;
+              break;
+            }
+            console.log("Cache timeout for ".concat(id));
+            _context10.n = 2;
+            return this["delete"](id);
+          case 2:
+            return _context10.a(2, false);
+          case 3:
+            return _context10.a(2, true);
+        }
+      }, _callee10, this);
+    }));
+    function checkCacheTimeout(_x1) {
+      return _checkCacheTimeout.apply(this, arguments);
+    }
+    return checkCacheTimeout;
+  }(),
+  getFilterStr: function () {
+    var _getFilterStr = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11() {
+      return _regenerator().w(function (_context11) {
+        while (1) switch (_context11.n) {
+          case 0:
+            _context11.n = 1;
+            return this.get(ClientCache.Keys.FILTER_STR);
+          case 1:
+            return _context11.a(2, _context11.v);
+        }
+      }, _callee11, this);
+    }));
+    function getFilterStr() {
+      return _getFilterStr.apply(this, arguments);
+    }
+    return getFilterStr;
+  }(),
+  setFilterStr: function () {
+    var _setFilterStr = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(filterStr) {
+      return _regenerator().w(function (_context12) {
+        while (1) switch (_context12.n) {
+          case 0:
+            _context12.n = 1;
+            return this.cache(ClientCache.Keys.FILTER_STR, filterStr);
+          case 1:
+            return _context12.a(2);
+        }
+      }, _callee12, this);
+    }));
+    function setFilterStr(_x10) {
+      return _setFilterStr.apply(this, arguments);
+    }
+    return setFilterStr;
+  }(),
+  getStats: function () {
+    var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13() {
+      return _regenerator().w(function (_context13) {
+        while (1) switch (_context13.n) {
+          case 0:
+            _context13.n = 1;
+            return this.get(ClientCache.Keys.STATS);
+          case 1:
+            return _context13.a(2, _context13.v);
+        }
+      }, _callee13, this);
+    }));
+    function getStats() {
+      return _getStats.apply(this, arguments);
+    }
+    return getStats;
+  }(),
+  setStats: function () {
+    var _setStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(stats) {
+      return _regenerator().w(function (_context14) {
+        while (1) switch (_context14.n) {
+          case 0:
+            _context14.n = 1;
+            return this.cache(Keys.STATS, stats);
+          case 1:
+            return _context14.a(2);
+        }
+      }, _callee14, this);
+    }));
+    function setStats(_x11) {
+      return _setStats.apply(this, arguments);
+    }
+    return setStats;
+  }(),
+  getFlag: function () {
+    var _getFlag = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(flag) {
+      var key;
+      return _regenerator().w(function (_context15) {
+        while (1) switch (_context15.n) {
+          case 0:
+            key = FlagsToKeys[flag];
+            if (key) {
+              _context15.n = 1;
+              break;
+            }
+            throw new Error("No key found for flag <".concat(flag, ">"));
+          case 1:
+            _context15.n = 2;
+            return this.get(key);
+          case 2:
+            return _context15.a(2, _context15.v);
+        }
+      }, _callee15, this);
+    }));
+    function getFlag(_x12) {
+      return _getFlag.apply(this, arguments);
+    }
+    return getFlag;
+  }(),
+  setFlag: function () {
+    var _setFlag = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(flag, value) {
+      var key;
+      return _regenerator().w(function (_context16) {
+        while (1) switch (_context16.n) {
+          case 0:
+            key = FlagsToKeys[flag];
+            if (key) {
+              _context16.n = 1;
+              break;
+            }
+            throw new Error("No key found for flag <".concat(flag, ">"));
+          case 1:
+            _context16.n = 2;
+            return this.cache(key, value);
+          case 2:
+            return _context16.a(2);
+        }
+      }, _callee16, this);
+    }));
+    function setFlag(_x13, _x14) {
+      return _setFlag.apply(this, arguments);
+    }
+    return setFlag;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ClientCache);
+
+/***/ }),
+
+/***/ "./static/assets/js/content-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/content-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./e7/hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _e7_battle_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7/battle-manager.js */ "./static/assets/js/e7/battle-manager.js");
+/* harmony import */ var _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./e7/season-manager.js */ "./static/assets/js/e7/season-manager.js");
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _e7_filter_parsing_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./e7/filter-parsing/filter-syntax-parser.js */ "./static/assets/js/e7/filter-parsing/filter-syntax-parser.js");
+/* harmony import */ var _e7_user_manager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./e7/user-manager.js */ "./static/assets/js/e7/user-manager.js");
+/* harmony import */ var _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./e7/artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+
+
+var ContentManager = {
+  HeroManager: _e7_hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  BattleManager: _e7_battle_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  SeasonManager: _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"],
+  UserManager: _e7_user_manager_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+  ClientCache: _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+  ArtifactManager: _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__["default"],
+  getFilters: function () {
+    var _getFilters = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(HM) {
+      var filterStr, seasonDetails, parser;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_3__["default"].getFilterStr();
+          case 1:
+            filterStr = _context.v;
+            if (filterStr) {
+              _context.n = 2;
+              break;
+            }
+            return _context.a(2, _e7_filter_parsing_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__["default"].getEmptyFilters());
+          case 2:
+            _context.n = 3;
+            return _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].getSeasonDetails();
+          case 3:
+            seasonDetails = _context.v;
+            _context.n = 4;
+            return _e7_filter_parsing_filter_syntax_parser_js__WEBPACK_IMPORTED_MODULE_4__["default"].createAndParse(filterStr, HM, seasonDetails);
+          case 4:
+            parser = _context.v;
+            return _context.a(2, parser.filters);
+        }
+      }, _callee);
+    }));
+    function getFilters(_x) {
+      return _getFilters.apply(this, arguments);
+    }
+    return getFilters;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ContentManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/artifact-manager.js":
+/*!*************************************************!*\
+  !*** ./static/assets/js/e7/artifact-manager.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+function _readOnlyError(r) { throw new TypeError('"' + r + '" is read-only'); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+function getArtifactMap() {
+  return _getArtifactMap.apply(this, arguments);
+}
+function _getArtifactMap() {
+  _getArtifactMap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+    var rawJSON;
+    return _regenerator().w(function (_context6) {
+      while (1) switch (_context6.n) {
+        case 0:
+          console.log("Getting artifact map from E7 server...");
+          _context6.n = 1;
+          return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].fetchArtifactJSON("en");
+        case 1:
+          rawJSON = _context6.v;
+          if (!(rawJSON === null)) {
+            _context6.n = 3;
+            break;
+          }
+          console.log("Getting artifact map from flask server...");
+          _context6.n = 2;
+          return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_2__["default"].fetchArtifactJson();
+        case 2:
+          _readOnlyError("rawJSON");
+        case 3:
+          if (!(rawJSON === null)) {
+            _context6.n = 4;
+            break;
+          }
+          console.error("Could not get artifact Json map from E7 server or flask server");
+          return _context6.a(2, null);
+        case 4:
+          console.log("Got artifact Json for language: 'en'");
+          return _context6.a(2, Object.fromEntries(rawJSON.filter(function (artifact) {
+            return artifact.name !== null;
+          }).map(function (artifact) {
+            return [artifact.code, artifact.name];
+          })));
+      }
+    }, _callee6);
+  }));
+  return _getArtifactMap.apply(this, arguments);
+}
+var ArtifactManager = {
+  getArtifacts: function () {
+    var _getArtifacts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 5;
+            break;
+          case 3:
+            _context.n = 4;
+            return this.fetchAndCacheArtifacts();
+          case 4:
+            _t3 = _context.v;
+          case 5:
+            return _context.a(2, _t3);
+        }
+      }, _callee, this);
+    }));
+    function getArtifacts() {
+      return _getArtifacts.apply(this, arguments);
+    }
+    return getArtifacts;
+  }(),
+  getArtifactLowercaseNameSet: function () {
+    var _getArtifactLowercaseNameSet = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var artiSet, artifacts;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS_LOWERCASE_NAMES_SET);
+          case 1:
+            artiSet = _context2.v;
+            if (!(artiSet !== null)) {
+              _context2.n = 2;
+              break;
+            }
+            console.log("Got artifact lowercase name set from cache");
+            return _context2.a(2, artiSet);
+          case 2:
+            _context2.n = 3;
+            return this.getArtifacts();
+          case 3:
+            artifacts = _context2.v;
+            artiSet = new Set(Object.values(artifacts).filter(function (artiName) {
+              return artiName !== null;
+            }).map(function (artiName) {
+              return artiName.toLowerCase();
+            }));
+            _context2.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS_LOWERCASE_NAMES_SET, artiSet);
+          case 4:
+            return _context2.a(2, artiSet);
+        }
+      }, _callee2, this);
+    }));
+    function getArtifactLowercaseNameSet() {
+      return _getArtifactLowercaseNameSet.apply(this, arguments);
+    }
+    return getArtifactLowercaseNameSet;
+  }(),
+  getArtifactObjectList: function () {
+    var _getArtifactObjectList = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      var objectList, artifacts;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACT_OBJECT_LIST);
+          case 1:
+            objectList = _context3.v;
+            if (!(objectList !== null)) {
+              _context3.n = 2;
+              break;
+            }
+            console.log("Got artifact object list from cache");
+            return _context3.a(2, objectList);
+          case 2:
+            _context3.n = 3;
+            return this.getArtifacts();
+          case 3:
+            artifacts = _context3.v;
+            objectList = Object.entries(artifacts).map(function (_ref) {
+              var _ref2 = _slicedToArray(_ref, 2),
+                id = _ref2[0],
+                name = _ref2[1];
+              return {
+                id: id,
+                name: name
+              };
+            });
+            _context3.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACT_OBJECT_LIST, objectList);
+          case 4:
+            return _context3.a(2, objectList);
+        }
+      }, _callee3, this);
+    }));
+    function getArtifactObjectList() {
+      return _getArtifactObjectList.apply(this, arguments);
+    }
+    return getArtifactObjectList;
+  }(),
+  fetchAndCacheArtifacts: function () {
+    var _fetchAndCacheArtifacts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      var artifactMap;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            console.log("ArtifactManager not found in cache, fetching from server and caching it");
+            _context4.n = 1;
+            return getArtifactMap();
+          case 1:
+            artifactMap = _context4.v;
+            _context4.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS, artifactMap);
+          case 2:
+            console.log("Cached ArtifactManager using raw data recieved from server");
+            return _context4.a(2, artifactMap);
+        }
+      }, _callee4);
+    }));
+    function fetchAndCacheArtifacts() {
+      return _fetchAndCacheArtifacts.apply(this, arguments);
+    }
+    return fetchAndCacheArtifacts;
+  }(),
+  clearArtifactData: function () {
+    var _clearArtifactData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.ARTIFACTS);
+          case 1:
+            return _context5.a(2);
+        }
+      }, _callee5);
+    }));
+    function clearArtifactData() {
+      return _clearArtifactData.apply(this, arguments);
+    }
+    return clearArtifactData;
+  }(),
+  // will fall back to the code if the name is not found
+  convertCodeToName: function convertCodeToName(code, artifacts) {
+    return artifacts[code] || code;
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ArtifactManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/battle-manager.js":
+/*!***********************************************!*\
+  !*** ./static/assets/js/e7/battle-manager.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stats-builder.js */ "./static/assets/js/e7/stats-builder.js");
+/* harmony import */ var _battle_transform_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./battle-transform.js */ "./static/assets/js/e7/battle-transform.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _regeneratorValues(e) { if (null != e) { var t = e["function" == typeof Symbol && Symbol.iterator || "@@iterator"], r = 0; if (t) return t.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) return { next: function next() { return e && r >= e.length && (e = void 0), { value: e && e[r++], done: !e }; } }; } throw new TypeError(_typeof(e) + " is not iterable"); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+var BattleManager = {
+  loaded_servers: new Set(),
+  // gets battles (upload and/or queried) and returns as list in clean format; used directly to populate battles table
+  getBattles: function () {
+    var _getBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            console.log("Getting battles");
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 4;
+            break;
+          case 3:
+            _t3 = null;
+          case 4:
+            return _context.a(2, _t3);
+        }
+      }, _callee);
+    }));
+    function getBattles() {
+      return _getBattles.apply(this, arguments);
+    }
+    return getBattles;
+  }(),
+  // Removes all user battle data from cache, should be called when user is switched out
+  removeBattles: function () {
+    var _removeBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _context2.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.UPLOADED_BATTLES);
+          case 2:
+            _context2.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES);
+          case 3:
+            console.log("Removed battle data from cache; cleared ['BATTLES', 'UPLOADED_BATTLES', 'FILTERED_BATTLES']");
+          case 4:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    function removeBattles() {
+      return _removeBattles.apply(this, arguments);
+    }
+    return removeBattles;
+  }(),
+  removeFilteredBattles: function () {
+    var _removeFilteredBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES);
+          case 1:
+            console.log("Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']");
+          case 2:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function removeFilteredBattles() {
+      return _removeFilteredBattles.apply(this, arguments);
+    }
+    return removeFilteredBattles;
+  }(),
+  /* after battles are set in cache, applies filters to the battles and stores filtered arr in cache under filtered 
+   battle key all battles are stored in their clean format, not numerical format; convert after to compute metrics */
+  applyFilter: function () {
+    var _applyFilter = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(filters) {
+      var battles, localFilterList, globalFilterList, battleList, _iterator, _step, filter, startLen, _iterator2, _step2, _loop, _t4;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return this.getBattles();
+          case 1:
+            battles = _context5.v;
+            localFilterList = filters.localFilters || [];
+            globalFilterList = filters.globalFilters || []; // apply global filters (filters that require context of all battles); these are always applied before local filters in order of appearance
+            battleList = Object.values(battles);
+            _iterator = _createForOfIteratorHelper(globalFilterList);
+            try {
+              for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                filter = _step.value;
+                console.log("Applying global filter: ".concat(filter));
+                startLen = battleList.length;
+                battleList = filter.call(battleList);
+                battles = Object.fromEntries(battleList.map(function (b) {
+                  return [b["Seq Num"], b];
+                }));
+                console.log("Filtered ".concat(startLen - battleList.length, " out of ").concat(startLen, "; new total = ").concat(battleList.length));
+              }
+
+              // apply local filters (filters that can be resolved on each battle without context of other battles)
+            } catch (err) {
+              _iterator.e(err);
+            } finally {
+              _iterator.f();
+            }
+            _iterator2 = _createForOfIteratorHelper(localFilterList);
+            _context5.p = 2;
+            _loop = /*#__PURE__*/_regenerator().m(function _loop() {
+              var filter, startLen;
+              return _regenerator().w(function (_context4) {
+                while (1) switch (_context4.n) {
+                  case 0:
+                    filter = _step2.value;
+                    console.log("Applying local filter: ".concat(filter));
+                    startLen = Object.keys(battles).length;
+                    battles = Object.fromEntries(Object.entries(battles).filter(function (_ref) {
+                      var _ref2 = _slicedToArray(_ref, 2),
+                        key = _ref2[0],
+                        battle = _ref2[1];
+                      var include = filter.call(battle);
+                      //console.log(`Filtering battle: ${key} ${include ? "included" : "excluded"}`);
+                      return include;
+                    }));
+                    console.log("Filtered ".concat(startLen - Object.keys(battles).length, " out of ").concat(startLen, "; new total = ").concat(Object.keys(battles).length));
+                  case 1:
+                    return _context4.a(2);
+                }
+              }, _loop);
+            });
+            _iterator2.s();
+          case 3:
+            if ((_step2 = _iterator2.n()).done) {
+              _context5.n = 5;
+              break;
+            }
+            return _context5.d(_regeneratorValues(_loop()), 4);
+          case 4:
+            _context5.n = 3;
+            break;
+          case 5:
+            _context5.n = 7;
+            break;
+          case 6:
+            _context5.p = 6;
+            _t4 = _context5.v;
+            _iterator2.e(_t4);
+          case 7:
+            _context5.p = 7;
+            _iterator2.f();
+            return _context5.f(7);
+          case 8:
+            console.log("Caching filtered battles ; total = ".concat(Object.keys(battles).length));
+            _context5.n = 9;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.FILTERED_BATTLES, battles);
+          case 9:
+            console.log("Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <".concat(localFilterList.length + globalFilterList.length, "> filters"));
+            return _context5.a(2, battles);
+        }
+      }, _callee4, this, [[2, 6, 7, 8]]);
+    }));
+    function applyFilter(_x) {
+      return _applyFilter.apply(this, arguments);
+    }
+    return applyFilter;
+  }(),
+  //takes in list of battles then converts to dict and then adds to cached battles
+  extendBattles: function () {
+    var _extendBattles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(cleanBattleMap) {
+      var _yield$ClientCache$ge2;
+      var oldDict, newDict, _t5, _t6, _t7;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            _context6.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+          case 1:
+            _t6 = _yield$ClientCache$ge2 = _context6.v;
+            _t5 = _t6 !== null;
+            if (!_t5) {
+              _context6.n = 2;
+              break;
+            }
+            _t5 = _yield$ClientCache$ge2 !== void 0;
+          case 2:
+            if (!_t5) {
+              _context6.n = 3;
+              break;
+            }
+            _t7 = _yield$ClientCache$ge2;
+            _context6.n = 4;
+            break;
+          case 3:
+            _t7 = {};
+          case 4:
+            oldDict = _t7;
+            // new battles automatically overwrite old ones if they share same seq_num
+            newDict = _objectSpread(_objectSpread({}, oldDict), cleanBattleMap);
+            _context6.n = 5;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES, newDict);
+          case 5:
+            console.log("Extended user data in cache");
+            return _context6.a(2, newDict);
+        }
+      }, _callee5);
+    }));
+    function extendBattles(_x2) {
+      return _extendBattles.apply(this, arguments);
+    }
+    return extendBattles;
+  }(),
+  //Takes queried battles, clean format and extend in cache
+  cacheQuery: function () {
+    var _cacheQuery = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(battleList, HM, artifacts) {
+      var cleanBattleMap, battles;
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
+          case 0:
+            if (battleList) {
+              _context7.n = 1;
+              break;
+            }
+            console.log("No query battles provided to cacheQuery");
+            return _context7.a(2, []);
+          case 1:
+            console.log("Caching queried battles: ".concat(battleList.length, " battles; modified [BATTLES]"));
+            cleanBattleMap = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_2__.buildFormattedBattleMap)(battleList, HM, artifacts);
+            _context7.n = 2;
+            return this.extendBattles(cleanBattleMap);
+          case 2:
+            battles = _context7.v;
+            console.log("Cached queried battles in cache; modified [BATTLES]");
+            return _context7.a(2, battles);
+        }
+      }, _callee6, this);
+    }));
+    function cacheQuery(_x3, _x4, _x5) {
+      return _cacheQuery.apply(this, arguments);
+    }
+    return cacheQuery;
+  }(),
+  //Takes uploaded battles and sets as battles in cache, should be called before attempting to get battles if upload exists
+  cacheUpload: function () {
+    var _cacheUpload = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(rawParsedBattleList, HM) {
+      var cleanBattles, battles;
+      return _regenerator().w(function (_context8) {
+        while (1) switch (_context8.n) {
+          case 0:
+            if (rawParsedBattleList) {
+              _context8.n = 1;
+              break;
+            }
+            console.error("No uploaded battles provided to cacheUpload");
+            return _context8.a(2, {});
+          case 1:
+            cleanBattles = (0,_battle_transform_js__WEBPACK_IMPORTED_MODULE_2__.parsedCSVToFormattedBattleMap)(rawParsedBattleList, HM);
+            _context8.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.UPLOADED_BATTLES, cleanBattles);
+          case 2:
+            _context8.n = 3;
+            return this.extendBattles(cleanBattles);
+          case 3:
+            battles = _context8.v;
+            console.log("Ingested uploaded battle data into cache; modified [BATTLES] and overwrote [UPLOADED_BATTLES]");
+            return _context8.a(2, battles);
+        }
+      }, _callee7, this);
+    }));
+    function cacheUpload(_x6, _x7) {
+      return _cacheUpload.apply(this, arguments);
+    }
+    return cacheUpload;
+  }(),
+  getStats: function () {
+    var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(battles, filters, HM) {
+      var numFilters, battlesList, filteredBattles, filteredBattlesList, prebanStats, firstPickStats, generalStats, heroStats, serverStats;
+      return _regenerator().w(function (_context9) {
+        while (1) switch (_context9.n) {
+          case 0:
+            console.log("Getting stats");
+            numFilters = filters.localFilters.length + filters.globalFilters.length;
+            console.log("Applying ".concat(numFilters, " filters"));
+            battlesList = Object.values(battles);
+            _context9.n = 1;
+            return this.applyFilter(filters);
+          case 1:
+            filteredBattles = _context9.v;
+            filteredBattlesList = Object.values(filteredBattles);
+            console.log("Getting preban stats");
+            _context9.n = 2;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getPrebanStats(filteredBattlesList, HM);
+          case 2:
+            prebanStats = _context9.v;
+            console.log("Getting first pick stats");
+            _context9.n = 3;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getFirstPickStats(filteredBattlesList, HM);
+          case 3:
+            firstPickStats = _context9.v;
+            console.log("Getting general stats");
+            _context9.n = 4;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getGeneralStats(filteredBattlesList, HM);
+          case 4:
+            generalStats = _context9.v;
+            console.log("Getting hero stats");
+            _context9.n = 5;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getHeroStats(filteredBattlesList, HM);
+          case 5:
+            heroStats = _context9.v;
+            console.log("Getting server stats");
+            _context9.n = 6;
+            return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getServerStats(filteredBattlesList);
+          case 6:
+            serverStats = _context9.v;
+            console.log("Returning stats");
+            return _context9.a(2, {
+              battles: battlesList,
+              filteredBattlesObj: filteredBattles,
+              prebanStats: prebanStats,
+              generalStats: generalStats,
+              firstPickStats: firstPickStats,
+              playerHeroStats: heroStats.playerHeroStats,
+              enemyHeroStats: heroStats.enemyHeroStats,
+              serverStats: serverStats,
+              numFilters: numFilters
+            });
+        }
+      }, _callee8, this);
+    }));
+    function getStats(_x8, _x9, _x0) {
+      return _getStats.apply(this, arguments);
+    }
+    return getStats;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BattleManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/battle-transform.js":
+/*!*************************************************!*\
+  !*** ./static/assets/js/e7/battle-transform.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   buildFormattedBattleMap: () => (/* binding */ buildFormattedBattleMap),
+/* harmony export */   parsedCSVToFormattedBattleMap: () => (/* binding */ parsedCSVToFormattedBattleMap)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./static/assets/js/utils.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+
+// takes in cleaned battle row (including from uploaded file or in formatBattleAsRow) 
+// and adds fields representing sets heroes as prime products
+function addPrimeFields(battle, HM) {
+  var getChampPrime = function getChampPrime(name) {
+    var _HeroManager$getHeroB, _HeroManager$getHeroB2;
+    return (_HeroManager$getHeroB = (_HeroManager$getHeroB2 = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName(name, HM)) === null || _HeroManager$getHeroB2 === void 0 ? void 0 : _HeroManager$getHeroB2.prime) !== null && _HeroManager$getHeroB !== void 0 ? _HeroManager$getHeroB : HM.Fodder.prime;
+  };
+  var product = function product(acc, prime) {
+    return acc * prime;
+  };
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIMES] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS].map(getChampPrime);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS_PRIMES].reduce(product, 1);
+  battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT] = battle[_references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS_PRIMES].reduce(product, 1);
+}
+var P1 = "p1";
+var P2 = "p2";
+
+// takes raw battle from array returned by rust battle array call to flask-server; formats into row to populate table
+function formatBattleAsRow(raw, HM, artifacts) {
+  var _battle;
+  // Make functions used to convert the identifier strings in the E7 data into human readable names
+
+  var getChampName = function getChampName(code) {
+    var _HeroManager$getHeroB3, _HeroManager$getHeroB4;
+    return (_HeroManager$getHeroB3 = (_HeroManager$getHeroB4 = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByCode(code, HM)) === null || _HeroManager$getHeroB4 === void 0 ? void 0 : _HeroManager$getHeroB4.name) !== null && _HeroManager$getHeroB3 !== void 0 ? _HeroManager$getHeroB3 : HM.Fodder.name;
+  };
+  var getArtifactName = function getArtifactName(code) {
+    return _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].convertCodeToName(code, artifacts) || "None";
+  };
+  var checkBanned = function checkBanned(player, index) {
+    // used to check if artifact is null because banned or because not equipped
+    if (player === P1) {
+      return raw.p2_postban === raw.p1_picks[index];
+    } else {
+      return raw.p1_postban === raw.p2_picks[index];
+    }
+  };
+  var formatArtifacts = function formatArtifacts(player, artiArr) {
+    return artiArr.map(function (code, index) {
+      return code ? getArtifactName(code) : checkBanned(player, index) ? "n/a" : "None";
+    });
+  };
+  var formatCRBar = function formatCRBar(crBar) {
+    return crBar.map(function (entry) {
+      return entry && entry.length == 2 ? [getChampName(entry[0]), entry[1]] : ["n/a", 0];
+    });
+  };
+
+  // Fall back to the code if the equipment set is not defined in references
+  var formatEquipment = function formatEquipment(equipArr) {
+    return equipArr.map(function (heroEquipList) {
+      return heroEquipList.map(function (equip) {
+        return _references_js__WEBPACK_IMPORTED_MODULE_2__.EQUIPMENT_SET_MAP[equip] || equip;
+      });
+    });
+  };
+  var firstTurnHero = raw.cr_bar.find(function (entry) {
+    return entry[1] === 100;
+  });
+  var p1TookFirstTurn = firstTurnHero ? raw.p1_picks.includes(firstTurnHero[0]) : false;
+  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_js__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p1_league) || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p2_league) || "None"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "n/a"), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(P1, raw.p1_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(P2, raw.p2_artifacts)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _references_js__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
+
+  // finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
+  addPrimeFields(battle, HM);
+  return battle;
+}
+function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
+  artifacts = artifacts !== null && artifacts !== void 0 ? artifacts : _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getArtifacts();
+  return Object.fromEntries(rawBattles.map(function (rawBattle) {
+    var battle = formatBattleAsRow(rawBattle, HeroManager, artifacts);
+    return [battle["Seq Num"], battle];
+  }));
+}
+
+// takes output of CSV parse and parses the list rows and ensures types are correct
+function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {
+  var rows = rawRowsArr.map(function (row) {
+    var _iterator = _createForOfIteratorHelper(_references_js__WEBPACK_IMPORTED_MODULE_2__.ARRAY_COLUMNS),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var col = _step.value;
+        row[col] = JSON.parse(row[col]);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    var _iterator2 = _createForOfIteratorHelper(_references_js__WEBPACK_IMPORTED_MODULE_2__.BOOLS_COLS),
+      _step2;
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _col = _step2.value;
+        row[_col] = row[_col].toLowerCase() === "true";
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+    var _iterator3 = _createForOfIteratorHelper(_references_js__WEBPACK_IMPORTED_MODULE_2__.INT_COLUMNS),
+      _step3;
+    try {
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+        var _col2 = _step3.value;
+        row[_col2] = Number(row[_col2].replace("'", ""));
+      }
+    } catch (err) {
+      _iterator3.e(err);
+    } finally {
+      _iterator3.f();
+    }
+    var _iterator4 = _createForOfIteratorHelper(_references_js__WEBPACK_IMPORTED_MODULE_2__.TITLE_CASE_COLUMNS),
+      _step4;
+    try {
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+        var _col3 = _step4.value;
+        row[_col3] = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(row[_col3]);
+      }
+    } catch (err) {
+      _iterator4.e(err);
+    } finally {
+      _iterator4.f();
+    }
+    addPrimeFields(row, HM);
+    return row;
+  });
+  return Object.fromEntries(rows.map(function (row) {
+    return [row["Seq Num"], row];
+  }));
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/e7-utils.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/e7/e7-utils.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getJSON: () => (/* binding */ getJSON),
+/* harmony export */   getUsers: () => (/* binding */ getUsers),
+/* harmony export */   printObjStruct: () => (/* binding */ printObjStruct)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+function getJSON(_x) {
+  return _getJSON.apply(this, arguments);
+}
+function _getJSON() {
+  _getJSON = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          console.log("Fetching");
+          return _context.a(2, fetch(url).then(function (response) {
+            console.log("Got response");
+            if (!response.ok) {
+              // Handle HTTP error responses (404, 500, etc.)
+              throw new Error("HTTP error! Status: ".concat(response.status));
+            }
+            return response.json(); // May also throw if not valid JSON
+          })["catch"](function (error) {
+            throw new E7APIError("Fetch error: ".concat(error.message));
+          }));
+      }
+    }, _callee);
+  }));
+  return _getJSON.apply(this, arguments);
+}
+function createUser(userJSON, world_code) {
+  return {
+    id: userJSON.nick_no,
+    name: userJSON.nick_nm.toLowerCase(),
+    code: userJSON.code,
+    rank: userJSON.rank,
+    world_code: world_code
+  };
+}
+function getUsers(_x2) {
+  return _getUsers.apply(this, arguments);
+}
+function _getUsers() {
+  _getUsers = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(world_code) {
+    var url, data, users;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          if (_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES.has(world_code)) {
+            _context2.n = 1;
+            break;
+          }
+          console.log("No Data returned: code ".concat(world_code, " not in ").concat(refs.WORLD_CODES));
+          return _context2.a(2);
+        case 1:
+          world_code = world_code.replace("world_", "");
+          url = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_user_world_".concat(world_code, ".json");
+          _context2.n = 2;
+          return getJSON(url);
+        case 2:
+          data = _context2.v;
+          users = new Object();
+          data.users.forEach(function (user) {
+            users[user.nick_nm] = createUser(user, world_code);
+          });
+          return _context2.a(2, users);
+      }
+    }, _callee2);
+  }));
+  return _getUsers.apply(this, arguments);
+}
+function printObjStruct(obj) {
+  var newObj = {};
+  for (var key in obj) {
+    if (Array.isArray(obj[key]) && obj[key].length > 0) {
+      newObj[key] = [obj[key][0], "Length: ".concat(obj[key].length)];
+    } else {
+      newObj[key] = obj[key];
+    }
+  }
+  console.log(newObj);
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-parsing/declared-data-types.js":
+/*!*******************************************************************!*\
+  !*** ./static/assets/js/e7/filter-parsing/declared-data-types.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DataType: () => (/* binding */ DataType),
+/* harmony export */   TYPES: () => (/* binding */ TYPES),
+/* harmony export */   parseDataType: () => (/* binding */ parseDataType)
+/* harmony export */ });
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./static/assets/js/utils.js");
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./filter-parse-references.js */ "./static/assets/js/e7/filter-parsing/filter-parse-references.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../references.js */ "./static/assets/js/e7/references.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+
+
+
+var DataType = /*#__PURE__*/function () {
+  function DataType(str) {
+    var REFS = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var kwargs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+    _classCallCheck(this, DataType);
+    this.rawString = str;
+    if (kwargs === null) {
+      this.data = this.getData(str, REFS);
+    } else {
+      this.data = this.getData(str, REFS, kwargs); // kwargs will be an object with specific arguments for the specific datatype
+    }
+  }
+  return _createClass(DataType, [{
+    key: "asString",
+    value: function asString() {
+      return "".concat(this.data);
+    }
+  }]);
+}(); // string type will always convert to titlecase to  match against values in battle records
+var StringType = /*#__PURE__*/function (_DataType) {
+  function StringType() {
+    _classCallCheck(this, StringType);
+    return _callSuper(this, StringType, arguments);
+  }
+  _inherits(StringType, _DataType);
+  return _createClass(StringType, [{
+    key: "getData",
+    value: function getData(str, REFS) {
+      var kwargs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+        types: ["hero", "league", "server", "equipment", "artifact"]
+      };
+      str = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].trimSurroundingQuotes(str);
+      str = str.trim();
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_LITERAL_RE.source, " ); got: [").concat(str, "]"));
+      }
+      function parseFn(type, str) {
+        var _HeroManager$getHeroB;
+        switch (type) {
+          case "hero":
+            return (_HeroManager$getHeroB = _hero_manager_js__WEBPACK_IMPORTED_MODULE_3__["default"].getHeroByName(str, REFS.HM)) === null || _HeroManager$getHeroB === void 0 ? void 0 : _HeroManager$getHeroB.name;
+          case "league":
+            return _references_js__WEBPACK_IMPORTED_MODULE_5__.LEAGUE_MAP[str] ? str : null;
+          case "server":
+            return Object.values(_references_js__WEBPACK_IMPORTED_MODULE_5__.WORLD_CODE_TO_CLEAN_STR).find(function (server) {
+              return server.toLowerCase() === str;
+            });
+          case "equipment":
+            return _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_4__.EQUIPMENT_LOWERCASE_STRINGS_SET.has(str) ? str : null;
+          case "artifact":
+            return REFS.ARTIFACT_LOWERCASE_STRINGS_SET.has(str) ? str : null;
+        }
+      }
+      var _iterator = _createForOfIteratorHelper(kwargs.types),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var type = _step.value;
+          var parsed = parseFn(type, str);
+          if (parsed) {
+            console.log("Parsed string: [".concat(str, "] to [").concat(parsed, "]"));
+            return (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.toTitleCase)(parsed);
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid string; All strings must either be a valid [".concat(kwargs.types.join(", "), "]; got: [").concat(str, "]"));
+    }
+  }, {
+    key: "asString",
+    value: function asString() {
+      return "\"".concat(this.data, "\"");
+    }
+  }]);
+}(DataType);
+var DateType = /*#__PURE__*/function (_DataType2) {
+  function DateType() {
+    _classCallCheck(this, DateType);
+    return _callSuper(this, DateType, arguments);
+  }
+  _inherits(DateType, _DataType2);
+  return _createClass(DateType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _REFS = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      return _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].parseDate(str);
+    }
+  }, {
+    key: "asString",
+    value: function asString() {
+      return "".concat(this.rawString);
+    }
+  }]);
+}(DataType);
+var IntType = /*#__PURE__*/function (_DataType3) {
+  function IntType() {
+    _classCallCheck(this, IntType);
+    return _callSuper(this, IntType, arguments);
+  }
+  _inherits(IntType, _DataType3);
+  return _createClass(IntType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _REFS = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_INT_LITERAL_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid integer; must be a number; got: '".concat(str, "'"));
+      }
+      var parsedInt = parseInt(str);
+      if (isNaN(parsedInt)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid integer; must be a number; got: '".concat(str, "'"));
+      }
+      return parsedInt;
+    }
+  }, {
+    key: "asString",
+    value: function asString() {
+      return "".concat(this.data);
+    }
+  }]);
+}(DataType);
+var BoolType = /*#__PURE__*/function (_DataType4) {
+  function BoolType() {
+    _classCallCheck(this, BoolType);
+    return _callSuper(this, BoolType, arguments);
+  }
+  _inherits(BoolType, _DataType4);
+  return _createClass(BoolType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _REFS = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid boolean; must be 'true' or 'false'; got: '".concat(str, "'"));
+      }
+      return str === "true" ? 1 : 0;
+    }
+  }, {
+    key: "asString",
+    value: function asString() {
+      return "".concat(this.data ? "true" : "false");
+    }
+  }]);
+}(DataType);
+var RangeType = /*#__PURE__*/function (_DataType5) {
+  function RangeType() {
+    _classCallCheck(this, RangeType);
+    return _callSuper(this, RangeType, arguments);
+  }
+  _inherits(RangeType, _DataType5);
+  return _createClass(RangeType, [{
+    key: "getData",
+    value: function getData(str) {
+      var _REFS = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var split = str.split("...");
+      if (split.length !== 2) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid range; ranges must be of the format x...y or x...=y ; got more than two values when splitting string: '".concat(str, "'"));
+      }
+      var _split = _slicedToArray(split, 2),
+        start = _split[0],
+        end = _split[1];
+      var endInclusive = false;
+      if (end.includes("=")) {
+        end = end.replace("=", "");
+        endInclusive = true;
+      }
+      var output = {
+        start: null,
+        end: null,
+        endInclusive: endInclusive
+      };
+      if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_DATE_LITERAL_RE.test(start)) {
+        output.start = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].tryConvert(_filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].parseDate, "Date", start, "Could not convert '".concat(start, "' to Date in declared range: '").concat(str, "'"));
+        output.end = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].tryConvert(_filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].parseDate, "Date", end, "Could not convert '".concat(end, "' to Date in declared range: '").concat(str, "' ; Ranges must have homogenous types"));
+        if (output.start > output.end) {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid range; start date must be on or before end date; ".concat(output.start, " > ").concat(output.end));
+        }
+        output.type = "Date";
+      } else if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_INT_LITERAL_RE.test(start)) {
+        output.start = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].tryConvert(function (i) {
+          return new IntType(i);
+        }, "Int", start, "Could not convert '".concat(start, "' to Int in declared range: '").concat(str, "'")).data;
+        output.end = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].tryConvert(function (i) {
+          return new IntType(i);
+        }, "Int", end, "Could not convert '".concat(end, "' to Int in declared range: '").concat(str, "' ; Ranges must have homogenous types")).data;
+        if (output.start > output.end) {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid range; start integer must be equal to or less than end integer; ".concat(output.start, " > ").concat(output.end));
+        }
+        output.type = "Int";
+      } else {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid range; must be of the format x...y or x...=y ; got: '".concat(str, "'"));
+      }
+      console.log("Built Range: ".concat(JSON.stringify(output)));
+      return output;
+    }
+  }, {
+    key: "asString",
+    value: function asString() {
+      var rangeSymb = this.data.endInclusive ? "...=" : "...";
+      if (this.data.type === "Date") {
+        return "".concat(this.data.start.toISOString().slice(0, 10)).concat(rangeSymb).concat(this.data.end.toISOString().slice(0, 10));
+      } else if (this.data.type === "Int") {
+        return "".concat(this.data.start).concat(rangeSymb).concat(this.data.end);
+      } else {
+        return "Error Converting Range to String => < ".concat(this.data.start).concat(rangeSymb).concat(this.data.end, " >");
+      }
+    }
+  }]);
+}(DataType);
+var SetType = /*#__PURE__*/function (_DataType6) {
+  function SetType() {
+    _classCallCheck(this, SetType);
+    return _callSuper(this, SetType, arguments);
+  }
+  _inherits(SetType, _DataType6);
+  return _createClass(SetType, [{
+    key: "getData",
+    value: function getData(str, REFS) {
+      var kwargs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+        types: ["hero", "league", "server", "equipment", "artifact"]
+      };
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_SET_RE.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_SET_RE.source, " ) (Just chat gpt this one bro); got: '").concat(str, "'"));
+      }
+      var elements = _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true).map(function (elt) {
+        if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_RE.test(elt)) {
+          return new StringType(elt, REFS, kwargs);
+        } else if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_DATE_LITERAL_RE.test(elt)) {
+          return new DateType(elt);
+        } else {
+          throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid set element; must be a string or date; got: '".concat(elt, "'"));
+        }
+      });
+      console.log("GOT ELEMENTS: ", elements);
+      var types = new Set();
+      var _iterator2 = _createForOfIteratorHelper(elements),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var element = _step2.value;
+          types.add(element.constructor.name);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+      types = _toConsumableArray(types);
+      console.log("GOT TYPES: ", types);
+      if (types.size > 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid set; all set elements must have the same data type; \n                got: types: [".concat(types.join(", "), "]"));
+      }
+      this.type = types[0];
+      this.str = "{".concat(elements.map(function (data) {
+        return data.asString();
+      }).join(", "), "}");
+      this.list = elements.map(function (data) {
+        return data.data;
+      });
+      return new Set(this.list);
+    }
+  }, {
+    key: "asString",
+    value: function asString() {
+      return this.str;
+    }
+  }]);
+}(DataType);
+function parseKeywordAsDataType(str, REFS) {
+  if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_SEASON_LITERAL_RE.test(str)) {
+    var toStr = function toStr(date) {
+      return date.toISOString().slice(0, 10);
+    };
+    if (REFS.SeasonDetails.length < 1) {
+      throw new Error("Did not recieve any season details; failed on: '".concat(str, "'"));
+    } else if (str === "current-season") {
+      var _REFS$SeasonDetails$f = _slicedToArray(REFS.SeasonDetails.find(function (season) {
+          return season["Status"] === "Active";
+        }).range, 2),
+        start = _REFS$SeasonDetails$f[0],
+        end = _REFS$SeasonDetails$f[1];
+      return new RangeType("".concat(toStr(start), "...=").concat(toStr(end === "N/A" ? new Date() : end)));
+    } else {
+      var seasonNum = Number(str.split("-")[1]);
+      var season = REFS.SeasonDetails.find(function (season) {
+        return season["Season Number"] === seasonNum;
+      });
+      if (!season) {
+        throw new Error("Invalid season specified; ".concat(seasonNum, " is not a valid season number; failed on str: '").concat(str, "'"));
+      }
+      var _season$range = _slicedToArray(season.range, 2),
+        _start = _season$range[0],
+        _end = _season$range[1];
+      return new RangeType("".concat(toStr(_start), "...=").concat(toStr(_end)));
+    }
+  }
+}
+function parseDataType(str, REFS) {
+  console.log("Trying to Parse DataType: ".concat(str));
+  if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_LITERAL_RE.test(str)) {
+    console.log("Parsing as StringType");
+    return new StringType(str, REFS);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_DATE_LITERAL_RE.test(str)) {
+    console.log("Parsing as DateType");
+    return new DateType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_INT_LITERAL_RE.test(str)) {
+    console.log("Parsing as IntType");
+    return new IntType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
+    console.log("Parsing as BoolType");
+    return new BoolType(str);
+  } else if (/\{.*\}/.test(str)) {
+    console.log("Parsing as SetType");
+    return new SetType(str, REFS);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_RANGE_LITERAL_RE.test(str)) {
+    console.log("Parsing as RangeType");
+    return new RangeType(str);
+  } else if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_DATA_WORD_LITERAL_RE.test(str)) {
+    console.log("Parsing as DataWord");
+    return parseKeywordAsDataType(str, REFS);
+  } else {
+    console.log("Failed to parse DataType");
+    if (_regex_js__WEBPACK_IMPORTED_MODULE_1__.RegExps.VALID_STRING_LITERAL_RE.test("'".concat(str, "'"))) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; did you forget to wrap string literals in double or single quotes?"));
+    } else if (str.includes("'") && str.includes('"')) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; did you encase in mismatching quote types?"));
+    } else if (str.includes(".=") || str.includes("..")) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid DataType declaration; got: '".concat(str, "'; were you trying to use a range? Ranges must be of the format x...y or x...=y and may only be int-int or date-date"));
+    }
+    throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].SyntaxException("Invalid DataType declaration; could not parse to valid Field or Declared Data Type; got: '".concat(str, "'"));
+  }
+}
+var TYPES = {
+  Date: DateType,
+  String: StringType,
+  Int: IntType,
+  Bool: BoolType,
+  Set: SetType,
+  Range: RangeType
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-parsing/field-type.js":
+/*!**********************************************************!*\
+  !*** ./static/assets/js/e7/filter-parsing/field-type.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FieldType: () => (/* binding */ FieldType),
+/* harmony export */   INT_FIELDS: () => (/* binding */ INT_FIELDS),
+/* harmony export */   SET_FIELDS: () => (/* binding */ SET_FIELDS)
+/* harmony export */ });
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../references.js */ "./static/assets/js/e7/references.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+var INT_FIELDS = new Set(["victory-points", "point-gain"]);
+
+// Fields that will extract arrays and can be used with the 'in' operators
+var SET_FIELDS = new Set(["prebans", "p1.picks", "p2.picks", "p1.prebans", "p2.prebans"]);
+var FieldType = /*#__PURE__*/function () {
+  function FieldType(str) {
+    _classCallCheck(this, FieldType);
+    var fn = FieldType.FIELD_EXTRACT_FN_MAP[str];
+    if (!fn) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].ValidationError("Invalid field type: '".concat(str, "'; valid types are: ").concat(Object.keys(FieldType.FIELD_EXTRACT_FN_MAP).join(", ")));
+    } else {
+      console.log("Found valid field type: ", str);
+    }
+    this.str = str;
+    this.extractData = fn;
+  }
+  return _createClass(FieldType, [{
+    key: "asString",
+    value: function asString() {
+      return this.str;
+    }
+  }]);
+}();
+// FNS that take in a clean format battle and return the appropriate data
+_defineProperty(FieldType, "FIELD_EXTRACT_FN_MAP", {
+  date: function date(battle) {
+    var _battle$COLUMNS_MAP$D;
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME] ? new Date("".concat((_battle$COLUMNS_MAP$D = battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME]) === null || _battle$COLUMNS_MAP$D === void 0 ? void 0 : _battle$COLUMNS_MAP$D.slice(0, 10), "T00:00:00")) : "N/A";
+  },
+  "is-first-pick": function isFirstPick(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK] ? 1 : 0;
+  },
+  "is-win": function isWin(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN] ? 1 : 0;
+  },
+  "victory-points": function victoryPoints(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS];
+  },
+  "p1.picks": function p1Picks(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS];
+  },
+  "p2.picks": function p2Picks(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS];
+  },
+  "p1.prebans": function p1Prebans(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS];
+  },
+  "p2.prebans": function p2Prebans(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PREBANS];
+  },
+  "p1.postban": function p1Postban(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN];
+  },
+  "p2.postban": function p2Postban(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN];
+  },
+  prebans: function prebans(battle) {
+    return [].concat(_toConsumableArray(battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS]), _toConsumableArray(battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PREBANS]));
+  },
+  "p1.pick1": function p1Pick1(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][0];
+  },
+  "p1.pick2": function p1Pick2(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][1];
+  },
+  "p1.pick3": function p1Pick3(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][2];
+  },
+  "p1.pick4": function p1Pick4(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][3];
+  },
+  "p1.pick5": function p1Pick5(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS][4];
+  },
+  "p2.pick1": function p2Pick1(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][0];
+  },
+  "p2.pick2": function p2Pick2(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][1];
+  },
+  "p2.pick3": function p2Pick3(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][2];
+  },
+  "p2.pick4": function p2Pick4(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][3];
+  },
+  "p2.pick5": function p2Pick5(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS][4];
+  },
+  "p1.league": function p1League(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_LEAGUE];
+  },
+  "p2.league": function p2League(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE];
+  },
+  "p1.server": function p1Server(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_SERVER];
+  },
+  "p2.server": function p2Server(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER];
+  },
+  "p1.id": function p1Id(battle) {
+    return Number(battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_ID]);
+  },
+  "p2.id": function p2Id(battle) {
+    return Number(battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_ID]);
+  },
+  "p1.mvp": function p1Mvp(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_MVP];
+  },
+  "p2.mvp": function p2Mvp(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_MVP];
+  },
+  "is-first-turn": function isFirstTurn(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN];
+  },
+  "first-turn-hero": function firstTurnHero(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN_HERO];
+  },
+  turns: function turns(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS];
+  },
+  seconds: function seconds(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.SECONDS];
+  },
+  "point-gain": function pointGain(battle) {
+    return battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN];
+  }
+});
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-parsing/filter-parse-references.js":
+/*!***********************************************************************!*\
+  !*** ./static/assets/js/e7/filter-parsing/filter-parse-references.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ACCEPTED_CHARS: () => (/* binding */ ACCEPTED_CHARS),
+/* harmony export */   EQUIPMENT_LOWERCASE_STRINGS_SET: () => (/* binding */ EQUIPMENT_LOWERCASE_STRINGS_SET),
+/* harmony export */   PRINT_PREFIX: () => (/* binding */ PRINT_PREFIX)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../references.js */ "./static/assets/js/e7/references.js");
+
+var ACCEPTED_CHARS = new Set("'\"(),-.=; ><!1234567890{}" + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+var PRINT_PREFIX = "   ";
+var EQUIPMENT_LOWERCASE_STRINGS_SET = new Set(Object.values(_references_js__WEBPACK_IMPORTED_MODULE_0__.EQUIPMENT_SET_MAP).map(function (eq) {
+  return eq.toLowerCase();
+}));
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-parsing/filter-syntax-parser.js":
+/*!********************************************************************!*\
+  !*** ./static/assets/js/e7/filter-parsing/filter-syntax-parser.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
+/* harmony import */ var _season_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../season-manager.js */ "./static/assets/js/e7/season-manager.js");
+/* harmony import */ var _artifact_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+/* harmony import */ var _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./filter-parse-references.js */ "./static/assets/js/e7/filter-parsing/filter-parse-references.js");
+/* harmony import */ var _field_type_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./field-type.js */ "./static/assets/js/e7/filter-parsing/field-type.js");
+/* harmony import */ var _declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./declared-data-types.js */ "./static/assets/js/e7/filter-parsing/declared-data-types.js");
+/* harmony import */ var _functions_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./functions.js */ "./static/assets/js/e7/filter-parsing/functions.js");
+/* harmony import */ var _operators_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./operators.js */ "./static/assets/js/e7/filter-parsing/operators.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+
+
+
+
+
+
+
+
+
+
+function validateChars(str, charSet, objName) {
+  var _iterator = _createForOfIteratorHelper(str),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _char = _step.value;
+      if (!charSet.has(_char)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Invalid character within <".concat(objName, "> ; ' ").concat(_char, " ' is not allowed; got string: '").concat(str, "'"));
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+}
+function preParse(str) {
+  str = str.replace(/[\n\t\r]/g, " ").replace(/\s+/g, " "); // replace newlines with spaces and remove multiple spaces
+  validateChars(str, _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_5__.ACCEPTED_CHARS, "Main Filter String");
+  str = str.toLowerCase();
+  return str;
+}
+var BaseFilter = /*#__PURE__*/function () {
+  function BaseFilter(str, fn) {
+    _classCallCheck(this, BaseFilter);
+    this.str = str;
+    this.fn = fn;
+  }
+  return _createClass(BaseFilter, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fn(battle);
+    }
+  }, {
+    key: "asString",
+    value: function asString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      return "".concat(prefix).concat(this.str);
+    }
+  }]);
+}();
+function tryParseFilterElement(leftOrRight, strValue, filterStr, REFS) {
+  var parsedValue = null;
+  try {
+    if (strValue in _field_type_js__WEBPACK_IMPORTED_MODULE_6__.FieldType.FIELD_EXTRACT_FN_MAP) {
+      parsedValue = new _field_type_js__WEBPACK_IMPORTED_MODULE_6__.FieldType(strValue);
+    } else {
+      parsedValue = (0,_declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__.parseDataType)(strValue, REFS);
+    }
+  } catch (e) {
+    for (var key in _field_type_js__WEBPACK_IMPORTED_MODULE_6__.FieldType.FIELD_EXTRACT_FN_MAP) {
+      if (strValue.includes(key) || key.includes(strValue)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Could not parse ".concat(leftOrRight, " side of filter; got: \"").concat(strValue, "\" from filter: [").concat(filterStr, "], did you mean to use '").concat(key, "' as a field instead?"));
+      }
+    }
+    console.error(e);
+    throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Could not parse ".concat(leftOrRight, " side of filter; got: \"").concat(strValue, "\" from filter: [").concat(filterStr, "]; error: ").concat(e.message));
+  }
+  return parsedValue;
+}
+var FilterSyntaxParser = /*#__PURE__*/function () {
+  function FilterSyntaxParser(key) {
+    _classCallCheck(this, FilterSyntaxParser);
+    if (key !== _INTERNAL_KEY._) {
+      throw new Error("Cannot instantiate FilterSyntaxParser directly; use createAndParse method instead.");
+    }
+  }
+  return _createClass(FilterSyntaxParser, [{
+    key: "asString",
+    value: function asString() {
+      var filters = _toConsumableArray(this.filters.localFilters);
+      filters.push.apply(filters, _toConsumableArray(this.filters.globalFilters));
+      return "[\n".concat(filters.map(function (filter) {
+        return filter.asString(_filter_parse_references_js__WEBPACK_IMPORTED_MODULE_5__.PRINT_PREFIX);
+      }).join(";\n"), "\n]");
+    }
+  }, {
+    key: "parseGlobalFilterFn",
+    value: function parseGlobalFilterFn(globalFilterFn, str) {
+      var pattern = _regex_js__WEBPACK_IMPORTED_MODULE_2__.RegExps.anchorExp(_regex_js__WEBPACK_IMPORTED_MODULE_2__.RegExps.VALID_GLOBAL_FILTER_RE);
+      if (!pattern.test(str)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Invalid global filter format; must follow the case insensitive regex format \"".concat(pattern.source, "\" ; got: '").concat(str, "'"));
+      }
+      var delim = ",",
+        enclosureLevel = 1;
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel);
+      if (globalFilterFn === _functions_js__WEBPACK_IMPORTED_MODULE_8__.lastN) {
+        return {
+          localFilters: [],
+          globalFilters: [new _functions_js__WEBPACK_IMPORTED_MODULE_8__.lastN(args)]
+        };
+      } else {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Global filter function ".concat(globalFilterFn.str, " not mapped in parseGlobalFilterFn"));
+      }
+    }
+  }, {
+    key: "parseClauseFn",
+    value: function parseClauseFn(clauseFn, str) {
+      var _this = this;
+      console.log("Parsing clause fn:", clauseFn.str, str);
+      var delim = ",",
+        enclosureLevel = 1;
+      var argArr = _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel).filter(function (s) {
+        return s.length > 0;
+      }); // account for trailing commas
+      console.log("Got argArr:", argArr);
+      if (clauseFn === _functions_js__WEBPACK_IMPORTED_MODULE_8__.XOR && argArr.length < 2) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("XOR clause must have at least two arguments; got: ".concat(argArr.length, " arguments from string: \"").concat(str, "\""));
+      } else if (clauseFn === _functions_js__WEBPACK_IMPORTED_MODULE_8__.NOT && argArr.length !== 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("NOT clause must have exactly one argument; got: ".concat(argArr.length, " arguments from string: \"").concat(str, "\""));
+      }
+      var fns = argArr.reduce(function (acc, arg) {
+        var _acc$localFilters, _acc$globalFilters;
+        (_acc$localFilters = acc.localFilters).push.apply(_acc$localFilters, _toConsumableArray(_this.parseFilters(arg).localFilters));
+        (_acc$globalFilters = acc.globalFilters).push.apply(_acc$globalFilters, _toConsumableArray(_this.parseFilters(arg).globalFilters));
+        return acc;
+      }, FilterSyntaxParser.getEmptyFilters());
+      if (fns.globalFilters.length > 0) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Global filters not allowed in clause functions; got: ".concat(fns.globalFilters, " from string: \"").concat(str, "\""));
+      }
+      if (clauseFn === _functions_js__WEBPACK_IMPORTED_MODULE_8__.NOT && fns.localFilters.length !== 1) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("NOT clause must have exactly one argument; got: ".concat(fns.length, " arguments from string: \"").concat(str, "\""));
+      }
+      return {
+        localFilters: [new clauseFn(fns)],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "parseDirectFn",
+    value: function parseDirectFn(directFn, str) {
+      return {
+        localFilters: [directFn.fromFilterStr(str, this.REFS)],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "parseBaseFilter",
+    value: function parseBaseFilter(str) {
+      console.log("Parsing base filter:", str);
+      var delim = " ",
+        enclosureLevel = 0,
+        trim = true;
+      var tokens = _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].tokenizeWithNestedEnclosures(str, delim, enclosureLevel, trim);
+      console.log("Got tokens: ", tokens, "; Length: ".concat(tokens.length));
+
+      // must be of form ['X', operator, 'Y']
+      if (!(tokens.length === 3)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Invalid base filter format; all filters must be of the form: ['X', operator, 'Y']; got tokens: [".concat(tokens.join(", "), "]"));
+      }
+      var _tokens = _slicedToArray(tokens, 3),
+        left = _tokens[0],
+        operator = _tokens[1],
+        right = _tokens[2];
+
+      // Validate operator
+      if (!_operators_js__WEBPACK_IMPORTED_MODULE_9__.OPERATOR_MAP[operator]) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Invalid operator in base filter; got: \"".concat(operator, "\" as the operator in filter: [").concat(str, "]"));
+      }
+      var opFn = _operators_js__WEBPACK_IMPORTED_MODULE_9__.OPERATOR_MAP[operator];
+
+      // try to converty to field types and data types
+      left = tryParseFilterElement("left", left, str, this.REFS, this.SeasonDetails);
+      right = tryParseFilterElement("right", right, str, this.REFS, this.SeasonDetails);
+
+      // validate filter
+      if (operator === "in" || operator === "!in") {
+        if (!(right instanceof _declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__.TYPES.Set || right instanceof _declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__.TYPES.Range)) {
+          if (!(right instanceof _field_type_js__WEBPACK_IMPORTED_MODULE_6__.FieldType) || !_field_type_js__WEBPACK_IMPORTED_MODULE_6__.SET_FIELDS.has(right.str)) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].TypeException("When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '".concat(str, "'"));
+          }
+        }
+      }
+      if (right instanceof _declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__.TYPES.Range) {
+        if (right.data.type === "Date") {
+          if (!left.str.includes("date")) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].TypeException("When using a Date Range, the left side of the operator must be a date field; ".concat(left.str, " is not a date field; error found in filter: '").concat(str, "'"));
+          }
+        } else if (right.data.type === "Int") {
+          if (!_field_type_js__WEBPACK_IMPORTED_MODULE_6__.INT_FIELDS.has(left.str)) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].TypeException("When using an Int Range, the left side of the operator must be an integer field; ".concat(left.str, " is not an integer field; error found in filter: '").concat(str, "'"));
+          }
+        }
+      }
+      if (right instanceof _declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__.DataType && left instanceof _declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__.DataType) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Either left or right side of filter must be a data field (a property of a battle); both ".concat(left, " and ").concat(right, " are user declared data types in filter: \"").concat(str, "\""));
+      }
+
+      // make filter
+      var filterFn = null;
+      if (left instanceof _declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__.DataType) {
+        filterFn = function filterFn(battle) {
+          return opFn(left.data, right.extractData(battle));
+        };
+      } else if (right instanceof _declared_data_types_js__WEBPACK_IMPORTED_MODULE_7__.DataType) {
+        filterFn = function filterFn(battle) {
+          return opFn(left.extractData(battle), right.data);
+        };
+      } else {
+        filterFn = function filterFn(battle) {
+          return opFn(left.extractData(battle), right.extractData(battle));
+        };
+      }
+      var cleanFilterStr = "".concat(left.asString(), " ").concat(operator, " ").concat(right.asString());
+      var filter = new BaseFilter(cleanFilterStr, filterFn);
+      console.log("Returning base local filter", [filter.asString()]);
+      return {
+        localFilters: [filter],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "parseFilters",
+    value: function parseFilters(str) {
+      var _this2 = this;
+      console.log("Parsing filter string: \"".concat(str || this.preParsedString, "\""));
+      if (str === "") {
+        console.log("Empty filter string; Returning empty filters");
+        return FilterSyntaxParser.getEmptyFilters();
+      }
+      str = str.trim();
+      var split = str.split(";").filter(function (s) {
+        return s.length > 0;
+      });
+      var _iterator2 = _createForOfIteratorHelper(split),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var splitStr = _step2.value;
+          var charCounts = _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].getCharCounts(splitStr);
+          if (charCounts["("] !== charCounts[")"]) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Imbalanced parentheses in following string: \"".concat(splitStr, "\""));
+          } else if (charCounts["{"] !== charCounts["}"]) {
+            throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Imbalanced braces ('{', '}') in following string: \"".concat(splitStr, "\""));
+          }
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+      if (split.length > 1) {
+        console.log("Processing <".concat(split.length, "> filters; filters: ").concat(split));
+        return split.reduce(function (acc, arg) {
+          var _acc$localFilters2, _acc$globalFilters2;
+          (_acc$localFilters2 = acc.localFilters).push.apply(_acc$localFilters2, _toConsumableArray(_this2.parseFilters(arg).localFilters));
+          (_acc$globalFilters2 = acc.globalFilters).push.apply(_acc$globalFilters2, _toConsumableArray(_this2.parseFilters(arg).globalFilters));
+          return acc;
+        }, FilterSyntaxParser.getEmptyFilters());
+      }
+      var filterString = split[0].trim();
+      if (filterString.length < 4) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].SyntaxException("Filter string cannot be valid (less than 4 characters); got filter string: [".concat(filterString, "]"));
+      }
+      var splitFilterString = filterString.split("(");
+      var fn = _functions_js__WEBPACK_IMPORTED_MODULE_8__.FN_MAP[splitFilterString[0]];
+      console.log("Trying to look for Fn ; got string:", filterString);
+      if (!fn) {
+        console.log("Did not find Fn; dispatching to base filter parser");
+        return this.parseBaseFilter(filterString);
+      } else if (_regex_js__WEBPACK_IMPORTED_MODULE_2__.RegExps.VALID_CLAUSE_FUNCTIONS_RE.test(filterString)) {
+        console.log("Found clause fn; dispatching to clause fn parser");
+        return this.parseClauseFn(fn, filterString);
+      } else if (_regex_js__WEBPACK_IMPORTED_MODULE_2__.RegExps.VALID_GLOBAL_FUNCTIONS_RE.test(filterString)) {
+        console.log("Found global filter fn; dispatching to global filter fn parser");
+        return this.parseGlobalFilterFn(fn, filterString);
+      } else if (_regex_js__WEBPACK_IMPORTED_MODULE_2__.RegExps.VALID_DIRECT_FUNCTIONS_RE.test(filterString)) {
+        return this.parseDirectFn(fn, filterString);
+      } else {
+        throw new Error("could not parse filter string as Fn: \"".concat(str, "\" ; did not map to any known function ; check filter-syntax page"));
+      }
+    }
+  }], [{
+    key: "getEmptyFilters",
+    value: function getEmptyFilters() {
+      return {
+        localFilters: [],
+        globalFilters: []
+      };
+    }
+  }, {
+    key: "createAndParse",
+    value: function () {
+      var _createAndParse = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(string) {
+        var HM,
+          SeasonDetails,
+          parser,
+          _args = arguments,
+          _t,
+          _t2;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              HM = _args.length > 1 && _args[1] !== undefined ? _args[1] : null;
+              SeasonDetails = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
+              console.log("Initialized parsing of string:", string);
+              parser = new FilterSyntaxParser(_INTERNAL_KEY._);
+              _t = HM;
+              if (_t) {
+                _context.n = 2;
+                break;
+              }
+              _context.n = 1;
+              return _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroManager();
+            case 1:
+              _t = _context.v;
+            case 2:
+              HM = _t;
+              _t2 = SeasonDetails;
+              if (_t2) {
+                _context.n = 4;
+                break;
+              }
+              _context.n = 3;
+              return _season_manager_js__WEBPACK_IMPORTED_MODULE_3__["default"].getSeasonDetails();
+            case 3:
+              _t2 = _context.v;
+            case 4:
+              SeasonDetails = _t2;
+              parser.rawString = string;
+              parser.HM = HM;
+              _context.n = 5;
+              return _artifact_manager_js__WEBPACK_IMPORTED_MODULE_4__["default"].getArtifactLowercaseNameSet();
+            case 5:
+              parser.ARTIFACT_LOWERCASE_STRINGS_SET = _context.v;
+              console.log("Got Artifact Lowercase Strings Set");
+              console.log(parser.ARTIFACT_LOWERCASE_STRINGS_SET);
+              parser.SeasonDetails = SeasonDetails;
+              parser.REFS = {
+                HM: parser.HM,
+                ARTIFACT_LOWERCASE_STRINGS_SET: parser.ARTIFACT_LOWERCASE_STRINGS_SET,
+                SeasonDetails: parser.SeasonDetails
+              };
+              parser.preParsedString = preParse(string);
+              parser.globalFilters = [];
+              parser.filters = parser.parseFilters(parser.preParsedString);
+              console.log("Got Filters\n");
+              console.log(parser.asString());
+              return _context.a(2, parser);
+          }
+        }, _callee);
+      }));
+      function createAndParse(_x) {
+        return _createAndParse.apply(this, arguments);
+      }
+      return createAndParse;
+    }()
+  }]);
+}();
+var _INTERNAL_KEY = {
+  _: Symbol("internal")
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FilterSyntaxParser);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-parsing/filter-utils.js":
+/*!************************************************************!*\
+  !*** ./static/assets/js/e7/filter-parsing/filter-utils.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _wrapNativeSuper(t) { var r = "function" == typeof Map ? new Map() : void 0; return _wrapNativeSuper = function _wrapNativeSuper(t) { if (null === t || !_isNativeFunction(t)) return t; if ("function" != typeof t) throw new TypeError("Super expression must either be null or a function"); if (void 0 !== r) { if (r.has(t)) return r.get(t); r.set(t, Wrapper); } function Wrapper() { return _construct(t, arguments, _getPrototypeOf(this).constructor); } return Wrapper.prototype = Object.create(t.prototype, { constructor: { value: Wrapper, enumerable: !1, writable: !0, configurable: !0 } }), _setPrototypeOf(Wrapper, t); }, _wrapNativeSuper(t); }
+function _construct(t, e, r) { if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments); var o = [null]; o.push.apply(o, e); var p = new (t.bind.apply(t, o))(); return r && _setPrototypeOf(p, r.prototype), p; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _isNativeFunction(t) { try { return -1 !== Function.toString.call(t).indexOf("[native code]"); } catch (n) { return "function" == typeof t; } }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+
+var SyntaxException = /*#__PURE__*/function (_Error) {
+  function SyntaxException(message) {
+    var _this;
+    _classCallCheck(this, SyntaxException);
+    _this = _callSuper(this, SyntaxException, [message]); // Pass message to base Error
+    _this.name = "Filter Syntax Exception"; // Set error name
+    return _this;
+  }
+  _inherits(SyntaxException, _Error);
+  return _createClass(SyntaxException);
+}(/*#__PURE__*/_wrapNativeSuper(Error));
+var TypeException = /*#__PURE__*/function (_Error2) {
+  function TypeException(message) {
+    var _this2;
+    _classCallCheck(this, TypeException);
+    _this2 = _callSuper(this, TypeException, [message]); // Pass message to base Error
+    _this2.name = "Filter Type Exception"; // Set error name
+    return _this2;
+  }
+  _inherits(TypeException, _Error2);
+  return _createClass(TypeException);
+}(/*#__PURE__*/_wrapNativeSuper(Error));
+var ValidationError = /*#__PURE__*/function (_Error3) {
+  function ValidationError(message) {
+    var _this3;
+    _classCallCheck(this, ValidationError);
+    _this3 = _callSuper(this, ValidationError, [message]); // Pass message to base Error
+    _this3.name = "Filter Validation Error"; // Set error name
+    return _this3;
+  }
+  _inherits(ValidationError, _Error3);
+  return _createClass(ValidationError);
+}(/*#__PURE__*/_wrapNativeSuper(Error)); //should only be called on strings of the form 'str(...)' or 'num(...)' etc. the string must end with the enclosure char, otherwise it will throw a SyntaxException.
+function retrieveEnclosure(string) {
+  var open_char = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "(";
+  var close_char = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ")";
+  if (open_char === close_char) {
+    throw new Error("Enclosure characters must be different: ".concat(open_char, " = ").concat(close_char));
+  }
+  var started = false;
+  var count = 0;
+  var output = "";
+  var _iterator = _createForOfIteratorHelper(_toConsumableArray(string).entries()),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _step$value = _slicedToArray(_step.value, 2),
+        index = _step$value[0],
+        _char = _step$value[1];
+      if (_char === open_char) {
+        count += 1;
+        if (!started) {
+          started = true;
+          continue;
+        }
+      } else if (_char === close_char) {
+        count -= 1;
+      }
+      if (count === 0 && started) {
+        if (index != string.length - 1) {
+          throw new SyntaxException("Enclosure should not be resolved before end of string; resolved at index: ".concat(index, "; input string: ").concat(string));
+        }
+        return output;
+      } else if (count < 0) {
+        throw new SyntaxException("Unbalanced enclosure at index: ".concat(index, " of input string: ").concat(string, "; balance of \"").concat(open_char, "...").concat(close_char, "\" enclosures became negative."));
+      } else if (started) {
+        output += _char;
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  if (!started) {
+    throw new SyntaxException("Enclosure of type ".concat(open_char, "...").concat(close_char, " not found in string; input string: ").concat(string));
+  } else if (count > 0) {
+    throw new SyntaxException("Enclosure could not be resolved; too many '".concat(close_char, "'; balance = +{count}; input string {string}"));
+  }
+}
+
+// retrieves comma separated arguments from a string; used for clause operators; input should be of the form 'fn(arg1, arg2,...)' where fn is a clause fn
+function retrieveArgs(string) {
+  var open_parenthese_count = 0;
+  var args = [];
+  var arg = "";
+  var _iterator2 = _createForOfIteratorHelper(string),
+    _step2;
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var _char2 = _step2.value;
+      if (_char2 === "(") {
+        open_parenthese_count += 1;
+        if (open_parenthese_count === 1) {
+          continue;
+        }
+      } else if (_char2 === ")") {
+        open_parenthese_count -= 1;
+      }
+      if (open_parenthese_count === 1 && _char2 === ",") {
+        args.push(arg.trim());
+        arg = "";
+      } else if (open_parenthese_count >= 1) {
+        arg += _char2;
+      }
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+  if (arg.trim()) {
+    args.push(arg.trim());
+  }
+  return args;
+}
+var ENCLOSURE_MAP = {
+  "(": ")",
+  "{": "}",
+  '"': '"',
+  "'": "'"
+};
+var ENCLOSURE_IGNORE = {
+  // if we are in a string enclosure, don't look for other quotes
+  "'": '"',
+  '"': "'"
+};
+var REVERSE_ENCLOSURE_MAP = Object.fromEntries(Object.entries(ENCLOSURE_MAP).filter(function (_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+    k = _ref2[0],
+    v = _ref2[1];
+  return k !== v;
+}).map(function (_ref3) {
+  var _ref4 = _slicedToArray(_ref3, 2),
+    k = _ref4[0],
+    v = _ref4[1];
+  return [v, k];
+}));
+function tokenizeWithNestedEnclosures(input) {
+  var splitChars = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : " ";
+  var enclosureLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var trim = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+  var tokens = [];
+  var current = "";
+  var stack = [];
+  for (var i = 0; i < input.length; i++) {
+    var _char3 = input[i];
+
+    //console.log(`Processing char ${char} at position ${i}; current string: ${current}; tokens: ${tokens}`);
+
+    if (splitChars.includes(_char3) && stack.length === enclosureLevel) {
+      if (current) {
+        tokens.push(trim ? current.trim() : current);
+        current = "";
+      }
+    } else {
+      if (REVERSE_ENCLOSURE_MAP[_char3]) {
+        // found a closing brace or parenthesis
+        var expected = REVERSE_ENCLOSURE_MAP[_char3];
+        if (stack.length > enclosureLevel) {
+          current += _char3;
+        }
+        if (stack[stack.length - 1] === expected) {
+          stack.pop();
+        } else {
+          var charCounts = getCharCounts(input);
+          if ((charCounts["'"] || 0) % 2 !== 0 || (charCounts['"'] || 0) % 2 !== 0) {
+            throw new SyntaxException("Error tokenizing: Unbalanced closing character at position ".concat(i, "; got string: '").concat(input, "' ; if a str type has quote characters in it, wrap it in the opposite quote character."));
+          } else {
+            throw new SyntaxException("Error tokenizing: Unbalanced closing character at position ".concat(i, "; got string: '").concat(input, "'"));
+          }
+        }
+      } else {
+        if (stack.length >= enclosureLevel) {
+          // we are beyond the level of enclosure we are ignoring so add to current string
+          current += _char3;
+        }
+        if (ENCLOSURE_MAP[_char3] && (!ENCLOSURE_IGNORE[_char3] || stack[stack.length - 1] !== ENCLOSURE_IGNORE[_char3])) {
+          if (stack[stack.length - 1] === ENCLOSURE_MAP[_char3] &&
+          // matching quote to end the enclosure
+          _char3 === ENCLOSURE_MAP[_char3]) {
+            stack.pop();
+          } else {
+            stack.push(_char3); // add new enclosure level
+          }
+        }
+      }
+    }
+  }
+  if (stack.length > 0) {
+    throw new Error("Unbalanced enclosures in input string; unresolved characters from enclosure stack: [ ".concat(stack.join(", "), " ]"));
+  }
+  if (current) {
+    tokens.push(trim ? current.trim() : current);
+  }
+  return tokens;
+}
+function getCharCounts(str) {
+  var counts = {};
+  var _iterator3 = _createForOfIteratorHelper(str),
+    _step3;
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var _char4 = _step3.value;
+      counts[_char4] = (counts[_char4] || 0) + 1;
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+  return counts;
+}
+function parseDate(dateStr) {
+  if (!_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.test(dateStr)) {
+    throw new SyntaxException("Invalid date; must be in the format: YYYY-MM-DD ( regex: ".concat(_regex_js__WEBPACK_IMPORTED_MODULE_0__.RegExps.VALID_DATE_LITERAL_RE.source, " ); got: '").concat(dateStr, "'"));
+  }
+  var isoDateStr = dateStr.split(" ")[0];
+  var date = new Date("".concat(isoDateStr, "T00:00:00"));
+
+  // Check if valid date
+  if (isNaN(date.getTime())) {
+    throw new SyntaxException("Invalid date; could not be parsed as a valid date; got: '".concat(dateStr, "'"));
+  }
+
+  // Check if parsed date matches passed in string
+  var dateString = date.toISOString().split("T")[0];
+  var _dateString$split$map = dateString.split("-").map(Number),
+    _dateString$split$map2 = _slicedToArray(_dateString$split$map, 3),
+    year = _dateString$split$map2[0],
+    month = _dateString$split$map2[1],
+    day = _dateString$split$map2[2];
+  if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+    throw new SyntaxException("Invalid date; parsed date: ".concat(date.toISOString(), " does not match passed in string: ").concat(isoDateStr));
+  }
+  console.log("Parsed date: ".concat(date.toISOString(), " ; ").concat(date.constructor.name));
+  return date;
+}
+function tryConvert(convertFnc, typeName, value) {
+  var errMSG = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  if (errMSG === null) {
+    errMSG = "Could not convert ".concat(value, " to ").concat(typeName);
+  }
+  try {
+    return convertFnc(value);
+  } catch (err) {
+    throw new TypeException("".concat(errMSG, ": ").concat(err.message));
+  }
+}
+function trimSurroundingQuotes(str) {
+  return str.replace(/^"(.*)"$/, "$1").replace(/^'(.*)'$/, "$1");
+}
+var Futils = {
+  SyntaxException: SyntaxException,
+  TypeException: TypeException,
+  ValidationError: ValidationError,
+  retrieveEnclosure: retrieveEnclosure,
+  retrieveArgs: retrieveArgs,
+  getCharCounts: getCharCounts,
+  tokenizeWithNestedEnclosures: tokenizeWithNestedEnclosures,
+  parseDate: parseDate,
+  tryConvert: tryConvert,
+  trimSurroundingQuotes: trimSurroundingQuotes
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Futils);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-parsing/functions.js":
+/*!*********************************************************!*\
+  !*** ./static/assets/js/e7/filter-parsing/functions.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AND: () => (/* binding */ AND),
+/* harmony export */   ArtifactFn: () => (/* binding */ ArtifactFn),
+/* harmony export */   CombatReadinessGeqFn: () => (/* binding */ CombatReadinessGeqFn),
+/* harmony export */   EquipmentFn: () => (/* binding */ EquipmentFn),
+/* harmony export */   FN_MAP: () => (/* binding */ FN_MAP),
+/* harmony export */   NOT: () => (/* binding */ NOT),
+/* harmony export */   OR: () => (/* binding */ OR),
+/* harmony export */   XOR: () => (/* binding */ XOR),
+/* harmony export */   lastN: () => (/* binding */ lastN)
+/* harmony export */ });
+/* harmony import */ var _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./declared-data-types.js */ "./static/assets/js/e7/filter-parsing/declared-data-types.js");
+/* harmony import */ var _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter-parse-references.js */ "./static/assets/js/e7/filter-parsing/filter-parse-references.js");
+/* harmony import */ var _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter-utils.js */ "./static/assets/js/e7/filter-parsing/filter-utils.js");
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../regex.js */ "./static/assets/js/e7/regex.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils.js */ "./static/assets/js/utils.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+
+
+var Fn = /*#__PURE__*/function () {
+  function Fn() {
+    _classCallCheck(this, Fn);
+  }
+  return _createClass(Fn, [{
+    key: "call",
+    value: function call(battle) {
+      throw new Error("Base class ".concat(this.constructor.name, " does not implement the 'call' method. Implement this method in a subclass."));
+    }
+  }]);
+}();
+var globalFilterFn = /*#__PURE__*/function (_Fn) {
+  function globalFilterFn() {
+    _classCallCheck(this, globalFilterFn);
+    return _callSuper(this, globalFilterFn);
+  }
+  _inherits(globalFilterFn, _Fn);
+  return _createClass(globalFilterFn, [{
+    key: "asString",
+    value: function asString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      return "".concat(prefix).concat(this.str);
+    }
+  }]);
+}(Fn);
+var lastN = /*#__PURE__*/function (_globalFilterFn) {
+  function lastN(args) {
+    var _this;
+    _classCallCheck(this, lastN);
+    _this = _callSuper(this, lastN);
+    _this.name = "last-N";
+    if (args.length !== 1) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("".concat(_this.name, " expects 1 argument, got ").concat(args.length));
+    }
+    var num = Number(args[0]);
+    if (!Number.isInteger(num)) {
+      throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("".concat(_this.name, " expects an integer argument, could not parse '").concat(args[0], "' as integer"));
+    }
+    _this.str = "".concat(_this.name, "(").concat(num, ")");
+    _this.n = num;
+    return _this;
+  }
+  _inherits(lastN, _globalFilterFn);
+  return _createClass(lastN, [{
+    key: "call",
+    value: function call(battles) {
+      battles.sort(function (b1, b2) {
+        return b1["Seq Num"] - b2["Seq Num"];
+      });
+      return battles.slice(-this.n);
+    }
+  }]);
+}(globalFilterFn);
+var ClauseFn = /*#__PURE__*/function (_Fn2) {
+  function ClauseFn(fns) {
+    var _this2;
+    _classCallCheck(this, ClauseFn);
+    _this2 = _callSuper(this, ClauseFn);
+    _this2.fns = fns;
+    console.log("Clause Fn constructor got fns:", fns);
+    return _this2;
+  }
+  _inherits(ClauseFn, _Fn2);
+  return _createClass(ClauseFn, [{
+    key: "asString",
+    value: function asString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      var output = "";
+      var newPrefix = prefix + _filter_parse_references_js__WEBPACK_IMPORTED_MODULE_1__.PRINT_PREFIX;
+      this.fns.localFilters.forEach(function (fn) {
+        return output += "".concat(fn.asString(newPrefix), ",\n");
+      });
+      console.log("Clause Fn asString got output:", output);
+      return "".concat(prefix).concat(this.str, "(\n").concat(output.trimEnd(), "\n").concat(prefix, ")");
+    }
+  }]);
+}(Fn);
+var AND = /*#__PURE__*/function (_ClauseFn) {
+  function AND(fns) {
+    var _this3;
+    _classCallCheck(this, AND);
+    _this3 = _callSuper(this, AND, [fns]);
+    _this3.str = "AND";
+    return _this3;
+  }
+  _inherits(AND, _ClauseFn);
+  return _createClass(AND, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fns.localFilters.every(function (fn) {
+        return fn.call(battle);
+      });
+    }
+  }]);
+}(ClauseFn);
+var OR = /*#__PURE__*/function (_ClauseFn2) {
+  function OR(fns) {
+    var _this4;
+    _classCallCheck(this, OR);
+    _this4 = _callSuper(this, OR, [fns]);
+    _this4.str = "OR";
+    return _this4;
+  }
+  _inherits(OR, _ClauseFn2);
+  return _createClass(OR, [{
+    key: "call",
+    value: function call(battle) {
+      return this.fns.localFilters.some(function (fn) {
+        return fn.call(battle);
+      });
+    }
+  }]);
+}(ClauseFn);
+var XOR = /*#__PURE__*/function (_ClauseFn3) {
+  function XOR(fns) {
+    var _this5;
+    _classCallCheck(this, XOR);
+    _this5 = _callSuper(this, XOR, [fns]);
+    _this5.str = "XOR";
+    return _this5;
+  }
+  _inherits(XOR, _ClauseFn3);
+  return _createClass(XOR, [{
+    key: "call",
+    value: function call(battle) {
+      var result = false;
+      // Cascading XOR
+      var _iterator = _createForOfIteratorHelper(this.fns.localFilters),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var fn = _step.value;
+          result = !result && fn.call(battle) || result && !fn.call(battle);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+      return result;
+    }
+  }]);
+}(ClauseFn);
+var NOT = /*#__PURE__*/function (_ClauseFn4) {
+  function NOT(fns) {
+    var _this6;
+    _classCallCheck(this, NOT);
+    _this6 = _callSuper(this, NOT, [fns]);
+    _this6.str = "NOT";
+    return _this6;
+  }
+  _inherits(NOT, _ClauseFn4);
+  return _createClass(NOT, [{
+    key: "call",
+    value: function call(battle) {
+      return !this.fns.localFilters[0].call(battle);
+    }
+  }]);
+}(ClauseFn); // Direct functions resolve to a single base filter ; they cannot contain nested filters
+var DirectFn = /*#__PURE__*/function (_Fn3) {
+  function DirectFn() {
+    _classCallCheck(this, DirectFn);
+    return _callSuper(this, DirectFn, arguments);
+  }
+  _inherits(DirectFn, _Fn3);
+  return _createClass(DirectFn, [{
+    key: "asString",
+    value: function asString() {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+      return "".concat(prefix).concat(this.str);
+    }
+  }]);
+}(Fn);
+function getHeroEquipment(heroName, picks, equipment) {
+  // picks is either P1 Picks or P2 Picks and equipment is either P1 Equipment or P2 Equipment from a battle record
+  for (var i = 0; i < picks.length; i++) {
+    if (picks[i] === heroName) {
+      return equipment[i];
+    }
+  }
+  return null;
+}
+var EquipmentFn = /*#__PURE__*/function (_DirectFn) {
+  function EquipmentFn(hero, equipmentSet, p1Flag) {
+    var _this7;
+    _classCallCheck(this, EquipmentFn);
+    console.log("Received equipment fn args", hero, equipmentSet, p1Flag);
+    _this7 = _callSuper(this, EquipmentFn);
+    _this7.hero = hero.data;
+    _this7.equipmentCounts = (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.strArrToCountMap)(equipmentSet.list);
+    _this7.str = (p1Flag ? "p1" : "p2") + ".equipment(".concat(hero.asString(), ", ").concat(equipmentSet.asString(), ")");
+    _this7.isPlayer1 = p1Flag;
+    return _this7;
+  }
+  _inherits(EquipmentFn, _DirectFn);
+  return _createClass(EquipmentFn, [{
+    key: "call",
+    value: function call(battle) {
+      var equipment = this.isPlayer1 ? battle["P1 Equipment"] : battle["P2 Equipment"];
+      var picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
+      var equipped = getHeroEquipment(this.hero, picks, equipment);
+      if (!equipped) {
+        return false;
+      }
+      var equippedCounts = (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.strArrToCountMap)(equipped);
+      return Object.entries(this.equipmentCounts).every(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+          eq = _ref2[0],
+          count = _ref2[1];
+        return equippedCounts[eq] === count;
+      });
+    }
+  }], [{
+    key: "fromFilterStr",
+    value: function fromFilterStr(str, REFS) {
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true);
+      if (!(args.length === 2)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid equipment function call ; accepts exactly 2 arguments ; got: [".concat(args, "] from str: ").concat(str));
+      }
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid equipment function call ; first argument must be a valid string literal ; got: '".concat(args[0], "' from str: ").concat(str));
+      }
+      var equipSetStr = /^\{[",'a-z\s]*\}$/i.test(args[1]) ? args[1] : "{".concat(args[1], "}");
+      var hero = null,
+        equipmentSet = null;
+      try {
+        hero = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.String(args[0], REFS, {
+          types: ["hero"]
+        });
+        equipmentSet = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Set(equipSetStr, REFS, {
+          types: ["equipment"]
+        });
+      } catch (e) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid type in equipment function call; got str: ".concat(str, " ; error: ").concat(e));
+      }
+      var p1Flag = str.split(".")[0] === "p1";
+      console.log("Sending equipment fn args", hero, equipmentSet, p1Flag);
+      return new EquipmentFn(hero, equipmentSet, p1Flag);
+    }
+  }]);
+}(DirectFn);
+function getHeroArtifact(heroName, picks, artifacts) {
+  // picks is either P1 Picks or P2 Picks and artifacts is either P1 Artifacts or P2 Artifacts from a battle record
+  for (var i = 0; i < picks.length; i++) {
+    if (picks[i] === heroName) {
+      return artifacts[i];
+    }
+  }
+  return null;
+}
+var ArtifactFn = /*#__PURE__*/function (_DirectFn2) {
+  function ArtifactFn(hero, artifactSet, p1Flag) {
+    var _this8;
+    _classCallCheck(this, ArtifactFn);
+    console.log("Received artifact fn args", hero, artifactSet, p1Flag);
+    _this8 = _callSuper(this, ArtifactFn);
+    _this8.hero = hero.data;
+    _this8.artifactArr = _toConsumableArray(artifactSet.data);
+    _this8.str = (p1Flag ? "p1" : "p2") + ".artifact(".concat(hero.asString(), ", ").concat(artifactSet.asString(), ")");
+    _this8.isPlayer1 = p1Flag;
+    return _this8;
+  }
+  _inherits(ArtifactFn, _DirectFn2);
+  return _createClass(ArtifactFn, [{
+    key: "call",
+    value: function call(battle) {
+      var artifacts = this.isPlayer1 ? battle["P1 Artifacts"] : battle["P2 Artifacts"];
+      var picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
+      var equippedArtifact = getHeroArtifact(this.hero, picks, artifacts);
+      console.log("Got equipped Artifact: ".concat(equippedArtifact, ", hero: ").concat(this.hero, ", picks: ").concat(JSON.stringify(picks), ", artifacts: ").concat(JSON.stringify(artifacts)));
+      if (!equippedArtifact) {
+        return false;
+      }
+      return this.artifactArr.some(function (arti) {
+        return equippedArtifact.toLowerCase() === arti.toLowerCase();
+      });
+    }
+  }], [{
+    key: "fromFilterStr",
+    value: function fromFilterStr(str, REFS) {
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true);
+      if (!(args.length === 2)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(args, "] from str: ").concat(str));
+      }
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.anchorExp(_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE).test(args[0])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid artifact function call ; first argument must be a valid string literal ; got: '".concat(args[0], "' from str: ").concat(str));
+      }
+      var artifactSetStr = _regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_SET_RE.test(args[1]) ? args[1] : "{".concat(args[1], "}");
+      var hero = null,
+        artifactSet = null;
+      try {
+        hero = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.String(args[0], REFS, {
+          types: ["hero"]
+        });
+        artifactSet = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Set(artifactSetStr, REFS, {
+          types: ["artifact"]
+        });
+      } catch (e) {
+        console.error(e);
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid type in artifact function call; got str: ".concat(str, " ; error: ").concat(e));
+      }
+      var p1Flag = str.split(".")[0] === "p1";
+      console.log("Sending artifact fn args", hero, artifactSet, p1Flag);
+      return new ArtifactFn(hero, artifactSet, p1Flag);
+    }
+  }]);
+}(DirectFn); // filters for battles where a hero as greater or equal starting CR as the passed integer value (indicating the percentage value)
+var CombatReadinessGeqFn = /*#__PURE__*/function (_DirectFn3) {
+  function CombatReadinessGeqFn(hero, crThreshold, p1Flag) {
+    var _this9;
+    _classCallCheck(this, CombatReadinessGeqFn);
+    console.log("Received CR-GEQ fn args", hero.asString(), crThreshold.asString(), p1Flag);
+    _this9 = _callSuper(this, CombatReadinessGeqFn);
+    _this9.hero = hero.data;
+    _this9.crThreshold = crThreshold.data;
+    _this9.str = (p1Flag ? "p1" : "p2") + ".CR-GEQ(".concat(hero.asString(), ", ").concat(crThreshold.asString(), ")");
+    _this9.isPlayer1 = p1Flag;
+    return _this9;
+  }
+  _inherits(CombatReadinessGeqFn, _DirectFn3);
+  return _createClass(CombatReadinessGeqFn, [{
+    key: "call",
+    value: function call(battle) {
+      var _this0 = this;
+      var findFn = function findFn(entry, picks) {
+        return picks.includes(entry[0]) && entry[1] >= _this0.crThreshold && entry[0] === _this0.hero;
+      };
+      var result = this.isPlayer1 ? battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+        return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P1_PICKS]);
+      }) : battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+        return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P2_PICKS]);
+      });
+      console.log("Got CR Result: ".concat(result, ", hero: ").concat(this.hero, ", minValue: ").concat(this.crThreshold));
+      return !!result;
+    }
+  }], [{
+    key: "fromFilterStr",
+    value: function fromFilterStr(str, REFS) {
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true);
+      if (!(args.length === 2)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(args, "] from str: ").concat(str));
+      }
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-GEQ function call ; first argument must be a valid string literal ; got: '".concat(args[0], "' from str: ").concat(str));
+      } else if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-GEQ function call ; second argument must be a valid integer literal ; got: '".concat(args[1], "' from str: ").concat(str));
+      }
+      var crThresholdStr = args[1];
+      var hero = null,
+        crThreshold = null;
+      try {
+        hero = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.String(args[0], REFS, {
+          types: ["hero"]
+        });
+        crThreshold = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Int(crThresholdStr);
+      } catch (e) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid type in CR-GEQ function call; got str: ".concat(str, " ; error: ").concat(e));
+      }
+      var p1Flag = str.split(".")[0] === "p1";
+      console.log("Sending CR fn args", hero, crThreshold, p1Flag);
+      return new CombatReadinessGeqFn(hero, crThreshold, p1Flag);
+    }
+  }]);
+}(DirectFn);
+var CombatReadinessLtFn = /*#__PURE__*/function (_DirectFn4) {
+  function CombatReadinessLtFn(hero, crThreshold, p1Flag) {
+    var _this1;
+    _classCallCheck(this, CombatReadinessLtFn);
+    console.log("Received CR-LT fn args", hero.asString(), crThreshold.asString(), p1Flag);
+    _this1 = _callSuper(this, CombatReadinessLtFn);
+    _this1.hero = hero.data;
+    _this1.crThreshold = crThreshold.data;
+    _this1.str = (p1Flag ? "p1" : "p2") + ".CR-LT(".concat(hero.asString(), ", ").concat(crThreshold.asString(), ")");
+    _this1.isPlayer1 = p1Flag;
+    return _this1;
+  }
+  _inherits(CombatReadinessLtFn, _DirectFn4);
+  return _createClass(CombatReadinessLtFn, [{
+    key: "call",
+    value: function call(battle) {
+      var _this10 = this;
+      var findFn = function findFn(entry, picks) {
+        return picks.includes(entry[0]) && entry[1] < _this10.crThreshold && entry[0] === _this10.hero;
+      };
+      var result = this.isPlayer1 ? battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+        return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P1_PICKS]);
+      }) : battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+        return findFn(entry, battle[_references_js__WEBPACK_IMPORTED_MODULE_4__.COLUMNS_MAP.P2_PICKS]);
+      });
+      console.log("Got CR Result: ".concat(result, ", hero: ").concat(this.hero, ", minValue: ").concat(this.crThreshold));
+      return !!result;
+    }
+  }], [{
+    key: "fromFilterStr",
+    value: function fromFilterStr(str, REFS) {
+      var args = _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].tokenizeWithNestedEnclosures(str, ",", 1, true);
+      if (!(args.length === 2)) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].SyntaxException("Invalid artifact function call ; accepts exactly 2 arguments ; got: [".concat(args, "] from str: ").concat(str));
+      }
+      if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-LT function call ; first argument must be a valid string literal ; got: '".concat(args[0], "' from str: ").concat(str));
+      } else if (!_regex_js__WEBPACK_IMPORTED_MODULE_3__.RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid CR-LT function call ; second argument must be a valid integer literal ; got: '".concat(args[1], "' from str: ").concat(str));
+      }
+      var crThresholdStr = args[1];
+      var hero = null,
+        crThreshold = null;
+      try {
+        hero = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.String(args[0], REFS, {
+          types: ["hero"]
+        });
+        crThreshold = new _declared_data_types_js__WEBPACK_IMPORTED_MODULE_0__.TYPES.Int(crThresholdStr);
+      } catch (e) {
+        throw new _filter_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].TypeException("Invalid type in CR-LT function call; got str: ".concat(str, " ; error: ").concat(e));
+      }
+      var p1Flag = str.split(".")[0] === "p1";
+      console.log("Sending CR fn args", hero, crThreshold, p1Flag);
+      return new CombatReadinessLtFn(hero, crThreshold, p1Flag);
+    }
+  }]);
+}(DirectFn);
+var FN_MAP = {
+  and: AND,
+  or: OR,
+  xor: XOR,
+  not: NOT,
+  "last-n": lastN,
+  "p1.equipment": EquipmentFn,
+  "p2.equipment": EquipmentFn,
+  "p1.artifact": ArtifactFn,
+  "p2.artifact": ArtifactFn,
+  "p1.cr-geq": CombatReadinessGeqFn,
+  "p2.cr-geq": CombatReadinessGeqFn,
+  "p1.cr-lt": CombatReadinessLtFn,
+  "p2.cr-lt": CombatReadinessLtFn
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/filter-parsing/operators.js":
+/*!*********************************************************!*\
+  !*** ./static/assets/js/e7/filter-parsing/operators.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   OPERATOR_MAP: () => (/* binding */ OPERATOR_MAP)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+// must handle both regular sets and ranges
+function inOperatorFn(a, b) {
+  if (b instanceof Set) {
+    return b.has(a);
+  }
+  // handle ranges
+  else if (_typeof(b) === "object" && b !== null && !Array.isArray(b) && ["start", "end", "endInclusive", "type"].every(function (key) {
+    return b.hasOwnProperty(key);
+  })) {
+    return a >= b.start && (b.endInclusive ? a <= b.end : a < b.end);
+  }
+
+  // handles fields that are arrays (ie p1.picks)
+  else if (Array.isArray(b)) {
+    return b.includes(a);
+  } else {
+    throw new Error("Invalid match pattern for 'in' operators; got: '".concat(a, "' and '").concat(JSON.stringify(b), "}' (").concat(b.constructor.name, ")"));
+  }
+}
+var OPERATOR_MAP = {
+  ">": function _(a, b) {
+    return a > b;
+  },
+  "<": function _(a, b) {
+    return a < b;
+  },
+  "=": function _(a, b) {
+    return a === b;
+  },
+  "in": function _in(a, b) {
+    return inOperatorFn(a, b);
+  },
+  ">=": function _(a, b) {
+    return a >= b;
+  },
+  "<=": function _(a, b) {
+    return a <= b;
+  },
+  "!=": function _(a, b) {
+    return a !== b;
+  },
+  "!in": function _in(a, b) {
+    return !inOperatorFn(a, b);
+  }
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/hero-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/e7/hero-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _e7_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7-utils.js */ "./static/assets/js/e7/e7-utils.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+var FODDER_NAME = "Fodder";
+var EMPTY_NAME = "Empty";
+
+// This function adds two heroes to the Hero Manager to account for fodder champions and empty picks/prebans
+function addNonHeroes(HM) {
+  var next_index = HM.heroes.length;
+  var Empty = {
+    attribute_cd: "N/A",
+    code: "N/A",
+    grade: "N/A",
+    job_cd: "N/A",
+    name: EMPTY_NAME,
+    prime: 1
+  };
+  var Fodder = {
+    attribute_cd: "N/A",
+    code: "N/A",
+    grade: "2/3",
+    job_cd: "N/A",
+    name: FODDER_NAME,
+    prime: _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[next_index]
+  };
+  HM.heroes.push(Empty);
+  HM.heroes.push(Fodder);
+  HM.Fodder = Fodder;
+  HM.Empty = Empty;
+  return HM;
+}
+
+// add lookup dicts to the hero manager so that we can perform efficient lookups
+function addDicts(HM) {
+  console.log("Adding Lookup Dicts");
+  console.log("\tAdding name lookup");
+  HM.name_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.name.toLowerCase().replace(/\s+/g, "")] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding prime lookup");
+  HM.prime_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.prime] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding code lookup");
+  HM.code_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.code] = hero;
+    return acc;
+  }, {});
+  console.log("\tAdding prime pair lookup");
+  var prime_pair_lookup = HM.heroes.reduce(function (acc, hero) {
+    acc[hero.prime] = hero.name;
+    return acc;
+  }, {});
+  var numKeys = Object.keys(HM.prime_lookup).length - 1; // subtract 1 since we don't consider Empty hero
+  console.log("\tAdding prime pair lookup; primes to process", numKeys);
+  for (var i = 0; i < numKeys - 1; i++) {
+    var prime = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[i];
+    for (var j = i + 1; j < numKeys; j++) {
+      var prime2 = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[j];
+      var product = prime * prime2;
+      var name1 = HM.prime_lookup[prime].name;
+      var name2 = HM.prime_lookup[prime2].name;
+      prime_pair_lookup[product] = [name1, name2].sort().join(", ");
+    }
+  }
+  //capture case where two fodder heroes
+  prime_pair_lookup[HM.Fodder.prime * HM.Fodder.prime] = [HM.Fodder.name, HM.Fodder.prime];
+
+  //set prime pair lookup dict in HM and return
+  HM.prime_pair_lookup = prime_pair_lookup;
+  return HM;
+}
+var HeroManager = {
+  getHeroManager: function () {
+    var _getHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 4;
+            break;
+          case 3:
+            _t3 = this.fetchAndCacheHeroManager();
+          case 4:
+            return _context.a(2, _t3);
+        }
+      }, _callee, this);
+    }));
+    function getHeroManager() {
+      return _getHeroManager.apply(this, arguments);
+    }
+    return getHeroManager;
+  }(),
+  createHeroManager: function createHeroManager(rawHeroList) {
+    // add prime identifier to each hero so that we can represent a set as a product of primes
+    var _iterator = _createForOfIteratorHelper(rawHeroList.entries()),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var _step$value = _slicedToArray(_step.value, 2),
+          index = _step$value[0],
+          heroData = _step$value[1];
+        var prime = _references_js__WEBPACK_IMPORTED_MODULE_2__.PRIMES[index];
+        heroData.prime = prime;
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    var HM = {
+      heroes: rawHeroList
+    };
+    HM = addNonHeroes(HM); //should not be called again
+    HM = addDicts(HM); // Must come after addNonHeroes so that empty/fodder are added to the dicts
+    return HM;
+  },
+  fetchHeroManager: function () {
+    var _fetchHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var _yield$E7API$fetchHer;
+      var heroJSON, enHeroList, HM, _t4, _t5, _t6;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_4__["default"].fetchHeroJSON();
+          case 1:
+            _t5 = _yield$E7API$fetchHer = _context2.v;
+            _t4 = _t5 !== null;
+            if (!_t4) {
+              _context2.n = 2;
+              break;
+            }
+            _t4 = _yield$E7API$fetchHer !== void 0;
+          case 2:
+            if (!_t4) {
+              _context2.n = 3;
+              break;
+            }
+            _t6 = _yield$E7API$fetchHer;
+            _context2.n = 5;
+            break;
+          case 3:
+            _context2.n = 4;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__["default"].fetchHeroData();
+          case 4:
+            _t6 = _context2.v;
+          case 5:
+            heroJSON = _t6;
+            enHeroList = heroJSON.en; //get english hero list
+            HM = this.createHeroManager(enHeroList);
+            console.log("Created HeroManager using raw data received from server");
+            return _context2.a(2, HM);
+        }
+      }, _callee2, this);
+    }));
+    function fetchHeroManager() {
+      return _fetchHeroManager.apply(this, arguments);
+    }
+    return fetchHeroManager;
+  }(),
+  fetchAndCacheHeroManager: function () {
+    var _fetchAndCacheHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      var HM;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            console.log("HeroManager not found in cache, fetching from server and caching it");
+            _context3.n = 1;
+            return this.fetchHeroManager();
+          case 1:
+            HM = _context3.v;
+            _context3.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER, HM);
+          case 2:
+            console.log("Cached HeroManager using raw data recieved from server");
+            (0,_e7_utils_js__WEBPACK_IMPORTED_MODULE_1__.printObjStruct)(HM);
+            return _context3.a(2, HM);
+        }
+      }, _callee3, this);
+    }));
+    function fetchAndCacheHeroManager() {
+      return _fetchAndCacheHeroManager.apply(this, arguments);
+    }
+    return fetchAndCacheHeroManager;
+  }(),
+  deleteHeroManager: function () {
+    var _deleteHeroManager = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HERO_MANAGER);
+          case 1:
+            console.log("Removed hero manager from cache");
+          case 2:
+            return _context4.a(2);
+        }
+      }, _callee4);
+    }));
+    function deleteHeroManager() {
+      return _deleteHeroManager.apply(this, arguments);
+    }
+    return deleteHeroManager;
+  }(),
+  getHeroByName: function getHeroByName(name, HM) {
+    var _HM$name_lookup$norma;
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    } else if (!name) {
+      return HM.Empty;
+    }
+    var normalizedName = name.toLowerCase().replace(/\s+/g, "");
+    return (_HM$name_lookup$norma = HM.name_lookup[normalizedName]) !== null && _HM$name_lookup$norma !== void 0 ? _HM$name_lookup$norma : null;
+  },
+  getHeroByPrime: function getHeroByPrime(prime, HM) {
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    }
+    return HM.prime_lookup[prime];
+  },
+  getHeroByCode: function getHeroByCode(code, HM) {
+    var _HM$code_lookup$code;
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    } else if (!code) {
+      return HM.Empty;
+    }
+    return (_HM$code_lookup$code = HM.code_lookup[code]) !== null && _HM$code_lookup$code !== void 0 ? _HM$code_lookup$code : null;
+  },
+  getPairNamesByProduct: function getPairNamesByProduct(product, HM) {
+    if (!HM) {
+      throw new Error("HeroManager instance must be passed to lookup functions");
+    }
+    return HM.prime_pair_lookup[product];
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HeroManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/references.js":
+/*!*******************************************!*\
+  !*** ./static/assets/js/e7/references.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ARRAY_COLUMNS: () => (/* binding */ ARRAY_COLUMNS),
+/* harmony export */   BOOLS_COLS: () => (/* binding */ BOOLS_COLS),
+/* harmony export */   COLUMNS: () => (/* binding */ COLUMNS),
+/* harmony export */   COLUMNS_MAP: () => (/* binding */ COLUMNS_MAP),
+/* harmony export */   EQUIPMENT_SET_MAP: () => (/* binding */ EQUIPMENT_SET_MAP),
+/* harmony export */   HERO_STATS_COLUMN_MAP: () => (/* binding */ HERO_STATS_COLUMN_MAP),
+/* harmony export */   INT_COLUMNS: () => (/* binding */ INT_COLUMNS),
+/* harmony export */   LEAGUE_MAP: () => (/* binding */ LEAGUE_MAP),
+/* harmony export */   ONE_DAY: () => (/* binding */ ONE_DAY),
+/* harmony export */   PRIMES: () => (/* binding */ PRIMES),
+/* harmony export */   TITLE_CASE_COLUMNS: () => (/* binding */ TITLE_CASE_COLUMNS),
+/* harmony export */   WORLD_CODES: () => (/* binding */ WORLD_CODES),
+/* harmony export */   WORLD_CODE_ENUM: () => (/* binding */ WORLD_CODE_ENUM),
+/* harmony export */   WORLD_CODE_TO_CLEAN_STR: () => (/* binding */ WORLD_CODE_TO_CLEAN_STR)
+/* harmony export */ });
+var WORLD_CODES = new Set(["world_kor", "world_global", "world_jpn", "world_asia", "world_eu"]);
+var WORLD_CODE_ENUM = {
+  GLOBAL: "world_global",
+  KOR: "world_kor",
+  JPN: "world_jpn",
+  ASIA: "world_asia",
+  EU: "world_eu"
+};
+var WORLD_CODE_TO_CLEAN_STR = {
+  world_global: "Global",
+  world_kor: "Korea",
+  world_jpn: "Japan",
+  world_asia: "Asia",
+  world_eu: "Europe"
+};
+var EQUIPMENT_SET_MAP = {
+  set_speed: "Speed",
+  set_acc: "Hit",
+  set_cri: "Critical",
+  set_res: "Resist",
+  set_def: "Defense",
+  set_att: "Attack",
+  set_max_hp: "Health",
+  set_cri_dmg: "Destruction",
+  set_coop: "Unity",
+  set_immune: "Immunity",
+  set_rage: "Rage",
+  set_vampire: "Lifesteal",
+  set_shield: "Protection",
+  set_revenge: "Revenge",
+  set_penetrate: "Penetration",
+  set_torrent: "Torrent",
+  set_counter: "Counter",
+  set_scar: "Injury"
+};
+var ONE_DAY = 1000 * 60 * 60 * 24;
+var LEAGUE_MAP = {
+  bronze: 0,
+  silver: 1,
+  gold: 2,
+  master: 3,
+  challenger: 4,
+  champion: 5,
+  warlord: 6,
+  emperor: 7,
+  legend: 8
+};
+var COLUMNS = ["Date/Time", "Seq Num", "P1 ID", "P1 Server", "P1 League", "P1 Points", "P2 ID", "P2 Server", "P2 League", "Win", "First Pick", "P1 Preban 1", "P1 Preban 2", "P2 Preban 1", "P2 Preban 2", "P1 Pick 1", "P1 Pick 2", "P1 Pick 3", "P1 Pick 4", "P1 Pick 5", "P2 Pick 1", "P2 Pick 2", "P2 Pick 3", "P2 Pick 4", "P2 Pick 5", "P1 Postban", "P2 Postban"];
+var COLUMNS_MAP = {
+  SEASON: "Season",
+  DATE_TIME: "Date/Time",
+  SECONDS: "Seconds",
+  TURNS: "Turns",
+  SEQ_NUM: "Seq Num",
+  P1_ID: "P1 ID",
+  P1_SERVER: "P1 Server",
+  P2_ID: "P2 ID",
+  P2_SERVER: "P2 Server",
+  P1_LEAGUE: "P1 League",
+  P2_LEAGUE: "P2 League",
+  P1_POINTS: "P1 Points",
+  POINT_GAIN: "Point Gain",
+  WIN: "Win",
+  FIRST_PICK: "First Pick",
+  FIRST_TURN: "First Turn",
+  FIRST_TURN_HERO: "First Turn Hero",
+  CR_BAR: "CR Bar",
+  P1_PREBANS: "P1 Prebans",
+  P2_PREBANS: "P2 Prebans",
+  P1_PICKS: "P1 Picks",
+  P2_PICKS: "P2 Picks",
+  P1_POSTBAN: "P1 Postban",
+  P2_POSTBAN: "P2 Postban",
+  P1_EQUIPMENT: "P1 Equipment",
+  P2_EQUIPMENT: "P2 Equipment",
+  P1_ARTIFACTS: "P1 Artifacts",
+  P2_ARTIFACTS: "P2 Artifacts",
+  P1_MVP: "P1 MVP",
+  P2_MVP: "P2 MVP",
+  P1_PICKS_PRIMES: "P1 Picks Primes",
+  P1_PICKS_PRIME_PRODUCT: "P1 Picks Prime Product",
+  P2_PICKS_PRIMES: "P2 Picks Primes",
+  P2_PICKS_PRIME_PRODUCT: "P2 Picks Prime Product",
+  P1_PREBANS_PRIMES: "P1 Prebans Primes",
+  P1_PREBANS_PRIME_PRODUCT: "P1 Prebans Prime Product",
+  P2_PREBANS_PRIMES: "P2 Prebans Primes",
+  P2_PREBANS_PRIME_PRODUCT: "P2 Prebans Prime Product"
+};
+var ARRAY_COLUMNS = [COLUMNS_MAP.P1_EQUIPMENT, COLUMNS_MAP.P2_EQUIPMENT, COLUMNS_MAP.P1_ARTIFACTS, COLUMNS_MAP.P2_ARTIFACTS, COLUMNS_MAP.CR_BAR, COLUMNS_MAP.P1_PREBANS, COLUMNS_MAP.P2_PREBANS, COLUMNS_MAP.P1_PICKS, COLUMNS_MAP.P2_PICKS];
+var BOOLS_COLS = [COLUMNS_MAP.FIRST_PICK, COLUMNS_MAP.FIRST_TURN, COLUMNS_MAP.WIN];
+var INT_COLUMNS = [COLUMNS_MAP.SECONDS, COLUMNS_MAP.TURNS, COLUMNS_MAP.P1_POINTS, COLUMNS_MAP.POINT_GAIN];
+var TITLE_CASE_COLUMNS = [COLUMNS_MAP.P1_LEAGUE, COLUMNS_MAP.P2_LEAGUE];
+var HERO_STATS_COLUMN_MAP = {
+  HERO_NAME: "Hero Name",
+  BATTLES: "Battles",
+  PICK_RATE: "Pick Rate",
+  WINS: "Wins",
+  WIN_RATE: "Win rate",
+  POSTBANS: "Postbans",
+  POSTBAN_RATE: "Postban Rate",
+  SUCCESS_RATE: "Success Rate",
+  // success rate indicates a win or a postban
+  PLUS_MINUS: "+/-",
+  POINT_GAIN: "Point Gain",
+  AVG_CR: "Avg CR",
+  FIRST_TURNS: "First Turns",
+  FIRST_TURN_RATE: "First Turn Rate"
+};
+
+/**
+ * Generates a list of all prime numbers up to and including the given limit.
+ *
+ * Uses the Sieve of Eratosthenes algorithm to generate the list.
+ *
+ * Primes are used to represent as prime identifier allowing us to represent a set as a product of primes
+ *
+ * @param {number} limit - The upper limit of the prime numbers to generate. Must be a positive integer.
+ * @returns {number[]} - A list of all prime numbers up to and including the given limit.
+ */
+function getPrimes(limit) {
+  var sieve = new Uint8Array(limit + 1);
+  var primes = [];
+  for (var i = 2; i <= limit; i++) {
+    if (!sieve[i]) {
+      primes.push(i);
+      for (var j = i * i; j <= limit; j += i) {
+        sieve[j] = 1;
+      }
+    }
+  }
+  return primes;
+}
+var PRIMES = getPrimes(30000);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/regex.js":
+/*!**************************************!*\
+  !*** ./static/assets/js/e7/regex.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RegExps: () => (/* binding */ RegExps)
+/* harmony export */ });
+function padRegex(pattern) {
+  var flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "i";
+  return new RegExp("^(?:".concat(pattern.source, ")(?=[,)\\s;]|$)"), flags);
+}
+function anchorExp(pattern) {
+  var flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "i";
+  return new RegExp("^(?:".concat(pattern.source, ")$"), flags);
+}
+function orRegex(patterns) {
+  var flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "i";
+  if (patterns.length < 1) throw new Error("orRegex must have at least one pattern");
+  var regExStr = "(?:".concat(patterns[0].source, ")");
+  for (var i = 1; i < patterns.length; i++) {
+    regExStr += "|(?:".concat(patterns[i].source, ")");
+  }
+  return new RegExp(regExStr, flags);
+}
+var escapeRegex = function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+var VALID_FIELD_WORDS = ["date", "is-first-pick", "is-win", "victory-points", "p1.picks", "p2.picks", "p1.prebans", "p2.prebans", "p1.postban", "p2.postban", "prebans", "p1.id", "p2.id", "p1.league", "p2.league", "p1.server", "p2.server", "p1.pick1", "p1.pick2", "p1.pick3", "p1.pick4", "p1.pick5", "p2.pick1", "p2.pick2", "p2.pick3", "p2.pick4", "p2.pick5", "p1.mvp", "p2.mvp", "first-turn", "first-turn-hero", "turns", "seconds", "point-gain"];
+var VALID_FIELD_WORD_RE = new RegExp("^(?:".concat(VALID_FIELD_WORDS.map(escapeRegex).join("|"), ")"), "i");
+var VALID_CLAUSE_FUNCTIONS = ["and", "or", "xor", "not"];
+var VALID_GLOBAL_FUNCTIONS = ["last-n"];
+var VALID_DIRECT_FUNCTIONS = ["p1.equipment", "p2.equipment", "p1.artifact", "p2.artifact", "p1.cr-geq", "p2.cr-geq", "p1.cr-lt", "p2.cr-lt"];
+var VALID_CLAUSE_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_CLAUSE_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
+var VALID_GLOBAL_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_GLOBAL_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
+var VALID_DIRECT_FUNCTIONS_RE = new RegExp("(?:".concat(VALID_DIRECT_FUNCTIONS.map(escapeRegex).join("|"), ")(?=\\()"), "i");
+var VALID_FUNCTIONS_RE = orRegex([VALID_CLAUSE_FUNCTIONS_RE, VALID_GLOBAL_FUNCTIONS_RE, VALID_DIRECT_FUNCTIONS_RE]);
+var VALID_STRING_RE = /.*/i;
+var VALID_DATE_RE = /\d{4}-\d{2}-\d{2}/;
+var EMPTY_SET_RE = /\{\s*\}/;
+var VALID_INT_RE = /-?\d+/;
+var VALID_SEASON_RE = /season-[1-9]+[0-9]*(\.[1-9]*)?|current-season/i;
+var VALID_GLOBAL_FILTER_RE = /last-n\(\d+\)/i;
+var VALID_DATE_LITERAL_RE = new RegExp("^".concat(VALID_DATE_RE.source, "$"), "i");
+var VALID_INT_LITERAL_RE = /^-?\d+$/;
+var VALID_BOOL_LITERAL_RE = /^(true|false)$/i;
+var VALID_DATA_WORD_RE = new RegExp("(?:".concat(VALID_SEASON_RE.source, ")"), "i");
+
+//consts without RE are used for injecting into regex patterns
+var STR = VALID_STRING_RE.source;
+var INT = VALID_INT_RE.source;
+var DATE = VALID_DATE_RE.source;
+var FIELD_WORD = VALID_FIELD_WORD_RE.source;
+var DATA_WORD = VALID_DATA_WORD_RE.source;
+var VALID_QUOTED_STRING_RE = new RegExp("\"(".concat(STR, ")\"|'(").concat(STR, ")'"), "i");
+var VALID_STRING_LITERAL_RE = new RegExp(anchorExp(VALID_QUOTED_STRING_RE), "i");
+var QUOTED_STR = VALID_QUOTED_STRING_RE.source;
+var SET_ELEMENT_RE = new RegExp("(?:".concat(QUOTED_STR, "|").concat(STR, "|").concat(DATE, ")"), "i");
+var VALID_DATAFIELD_RE = new RegExp("(?:".concat(FIELD_WORD, "|").concat(DATA_WORD, ")"), "i");
+var SETELT = SET_ELEMENT_RE.source;
+var VALID_SET_RE = new RegExp("\\{\\s*(?:".concat(SETELT, "\\s*)(?:,\\s*").concat(SETELT, "\\s*)*,?\\s*\\}|").concat(EMPTY_SET_RE.source), "i");
+var VALID_RANGE_RE = new RegExp("".concat(INT, "\\.\\.\\.").concat(INT, "|").concat(DATE, "\\.\\.\\.").concat(DATE, "|").concat(INT, "\\.\\.\\.=").concat(INT, "|").concat(DATE, "\\.\\.\\.=").concat(DATE));
+var VALID_RANGE_LITERAL_RE = new RegExp("^".concat(VALID_RANGE_RE.source, "$"));
+function tokenMatch(stream) {
+  if (stream.match(VALID_FUNCTIONS_RE)) {
+    console.log("Matched stream as clause:", stream);
+    return "keyword";
+  }
+  if (stream.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)) {
+    console.log("Matched stream as operator:", stream);
+    return "operator";
+  }
+  if (stream.match(new RegExp("[a-z0-9.\"'}=)-]".concat(VALID_DATAFIELD_RE.source, "(?=[,)\\s;]|$)"), "i"))) {
+    console.log("Matched stream as field with preceding fragment:", stream);
+    return null;
+  }
+  if (stream.match(padRegex(VALID_DATAFIELD_RE))) {
+    console.log("Matched stream as Data Field:", stream);
+    return "datafield";
+  }
+  if (stream.match(padRegex(VALID_QUOTED_STRING_RE))) {
+    console.log("Matched stream as string:", stream);
+    return "string";
+  }
+  if (stream.match(padRegex(VALID_SET_RE))) {
+    console.log("Matched stream as set:", stream);
+    return "set";
+  }
+  if (stream.match(padRegex(VALID_RANGE_RE))) {
+    console.log("Matched stream as range:", stream);
+    return "range";
+  }
+  if (stream.match(/[^(,\s;.=0-9\-]+\d+/i)) {
+    console.log("Matched stream as non-num null", stream);
+    return null;
+  }
+  if (stream.match(padRegex(VALID_INT_RE))) {
+    console.log("Matched stream as number:", stream);
+    return "number";
+  }
+  if (stream.match(padRegex(VALID_DATE_RE))) {
+    console.log("Matched stream as date:", stream);
+    return "date";
+  }
+  if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
+    console.log("Matched stream as bool:", stream);
+    return "bool";
+  }
+  if (stream.match(/[\(\)\{\}\;\,]/)) {
+    console.log("Matched stream as bracket:", stream);
+    return "bracket";
+  }
+  stream.next();
+  console.log("Matched stream as null:", stream);
+  return null;
+}
+var RegExps = {
+  VALID_STRING_RE: VALID_STRING_RE,
+  VALID_DATE_RE: VALID_DATE_RE,
+  VALID_INT_RE: VALID_INT_RE,
+  EMPTY_SET_RE: EMPTY_SET_RE,
+  SET_ELEMENT_RE: SET_ELEMENT_RE,
+  VALID_SET_RE: VALID_SET_RE,
+  VALID_STRING_LITERAL_RE: VALID_STRING_LITERAL_RE,
+  VALID_DATE_LITERAL_RE: VALID_DATE_LITERAL_RE,
+  VALID_INT_LITERAL_RE: VALID_INT_LITERAL_RE,
+  VALID_BOOL_LITERAL_RE: VALID_BOOL_LITERAL_RE,
+  VALID_RANGE_RE: VALID_RANGE_RE,
+  VALID_RANGE_LITERAL_RE: VALID_RANGE_LITERAL_RE,
+  VALID_SEASON_RE: VALID_SEASON_RE,
+  VALID_SEASON_LITERAL_RE: anchorExp(VALID_SEASON_RE),
+  VALID_DATA_WORD_RE: VALID_DATA_WORD_RE,
+  VALID_DATA_WORD_LITERAL_RE: anchorExp(VALID_DATA_WORD_RE),
+  VALID_FIELD_WORD_RE: VALID_FIELD_WORD_RE,
+  VALID_DATAFIELD_RE: VALID_DATAFIELD_RE,
+  VALID_GLOBAL_FILTER_RE: VALID_GLOBAL_FILTER_RE,
+  ANCHORED_STR_LITERAL_RE: anchorExp(VALID_STRING_LITERAL_RE),
+  VALID_CLAUSE_FUNCTIONS_RE: VALID_CLAUSE_FUNCTIONS_RE,
+  VALID_DIRECT_FUNCTIONS_RE: VALID_DIRECT_FUNCTIONS_RE,
+  VALID_GLOBAL_FUNCTIONS_RE: VALID_GLOBAL_FUNCTIONS_RE,
+  VALID_FUNCTIONS_RE: VALID_FUNCTIONS_RE,
+  padRegex: padRegex,
+  anchorExp: anchorExp,
+  tokenMatch: tokenMatch,
+  orRegex: orRegex,
+  escapeRegex: escapeRegex
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/searcher.js":
+/*!*****************************************!*\
+  !*** ./static/assets/js/e7/searcher.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Searcher: () => (/* binding */ Searcher)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./static/assets/js/utils.js");
+/* harmony import */ var _hero_manager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hero-manager */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _artifact_manager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./artifact-manager */ "./static/assets/js/e7/artifact-manager.js");
+/* harmony import */ var _user_manager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./user-manager */ "./static/assets/js/e7/user-manager.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+
+var SEARCH_DOMAINS = {
+  GLOBAL_SERVER: "Global Server",
+  KOR_SERVER: "Korea Server",
+  JPN_SERVER: "Japan Server",
+  ASIA_SERVER: "Asia Server",
+  EU_SERVER: "Europe Server",
+  HEROES: "Heroes",
+  ARTIFACTS: "Artifacts"
+};
+var HERO_SEARCH_CONFIG = {
+  keys: ["name"],
+  threshold: 0.2
+};
+var USER_SEARCH_CONFIG = {
+  keys: ["name"],
+  threshold: 0.2
+};
+var ARTIFACT_SEARCH_CONFIG = {
+  keys: ["name"],
+  threshold: 0.2
+};
+function searchHeroes(heroName, heroes) {
+  return (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getStrMatches)(heroName, heroes, null, HERO_SEARCH_CONFIG);
+}
+function searchUsers(userName, userList) {
+  return (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getStrMatches)(userName, userList, null, USER_SEARCH_CONFIG);
+}
+function searchArtifacts(artiName, artiList) {
+  return (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getStrMatches)(artiName, artiList, null, ARTIFACT_SEARCH_CONFIG);
+}
+var Searcher = /*#__PURE__*/function () {
+  function Searcher() {
+    _classCallCheck(this, Searcher);
+    _defineProperty(this, "DOMAIN_CACHE", {});
+  }
+  return _createClass(Searcher, [{
+    key: "get_domain",
+    value: function () {
+      var _get_domain = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(domain) {
+        var elements, _t;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              if (this.DOMAIN_CACHE[domain]) {
+                _context.n = 10;
+                break;
+              }
+              _t = domain;
+              _context.n = _t === SEARCH_DOMAINS.GLOBAL_SERVER ? 1 : _t === SEARCH_DOMAINS.KOR_SERVER ? 2 : _t === SEARCH_DOMAINS.JPN_SERVER ? 3 : _t === SEARCH_DOMAINS.ASIA_SERVER ? 4 : _t === SEARCH_DOMAINS.EU_SERVER ? 5 : _t === SEARCH_DOMAINS.HEROES ? 6 : _t === SEARCH_DOMAINS.ARTIFACTS ? 7 : 8;
+              break;
+            case 1:
+              this.DOMAIN_CACHE[domain] = _user_manager__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_js__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.GLOBAL);
+              return _context.a(3, 8);
+            case 2:
+              this.DOMAIN_CACHE[domain] = _user_manager__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_js__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.KOR);
+              return _context.a(3, 8);
+            case 3:
+              this.DOMAIN_CACHE[domain] = _user_manager__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_js__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.JPN);
+              return _context.a(3, 8);
+            case 4:
+              this.DOMAIN_CACHE[domain] = _user_manager__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_js__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.ASIA);
+              return _context.a(3, 8);
+            case 5:
+              this.DOMAIN_CACHE[domain] = _user_manager__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_js__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.EU);
+              return _context.a(3, 8);
+            case 6:
+              this.DOMAIN_CACHE[domain] = _hero_manager__WEBPACK_IMPORTED_MODULE_1__["default"].getHeroManager();
+              return _context.a(3, 8);
+            case 7:
+              this.DOMAIN_CACHE[domain] = _artifact_manager__WEBPACK_IMPORTED_MODULE_2__["default"].getArtifactObjectList();
+              return _context.a(3, 8);
+            case 8:
+              _context.n = 9;
+              return this.DOMAIN_CACHE[domain];
+            case 9:
+              elements = _context.v;
+              if (!Array.isArray(elements)) {
+                if (domain === SEARCH_DOMAINS.HEROES) {
+                  this.DOMAIN_CACHE[domain] = elements.heroes;
+                } else {
+                  this.DOMAIN_CACHE[domain] = Object.values(elements);
+                }
+              }
+            case 10:
+              _context.n = 11;
+              return this.DOMAIN_CACHE[domain];
+            case 11:
+              return _context.a(2, _context.v);
+          }
+        }, _callee, this);
+      }));
+      function get_domain(_x) {
+        return _get_domain.apply(this, arguments);
+      }
+      return get_domain;
+    }()
+  }, {
+    key: "search",
+    value: function () {
+      var _search = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(domain, searchTerm) {
+        var domainElements, _t2;
+        return _regenerator().w(function (_context2) {
+          while (1) switch (_context2.n) {
+            case 0:
+              console.log("Searching ".concat(domain, " for ").concat(searchTerm));
+              _t2 = domain;
+              _context2.n = _t2 === SEARCH_DOMAINS.GLOBAL_SERVER ? 1 : _t2 === SEARCH_DOMAINS.KOR_SERVER ? 3 : _t2 === SEARCH_DOMAINS.JPN_SERVER ? 5 : _t2 === SEARCH_DOMAINS.ASIA_SERVER ? 7 : _t2 === SEARCH_DOMAINS.EU_SERVER ? 9 : _t2 === SEARCH_DOMAINS.HEROES ? 11 : _t2 === SEARCH_DOMAINS.ARTIFACTS ? 13 : 15;
+              break;
+            case 1:
+              _context2.n = 2;
+              return this.get_domain(domain);
+            case 2:
+              domainElements = _context2.v;
+              return _context2.a(2, searchUsers(searchTerm, domainElements));
+            case 3:
+              _context2.n = 4;
+              return this.get_domain(domain);
+            case 4:
+              domainElements = _context2.v;
+              return _context2.a(2, searchUsers(searchTerm, domainElements));
+            case 5:
+              _context2.n = 6;
+              return this.get_domain(domain);
+            case 6:
+              domainElements = _context2.v;
+              return _context2.a(2, searchUsers(searchTerm, domainElements));
+            case 7:
+              _context2.n = 8;
+              return this.get_domain(domain);
+            case 8:
+              domainElements = _context2.v;
+              return _context2.a(2, searchUsers(searchTerm, domainElements));
+            case 9:
+              _context2.n = 10;
+              return this.get_domain(domain);
+            case 10:
+              domainElements = _context2.v;
+              return _context2.a(2, searchUsers(searchTerm, domainElements));
+            case 11:
+              _context2.n = 12;
+              return this.get_domain(domain);
+            case 12:
+              domainElements = _context2.v;
+              return _context2.a(2, searchHeroes(searchTerm, domainElements));
+            case 13:
+              _context2.n = 14;
+              return this.get_domain(domain);
+            case 14:
+              domainElements = _context2.v;
+              return _context2.a(2, searchArtifacts(searchTerm, domainElements));
+            case 15:
+              throw new Error("Unknown domain: ".concat(domain));
+            case 16:
+              return _context2.a(2);
+          }
+        }, _callee2, this);
+      }));
+      function search(_x2, _x3) {
+        return _search.apply(this, arguments);
+      }
+      return search;
+    }()
+  }]);
+}();
+_defineProperty(Searcher, "DOMAINS", SEARCH_DOMAINS);
+
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/season-manager.js":
+/*!***********************************************!*\
+  !*** ./static/assets/js/e7/season-manager.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+// a Season record has the following fields: "Season Number", "Code", "Season", "Start", "End", "Status"
+
+var SeasonManager = {
+  fetchAndCacheSeasonDetails: function () {
+    var _fetchAndCacheSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var result, seasonDetails, preSeasonFilled, lastSeason, start, preSeason;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].fetchSeasonDetails();
+          case 1:
+            result = _context.v;
+            if (!result.error) {
+              _context.n = 2;
+              break;
+            }
+            throw new Error("Could not fetch season details: ".concat(result.error));
+          case 2:
+            seasonDetails = result.seasonDetails;
+            seasonDetails.forEach(function (season) {
+              season.range = [season["Start"], season["End"]].map(function (d) {
+                return new Date("".concat(d.split(" ")[0], "T00:00:00"));
+              });
+            });
+            seasonDetails.sort(function (a, b) {
+              return a["Season Number"] - b["Season Number"];
+            });
+
+            // add pre seasons
+            preSeasonFilled = [seasonDetails[0]];
+            lastSeason = seasonDetails[0];
+            seasonDetails.slice(1).forEach(function (season) {
+              var start = new Date(+lastSeason.range[1] + _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY),
+                end = new Date(+season.range[0] - _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY);
+              var preSeason = {
+                "Season Number": lastSeason["Season Number"] + 0.5,
+                Code: null,
+                Season: "Pre-Season: ".concat(season["Season"]),
+                Start: start.toISOString().slice(0, 10),
+                End: end.toISOString().slice(0, 10),
+                Status: "Complete",
+                range: [start, end]
+              };
+              preSeasonFilled.push(preSeason);
+              preSeasonFilled.push(season);
+              lastSeason = season;
+            });
+
+            // add another pre season if current season is complete
+            if (lastSeason.range[1] < new Date()) {
+              start = new Date(+preSeasonFilled.at(-1).range[1] + _references_js__WEBPACK_IMPORTED_MODULE_2__.ONE_DAY);
+              preSeason = {
+                "Season Number": lastSeason["Season Number"] + 0.5,
+                Code: null,
+                Season: "Active Pre-Season",
+                Start: start.toISOString().slice(0, 10),
+                End: "N/A",
+                Status: "Active",
+                range: [start, new Date()]
+              };
+              preSeasonFilled.push(preSeason);
+            }
+            preSeasonFilled.reverse();
+            _context.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS, preSeasonFilled);
+          case 3:
+            return _context.a(2, preSeasonFilled);
+        }
+      }, _callee);
+    }));
+    function fetchAndCacheSeasonDetails() {
+      return _fetchAndCacheSeasonDetails.apply(this, arguments);
+    }
+    return fetchAndCacheSeasonDetails;
+  }(),
+  getSeasonDetails: function () {
+    var _getSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context2.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context2.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context2.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context2.n = 5;
+            break;
+          case 3:
+            _context2.n = 4;
+            return SeasonManager.fetchAndCacheSeasonDetails();
+          case 4:
+            _t3 = _context2.v;
+          case 5:
+            return _context2.a(2, _t3);
+        }
+      }, _callee2);
+    }));
+    function getSeasonDetails() {
+      return _getSeasonDetails.apply(this, arguments);
+    }
+    return getSeasonDetails;
+  }(),
+  clearSeasonDetails: function () {
+    var _clearSeasonDetails = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.SEASON_DETAILS);
+          case 1:
+            console.log("Season details cleared from data cache");
+          case 2:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function clearSeasonDetails() {
+      return _clearSeasonDetails.apply(this, arguments);
+    }
+    return clearSeasonDetails;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SeasonManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/stats-builder.js":
+/*!**********************************************!*\
+  !*** ./static/assets/js/e7/stats-builder.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.js */ "./static/assets/js/e7/hero-manager.js");
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+
+
+var getWins = function getWins(battleList) {
+  return battleList.filter(function (b) {
+    return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN];
+  });
+};
+var getFirstPickSubset = function getFirstPickSubset(battleList) {
+  return battleList.filter(function (b) {
+    return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK];
+  });
+};
+var getSecondPickSubset = function getSecondPickSubset(battleList) {
+  return battleList.filter(function (b) {
+    return !b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK];
+  });
+};
+var isIncomplete = function isIncomplete(b) {
+  return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS] === 0;
+};
+function toPercent(value) {
+  return (value * 100).toFixed(2) + "%";
+}
+function divideToPercentString(a, b) {
+  return b !== 0 ? toPercent(a / b) : toPercent(0);
+}
+function getCR(battle, heroName) {
+  var entry = battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.CR_BAR].find(function (entry) {
+    return entry[0] === heroName;
+  });
+  return entry ? entry[1] : null;
+}
+function queryStats(battleList, totalBattles, heroName) {
+  var _ref;
+  var gamesWon = getWins(battleList).length;
+  var gamesAppeared = battleList.length;
+  var appearanceRate = totalBattles !== 0 ? gamesAppeared / totalBattles : 0;
+  var winRate = gamesAppeared !== 0 ? gamesWon / gamesAppeared : 0;
+  var postBanned = battleList.reduce(function (acc, b) {
+    return acc + (b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN] === heroName || b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN] === heroName);
+  }, 0);
+  var successes = battleList.reduce(function (acc, b) {
+    return acc + (b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN] || b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN] === heroName || b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN] === heroName);
+  }, 0);
+  var pointGain = battleList.reduce(function (acc, b) {
+    return acc + b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN];
+  }, 0);
+  var gamesConsidered = 0;
+  var crTotal = 0;
+  var firstTurns = 0;
+  var _iterator = _createForOfIteratorHelper(battleList),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var battle = _step.value;
+      var cr = getCR(battle, heroName);
+      if (cr !== null && cr !== 0) {
+        gamesConsidered += 1;
+        crTotal += cr;
+        if (cr === 100) {
+          firstTurns += 1;
+        }
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  var avgCR = divideToPercentString(crTotal / 100, gamesConsidered);
+  return _ref = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME, heroName), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.BATTLES, gamesAppeared), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PICK_RATE, toPercent(appearanceRate)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WINS, gamesWon), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WIN_RATE, toPercent(winRate)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBANS, postBanned), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBAN_RATE, divideToPercentString(postBanned, gamesAppeared)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.SUCCESS_RATE, divideToPercentString(successes, gamesAppeared)), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PLUS_MINUS, 2 * gamesWon - gamesAppeared), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POINT_GAIN, pointGain), _defineProperty(_defineProperty(_defineProperty(_ref, _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.AVG_CR, avgCR), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURNS, firstTurns), _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE, divideToPercentString(firstTurns, gamesConsidered));
+}
+function getPrimes(battleList) {
+  var isP1 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var primeSet = new Set();
+  for (var _i = 0, _Object$values = Object.values(battleList); _i < _Object$values.length; _i++) {
+    var battle = _Object$values[_i];
+    var picks = isP1 ? battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES] : battle[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIMES];
+    picks.forEach(function (element) {
+      primeSet.add(element);
+    });
+  }
+  return primeSet;
+}
+function getHeroStats(battleList, HM) {
+  if (battleList.length === 0) {
+    return {
+      playerHeroStats: [],
+      enemyHeroStats: []
+    };
+  }
+  var totalBattles = battleList.length;
+  var playerPrimes = getPrimes(battleList, true);
+  var enemyPrimes = getPrimes(battleList, false);
+  var playerHeroStats = [];
+  var enemyHeroStats = [];
+  var _iterator2 = _createForOfIteratorHelper(playerPrimes),
+    _step2;
+  try {
+    var _loop = function _loop() {
+      var prime = _step2.value;
+      var hero = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM);
+      var playerSubset = battleList.filter(function (b) {
+        return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] % prime === 0;
+      });
+      if (playerSubset.length > 0) {
+        playerHeroStats.push(queryStats(playerSubset, totalBattles, hero.name));
+      }
+    };
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      _loop();
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+  var _iterator3 = _createForOfIteratorHelper(enemyPrimes),
+    _step3;
+  try {
+    var _loop2 = function _loop2() {
+      var prime = _step3.value;
+      var hero = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM);
+      var enemySubset = battleList.filter(function (b) {
+        return b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] % prime === 0;
+      });
+      if (enemySubset.length > 0) {
+        enemyHeroStats.push(queryStats(enemySubset, totalBattles, hero.name));
+      }
+    };
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      _loop2();
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+  var nameCol = _references_js__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME;
+  return {
+    playerHeroStats: playerHeroStats.sort(function (b1, b2) {
+      return b1[nameCol].localeCompare(b2[nameCol]);
+    }),
+    enemyHeroStats: enemyHeroStats.sort(function (b1, b2) {
+      return b1[nameCol].localeCompare(b2[nameCol]);
+    })
+  };
+}
+function getFirstPickStats(battleList, HM) {
+  battleList = getFirstPickSubset(Object.values(battleList));
+  if (battleList.length === 0) {
+    return [];
+  }
+  var totalBattles = battleList.length;
+  var grouped = {};
+  var _iterator4 = _createForOfIteratorHelper(battleList),
+    _step4;
+  try {
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var b = _step4.value;
+      if (b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES].length === 0) continue; // skip any battle where player didn't get to pick a first unit
+      var hero = b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES][0];
+      if (!(hero in grouped)) grouped[hero] = {
+        wins: 0,
+        appearances: 0
+      };
+      grouped[hero].wins += b[_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN];
+      grouped[hero].appearances += 1;
+    }
+  } catch (err) {
+    _iterator4.e(err);
+  } finally {
+    _iterator4.f();
+  }
+  var result = Object.entries(grouped).map(function (_ref2) {
+    var _ref3 = _slicedToArray(_ref2, 2),
+      prime = _ref3[0],
+      stats = _ref3[1];
+    var name = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HM).name;
+    return {
+      hero: name,
+      wins: stats.wins,
+      appearances: stats.appearances,
+      win_rate: toPercent(stats.wins / stats.appearances),
+      appearance_rate: toPercent(stats.appearances / totalBattles),
+      "+/-": 2 * stats.wins - stats.appearances
+    };
+  });
+  result.sort(function (a, b) {
+    return b.appearances - a.appearances;
+  });
+  return result;
+}
+function getPrebanStats(battleList, HM) {
+  //console.log(`Got HM: ${HM}`);
+
+  var emptyPrime = _hero_manager_js__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByName("Empty", HM).prime;
+  if (battleList.length === 0) {
+    return [];
+  }
+  var getValidPrimes = function getValidPrimes(col, index) {
+    return _toConsumableArray(new Set(battleList.map(function (b) {
+      return b[col][index];
+    }).filter(function (p) {
+      return p && p !== emptyPrime;
+    })));
+  };
+  var preban1Set = getValidPrimes(_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES, 0);
+  var preban2Set = getValidPrimes(_references_js__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES, 1);
+  var prebanSet = new Set([].concat(_toConsumableArray(preban1Set), _toConsumableArray(preban2Set)));
+  var prebans = [];
+  var _iterator5 = _createForOfIteratorHelper(prebanSet),
+    _step5;
+  try {
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+      var prime = _step5.value;
+      prebans.push(prime);
+    }
+  } catch (err) {
+    _iterator5.e(err);
+  } finally {
+    _iterator5.f();
+  }
+  var _iterator6 = _createForOfIteratorHelper(prebanSet),
+    _step6;
+  try {
+    for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+      var a = _step6.value;
+      var _iterator7 = _createForOfIteratorHelper(prebanSet),
+        _step7;
+      try {
+        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+          var b = _step7.value;
+          if (a < b) prebans.push(a * b);
+        }
+      } catch (err) {
+        _iterator7.e(err);
+      } finally {
+        _iterator7.f();
+      }
+    }
+  } catch (err) {
+    _iterator6.e(err);
+  } finally {
+    _iterator6.f();
+  }
+  console.log("Prebans:", prebans);
+  var totalBattles = battleList.length;
+  var output = [];
+  var _loop3 = function _loop3() {
+    var preban = _prebans[_i2];
+    var filtered = battleList.filter(function (b) {
+      return b["P1 Prebans Prime Product"] % preban === 0;
+    });
+    var appearances = filtered.length;
+    if (appearances < 1) {
+      return 1; // continue
+    }
+    var wins = filtered.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var appearanceRate = totalBattles > 0 ? appearances / totalBattles : 0;
+    var winRate = appearances > 0 ? wins / appearances : 0;
+    var plusMinus = 2 * wins - appearances;
+    output.push({
+      preban: HM.prime_pair_lookup[preban],
+      wins: wins,
+      appearances: appearances,
+      appearance_rate: toPercent(appearanceRate),
+      win_rate: toPercent(winRate),
+      "+/-": plusMinus
+    });
+  };
+  for (var _i2 = 0, _prebans = prebans; _i2 < _prebans.length; _i2++) {
+    if (_loop3()) continue;
+  }
+  output.sort(function (a, b) {
+    return b.appearances - a.appearances;
+  });
+  return output;
+}
+function secondsToTimeStr(inputSeconds) {
+  var timeStr;
+  var mins = Math.floor(inputSeconds / 60);
+  var secs = (inputSeconds % 60).toFixed(1);
+  if (mins === 0) {
+    timeStr = "".concat(secs, " secs");
+  } else {
+    timeStr = "".concat(mins, " : ").concat(secs, "s");
+  }
+  return timeStr;
+}
+function getGeneralStats(battleList, HM) {
+  battleList.sort(function (b1, b2) {
+    return new Date(b1["Date/Time"]) - new Date(b2["Date/Time"]);
+  });
+  var totalBattles = battleList.length;
+  var totalGain = battleList.reduce(function (acc, b) {
+    return acc + b["Point Gain"];
+  }, 0);
+  var avgPPG = totalBattles > 0 ? totalGain / totalBattles : 0;
+  var totalTurns = battleList.reduce(function (acc, b) {
+    return acc + b["Turns"];
+  }, 0);
+  var avgTurns = totalBattles > 0 ? totalTurns / totalBattles : 0;
+  var maxTurns = battleList.length > 0 ? Math.max.apply(Math, _toConsumableArray(battleList.map(function (b) {
+    return b["Turns"];
+  }))) : 0;
+  var totalSeconds = battleList.reduce(function (acc, b) {
+    return acc + b["Seconds"];
+  }, 0);
+  var avgSeconds = totalBattles > 0 ? totalSeconds / totalBattles : 0;
+  var maxSeconds = battleList.length > 0 ? Math.max.apply(Math, _toConsumableArray(battleList.map(function (b) {
+    return b["Seconds"];
+  }))) : 0;
+  var avgTimeStr = secondsToTimeStr(avgSeconds);
+  var maxTimeStr = secondsToTimeStr(maxSeconds);
+  var totalFirstTurnGames = battleList.reduce(function (acc, b) {
+    return acc + b["First Turn"];
+  }, 0);
+
+  // create subsets for first pick and second pick battles
+  var fpBattles = getFirstPickSubset(battleList);
+  var spBattles = getSecondPickSubset(battleList);
+
+  // get counts for first pick and second pick battles
+  var fpCount = fpBattles.length;
+  var spCount = spBattles.length;
+
+  // calculate wins for first pick and second pick battles
+  var fpWins = fpBattles.reduce(function (acc, b) {
+    return acc + b.Win;
+  }, 0);
+  var spWins = spBattles.reduce(function (acc, b) {
+    return acc + b.Win;
+  }, 0);
+
+  // calculate rate of occurrence for first pick and second pick battles
+  var fpR = totalBattles ? fpCount / totalBattles : 0;
+  var spR = totalBattles ? spCount / totalBattles : 0;
+
+  // calculate win rate for first pick and second pick battles
+  var fpWR = fpCount ? fpWins / fpCount : 0;
+  var spWR = spCount ? spWins / spCount : 0;
+
+  // calculate total win rate
+  var winRate = totalBattles ? (fpWins + spWins) / totalBattles : 0;
+
+  // iterate through battles and calculate longest win/loss streaks
+  var maxWinStreak = 0,
+    maxLossStreak = 0,
+    winStreak = 0,
+    lossStreak = 0;
+  var _iterator8 = _createForOfIteratorHelper(battleList),
+    _step8;
+  try {
+    for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+      var b = _step8.value;
+      if (b.Win) {
+        winStreak += 1;
+        maxWinStreak = Math.max(maxWinStreak, winStreak);
+        lossStreak = 0;
+      } else {
+        winStreak = 0;
+        lossStreak += 1;
+        maxLossStreak = Math.max(maxLossStreak, lossStreak);
+      }
+    }
+  } catch (err) {
+    _iterator8.e(err);
+  } finally {
+    _iterator8.f();
+  }
+  var NA = "N/A";
+  return {
+    first_pick_count: fpCount,
+    second_pick_count: spCount,
+    first_pick_rate: fpCount ? toPercent(fpR) : NA,
+    second_pick_rate: spCount ? toPercent(spR) : NA,
+    first_pick_winrate: fpCount ? toPercent(fpWR) : NA,
+    second_pick_winrate: spCount ? toPercent(spWR) : NA,
+    total_winrate: totalBattles ? toPercent(winRate) : NA,
+    total_battles: totalBattles,
+    total_wins: fpWins + spWins,
+    max_win_streak: maxWinStreak,
+    max_loss_streak: maxLossStreak,
+    avg_ppg: avgPPG.toFixed(2),
+    avg_turns: avgTurns.toFixed(2),
+    avg_time: avgTimeStr,
+    max_turns: maxTurns,
+    max_time: maxTimeStr,
+    first_turn_games: totalFirstTurnGames,
+    first_turn_rate: totalBattles ? toPercent(totalFirstTurnGames / totalBattles) : NA
+  };
+}
+function getServerStats(battlesList) {
+  var allServerStats = [];
+  var totalBattles = battlesList.length;
+  var _loop4 = function _loop4() {
+    var server = _Object$values2[_i3];
+    var subset = battlesList.filter(function (b) {
+      return b["P2 Server"] === server;
+    });
+    var count = subset.length;
+    var wins = subset.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var winRate = count > 0 ? wins / count : "N/A";
+    var frequency = totalBattles > 0 ? count / totalBattles : "N/A";
+    var firstPickGames = subset.filter(function (b) {
+      return b["First Pick"];
+    });
+    var fpWins = firstPickGames.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    var secondPickGames = subset.filter(function (b) {
+      return !b["First Pick"];
+    });
+    var spWins = secondPickGames.reduce(function (acc, b) {
+      return acc + b.Win;
+    }, 0);
+    allServerStats.push({
+      server: server,
+      count: count,
+      wins: wins,
+      win_rate: winRate === "N/A" ? "N/A" : toPercent(winRate),
+      frequency: toPercent(frequency),
+      "+/-": 2 * wins - count,
+      fp_games: firstPickGames.length,
+      sp_games: secondPickGames.length,
+      fp_wr: firstPickGames.length > 0 ? toPercent(fpWins / firstPickGames.length) : "N/A",
+      sp_wr: secondPickGames.length > 0 ? toPercent(spWins / secondPickGames.length) : "N/A"
+    });
+  };
+  for (var _i3 = 0, _Object$values2 = Object.values(_references_js__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR); _i3 < _Object$values2.length; _i3++) {
+    _loop4();
+  }
+  allServerStats.sort(function (a, b) {
+    return a.server.localeCompare(b.server);
+  });
+  return allServerStats;
+}
+var StatsBuilder = {
+  getHeroStats: getHeroStats,
+  getFirstPickStats: getFirstPickStats,
+  getPrebanStats: getPrebanStats,
+  getServerStats: getServerStats,
+  getGeneralStats: getGeneralStats
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StatsBuilder);
+
+/***/ }),
+
+/***/ "./static/assets/js/e7/user-manager.js":
+/*!*********************************************!*\
+  !*** ./static/assets/js/e7/user-manager.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./references.js */ "./static/assets/js/e7/references.js");
+/* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+var userMapCacheKeyMap = _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({}, _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_ENUM.GLOBAL, _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.GLOBAL_USERS), _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_ENUM.EU, _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.EU_USERS), _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_ENUM.ASIA, _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.ASIA_USERS), _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_ENUM.JPN, _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.JPN_USERS), _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_ENUM.KOR, _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.KOR_USERS);
+function createUser(userJSON, world_code) {
+  return {
+    id: userJSON.nick_no,
+    name: userJSON.nick_nm,
+    code: userJSON.code,
+    rank: userJSON.rank,
+    world_code: world_code
+  };
+}
+function getUserMapFromE7Server(_x) {
+  return _getUserMapFromE7Server.apply(this, arguments);
+}
+function _getUserMapFromE7Server() {
+  _getUserMapFromE7Server = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(world_code) {
+    var rawUserJSON;
+    return _regenerator().w(function (_context7) {
+      while (1) switch (_context7.n) {
+        case 0:
+          console.log("Getting user map for world code from E7 server: ".concat(world_code));
+          _context7.n = 1;
+          return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_2__["default"].fetchUserJSON(world_code);
+        case 1:
+          rawUserJSON = _context7.v;
+          if (rawUserJSON) {
+            _context7.n = 2;
+            break;
+          }
+          console.log("Could not get user map from E7 server for world code: ".concat(world_code));
+          return _context7.a(2, null);
+        case 2:
+          console.log("Got user map from E7 server for world code: ".concat(world_code));
+          return _context7.a(2, Object.fromEntries(rawUserJSON.users.map(function (user) {
+            return [user.nick_no, createUser(user, world_code)];
+          })));
+      }
+    }, _callee7);
+  }));
+  return _getUserMapFromE7Server.apply(this, arguments);
+}
+var UserManager = {
+  getUserMap: function () {
+    var _getUserMap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(world_code) {
+      var cachedUserMap, fetchedUserMap;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            console.log("Getting user map for world code: ".concat(world_code));
+            _context.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].get(userMapCacheKeyMap[world_code]);
+          case 1:
+            cachedUserMap = _context.v;
+            if (!(cachedUserMap !== null)) {
+              _context.n = 2;
+              break;
+            }
+            console.log("Got user map from cache");
+            return _context.a(2, cachedUserMap);
+          case 2:
+            _context.n = 3;
+            return getUserMapFromE7Server(world_code);
+          case 3:
+            fetchedUserMap = _context.v;
+            _context.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].cache(userMapCacheKeyMap[world_code], fetchedUserMap);
+          case 4:
+            return _context.a(2, fetchedUserMap);
+        }
+      }, _callee);
+    }));
+    function getUserMap(_x2) {
+      return _getUserMap.apply(this, arguments);
+    }
+    return getUserMap;
+  }(),
+  findUser: function () {
+    var _findUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(userData) {
+      var useFlaskServer, cleanStr, _iterator, _step, world_code, userMap, users, user, _ref, name, _world_code, _userMap, _users, lowerCaseName, _user, flaskServerResponse, _t;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            useFlaskServer = false;
+            cleanStr = function cleanStr(world_code) {
+              return _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_TO_CLEAN_STR[world_code];
+            }; // attempt to find user through client-side means
+            console.log("Attempting to find user: ".concat(JSON.stringify(userData)));
+
+            // try to find user by ID
+            if (!userData.id) {
+              _context2.n = 12;
+              break;
+            }
+            _iterator = _createForOfIteratorHelper(_references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODES);
+            _context2.p = 1;
+            _iterator.s();
+          case 2:
+            if ((_step = _iterator.n()).done) {
+              _context2.n = 8;
+              break;
+            }
+            world_code = _step.value;
+            if (!(userData.world_code && userData.world_code !== world_code)) {
+              _context2.n = 3;
+              break;
+            }
+            return _context2.a(3, 7);
+          case 3:
+            _context2.n = 4;
+            return this.getUserMap(world_code);
+          case 4:
+            userMap = _context2.v;
+            users = Object.values(userMap);
+            if (!(!users || users.length === 0)) {
+              _context2.n = 5;
+              break;
+            }
+            console.log("User map had no users, falling back to flask server for world code: ".concat(cleanStr(world_code)));
+            useFlaskServer = true;
+            return _context2.a(3, 7);
+          case 5:
+            user = users.find(function (user) {
+              return user.id === userData.id;
+            });
+            if (!user) {
+              _context2.n = 6;
+              break;
+            }
+            console.log("Found user: ".concat(JSON.stringify(user), " in world code: ").concat(cleanStr(world_code)));
+            return _context2.a(2, {
+              user: user,
+              error: false
+            });
+          case 6:
+            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(cleanStr(world_code), " from client-side means"));
+          case 7:
+            _context2.n = 2;
+            break;
+          case 8:
+            _context2.n = 10;
+            break;
+          case 9:
+            _context2.p = 9;
+            _t = _context2.v;
+            _iterator.e(_t);
+          case 10:
+            _context2.p = 10;
+            _iterator.f();
+            return _context2.f(10);
+          case 11:
+            _context2.n = 18;
+            break;
+          case 12:
+            if (!(userData.name && userData.world_code)) {
+              _context2.n = 17;
+              break;
+            }
+            _ref = [userData.name, userData.world_code], name = _ref[0], _world_code = _ref[1];
+            _context2.n = 13;
+            return this.getUserMap(_world_code);
+          case 13:
+            _userMap = _context2.v;
+            _users = Object.values(_userMap);
+            if (!(!_users || _users.length === 0)) {
+              _context2.n = 14;
+              break;
+            }
+            console.log("User map had no users, falling back to flask server for world code: ".concat(cleanStr(_world_code)));
+            useFlaskServer = true;
+            _context2.n = 16;
+            break;
+          case 14:
+            lowerCaseName = name.toLowerCase();
+            _user = _users.find(function (user) {
+              return lowerCaseName === user.name.toLowerCase();
+            });
+            if (!_user) {
+              _context2.n = 15;
+              break;
+            }
+            console.log("Found user: ".concat(JSON.stringify(_user), " in world code: ").concat(cleanStr(_world_code)));
+            return _context2.a(2, {
+              user: _user,
+              error: false
+            });
+          case 15:
+            console.log("Could not find user with ID: ".concat(userData.id, " in world code: ").concat(cleanStr(_world_code), " from client-side means"));
+          case 16:
+            _context2.n = 18;
+            break;
+          case 17:
+            console.error("Must pass a user object with either user.name and user.world_code or user.id to fetch user");
+            return _context2.a(2, {
+              user: null,
+              error: "Must pass a user object with either user.name and user.world_code or user.id to fetch user"
+            });
+          case 18:
+            if (!useFlaskServer) {
+              _context2.n = 21;
+              break;
+            }
+            console.log("Failed to find user through client-side means; falling back to flask server");
+            // failed to find user through client-side means; make request to flask server
+            _context2.n = 19;
+            return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_3__["default"].fetchUser(userData);
+          case 19:
+            flaskServerResponse = _context2.v;
+            if (!flaskServerResponse.error) {
+              _context2.n = 20;
+              break;
+            }
+            return _context2.a(2, {
+              user: null,
+              error: flaskServerResponse.error
+            });
+          case 20:
+            return _context2.a(2, {
+              user: flaskServerResponse.user,
+              error: false
+            });
+          case 21:
+            return _context2.a(2, {
+              user: null,
+              error: "Could not find user"
+            });
+          case 22:
+            return _context2.a(2);
+        }
+      }, _callee2, this, [[1, 9, 10, 11]]);
+    }));
+    function findUser(_x3) {
+      return _findUser.apply(this, arguments);
+    }
+    return findUser;
+  }(),
+  setUser: function () {
+    var _setUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(userData) {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].cache(_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER, userData);
+          case 1:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function setUser(_x4) {
+      return _setUser.apply(this, arguments);
+    }
+    return setUser;
+  }(),
+  getUser: function () {
+    var _getUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            _context4.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].get(_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
+          case 1:
+            return _context4.a(2, _context4.v);
+        }
+      }, _callee4);
+    }));
+    function getUser() {
+      return _getUser.apply(this, arguments);
+    }
+    return getUser;
+  }(),
+  clearUserData: function () {
+    var _clearUserData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
+          case 0:
+            _context5.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].clearUserData();
+          case 1:
+            return _context5.a(2);
+        }
+      }, _callee5);
+    }));
+    function clearUserData() {
+      return _clearUserData.apply(this, arguments);
+    }
+    return clearUserData;
+  }(),
+  clearUserDataLists: function () {
+    var _clearUserDataLists = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
+          case 0:
+            _context6.n = 1;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.GLOBAL_USERS);
+          case 1:
+            _context6.n = 2;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.EU_USERS);
+          case 2:
+            _context6.n = 3;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.ASIA_USERS);
+          case 3:
+            _context6.n = 4;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.JPN_USERS);
+          case 4:
+            _context6.n = 5;
+            return _cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](_cache_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.KOR_USERS);
+          case 5:
+            return _context6.a(2);
+        }
+      }, _callee6);
+    }));
+    function clearUserDataLists() {
+      return _clearUserDataLists.apply(this, arguments);
+    }
+    return clearUserDataLists;
+  }()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserManager);
+
+/***/ }),
+
+/***/ "./static/assets/js/utils.js":
+/*!***********************************!*\
+  !*** ./static/assets/js/utils.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getStrMatches: () => (/* binding */ getStrMatches),
+/* harmony export */   strArrToCountMap: () => (/* binding */ strArrToCountMap),
+/* harmony export */   toTitleCase: () => (/* binding */ toTitleCase)
+/* harmony export */ });
+/* harmony import */ var fuse_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! fuse.js */ "./node_modules/fuse.js/dist/fuse.mjs");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
+function strArrToCountMap(strArr) {
+  return strArr.reduce(function (acc, elt) {
+    acc[elt] = (acc[elt] || 0) + 1;
+    return acc;
+  }, {});
+}
+function getStrMatches(str, strings) {
+  var numMatches = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var customConfig = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  var config = {
+    includeScore: true,
+    threshold: 0.3
+  };
+  var fuse = null;
+  if (customConfig) {
+    fuse = new fuse_js__WEBPACK_IMPORTED_MODULE_0__["default"](strings, _objectSpread(_objectSpread({}, config), customConfig));
+  } else {
+    fuse = new fuse_js__WEBPACK_IMPORTED_MODULE_0__["default"](strings, config);
+  }
+  var result = fuse.search(str);
+  if (numMatches !== null) {
+    return result.slice(0, numMatches);
+  }
+  return result;
+}
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!****************************************!*\
+  !*** ./static/assets/js/pages/test.js ***!
+  \****************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
+/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+/* harmony import */ var _content_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../content-manager.js */ "./static/assets/js/content-manager.js");
+/* harmony import */ var _e7_battle_transform_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../e7/battle-transform.js */ "./static/assets/js/e7/battle-transform.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils.js */ "./static/assets/js/utils.js");
+/* harmony import */ var _e7_searcher_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../e7/searcher.js */ "./static/assets/js/e7/searcher.js");
+/* harmony import */ var _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../e7/artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+
+
+
+
+
+
+
+function ingestStringChars(set, strings) {
+  console.log("Ingesting strings:", _typeof(strings), strings);
+  var length = set.size;
+  var _iterator = _createForOfIteratorHelper(strings),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var str = _step.value;
+      var _iterator2 = _createForOfIteratorHelper(str),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var _char = _step2.value;
+          set.add(_char);
+          var newLength = set.size;
+          if (length !== newLength) {
+            console.log("New chars in string:", str, _char);
+          }
+          length = newLength;
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+}
+document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+  var global_users, HM, artifacts, searcher, wolf, artiList, elbris;
+  return _regenerator().w(function (_context) {
+    while (1) switch (_context.n) {
+      case 0:
+        _context.n = 1;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].ArtifactManager.clearArtifactData();
+      case 1:
+        _context.n = 2;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].UserManager.getUserMap("world_global");
+      case 2:
+        global_users = _context.v;
+        _context.n = 3;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].HeroManager.getHeroManager();
+      case 3:
+        HM = _context.v;
+        _context.n = 4;
+        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].ArtifactManager.getArtifacts();
+      case 4:
+        artifacts = _context.v;
+        console.log("Got artifacts:", artifacts, _typeof(artifacts), artifacts.length);
+        console.log((0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getStrMatches)("wolf", Object.values(global_users), 10, {
+          keys: ["name"],
+          distance: 4
+        }));
+        searcher = new _e7_searcher_js__WEBPACK_IMPORTED_MODULE_5__.Searcher();
+        _context.n = 5;
+        return searcher.search("Global Server", "wolf");
+      case 5:
+        wolf = _context.v;
+        _context.n = 6;
+        return _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__["default"].getArtifactObjectList();
+      case 6:
+        artiList = _context.v;
+        console.log(artiList);
+        _context.n = 7;
+        return searcher.search(_e7_searcher_js__WEBPACK_IMPORTED_MODULE_5__.Searcher.DOMAINS.ARTIFACTS, "elbris");
+      case 7:
+        elbris = _context.v;
+        console.log(wolf.map(function (user) {
+          return [user.item.name, user.item.id];
+        }));
+        console.log(elbris);
+      case 8:
+        return _context.a(2);
+    }
+  }, _callee);
+})));
+})();
+
+/******/ })()
+;
 //# sourceMappingURL=test.bundle.js.map

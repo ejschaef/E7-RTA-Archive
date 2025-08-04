@@ -12,7 +12,7 @@ module.exports = {
     path: path.resolve(__dirname, 'static/dist'),  // Output folder
   },
   mode: 'production',             // Enables minification
-  //mode: 'development',
+  // mode: 'development',
   devtool: 'source-map',
   module: {
     rules: [
