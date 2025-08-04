@@ -72,6 +72,10 @@ class HomePageElements {
     get ID_SEARCH_FLAG() {
         return this._ID_SEARCH_FLAG ||= document.getElementById("id-search-flag");
     }
+
+    get ESCAPE_BTN() {
+        return this._ESCAPE_BTN ||= document.getElementById("escape-btn");
+    }
 }
 
 class NavBarElements {

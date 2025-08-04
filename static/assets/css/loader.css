@@ -53,3 +53,10 @@
   color: #4f9293; /* Direct style in case inherited one is overwritten */
 }
 
+#escape-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+

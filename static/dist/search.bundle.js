@@ -3178,6 +3178,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _cache_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../cache-manager.js */ "./static/assets/js/cache-manager.js");
 /* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
 /* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
+function _readOnlyError(r) { throw new TypeError('"' + r + '" is read-only'); }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -3202,16 +3203,26 @@ function _getArtifactMap() {
         case 0:
           console.log("Getting artifact map from E7 server...");
           _context6.n = 1;
-          return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_2__["default"].fetchArtifactJson();
+          return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_1__["default"].fetchArtifactJSON("en");
         case 1:
           rawJSON = _context6.v;
           if (!(rawJSON === null)) {
-            _context6.n = 2;
+            _context6.n = 3;
+            break;
+          }
+          console.log("Getting artifact map from flask server...");
+          _context6.n = 2;
+          return _apis_py_API_js__WEBPACK_IMPORTED_MODULE_2__["default"].fetchArtifactJson();
+        case 2:
+          _readOnlyError("rawJSON");
+        case 3:
+          if (!(rawJSON === null)) {
+            _context6.n = 4;
             break;
           }
           console.error("Could not get artifact Json map from E7 server or flask server");
           return _context6.a(2, null);
-        case 2:
+        case 4:
           console.log("Got artifact Json for language: 'en'");
           return _context6.a(2, Object.fromEntries(rawJSON.filter(function (artifact) {
             return artifact.name !== null;
@@ -7675,10 +7686,7 @@ var UserManager = {
       return _clearUserDataLists.apply(this, arguments);
     }
     return clearUserDataLists;
-  }(),
-  convertServerStr: function convertServerStr(serverStr) {
-    return _references_js__WEBPACK_IMPORTED_MODULE_0__.WORLD_CODE_TO_CLEAN_STR[serverStr];
-  }
+  }()
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserManager);
 
@@ -7795,6 +7803,11 @@ var HomePageElements = /*#__PURE__*/function () {
     key: "ID_SEARCH_FLAG",
     get: function get() {
       return this._ID_SEARCH_FLAG || (this._ID_SEARCH_FLAG = document.getElementById("id-search-flag"));
+    }
+  }, {
+    key: "ESCAPE_BTN",
+    get: function get() {
+      return this._ESCAPE_BTN || (this._ESCAPE_BTN = document.getElementById("escape-btn"));
     }
   }]);
 }();

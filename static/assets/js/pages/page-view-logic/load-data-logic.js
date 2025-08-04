@@ -6,6 +6,24 @@ import {
 import { ContentManager, CSVParse } from "../../exports.js";
 import { PageUtils } from "../../exports.js";
 import { StatsViewFns } from "./stats-logic.js";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
+
+
+function addEscapeButtonListener() {
+	const escapeBtn = DOC_ELEMENTS.HOME_PAGE.ESCAPE_BTN;
+	escapeBtn.addEventListener("click", async () => {
+		const user = await ContentManager.UserManager.getUser();
+		if (user) {
+			await HOME_PAGE_FNS.homePageSetUser(null);
+		} else {
+			await stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+		}
+	});
+}
+
+function initializeLoadDataLogic() {
+	addEscapeButtonListener();
+}
 
 async function handleUploadAndSetUser(HM) {
 	const selectedFile = await ContentManager.ClientCache.get(
@@ -116,4 +134,4 @@ async function runLoadDataLogic(stateDispatcher) {
 	}
 }
 
-export { runLoadDataLogic };
+export { runLoadDataLogic, initializeLoadDataLogic };

@@ -11,7 +11,7 @@ import {
 import {
 	StatsViewFns,
 } from "./page-view-logic/stats-logic.js";
-import { runLoadDataLogic } from "./page-view-logic/load-data-logic.js";
+import { runLoadDataLogic, initializeLoadDataLogic } from "./page-view-logic/load-data-logic.js";
 import { CONTEXT } from "./page-utilities/home-page-context.js";
 import { ContentManager } from "../exports.js";
 import PageUtils from "./page-utilities/page-utils.js";
@@ -185,6 +185,7 @@ function addAllListeners() {
 async function homePageLogic() {
 	console.log("Initialized CONTEXT", CONTEXT);
 	addAllListeners();
+	initializeLoadDataLogic();
 	await initializeSelectDataLogic(stateDispatcher);
 	await StatsViewFns.initializeStatsLogic(stateDispatcher);
 	const user = await ContentManager.UserManager.getUser();

@@ -20,7 +20,7 @@ File: style.css
   --pc-sidebar-active-color: #0df8fd;
   --pc-sidebar-active-background: rgba(121, 121, 121, 0.252);
   --pc-sidebar-main-active-color: #fff;
-  --pc-sidebar-shadow: 1px 0 5px 0 #2b5352;
+  --pc-sidebar-shadow: 1px 0 1px 0 #7f7f7f;
   --pc-sidebar-caption-color: #e8edf7;
   --pc-sidebar-border: none;
   /* --pc-header-background: rgba(var(--bs-body-bg-rgb), 0.7); */
