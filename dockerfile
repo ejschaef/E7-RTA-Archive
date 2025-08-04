@@ -31,6 +31,14 @@ WORKDIR /code
 # Install maturin
 RUN pip install maturin
 
+RUN mkdir -p /code/logs
+
+# Install dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copy project files
+COPY . /code
+
 # Set working directory to rust folder
 WORKDIR /code/e7_rs_tools
 
@@ -41,18 +49,10 @@ RUN pip install target/wheels/*.whl
 # Set working directory to flask folder
 WORKDIR /code
 
-RUN mkdir -p /code/logs
-
-# Install dependencies
-RUN pip install --upgrade pip && pip install -r requirements.txt
-
 # Let celery user own files
 RUN chown -R e7_user:e7_user /code
 
 USER e7_user
-
-# Copy project files
-COPY . /code
 
 # Default command to run Flask
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app"]
