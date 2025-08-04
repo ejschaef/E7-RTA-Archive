@@ -241,9 +241,15 @@ table.dataTable.w-100 td {
     text-align: center;
   }
 
-  table.col2-150 td:nth-child(2),
-  table.col2-150 th:nth-child(2) {
-    width: 150px !important; /* or any width you want */
+  table.col2-30 td:nth-child(2),
+  table.col2-30 th:nth-child(2) {
+    width: 30% !important; /* or any width you want */
+  }
+
+  table.col1-justify-start th:nth-child(1),
+  table.col1-justify-start td:nth-child(1) {
+    text-align: left !important;
+    width: 10% !important;
   }
 
   table.align-center-except-second th:not(:nth-child(2)),

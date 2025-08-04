@@ -24,11 +24,9 @@ function ingestStringChars(set, strings) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-	// await ContentManager.ClientCache.clearUserData();
+	await ContentManager.ClientCache.clearData();
 
     // await ContentManager.UserManager.clearUserDataLists();
-
-	await ContentManager.ArtifactManager.clearArtifactData();
 
     let global_users = await ContentManager.UserManager.getUserMap("world_global");
     // let first_ten = Object.values(global_users).slice(0, 10);
