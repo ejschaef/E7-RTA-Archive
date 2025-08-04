@@ -21,11 +21,18 @@ RUN apt-get update && apt-get install -y \
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
+# Create non-root user and group; allows celery to read/write local files
+RUN groupadd -g 1001 celery && \
+    useradd -u 1001 -g celery -m celery
+
 # Set working directory
 WORKDIR /code
 
 # Copy project files
 COPY . /code
+
+# Let celery user own files
+RUN chown -R celery:celery /code
 
 RUN mkdir -p /code/logs
 
