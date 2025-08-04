@@ -25,7 +25,7 @@ ARTIFACT_JSON_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'artifact_json.pi
 
 def try_load(obj_name, fetch_fn, pickle_path):
     try:
-        raise Exception("USING BACKUPS: MUST REMOVE WHEN DEPLOYING PROD INSTANCE")
+        # raise Exception("USING BACKUPS: MUST REMOVE WHEN DEPLOYING PROD INSTANCE")
         obj = fetch_fn()
         if obj is None:
             raise Exception("Object is None")

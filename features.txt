@@ -7,5 +7,6 @@ interactive plots           : plotly
 interactive code panels     : CodeMirror
 containerization            : docker
 version control             : github
-front end proxy             : nginx
+Server proxy                : nginx
 JS bundling                 : webpack
+Front End Framework         : vanilla JS
