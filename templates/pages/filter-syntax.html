@@ -652,5 +652,5 @@
 {% endblock content %}
 
 {% block extra_js %}
-<script type="module" src="{{ url_for('static', filename='dist/filter-syntax.bundle.js') }}"></script>
+<script type="module" src="{{ get_manifest(filename='filter-syntax.js') }}"></script>
 {% endblock extra_js %}

@@ -61,5 +61,5 @@
 {% endblock content %}
 
 {% block extra_js %}
-<script type="module" src="{{ url_for('static', filename='dist/search.bundle.js') }}"></script>
+<script type="module" src="{{ get_manifest(filename='search.js') }}"></script>
 {% endblock extra_js %}

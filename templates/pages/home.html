@@ -578,6 +578,6 @@
 
 {% block extra_js %}
 
-<script type="module" src="{{ url_for('static', filename='dist/home-page.bundle.js') }}"></script>
+<script type="module" src="{{ get_manifest(filename='home-page.js') }}"></script>
 
 {% endblock extra_js %}

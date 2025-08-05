@@ -50,3 +50,10 @@ docker-compose version
 git clone https://github.com/ejschaef/E7-Ventus-Archive
 
 #Stop Docker
+docker stop $(docker ps -q)
+
+#Remove all container
+docker rm -f $(docker ps -aq)
+
+#Remove all images
+docker rmi -f $(docker images -q)

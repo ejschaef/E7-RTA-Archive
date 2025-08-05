@@ -37,8 +37,7 @@ RUN mkdir -p /code/logs
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy project files
-COPY . /code
+COPY e7_rs_tools /code/e7_rs_tools
 
 # Set working directory to rust folder
 WORKDIR /code/e7_rs_tools
@@ -50,10 +49,8 @@ RUN pip install target/wheels/*.whl
 # Set working directory to flask folder
 WORKDIR /code
 
-# Let celery user own files
-RUN chown -R e7_user:e7_user /code
-
-USER e7_user
+# Copy project files
+COPY . /code
 
 # Default command to run Flask
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app"]

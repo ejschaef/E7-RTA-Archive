@@ -24,10 +24,4 @@
 <!-- <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style-preset.css') }}" > -->
 
 <!-- Your Custom CSS -->
- 
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/custom.css') }}" >
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/loader.css') }}" >
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/metric-kpis.css') }}" >
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/table-styling.css') }}" >
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/filter-syntax.css') }}" >
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/nav-tiles.css') }}" >
+<link rel="stylesheet" href="{{ get_manifest(filename='bundled-css.css') }}" >

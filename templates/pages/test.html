@@ -48,7 +48,7 @@
 
 {% block extra_js %}
 
-<script type="module" src="{{ url_for('static', filename='dist/test.bundle.js') }}"></script>
+<script type="module" src="{{ get_manifest(filename='test.js') }}"></script>
 
 {% endblock extra_js%}
 

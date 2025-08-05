@@ -9,7 +9,7 @@ import jsonpickle
 
 
 from apps.home import blueprint
-from flask import render_template, request, redirect, url_for, session, current_app, jsonify
+from flask import render_template, request, redirect, url_for, session, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 from flask_login import login_required, current_user
@@ -20,16 +20,12 @@ from apps.authentication.models import Users
 from flask_wtf import FlaskForm
 from werkzeug.exceptions import RequestEntityTooLarge
 from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm, SearchForm
-from apps.e7_utils.user_manager import User
 from apps.e7_utils.query_user_battles import get_transformed_battles
 from apps.e7_utils.artifact_manager import get_artifacts
 from apps.content_manager import get_mngr
 from apps.references import cached_var_keys as KEYS
 from e7_rs_tools import get_battle_array
 import traceback
-
-from apps.tasks import celery_app
-from celery.result import AsyncResult
 
 import logging
 

@@ -1,0 +1,61 @@
+
+FROM python:3.12-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV COMPOSE_BAKE=true
+
+# Install rust library
+# Install build dependencies for maturin and Rust tooling
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    python3-dev \
+    libssl-dev \
+    pkg-config \
+    patchelf \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust (for maturin and building)
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Create non-root user and group; allows celery to read/write local files
+RUN groupadd -g 1001 e7_user && \
+    useradd -u 1001 -g e7_user -m e7_user
+
+# Set working directory
+WORKDIR /code
+
+# Install maturin
+RUN pip install maturin
+
+RUN mkdir -p /code/logs
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+COPY e7_rs_tools /code/e7_rs_tools
+
+# Set working directory to rust folder
+WORKDIR /code/e7_rs_tools
+
+# Build and install Rust Python lib with maturin develop
+RUN maturin build --release --interpreter python3
+RUN pip install target/wheels/*.whl
+
+# Set working directory to flask folder
+WORKDIR /code
+
+# Copy project files
+COPY . /code
+
+# Let celery user own files
+RUN chown -R e7_user:e7_user /code
+
+USER e7_user
+
+# Default command to run Flask
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app"]

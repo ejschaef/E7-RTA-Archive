@@ -17,7 +17,7 @@ from apps.config import config_dict
 from apps import create_app, db
 import json
 import logging
-
+import apps.manifest as manifest
 
 # WARNING: Don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG', 'False') == 'True')
@@ -36,6 +36,8 @@ except KeyError:
     exit('Error: Invalid <config_mode>. Expected values [Debug, Production] ')
 
 app = create_app(app_config)
+
+app.jinja_env.globals['get_manifest'] = manifest.get_manifest
 
 # setup logging
 

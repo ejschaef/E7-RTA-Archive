@@ -7,7 +7,9 @@ services:
       - "6379:6379"
 
   flask-app:
-    build: ./
+    build:
+      context: ./
+      dockerfile: dockerfile.prod
     container_name: e7-flask-app
     image: ejschaef/e7-flask-app:latest
     expose:
@@ -16,7 +18,9 @@ services:
       - redis
 
   celery-worker:
-    build: ./
+    build:
+      context: ./
+      dockerfile: dockerfile.prod
     container_name: e7-celery-worker
     image: ejschaef/e7-celery-worker:latest
     command: celery -A apps.tasks worker --loglevel=info --concurrency=1
@@ -26,9 +30,12 @@ services:
       - redis
 
   celery-beat:
-    build: ./
+    build: 
+      context: ./
+      dockerfile: dockerfile.prod
     container_name: e7-celery-beat
     image: ejschaef/e7-celery-beat:latest
+    
     command: celery -A apps.tasks beat --loglevel=info
     depends_on:
       - celery-worker
