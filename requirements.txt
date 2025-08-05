@@ -37,7 +37,6 @@ jsonpickle==4.0.5
 #e7 content tools
 sympy==1.14.0
 requests==2.32.3
-plotly==6.1.0
 pyarrow==20.0.0
 
 # utils

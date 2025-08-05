@@ -16,6 +16,7 @@ class JsonLogFormatter(logging.Formatter):
         return json.dumps(message, default=str)
     
     def __prep_log_dict(self, record: logging.LogRecord):
+        print(record, dict(record.__dict__))
         required_fields = {
             "timestamp": dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).isoformat(),
             "message"  : record.getMessage(),
@@ -25,6 +26,12 @@ class JsonLogFormatter(logging.Formatter):
         
         if record.stack_info is not None:
             required_fields["stack_info"] = self.formatStack(record.stack_info)
+
+        if hasattr(record, "ip"):
+            required_fields["ip"] = record.ip
+
+        if hasattr(record, "url"):
+            required_fields["url"] = record.url
 
         message = {
             key : msg

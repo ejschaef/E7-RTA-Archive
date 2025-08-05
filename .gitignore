@@ -14,6 +14,9 @@ __pycache__/
 #node
 node_modules
 
+#env file
+.env
+
 # venv
 env
 env_linux
@@ -37,8 +40,12 @@ package-lock.json
 apps/static/assets/node_modules
 apps/static/assets/yarn.lock
 apps/static/assets/.temp
-apps/services/log_key.py
+apps/services/services_key.py
+apps/log_ip_salt_str.py
 logs/
+
+# vm setup
+refresh-and-run.sh
 
 # vscode
 .vscode

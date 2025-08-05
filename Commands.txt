@@ -57,3 +57,6 @@ docker rm -f $(docker ps -aq)
 
 #Remove all images
 docker rmi -f $(docker images -q)
+
+#execute permissions for script
+chmod +x script.sh

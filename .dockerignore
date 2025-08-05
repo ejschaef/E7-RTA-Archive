@@ -17,3 +17,6 @@ prod_steps.txt
 apps/static/assets/node_modules
 apps/static/assets/yarn.lock
 apps/static/assets/.temp
+
+# vm setup
+refresh-and-run.sh

@@ -10,6 +10,9 @@ services:
     build: 
       context: ./
       dockerfile: dockerfile.dev
+    environment:
+      - SALT_STRING=${SALT_STRING:-default_salt}
+      - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
     container_name: e7-flask-app-dev
     image: ejschaef/e7-flask-app:latest
     volumes:
@@ -23,6 +26,9 @@ services:
     build: 
       context: ./
       dockerfile: dockerfile.dev
+    environment:
+      - SALT_STRING=${SALT_STRING:-default_salt}
+      - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
     container_name: e7-celery-worker-dev
     image: ejschaef/e7-celery-worker:latest
     command: celery -A apps.tasks worker --loglevel=info
@@ -35,6 +41,9 @@ services:
     build: 
       context: ./
       dockerfile: dockerfile.dev
+    environment:
+      - SALT_STRING=${SALT_STRING:-default_salt}
+      - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
     container_name: e7-celery-beat-dev
     image: ejschaef/e7-celery-beat:latest
     command: celery -A apps.tasks beat --loglevel=info

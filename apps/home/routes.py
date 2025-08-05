@@ -19,10 +19,7 @@ from apps.authentication.models import Users
 from flask_wtf import FlaskForm
 from werkzeug.exceptions import RequestEntityTooLarge
 from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm, SearchForm
-from apps.e7_utils.query_user_battles import get_transformed_battles
-from apps.e7_utils.artifact_manager import get_artifacts
 from apps.content_manager import get_mngr
-from apps.references import cached_var_keys as KEYS
 from e7_rs_tools import get_battle_array
 import traceback
 
@@ -89,14 +86,10 @@ def typography():
 
 @blueprint.route('api/rs_get_battle_data', methods=["POST"])
 def rs_get_battle_data():
-    print("RS API Call to get_battle_data was made")
     try:
         user_dict = request.get_json()["user"]
-        print(f"Got: {user_dict}")
         name, world_code, uid = user_dict["name"], user_dict["world_code"], user_dict["id"]
-        print(f"SERVER QUERYING: <name={name}, server={world_code}>, id={uid} using RS")
         battle_data = get_battle_array(int(uid), world_code)
-        print(f"Got {len(battle_data)} battles for {name} on {world_code}")
         log_msg = {
             "len" : len(battle_data),
             "world"   : world_code.split("_")[1],
@@ -114,38 +107,32 @@ def rs_get_battle_data():
 def get_season_details():
     try:
         MNGR = get_mngr()
-        print("SERVER RETURNING SEASON DETAILS")
         return jsonify({
                     "seasonDetails" : MNGR.SeasonDetailsJSON,
                     'success'       : True 
                 }
             ), 200 #Http status code Ok
     except Exception as e:
-        print(f"SERVER ERROR WHEN RETURNING SEASON DETAILS: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
     
 @blueprint.route('api/get_artifact_json')
 def get_artifact_json():
     try:
         MNGR = get_mngr()
-        print("SERVER RETURNING SEASON DETAILS")
         return jsonify({
                     "artifactJson" : MNGR.ArtifactJson,
                     'success'       : True 
                 }
             ), 200 #Http status code Ok
     except Exception as e:
-        print(f"SERVER ERROR WHEN RETURNING ARTIFACT JSON: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 @blueprint.route('api/get_hero_data')
 def get_hero_data():
     try:
         MNGR = get_mngr()
-        print("SERVER RETURNING HERO DATA")
         return jsonify(MNGR.HeroManager.json), 200 #Http status code Ok
     except Exception as e:
-        print(f"SERVER ERROR WHEN RETURNING HERO DATA: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 
@@ -165,15 +152,12 @@ def get_user_data():
             user = MNGR.UserManager.get_user_from_id(int(user_data["id"]))
 
         if user:
-            print(f"SERVER RETURNING: <name={user.name}, server={user.world_code}>, id={user.id}")
             return_dict = {"user" : user.to_dict(), "success" : True, "foundUser" : user is not None }
         else:
-            print("SERVER: Could not find user")
             return_dict = {"user" : None, "success" : True, "foundUser" : user is not None }
         return jsonify(return_dict ), 200 #Http status code Ok
     except Exception as e:
         traceback.print_exc()
-        print(f"SERVER ERROR WHEN RETURNING USER DATA: {str(e)}")
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 
