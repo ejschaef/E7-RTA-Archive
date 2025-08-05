@@ -18,9 +18,12 @@ def register_extensions(app):
     login_manager.init_app(app)
 
 def register_blueprints(app):
-    for module_name in ('authentication', 'home', 'dyn_dt'):
-        module = import_module('apps.{}.routes'.format(module_name))
-        app.register_blueprint(module.blueprint)
+    for module_name in ('authentication', 'home', 'dyn_dt', 'services'):
+        try:
+            module = import_module('apps.{}.routes'.format(module_name))
+            app.register_blueprint(module.blueprint)
+        except ModuleNotFoundError:
+            print("No module named 'apps.{}.routes' ; SKIPPING".format(module_name))
 
 from apps.authentication.oauth import github_blueprint, google_blueprint
 

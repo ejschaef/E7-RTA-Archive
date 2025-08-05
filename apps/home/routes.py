@@ -7,7 +7,6 @@ import os, json, pprint, uuid, base64
 import wtforms
 import jsonpickle
 
-
 from apps.home import blueprint
 from flask import render_template, request, redirect, url_for, session, jsonify
 from flask_login import login_required
