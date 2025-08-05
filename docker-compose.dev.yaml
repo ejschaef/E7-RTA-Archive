@@ -26,7 +26,6 @@ services:
     container_name: e7-celery-worker-dev
     image: ejschaef/e7-celery-worker:latest
     command: celery -A apps.tasks worker --loglevel=info
-    user: "nobody"
     volumes:
       - .:/code
     depends_on:
