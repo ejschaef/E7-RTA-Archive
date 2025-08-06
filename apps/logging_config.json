@@ -38,7 +38,7 @@
         },
         "queue_handler": {
             "class": "logging.handlers.QueueHandler",
-            "handlers": ["stdout", "file"],
+            "handlers": ["file"],
             "filters": ["request_info_filter"],
             "respect_handler_level": true
         }

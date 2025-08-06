@@ -16,7 +16,6 @@ class JsonLogFormatter(logging.Formatter):
         return json.dumps(message, default=str)
     
     def __prep_log_dict(self, record: logging.LogRecord):
-        print(record, dict(record.__dict__))
         required_fields = {
             "timestamp": dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).isoformat(),
             "message"  : record.getMessage(),

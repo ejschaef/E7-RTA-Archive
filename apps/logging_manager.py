@@ -8,7 +8,7 @@ os.chdir("..")
 
 load_dotenv()
 
-DEV = True
+DEV = False
 
 if DEV:
     URL = "http://localhost"
@@ -62,7 +62,8 @@ class LogManager:
         
 if __name__ == "__main__":
     log_manager = LogManager()
-    logs = log_manager.delete_logs()
+    log_manager.delete_logs()
+    logs = log_manager.get_logs()
     
 
     
