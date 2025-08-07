@@ -6,9 +6,11 @@ import requests
 
 os.chdir("..")
 
+from apps.services.signature import generate_services_headers
+
 load_dotenv()
 
-DEV = False
+DEV = True
 
 if DEV:
     URL = "http://localhost"
@@ -21,12 +23,13 @@ DELETE_LOGS_URL = f"{URL}/services/delete_logs"
 SERVICES_KEY = os.environ.get('SERVICES_KEY', 'default_services_key')
 
 HEADERS = {
-    "Services-Key": SERVICES_KEY,
     "User-Agent"  : "log-getter"
     }
 
+create_headers = lambda: {} | HEADERS | generate_services_headers()
+
 def get_logs() -> dict:
-    response = requests.get(GET_LOGS_URL, headers=HEADERS)
+    response = requests.get(GET_LOGS_URL, headers=create_headers())
     if response.ok:
         data = response.json()
         return data['logs']
@@ -34,7 +37,7 @@ def get_logs() -> dict:
         raise Exception(f"Failed to fetch logs from {GET_LOGS_URL}. Status Code: {response.status_code}")
 
 def delete_logs() -> bool:
-    response = requests.get(DELETE_LOGS_URL, headers=HEADERS)
+    response = requests.get(DELETE_LOGS_URL, headers=create_headers())
     return response.ok
 
 class LogManager:

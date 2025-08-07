@@ -4,18 +4,57 @@ from apps.models import *
 from apps.tasks import *
 import apps.services.log_utils as log_utils
 import os
-
+import hmac
+import hashlib
+import time
+from apps.services.references import SERVICES_HEADERS
 
 LOGGER = log_utils.get_logger()
 
+ALLOWED_TIMESTAMP_DRIFT = 10 # seconds
+
 KEY = os.environ.get('SERVICES_KEY', 'default_services_key')
 
-@blueprint.route('/services/dump_logs', methods=['GET'])
+class ROUTES:
+    DUMP_LOGS = "/services/dump_logs"
+    DELETE_LOGS = "/services/delete_logs"
+
+def unauthorized(route):
+    LOGGER.warning(f"Attempted unauthorized access to {route}")
+    return jsonify({ 'error' : "Unauthorized" }), 403
+
+def validate_signature(key, timestamp, signature, request_body):
+    message = f"{key}{timestamp}{request_body}"
+    expected_signature = hmac.new(key.encode('utf-8'), message.encode('utf-8'), hashlib.sha256).hexdigest()
+    return hmac.compare_digest(expected_signature, signature)
+
+def validate_timestamp(timestamp):
+    try:
+        timestamp = int(timestamp)
+    except ValueError:
+        return False
+    drift = int(time.time()) - timestamp
+    return abs(drift) < ALLOWED_TIMESTAMP_DRIFT
+
+def get_services_headers():
+    print(f"Got headers", request.headers)
+    return [request.headers.get(header) for header in SERVICES_HEADERS.HEADERS]
+
+def validate_request():
+    [key, timestamp, signature] = get_services_headers()
+    validations = [
+        lambda: all([key, timestamp, signature]),
+        lambda: validate_timestamp(timestamp),
+        lambda: validate_signature(key, timestamp, signature, '')
+    ]
+    validation_results = [validation() for validation in validations]
+    print(validation_results)
+    return all(validation_results)
+
+@blueprint.route(ROUTES.DUMP_LOGS, methods=['GET'])
 def dump_logs():
-    key = request.headers.get('Services-Key')
-    if key != KEY:
-        LOGGER.warning("Attempted unauthorized access to /services/dump_logs")
-        return jsonify({ 'error' : "Unauthorized" }), 403
+    if validate_request() is False:
+        return unauthorized(ROUTES.DUMP_LOGS)
     try:
         log_content = log_utils.get_log_content()
         LOGGER.info("Fetched logs")
@@ -26,10 +65,8 @@ def dump_logs():
     
 @blueprint.route('/services/delete_logs', methods=['GET'])
 def delete_logs():
-    key = request.headers.get('Services-Key')
-    if key != KEY:
-        LOGGER.warning("Attempted unauthorized access to /services/delete_logs")
-        return jsonify({ 'error' : "Unauthorized" }), 403
+    if validate_request() is False:
+        return unauthorized(ROUTES.DELETE_LOGS)
     try:
         log_utils.delete_logs()
         LOGGER.info("Deleted logs")
