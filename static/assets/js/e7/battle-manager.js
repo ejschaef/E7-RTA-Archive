@@ -100,12 +100,12 @@ let BattleManager = {
 			return [];
 		}
 		console.log(
-			`Caching queried battles: ${battleList.length} battles; modified [BATTLES]`
+			`Caching queried battles: ${battleList.length} battles; modified [BATTLES];`, battleList
 		);
 		const cleanBattleMap = buildFormattedBattleMap(battleList, HM, artifacts);
 
 		const battles = await this.extendBattles(cleanBattleMap);
-		console.log("Cached queried battles in cache; modified [BATTLES]");
+		console.log("Cached queried battles in cache; modified [BATTLES];");
 		return battles;
 	},
 

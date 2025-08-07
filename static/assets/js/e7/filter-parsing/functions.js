@@ -8,7 +8,7 @@ import { strArrToCountMap } from "../../utils.js";
 class Fn {
 	constructor() {}
 
-	call(battle) {
+	call(_battle) {
 		throw new Error(
 			`Base class ${this.constructor.name} does not implement the 'call' method. Implement this method in a subclass.`
 		);

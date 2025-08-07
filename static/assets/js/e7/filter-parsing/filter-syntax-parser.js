@@ -48,13 +48,6 @@ function tryParseFilterElement(leftOrRight, strValue, filterStr, REFS) {
 			parsedValue = parseDataType(strValue, REFS);
 		}
 	} catch (e) {
-		for (let key in FieldType.FIELD_EXTRACT_FN_MAP) {
-			if (strValue.includes(key) || key.includes(strValue)) {
-				throw new Futils.SyntaxException(
-					`Could not parse ${leftOrRight} side of filter; got: "${strValue}" from filter: [${filterStr}], did you mean to use '${key}' as a field instead?`
-				);
-			}
-		}
 		console.error(e);
 		throw new Futils.SyntaxException(
 			`Could not parse ${leftOrRight} side of filter; got: "${strValue}" from filter: [${filterStr}]; error: ${e.message}`
@@ -85,14 +78,14 @@ class FilterSyntaxParser {
 		SeasonDetails = SeasonDetails || (await SeasonManager.getSeasonDetails());
 		parser.rawString = string;
 		parser.HM = HM;
-		parser.ARTIFACT_LOWERCASE_STRINGS_SET =
-			await ArtifactManager.getArtifactLowercaseNameSet();
-		console.log("Got Artifact Lowercase Strings Set");
-		console.log(parser.ARTIFACT_LOWERCASE_STRINGS_SET);
+		parser.ARTIFACT_LOWERCASE_STRINGS_MAP =
+			await ArtifactManager.getArtifactLowercaseNameMap();
+		console.log("Got Artifact Lowercase Strings map", parser.ARTIFACT_LOWERCASE_STRINGS_MAP);
+		console.log(parser.ARTIFACT_LOWERCASE_STRINGS_MAP);
 		parser.SeasonDetails = SeasonDetails;
 		parser.REFS = {
 			HM: parser.HM,
-			ARTIFACT_LOWERCASE_STRINGS_SET: parser.ARTIFACT_LOWERCASE_STRINGS_SET,
+			ARTIFACT_LOWERCASE_STRINGS_MAP: parser.ARTIFACT_LOWERCASE_STRINGS_MAP,
 			SeasonDetails: parser.SeasonDetails,
 		};
 		parser.preParsedString = preParse(string);

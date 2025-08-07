@@ -20,11 +20,12 @@ module.exports = {
     "bundled-css"   : './static/assets/css/bundled-css.css',
   },
   output: {
-    filename: '[name].[contenthash].bundle.js',         // Output bundled files
+    filename: '[name].[contenthash].bundle.js',    // Output bundled files with hash
     path: path.resolve(__dirname, 'static/dist'),  // Output folder
+    clean: true,
   },
-  mode: 'production',             // Enables minification
-  // mode: 'development',
+  // mode: 'production',             // Enables minification
+  mode: 'development',
   devtool: 'source-map',
   module: {
     rules: [
@@ -32,7 +33,7 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',  // Optional, for transpiling if needed
+          loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env'],
           },

@@ -37,14 +37,16 @@
         background-color: rgba(105, 135, 191, 0.3) !important; /* custom color */
     }
 
-    .cm-default { color: #844df9 !important; }
-    .cm-keyword { color: #ff2ea8 !important; }
+    .cm-default { color: #9b6dff !important; }
+    .cm-keyword { color: #ff2e89 !important; }
     .cm-string  { color: #40d766 !important; }
-    .cm-set    {color: #409dd7 !important}
+    .cm-set    {color: #4dbaec !important}
     .cm-date  { color: #d7d440 !important; }
     .cm-bool { color: #40d7c0 !important; }
+    .cm-declared-data { color: #40d7c0 !important; }
     .cm-comment { color: #6272a4; font-style: italic; }
     .cm-number  { color: #d7d440 !important; }
+    .cm-field  { color: #ff6334 !important; }
     .cm-datafield  { color: #ffa25b !important; }
     .cm-def     { color: #dfeaec; }
     .cm-operator { color: #b300ff !important; font-style: italic;}

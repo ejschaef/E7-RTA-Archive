@@ -14,6 +14,7 @@ from   flask import session
 from sys import exit
 
 from apps.config import config_dict
+from apps.services import log_utils
 from apps import create_app, db
 import json
 import logging
@@ -39,34 +40,18 @@ app = create_app(app_config)
 
 app.jinja_env.globals['get_manifest'] = manifest.get_manifest
 
-# setup logging
-
-logger = logging.getLogger(app.config['LOGGER_NAME'])
-
-def setup_logging():
-    with open('apps/logging_config.json') as f:
-        data = json.load(f)
-    logging.config.dictConfig(data)
-    queue_handler = logging.getHandlerByName('queue_handler')
-    if queue_handler is not None:
-        print("Starting Queue Listener")
-        queue_handler.listener.start()
-        atexit.register(queue_handler.listener.stop)
-    else:
-        print("No Queue Listener Found")
-
-setup_logging()
-
-if DEBUG:
-    app.logger.setLevel(logging.DEBUG)
-else:
-    app.logger.setLevel(logging.INFO)
-
 
 Session(app)
 
 # Create tables & Fallback to SQLite
 with app.app_context():
+
+    # setup logging
+    log_utils.setup_logging()
+    if DEBUG:
+        app.logger.setLevel(logging.DEBUG)
+    else:
+        app.logger.setLevel(logging.INFO)
     
     try:
         db.create_all()

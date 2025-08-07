@@ -80,11 +80,16 @@ async function homePageSetUser(user) {
 	}
 }
 
+async function homePageClearUserData() {
+	await homePageSetUser(null);
+}
+
 
 let HOME_PAGE_FNS = {
 	homePageSetView: homePageSetView,
 	homePageSetUser: homePageSetUser,
-	homePageDrawUserInfo: homePageDrawUserInfo
+	homePageDrawUserInfo: homePageDrawUserInfo,
+	homePageClearUserData: homePageClearUserData
 };
 
 

@@ -5,6 +5,7 @@ import { ONE_DAY } from "./references.js";
 // a Season record has the following fields: "Season Number", "Code", "Season", "Start", "End", "Status"
 
 let SeasonManager = {
+
 	fetchAndCacheSeasonDetails: async function () {
 		const result = await PYAPI.fetchSeasonDetails();
 		if (result.error) {
@@ -15,9 +16,10 @@ let SeasonManager = {
 			season.range = [season["Start"], season["End"]].map(
 				(d) => new Date(`${d.split(" ")[0]}T00:00:00`)
 			);
+			season["Season Number"] = String(season["Season Number"]);
 		});
 
-		seasonDetails.sort((a, b) => a["Season Number"] - b["Season Number"]);
+		seasonDetails.sort((a, b) => parseInt(a["Season Number"]) - parseInt(b["Season Number"]));
 
 		// add pre seasons
 		const preSeasonFilled = [seasonDetails[0]];
@@ -27,9 +29,10 @@ let SeasonManager = {
 				new Date(+lastSeason.range[1] + ONE_DAY),
 				new Date(+season.range[0] - ONE_DAY),
 			];
+			const seasonNumStr = lastSeason["Season Number"] + "f";
 			const preSeason = {
-				"Season Number": lastSeason["Season Number"] + 0.5,
-				Code: null,
+				"Season Number": seasonNumStr,
+				Code: "pvp_rta_ss" + seasonNumStr,
 				Season: `Pre ${season["Season"]}`,
 				Start: start.toISOString().slice(0, 10),
 				End: end.toISOString().slice(0, 10),
@@ -44,9 +47,10 @@ let SeasonManager = {
 		// add another pre season if current season is complete
 		if (lastSeason.range[1] < new Date()) {
 			const start = new Date(+preSeasonFilled.at(-1).range[1] + ONE_DAY);
+			const seasonNumStr = lastSeason["Season Number"] + "f";
 			const preSeason = {
-				"Season Number": lastSeason["Season Number"] + 0.5,
-				Code: null,
+				"Season Number": seasonNumStr,
+				Code: "pvp_rta_ss" + seasonNumStr,
 				Season: `Active Pre-Season`,
 				Start: start.toISOString().slice(0, 10),
 				End: "N/A",

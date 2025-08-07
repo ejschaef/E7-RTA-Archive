@@ -29,16 +29,22 @@ let ArtifactManager = {
 		);
 	},
 
-    getArtifactLowercaseNameSet: async function () {
-        let artiSet = await ClientCache.get(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_SET);
-        if (artiSet !== null) {
-			console.log("Got artifact lowercase name set from cache");
-            return artiSet;
+    getArtifactLowercaseNameMap: async function () {
+        let artiMap = await ClientCache.get(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_MAP);
+        if (artiMap !== null) {
+			console.log("Got artifact lowercase name map from cache");
+            return artiMap;
         }
         const artifacts = await this.getArtifacts();
-        artiSet = new Set(Object.values(artifacts).filter((artiName) => artiName !== null).map((artiName) => artiName.toLowerCase()));
-        await ClientCache.cache(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_SET, artiSet);
-        return artiSet;
+		artiMap = Object.fromEntries(
+			Object.values(artifacts)
+			.filter((name) => name !== null)
+			.map((name) => {
+				return [name.toLowerCase(), name];
+			})
+		)
+        await ClientCache.cache(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_MAP, artiMap);
+        return artiMap;
     },
 
 	getArtifactObjectList: async function () {

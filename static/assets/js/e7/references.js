@@ -15,11 +15,19 @@ export const WORLD_CODE_ENUM = {
 };
 
 export const WORLD_CODE_TO_CLEAN_STR = {
-	world_global: "Global",
-	world_kor: "Korea",
-	world_jpn: "Japan",
-	world_asia: "Asia",
-	world_eu: "Europe",
+	[WORLD_CODE_ENUM.GLOBAL]: "Global",
+	[WORLD_CODE_ENUM.KOR]: "Korea",
+	[WORLD_CODE_ENUM.JPN]: "Japan",
+	[WORLD_CODE_ENUM.ASIA]: "Asia",
+	[WORLD_CODE_ENUM.EU]: "Europe",
+};
+
+export const CLEAN_STR_TO_WORLD_CODE = {
+	[WORLD_CODE_TO_CLEAN_STR.world_global]: WORLD_CODE_ENUM.GLOBAL,
+	[WORLD_CODE_TO_CLEAN_STR.world_kor]: WORLD_CODE_ENUM.KOR,
+	[WORLD_CODE_TO_CLEAN_STR.world_jpn]: WORLD_CODE_ENUM.JPN,
+	[WORLD_CODE_TO_CLEAN_STR.world_asia]: WORLD_CODE_ENUM.ASIA,
+	[WORLD_CODE_TO_CLEAN_STR.world_eu]: WORLD_CODE_ENUM.EU,
 };
 
 export const EQUIPMENT_SET_MAP = {
@@ -93,6 +101,7 @@ export const COLUMNS = [
 
 export const COLUMNS_MAP = {
 	SEASON: "Season",
+	SEASON_CODE: "Season Code",
 	DATE_TIME: "Date/Time",
 	SECONDS: "Seconds",
 	TURNS: "Turns",

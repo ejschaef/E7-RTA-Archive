@@ -73,45 +73,20 @@ let PYAPI = {
             body: JSON.stringify({ userData })
         })
         const data = await response.json();
-        try {
-            if (response.ok) {
-                if (!data.foundUser) {
-                    if (userData.name) {
-                        let worldCodeStr = userData.world_code.replace("world_", "");
-                        return { user: null, error: `Could not find user: "${userData.name}" in world_code: ${worldCodeStr}`};
-                    } else if (userData.id) {
-                        return { user: null, error: `Could not find user with ID: ${userData.id}`};
-                    }
-                } else {
-                    const user = data.user;
-                    console.log("Server communication successful; received response data for user");
-                    console.log(`Found user: ${JSON.stringify(user)}`);
-                    return { user, error: false};
-                }
-            } else {
-                console.log("Server communication unsuccessful")
-                return { user: null, error: data.error};
-            };
-        } catch (e) {
-            console.error(`Error fetching and caching user: ${e}`);
-            return { user: null, error: e.message};
+        if (!response.ok) {
+            throw new Error(`Flask server error: ${data.error}`);
         }
+        if (!data.foundUser) {
+            if (!userData.world_code) {
+                return { user: null, ok: true};
+            }
+            return { user: null, ok: true};
+        } 
+        const user = data.user;
+        console.log("Server communication successful; received response data for user");
+        console.log(`Found user: ${JSON.stringify(user)}`);
+        return { user, ok: true};
     },
-
-    //returns both user and battles
-    fetchDataFromID: async function (id) {
-        if (!id) {
-            throw new Error("Must pass ID to fetch user");
-        }
-        return await fetch('/api/get_battle_data_from_id', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id : id })
-          })
-    },
-        
 };
 
 export default PYAPI;

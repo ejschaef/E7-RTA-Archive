@@ -25,7 +25,7 @@ function initializeCodeBlocksAndAddListeners() {
   });
 
 	const ex1Str = `
-date in current-season;
+season = current-season;
 is-first-pick = true;
 p1.pick1 in {lone wolf peira, new moon luna};
 OR("harsetti" in p1.prebans, "harsetti" in p2.prebans);`;
@@ -56,7 +56,7 @@ victory-points in 2500...=3000;`;
 	makeExFilter("exFilter3", ex3Str);
 
 	const ex4Str = `
-date in season-16.5;
+season = season-16f;
 is-win = true;`;
 
 	makeExFilter("exFilter4", ex4Str);

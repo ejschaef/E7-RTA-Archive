@@ -31,7 +31,7 @@ const OPERATOR_MAP = {
 	">": (a, b) => a > b,
 	"<": (a, b) => a < b,
 	"=": (a, b) => a === b,
-	in: (a, b) => inOperatorFn(a, b),
+	"in": (a, b) => inOperatorFn(a, b),
 	">=": (a, b) => a >= b,
 	"<=": (a, b) => a <= b,
 	"!=": (a, b) => a !== b,

@@ -2,9 +2,20 @@ import Futils from "./filter-utils.js";
 import { RegExps } from "../regex.js";
 import { toTitleCase } from "../../utils.js";
 import HeroManager from "../hero-manager.js";
-import { EQUIPMENT_LOWERCASE_STRINGS_SET } from "./filter-parse-references.js";
+import { EQUIPMENT_LOWERCASE_STRINGS_MAP } from "./filter-parse-references.js";
 import { LEAGUE_MAP } from "../references.js";
 import { WORLD_CODE_TO_CLEAN_STR } from "../references.js";
+
+function getSeasonFromSyntaxStr(str, seasonDetails) {
+	const seasonNum = str.split("-")[1];
+	const season = seasonDetails.find((season) => season["Season Number"] === seasonNum);
+	if (!season) {
+		throw new Error(
+			`Invalid season specified; ${seasonNum} is not a valid season number; failed on str: '${str}'`
+		);
+	}
+	return season;
+}
 
 class DataType {
 	constructor(str, REFS = null, kwargs = null) {
@@ -21,15 +32,17 @@ class DataType {
 	}
 }
 
-// string type will always convert to titlecase to  match against values in battle records
+const STRING_TYPES = ["hero", "league", "server", "equipment", "artifact", "season-code"];
+
 class StringType extends DataType {
 	getData(
 		str,
 		REFS,
-		kwargs = { types: ["hero", "league", "server", "equipment", "artifact"] }
+		kwargs = { types: STRING_TYPES}
 	) {
 		str = Futils.trimSurroundingQuotes(str);
 		str = str.trim();
+		console.log(`Parsing string: [${str}] with types: [${kwargs.types}]`);
 		if (!RegExps.VALID_STRING_RE.test(str)) {
 			throw new Futils.SyntaxException(
 				`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ${RegExps.VALID_STRING_LITERAL_RE.source} ); got: [${str}]`
@@ -40,22 +53,24 @@ class StringType extends DataType {
 				case "hero":
 					return HeroManager.getHeroByName(str, REFS.HM)?.name;
 				case "league":
-					return LEAGUE_MAP[str] ? str : null;
+					return LEAGUE_MAP[str] ? toTitleCase(str) : null;
 				case "server":
 					return Object.values(WORLD_CODE_TO_CLEAN_STR).find(
 						(server) => server.toLowerCase() === str
 					);
 				case "equipment":
-					return EQUIPMENT_LOWERCASE_STRINGS_SET.has(str) ? str : null;
+					return EQUIPMENT_LOWERCASE_STRINGS_MAP[str];
 				case "artifact":
-					return REFS.ARTIFACT_LOWERCASE_STRINGS_SET.has(str) ? str : null;
+					return REFS.ARTIFACT_LOWERCASE_STRINGS_MAP[str];
+				case "season-code":
+					return REFS.SeasonDetails.find((season) => season.Code === str)?.Code;
 			}
 		}
 		for (const type of kwargs.types) {
 			const parsed = parseFn(type, str);
 			if (parsed) {
-				console.log(`Parsed string: [${str}] to [${parsed}]`);
-				return toTitleCase(parsed);
+				console.log(`Parsed string: [${str}] to [${parsed}] with type: [${type}]`);
+				return parsed;
 			}
 		}
 		throw new Futils.SyntaxException(
@@ -192,10 +207,25 @@ class RangeType extends DataType {
 }
 
 class SetType extends DataType {
+	getType(elements) {
+		let types = new Set();
+		for (const element of elements) {
+			types.add(element.constructor.name);
+		}
+		types = [...types];
+		console.log("GOT TYPES: ", types);
+		if (types.length > 1) {
+			throw new Futils.SyntaxException(
+				`Invalid set; all set elements must have the same data type; 
+                got: types: [${types.join(", ")}]`
+			);
+		}
+		return types[0];
+	}
 	getData(
 		str,
 		REFS,
-		kwargs = { types: ["hero", "league", "server", "equipment", "artifact"] }
+		kwargs = { types: STRING_TYPES }
 	) {
 		if (!RegExps.VALID_SET_RE.test(str)) {
 			throw new Futils.SyntaxException(
@@ -204,10 +234,13 @@ class SetType extends DataType {
 		}
 		const elements = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true)
 			.map((elt) => {
-				if (RegExps.VALID_STRING_RE.test(elt)) {
-					return new StringType(elt, REFS, kwargs);
+				if (RegExps.VALID_SEASON_LITERAL_RE.test(elt)) {
+					const season = getSeasonFromSyntaxStr(elt, REFS.SeasonDetails);
+					return new StringType(season.Code, REFS, {types: ["season-code"]});
 				} else if (RegExps.VALID_DATE_LITERAL_RE.test(elt)) {
 					return new DateType(elt);
+				} else if (RegExps.VALID_STRING_RE.test(elt)) {
+					return new StringType(elt, REFS, kwargs);
 				} else {
 					throw new Futils.SyntaxException(
 						`Invalid set element; must be a string or date; got: '${elt}'`
@@ -215,19 +248,7 @@ class SetType extends DataType {
 				}
 			});
 		console.log("GOT ELEMENTS: ", elements);
-		let types = new Set();
-		for (const element of elements) {
-			types.add(element.constructor.name);
-		}
-		types = [...types];
-		console.log("GOT TYPES: ", types);
-		if (types.size > 1) {
-			throw new Futils.SyntaxException(
-				`Invalid set; all set elements must have the same data type; 
-                got: types: [${types.join(", ")}]`
-			);
-		}
-		this.type = types[0];
+		this.type = this.getType(elements);
 		this.str = `{${elements.map((data) => data.asString()).join(", ")}}`;
 		this.list = elements.map((data) => data.data);
 		return new Set(this.list);
@@ -239,32 +260,22 @@ class SetType extends DataType {
 
 function parseKeywordAsDataType(str, REFS) {
 	if (RegExps.VALID_SEASON_LITERAL_RE.test(str)) {
-		const toStr = (date) => date.toISOString().slice(0, 10);
+		console.log("Parsing as season");
 		if (REFS.SeasonDetails.length < 1) {
 			throw new Error(
 				`Did not recieve any season details; failed on: '${str}'`
 			);
 		} else if (str === "current-season") {
-			const [start, end] = REFS.SeasonDetails.find(
+			const seasonCode = REFS.SeasonDetails.find(
 				(season) => season["Status"] === "Active"
-			).range;
-			return new RangeType(
-				`${toStr(start)}...=${toStr(end === "N/A" ? new Date() : end)}`
-			);
+			).Code;
+			return new StringType(seasonCode, REFS, { types: ["season-code"] });
 		} else {
-			const seasonNum = Number(str.split("-")[1]);
-			const season = REFS.SeasonDetails.find(
-				(season) => season["Season Number"] === seasonNum
-			);
-			if (!season) {
-				throw new Error(
-					`Invalid season specified; ${seasonNum} is not a valid season number; failed on str: '${str}'`
-				);
-			}
-			const [start, end] = season.range;
-			return new RangeType(`${toStr(start)}...=${toStr(end)}`);
+			const season = getSeasonFromSyntaxStr(str, REFS.SeasonDetails);
+			return new StringType(season.Code, REFS, { types: ["season-code"] });
 		}
 	}
+	throw new Error(`Unrecognized keyword: '${str}'`);
 }
 
 function parseDataType(str, REFS) {

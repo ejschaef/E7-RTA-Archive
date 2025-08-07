@@ -26,12 +26,12 @@ async function handleClick(rowData) {
         console.log("Ignoring click on item with no world code:", item);
         return;
     }
-    const result = await UserManager.findUser({id: item.id, world_code: item.world_code});
-    if (result.error) {
+    const user = await UserManager.findUser({id: item.id, world_code: item.world_code});
+    if (user === null) {
         throw new Error("User not found:", item);
     }
     await UserManager.clearUserData();
-    await UserManager.setUser(result.user);
+    await UserManager.setUser(user);
     IPM.pushActions([IPM.ACTIONS.QUERY_USER]);
     NavBarUtils.navToHome();
 }

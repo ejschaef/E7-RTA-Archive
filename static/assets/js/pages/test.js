@@ -5,23 +5,7 @@ import { buildFormattedBattleMap } from "../e7/battle-transform.js";
 import { getStrMatches } from "../utils.js";
 import { Searcher } from "../e7/searcher.js";
 import ArtifactManager from "../e7/artifact-manager.js";
-
-
-function ingestStringChars(set, strings) {
-	console.log("Ingesting strings:", typeof strings, strings);
-	let length = set.size;
-	for (let str of strings) {
-		for (let char of str) {
-			set.add(char);
-			let newLength = set.size;
-			if (length !== newLength) {
-				console.log("New chars in string:", str, char);
-			}
-			length = newLength;
-		}
-	}
-	
-}
+import SeasonManager from "../e7/season-manager.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 	await ContentManager.ClientCache.clearData();
@@ -34,6 +18,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	// let user = await ContentManager.UserManager.findUser({ id: "195863691" });
 	// let response = await PYAPI.rsFetchBattleData(user.user);
+
+	let seasons = await SeasonManager.getSeasonDetails();
+
+	console.log(`Got seasons:`, seasons, typeof seasons, seasons.length);
 
 	let HM = await ContentManager.HeroManager.getHeroManager();
 	let artifacts = await ContentManager.ArtifactManager.getArtifacts();

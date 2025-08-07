@@ -32,6 +32,7 @@ services:
     container_name: e7-celery-worker-dev
     image: ejschaef/e7-celery-worker:latest
     command: celery -A apps.tasks worker --loglevel=info
+    user: root
     volumes:
       - .:/code
     depends_on:
@@ -47,6 +48,7 @@ services:
     container_name: e7-celery-beat-dev
     image: ejschaef/e7-celery-beat:latest
     command: celery -A apps.tasks beat --loglevel=info
+    user: root
     volumes:
       - .:/code
     depends_on:

@@ -19,6 +19,7 @@ class FieldType {
 			battle[COLUMNS_MAP.DATE_TIME]
 				? new Date(`${battle[COLUMNS_MAP.DATE_TIME]?.slice(0, 10)}T00:00:00`)
 				: "N/A",
+		"season" : (battle) => battle[COLUMNS_MAP.SEASON_CODE],
 		"is-first-pick": (battle) => (battle[COLUMNS_MAP.FIRST_PICK] ? 1 : 0),
 		"is-win": (battle) => (battle[COLUMNS_MAP.WIN] ? 1 : 0),
 		"victory-points": (battle) => battle[COLUMNS_MAP.P1_POINTS],

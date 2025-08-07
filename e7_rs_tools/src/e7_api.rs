@@ -1,4 +1,4 @@
-use crate::battle_info_structs::BattleAPIresponse;
+use crate::battle_api_structs::BattleAPIresponse;
 use once_cell::sync::Lazy;
 use reqwest::{blocking::Client};
 use serde::de::DeserializeOwned;

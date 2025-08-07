@@ -18,20 +18,24 @@ const USER_DATA_KEYS = {
   FILTER_STR: "filter-str",
 }
 
-const Keys = {
-  ...USER_DATA_KEYS,
-  HERO_MANAGER: "hero-manager",
-  SEASON_DETAILS: "season-details",
-  AUTO_ZOOM_FLAG: "auto-zoom",
-  AUTO_QUERY_FLAG: "auto-query",
-  ID_SEARCH_FLAG: "id-search",
+const USER_LIST_KEYS = {
   GLOBAL_USERS: "global-users",
   EU_USERS: "eu-users",
   ASIA_USERS: "asia-users",
   JPN_USERS: "jpn-users",
   KOR_USERS: "kor-users",
+}
+
+const Keys = {
+  ...USER_DATA_KEYS,
+  ...USER_LIST_KEYS,
+  HERO_MANAGER: "hero-manager",
+  SEASON_DETAILS: "season-details",
+  AUTO_ZOOM_FLAG: "auto-zoom",
+  AUTO_QUERY_FLAG: "auto-query",
+  ID_SEARCH_FLAG: "id-search",
   ARTIFACTS: "artifacts", // map of artifact codes to names
-  ARTIFACTS_LOWERCASE_NAMES_SET: "artifacts-lowercase-names-set", // set of artifact lowercase names
+  ARTIFACTS_LOWERCASE_NAMES_MAP: "artifacts-lowercase-names-map", // map of artifact lowercase names to original names
   ARTIFACT_OBJECT_LIST: "artifact-object-list",
   HOME_PAGE_STATE: "home-page-state",
   INTER_PAGE_MANAGER: "inter-page-manager",
@@ -145,6 +149,13 @@ let ClientCache = {
     const toDelete = Object.values(USER_DATA_KEYS);
     await Promise.all(toDelete.map(key => this.delete(key)));
     console.log("User data cleared from data cache");
+  },
+
+
+  clearUserLists: async function() {
+    const toDelete = Object.values(USER_LIST_KEYS);
+    await Promise.all(toDelete.map(key => this.delete(key)));
+    console.log("User lists cleared from data cache");
   },
 
   clearSeasonData: async function() {

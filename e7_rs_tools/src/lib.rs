@@ -1,15 +1,11 @@
-use std::os::raw;
-
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
-use serde::{Deserialize, Serialize, de::DeserializeOwned};
-
 
 pub mod deserializers;
-pub mod battle_info_structs;
+pub mod battle_api_structs;
 pub mod e7_api;
 
-use battle_info_structs::BattleStatsBundle;
+use battle_api_structs::BattleStatsBundle;
 use e7_api::fetch_battle_data;
 
 

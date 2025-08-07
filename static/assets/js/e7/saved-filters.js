@@ -1,5 +1,5 @@
 let SavedFilters = {
-    "Current Season" : "date in current-season",
+    "Current Season" : "season = current-season",
     "First Pick" : "is-first-pick = true",
     "Second Pick" : "is-first-pick = false",
     "Champion+ Opponent" : "p2.league in {champion, warlord, emperor, legend}",

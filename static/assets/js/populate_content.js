@@ -246,9 +246,9 @@ Tables.functions = {
 				},
 			],
 			rowCallback: function (row, data, dataIndex) {
-				const winCell = row.cells[13];
-				const firstPickCell = row.cells[14];
-				const firstTurnCell = row.cells[15];
+				const winCell = row.cells[14];
+				const firstPickCell = row.cells[15];
+				const firstTurnCell = row.cells[16];
 
 				if (data["Win"] === true) {
 					winCell.style.color = "mediumspringgreen";

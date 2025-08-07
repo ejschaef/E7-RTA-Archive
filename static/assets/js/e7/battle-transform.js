@@ -56,6 +56,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
 
     const battle = {
         [COLUMNS_MAP.SEASON]: raw.season_name || "None",
+        [COLUMNS_MAP.SEASON_CODE]: raw.season_code || "None",
         [COLUMNS_MAP.DATE_TIME]: raw.date_time,
         [COLUMNS_MAP.SECONDS]: raw.seconds,
         [COLUMNS_MAP.TURNS]: raw.turns,
@@ -94,12 +95,13 @@ function formatBattleAsRow(raw, HM, artifacts) {
 
 function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
     artifacts = artifacts ?? ArtifactManager.getArtifacts();
-    return Object.fromEntries(rawBattles.map(rawBattle => {
+    let entries = [];
+    for (const rawBattle of rawBattles) {
         let battle = formatBattleAsRow(rawBattle, HeroManager, artifacts);
-        return [battle["Seq Num"], battle];
-    }));
+        entries.push([battle["Seq Num"], battle]);
+    }  
+    return Object.fromEntries(entries); 
 }
-
 
 // takes output of CSV parse and parses the list rows and ensures types are correct
 function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {

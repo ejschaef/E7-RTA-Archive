@@ -1,4 +1,8 @@
-import { WORLD_CODES, WORLD_CODE_TO_CLEAN_STR, WORLD_CODE_ENUM } from "./references.js";
+import {
+	WORLD_CODES,
+	WORLD_CODE_TO_CLEAN_STR,
+	WORLD_CODE_ENUM,
+} from "./references.js";
 import ClientCache from "../cache-manager.js";
 import E7API from "../apis/e7-API.js";
 import PYAPI from "../apis/py-API.js";
@@ -39,105 +43,129 @@ async function getUserMapFromE7Server(world_code) {
 	);
 }
 
-let UserManager = {
-	getUserMap: async function (world_code) {
-		console.log(`Getting user map for world code: ${world_code}`);
-		const cachedUserMap = await ClientCache.get(userMapCacheKeyMap[world_code]);
-		if (cachedUserMap !== null) {
-			console.log("Got user map from cache");
-			return cachedUserMap;
+/**
+ * Gets a user map from the E7 server for the given world code. 
+ * The user map is a map of user IDs to user objects.
+ * If the user map is cached, it will be returned from the cache.
+ * Otherwise, it will be fetched from the E7 server and cached.
+ * @param {string} world_code - The world code to get the user map for.
+ * @returns {Promise<Object.<string, User>>} - The user map for the given world code.
+ */
+async function getUserMap(world_code) {
+	console.log(`Getting user map for world code: ${world_code}`);
+	const cachedUserMap = await ClientCache.get(userMapCacheKeyMap[world_code]);
+	if (cachedUserMap !== null) {
+		console.log("Got user map from cache");
+		return cachedUserMap;
+	}
+	const fetchedUserMap = await getUserMapFromE7Server(world_code);
+	await ClientCache.cache(userMapCacheKeyMap[world_code], fetchedUserMap);
+	return fetchedUserMap;
+}
+
+const cleanStr = (world_code) => WORLD_CODE_TO_CLEAN_STR[world_code];
+
+// tries to find user by ID using client side call to E7 server
+async function findUserWithIdLocally(uid, userWorldCode = null) {
+	for (const worldCode of WORLD_CODES) {
+		if (userWorldCode && userWorldCode !== worldCode) {
+			continue;
 		}
-		const fetchedUserMap = await getUserMapFromE7Server(world_code);
-		await ClientCache.cache(userMapCacheKeyMap[world_code], fetchedUserMap);
-		return fetchedUserMap;
-	},
+		const userMap = await getUserMap(worldCode);
+		const users = Object.values(userMap);
+		if (!users || users.length === 0) {
+			console.log(
+				`User map had no users, falling back to flask server for world code: ${cleanStr(
+					worldCode
+				)}`
+			);
+			return { user: null, ok: false };
+		}
+		const user = users.find((user) => user.id === uid);
+		if (user) {
+			console.log(
+				`Found user: ${JSON.stringify(user)} in world code: ${cleanStr(
+					worldCode
+				)}`
+			);
+			return { user, ok: true };
+		}
+	}
+	return { user: null, ok: true };
+}
 
-	findUser: async function (userData) {
-		let useFlaskServer = false;
-		const cleanStr = world_code => WORLD_CODE_TO_CLEAN_STR[world_code];
+// tries to find user by name using client side call to E7 server
+async function findUserWithNameLocally(name, userWorldCode) {
+	const userMap = await getUserMap(userWorldCode);
+	const users = Object.values(userMap);
+	if (!users || users.length === 0) {
+		console.log(
+			`User map had no users, falling back to flask server for world code: ${cleanStr(
+				userWorldCode
+			)}`
+		);
+		return { user: null, ok: false };
+	} 
+	const lowerCaseName = name.toLowerCase();
+	const user = users.find(
+		(user) => lowerCaseName === user.name.toLowerCase()
+	);
+	if (user) {
+		console.log(
+			`Found user: ${JSON.stringify(user)} in world code: ${cleanStr(
+				userWorldCode
+			)}`
+		);
+		return { user, ok: true };
+	} 
+	return { user: null, ok: true };
+}
 
-		// attempt to find user through client-side means
-		console.log(`Attempting to find user: ${JSON.stringify(userData)}`);
+let UserManager = {
+
+	getUserMap: getUserMap,
+
+	/**
+	 * Finds a user in the user map for the given world code using either user ID or name
+	 * The world code is required
+	 * If the user maps api call fails, will try to find the user by calling flask server
+	 * 
+	 * @param {Object} searchUser - Object with either user ID or name, and world code
+	 * @returns {Object} - Found user object
+	 * @throws {Error} - If user is not found with given identifier in given world code
+	 */
+	findUser: async function (searchUser) {
+		console.log(`Attempting to find user: ${JSON.stringify(searchUser)}`);
+		if (!(searchUser.name || searchUser.id) || !searchUser.world_code) {
+            throw new Error("Must pass a user object with either user.name or user.id, and user.world_code to find user");
+        }
+		let identifier = searchUser.id ? `ID: ${searchUser.id}` : `Name: '${searchUser.name}'`;
+		let result = null;
 
 		// try to find user by ID
-		if (userData.id) {
-			for (const world_code of WORLD_CODES) {
-				if (userData.world_code && userData.world_code !== world_code) {
-					continue;
-				}
-				const userMap = await this.getUserMap(world_code);
-				const users = Object.values(userMap);
-				if (!users || users.length === 0) {
-					console.log(
-						`User map had no users, falling back to flask server for world code: ${cleanStr(world_code)}`
-					);
-					useFlaskServer = true;
-					continue;
-				}
-				const user = users.find((user) => user.id === userData.id);
-				if (user) {
-					console.log(
-						`Found user: ${JSON.stringify(user)} in world code: ${cleanStr(world_code)}`
-					);
-					return { user, error: false };
-				} else {
-					console.log(
-						`Could not find user with ID: ${userData.id} in world code: ${cleanStr(world_code)} from client-side means`
-					);
-				}
-			}
+		if (searchUser.id) {
+			result = await findUserWithIdLocally(searchUser.id, searchUser.world_code);
+		} 
+		// try to find user by name
+		else if (searchUser.name && searchUser.world_code) {
+			result = await findUserWithNameLocally(searchUser.name, searchUser.world_code);
 		}
 
-		// try to find user by name and world code
-		else if (userData.name && userData.world_code) {
-			const [name, world_code] = [userData.name, userData.world_code];
-			const userMap = await this.getUserMap(world_code);
-			const users = Object.values(userMap);
-			if (!users || (users.length === 0)) {
-				console.log(
-					`User map had no users, falling back to flask server for world code: ${cleanStr(world_code)}`
-				);
-				useFlaskServer = true;
-			} else {
-				const lowerCaseName = name.toLowerCase();
-				const user = users.find(
-					(user) => lowerCaseName === user.name.toLowerCase()
-				);
-				if (user) {
-					console.log(
-						`Found user: ${JSON.stringify(user)} in world code: ${cleanStr(world_code)}`
-					);
-					return { user, error: false };
-				} else {
-					console.log(
-						`Could not find user with ID: ${userData.id} in world code: ${cleanStr(world_code)} from client-side means`
-					);
-				}
-			}
-		} else {
-			console.error(
-				"Must pass a user object with either user.name and user.world_code or user.id to fetch user"
-			);
-			return {
-				user: null,
-				error:
-					"Must pass a user object with either user.name and user.world_code or user.id to fetch user",
-			};
+		// if issue, try to fetch from flask
+		if (!result.ok) {
+			result = await PYAPI.fetchUser(searchUser);
 		}
 
-		if (useFlaskServer) {
-			console.log(
-				"Failed to find user through client-side means; falling back to flask server"
-			);
-			// failed to find user through client-side means; make request to flask server
-			const flaskServerResponse = await PYAPI.fetchUser(userData);
-			if (flaskServerResponse.error) {
-				return { user: null, error: flaskServerResponse.error };
+		// result should now be guaranteed to be ok
+		if (result.ok) {
+			const user = result.user;
+			if (user === null) {
+				throw new Error(`Could not find user with ${identifier} in Server: ${cleanStr(searchUser.world_code)}`);
 			}
-			return { user: flaskServerResponse.user, error: false };
-		} else {
-			return { user: null, error: "Could not find user" };
+			return user;
 		}
+
+		throw new Error(`Function did not properly terminate: ${JSON.stringify(result)}`);
 	},
 
 	setUser: async function (userData) {
@@ -153,6 +181,9 @@ let UserManager = {
 	},
 
 	clearUserDataLists: async function () {
+		const clearTargets = [
+
+		]
 		await ClientCache.delete(ClientCache.Keys.GLOBAL_USERS);
 		await ClientCache.delete(ClientCache.Keys.EU_USERS);
 		await ClientCache.delete(ClientCache.Keys.ASIA_USERS);

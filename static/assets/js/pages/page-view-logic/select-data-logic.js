@@ -41,26 +41,25 @@ async function addUserFormListener(stateDispatcher) {
 					? { id: name, world_code }
 					: { name, world_code };
 				console.log("Finding User using:", userObj);
-				const result = await ContentManager.UserManager.findUser(userObj);
-				console.log("Got data:", JSON.stringify(result));
-				if (!result.error) {
-					await HOME_PAGE_FNS.homePageSetUser(result.user);
+				const user = await ContentManager.UserManager.findUser(userObj);
+				console.log("Got data:", JSON.stringify(user));
+				if (user !== null) {
+					await HOME_PAGE_FNS.homePageSetUser(user);
 					CONTEXT.AUTO_QUERY = true;
 					CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.QUERY;
 					stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
 					return;
-				} else {
-					console.log("User Not Found:", result.error);
-					document.getElementById(
-						"select-data-msg"
-					).textContent = `Could not find user: ${name} in server: ${WORLD_CODE_TO_CLEAN_STR[world_code]}`;
 				}
+				PageUtils.setTextRed(
+					DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG,
+					`Could not find user: ${name} in server: ${WORLD_CODE_TO_CLEAN_STR[world_code]}`
+				)
 			} catch (err) {
-				// You can now store the data, process it, or update your app state
 				console.error("Caught Error:", err);
-				document.getElementById(
-					"select-data-msg"
-				).textcontent = `Error encountered: ${err.message}`;
+				PageUtils.setTextRed(
+					DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG,
+					err.message
+				)
 			}
 		}
 	});
@@ -124,12 +123,16 @@ async function initializeSelectDataLogic(stateDispatcher) {
 }
 
 async function runSelectDataLogic(stateDispatcher) {
+
 	const autoQueryFlag = document.getElementById("auto-query-flag");
 	autoQueryFlag.checked = await ContentManager.ClientCache.getFlag("autoQuery");
+
 	const idSearchFlag = DOC_ELEMENTS.HOME_PAGE.ID_SEARCH_FLAG;
 	idSearchFlag.checked = await ContentManager.ClientCache.getFlag("idSearch");
+
 	const msgElement = DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG;
 	msgElement.textContent = "";
+
 	if (CONTEXT.ERROR_MSG) {
 		const errorMSG = CONTEXT.popKey(CONTEXT.KEYS.ERROR_MSG);
 		console.log("Setting Error Message:", errorMSG);

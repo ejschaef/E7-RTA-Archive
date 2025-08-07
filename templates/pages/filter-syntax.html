@@ -97,6 +97,11 @@
                   <td class="cm-default">the date the battle occurred</td>
                 </tr>
                 <tr>
+                  <td class="cm-datafield" style="white-space: nowrap;">season</td>
+                  <td class="cm-def">&rarr;</td>
+                  <td class="cm-default">the season the battle occured (resolves to the internal season code, not the name or number)</td>
+                </tr>
+                <tr>
                   <td class="cm-datafield" style="white-space: nowrap;">is-win</td>
                   <td class="cm-def">&rarr;</td>
                   <td class="cm-default">boolean indicator flagging if the player won</td>
@@ -224,8 +229,11 @@
                   <td class="cm-string" style="white-space: nowrap;">String</td>
                   <td class="cm-def">&rarr;</td>
                   <td class="cm-default">Text based data declared within either double or single quotes (example: "lone
-                    wolf peira").
-                    The quotes are necessary when declared outside of a set
+                    wolf peira"). The quotes are necessary when declared outside of a set. When the string contains a quote,
+                    you must use the opposite quote type to wrap the string. Season keywords like "current-season" will be
+                    converted to string types automatically.
+                    They will take the form of their season code (ie 'pvp_rta_ss[season number here]' like 'pvp_rta_ss17' or 'pvp_rta_ss17f').
+                    Therefore, season codes are valid string literals.
                   </td>
                 </tr>
                 <tr>
@@ -239,9 +247,10 @@
                   <td class="cm-def">&rarr;</td>
                   <td class="cm-default">Used to group multiple individual pieces of data together; declare using the
                     format { x, y, z, ...}.
-                    A trailing comma after the last element is optional. Sets can only contain strings and dates and
-                    must be of a homogeneous type.
-                    Strings within sets do not need to be quoted</td>
+                    A trailing comma after the last element is optional. Sets can only contain string and date literals and
+                    must be of a homogeneous type. Strings within sets do not need to be quoted. Since season keywords like
+                    "current-season" will be converted to string types automatically, they can be used in sets.
+                  </td>
                 </tr>
                 <tr>
                   <td class="cm-range" style="white-space: nowrap;">Range</td>
@@ -256,12 +265,12 @@
                 <tr>
                   <td class="cm-datafield" style="white-space: nowrap;">Season</td>
                   <td class="cm-def">&rarr;</td>
-                  <td class="cm-default">Used to easily define a range of dates corresponding to particular seasons or
-                    preseasons.
+                  <td class="cm-default">
+                    Used to easily filter battles to particular seasons or preseasons.
                     Can be declared by writing "season-n" without quotes, where n is the number of the desired season.
                     Season numbers and dates can be seen in the season details table at the top of the stats page. The
-                    keyword
-                    "current-season" can alternatively be used to access the active season.
+                    keyword "current-season" can alternatively be used to access the active season. A season number appended
+                    with "f" will access the preseason immediately following the season if one exists.
                   </td>
                 </tr>
               </tbody>
@@ -283,29 +292,29 @@
                   <td class="cm-default">Checks if left side is equal to right side.</td>
                 </tr>
                 <tr>
-                  <td class="cm-operator" style="white-space: nowrap;">=</td>
+                  <td class="cm-operator" style="white-space: nowrap;">!=</td>
                   <td class="cm-def">&rarr;</td>
                   <td class="cm-default">Checks if left side is not equal to right side.</td>
                 </tr>
                 <tr>
-                  <td class="cm-operator" style="white-space: nowrap;">></td>
+                  <td class="cm-operator" style="white-space: nowrap;">&gt;</td>
                   <td class="cm-def">&rarr;</td>
                   <td class="cm-default">Checks if left side is greater than right side,</td>
                 </tr>
                 <tr>
-                  <td class="cm-operator" style="white-space: nowrap;">>=</td>
+                  <td class="cm-operator" style="white-space: nowrap;">&gt;=</td>
                   <td class="cm-def">&rarr;</td>
                   <td class="cm-default">Checks if left side is greater than or equal to right side,</td>
                 </tr>
                 <tr>
                   <td class="cm-operator" style="white-space: nowrap;">
-                    << /td>
+                    &lt; </td>
                   <td class="cm-def">&rarr;</td>
                   <td class="cm-default">Checks if left side is less than right side,</td>
                 </tr>
                 <tr>
                   <td class="cm-operator" style="white-space: nowrap;">
-                    <=< /td>
+                    &lt;=</td>
                   <td class="cm-def">&rarr;</td>
                   <td class="cm-default">Checks if left side is less than or equal to right side,</td>
                 </tr>

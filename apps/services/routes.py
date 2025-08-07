@@ -1,14 +1,12 @@
 from apps.services import blueprint
 from flask import request, jsonify
-from apps import config
 from apps.models import *
 from apps.tasks import *
-import logging
 import apps.services.log_utils as log_utils
 import os
 
 
-LOGGER = logging.getLogger(config.Config.LOGGER_NAME)
+LOGGER = log_utils.get_logger()
 
 KEY = os.environ.get('SERVICES_KEY', 'default_services_key')
 
