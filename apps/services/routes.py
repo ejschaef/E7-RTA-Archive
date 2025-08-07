@@ -37,7 +37,6 @@ def validate_timestamp(timestamp):
     return abs(drift) < ALLOWED_TIMESTAMP_DRIFT
 
 def get_services_headers():
-    print(f"Got headers", request.headers)
     return [request.headers.get(header) for header in SERVICES_HEADERS.HEADERS]
 
 def validate_request():
@@ -47,9 +46,7 @@ def validate_request():
         lambda: validate_timestamp(timestamp),
         lambda: validate_signature(key, timestamp, signature, '')
     ]
-    validation_results = [validation() for validation in validations]
-    print(validation_results)
-    return all(validation_results)
+    return all(validation() for validation in validations)
 
 @blueprint.route(ROUTES.DUMP_LOGS, methods=['GET'])
 def dump_logs():
