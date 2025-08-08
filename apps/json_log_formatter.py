@@ -11,11 +11,11 @@ class JsonLogFormatter(logging.Formatter):
         self.fmt_keys = fmt_keys if fmt_keys is not None else {}
 
     @override
-    def format(self, record):
+    def format(self, record) -> str:
         message = self.__prep_log_dict(record)
         return json.dumps(message, default=str)
     
-    def __prep_log_dict(self, record: logging.LogRecord):
+    def __prep_log_dict(self, record: logging.LogRecord) -> dict[str, str | int | dt.datetime]:
         required_fields = {
             "timestamp": dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).isoformat(),
             "message"  : record.getMessage(),

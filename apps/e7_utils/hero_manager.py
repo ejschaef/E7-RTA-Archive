@@ -15,7 +15,7 @@ HERO_JSON_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_her
 PRIMES = list(sympy.primerange(1, 1000000))
 
 
-def get_hero_data(lang="en"):
+def get_hero_data(lang: str="en") -> dict[str, list | dict[str, list]]:
     """
     Use in order to get a json of all the heroes in the game and their hero codes. JSON will be organized by language codes
     """
@@ -28,7 +28,7 @@ def get_hero_data(lang="en"):
     else:
         return file[lang]
     
-def get_int_to_hero_dict(lang="en", json=None):
+def get_int_to_hero_dict(lang="en", json=None) -> dict[int, str]:
     if json:
         heroes = json[lang]
     else:

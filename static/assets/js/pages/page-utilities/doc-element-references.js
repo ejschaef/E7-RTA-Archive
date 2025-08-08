@@ -76,11 +76,35 @@ class HomePageElements {
     get ESCAPE_BTN() {
         return this._ESCAPE_BTN ||= document.getElementById("escape-btn");
     }
+
+    get MESSAGE_ELEMENTS_LIST() {
+        return [this.SELECT_DATA_MSG, this.FILTER_MSG];
+    }
 }
 
 class NavBarElements {
     get SIDEBAR_HIDE_BTN() {
         return this._SIDEBAR_HIDE_BTN ||= document.getElementById("sidebar-hide");
+    }
+
+    get CLEAR_DATA_BTN() {
+        return this._CLEAR_DATA_BTN ||= document.getElementById("clear-data-btn");
+    }
+
+    get USER_NAME() {
+        return this._USER_NAME ||= document.getElementById("user-name");
+    }
+
+    get USER_ID() {
+        return this._USER_ID ||= document.getElementById("user-id");
+    }
+
+    get USER_SERVER() {
+        return this._USER_SERVER ||= document.getElementById("user-server");
+    }
+
+    get SIDEBAR_CONTROL() {
+        return this._SIDEBAR_CONTROL ||= document.getElementById("sidebar-control");
     }
 }
 

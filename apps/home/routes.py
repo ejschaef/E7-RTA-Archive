@@ -23,25 +23,14 @@ from apps.content_manager import get_mngr
 from e7_rs_tools import get_battle_array
 import traceback
 
-import logging
+from apps.services import log_utils
 
 
-LOGGER = logging.getLogger(config.Config.LOGGER_NAME)
-
-########################################################################################################
-# START HELPERS
-########################################################################################################
-
-def generate_short_id():
-    uid = uuid.uuid4()
-    short = base64.urlsafe_b64encode(uid.bytes).rstrip(b'=').decode('utf-8')
-    return short
-
+LOGGER = log_utils.get_logger()
 
 ########################################################################################################
-# END HELPERS
+# Simple Routes
 ########################################################################################################
-
 
 @blueprint.route('/overview')
 def overview():
@@ -83,12 +72,11 @@ def typography():
 # START JS PYAPI DATA SECTION: used for getting data from E7 server to cache client side ; called from PYAPI.js file
 ########################################################################################################
 
-
 @blueprint.route('api/rs_get_battle_data', methods=["POST"])
-def rs_get_battle_data():
+def rs_get_battle_data() -> tuple[str, int]:
     try:
         user_dict = request.get_json()["user"]
-        name, world_code, uid = user_dict["name"], user_dict["world_code"], user_dict["id"]
+        world_code, uid = user_dict["world_code"], user_dict["id"]
         battle_data = get_battle_array(int(uid), world_code)
         log_msg = {
             "len" : len(battle_data),
@@ -104,7 +92,7 @@ def rs_get_battle_data():
 
 
 @blueprint.route('api/get_season_details')
-def get_season_details():
+def get_season_details() -> tuple[str, int]:
     try:
         MNGR = get_mngr()
         return jsonify({
@@ -116,7 +104,7 @@ def get_season_details():
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
     
 @blueprint.route('api/get_artifact_json')
-def get_artifact_json():
+def get_artifact_json() -> tuple[str, int]:
     try:
         MNGR = get_mngr()
         return jsonify({
@@ -128,7 +116,7 @@ def get_artifact_json():
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
 
 @blueprint.route('api/get_hero_data')
-def get_hero_data():
+def get_hero_data() -> tuple[str, int]:
     try:
         MNGR = get_mngr()
         return jsonify(MNGR.HeroManager.json), 200 #Http status code Ok
@@ -137,7 +125,7 @@ def get_hero_data():
 
 
 @blueprint.route('api/get_user_data', methods=["POST"])
-def get_user_data():
+def get_user_data() -> tuple[str, int]:
     try:
         MNGR = get_mngr()
         data = request.get_json()

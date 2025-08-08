@@ -3,8 +3,9 @@ import PYAPI from "../../apis/py-API.js";
 import HeroManager from "../../e7/hero-manager.js";
 import FilterSyntaxParser from "../../e7/filter-parsing/filter-syntax-parser.js";
 import ArtifactManager from "../../e7/artifact-manager.js";
-import { CONTEXT } from "./home-page-context.js";
-import { HOME_PAGE_STATES } from "./page-state-manager.js";
+import { CONTEXT } from "../orchestration/home-page-context.js";
+import { HOME_PAGE_STATES } from "../orchestration/page-state-manager.js";
+import { TextController, TextPacket } from "../orchestration/text-controller.js";
 
 let PageUtils = {
 	queryAndCacheBattles: async function (user, stateDispatcher, HM) {
@@ -42,15 +43,15 @@ let PageUtils = {
 		let filterMSG = document.getElementById("filterMSG");
 		try {
 			await FilterSyntaxParser.createAndParse(str, HM);
-			filterMSG.textContent = "Validation Passed";
-			filterMSG.classList.remove("text-danger");
-			filterMSG.classList.add("text-safe");
+			TextController.write(
+				new TextPacket("Validation Passed", filterMSG, [TextController.STYLES.GREEN])
+			)
 			return true;
 		} catch (err) {
 			console.error(err);
-			filterMSG.textContent = `Validation Failed: ${err.message}`;
-			filterMSG.classList.remove("text-safe");
-			filterMSG.classList.add("text-danger");
+			TextController.write(
+				new TextPacket(`Validation Failed: ${err.message}`, filterMSG, [TextController.STYLES.RED])
+			)
 			return false;
 		}
 	},

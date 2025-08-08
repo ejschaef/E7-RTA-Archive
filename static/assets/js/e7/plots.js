@@ -112,7 +112,6 @@ export function generateRankPlot(container, battles, user, filteredBattles = nul
         responsive: true
     };
 
-    // Generate HTML string
     const plotDiv = document.createElement("div");
 	plotDiv.id = "rank-plot"; // or use a dynamic ID if needed
 	plotDiv.style.width = "100%";

@@ -11,6 +11,7 @@ from apps.redis_manager import GLOBAL_DB
 from apps.config import *
 from datetime import datetime
 import json
+import time
 
 GLOBAL_CLIENT = GLOBAL_DB.get_client()
 
@@ -75,13 +76,13 @@ class ContentManager:
 def get_mngr_from_redis() -> object:
     return GLOBAL_CLIENT.get(CONTENT_MNGR_KEY)
 
+MANAGER_REFRESH_INTERVAL = 3600 * 2 + 60 # 2 hours and 1 minute
+
 def get_mngr() -> ContentManager:
     global _reference_obj, _reference_loaded_at
-
-    import time
     now = time.time()
     # Refresh every 2 hours and 1 minute (3600s), or if not loaded yet
-    if _reference_obj is None or now - _reference_loaded_at > 3600 * 2 + 60:
+    if _reference_obj is None or now - _reference_loaded_at > MANAGER_REFRESH_INTERVAL:
         print("Refreshing ContentManager global from Redis")
         raw = get_mngr_from_redis()
         if raw:

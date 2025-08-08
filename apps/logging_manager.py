@@ -65,7 +65,6 @@ class LogManager:
         
 if __name__ == "__main__":
     log_manager = LogManager()
-    log_manager.delete_logs()
     logs = log_manager.get_logs()
     
 

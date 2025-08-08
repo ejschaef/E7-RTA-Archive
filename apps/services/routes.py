@@ -19,16 +19,16 @@ class ROUTES:
     DUMP_LOGS = "/services/dump_logs"
     DELETE_LOGS = "/services/delete_logs"
 
-def unauthorized(route):
+def unauthorized(route: str) -> tuple[str, int]:
     LOGGER.warning(f"Attempted unauthorized access to {route}")
     return jsonify({ 'error' : "Unauthorized" }), 403
 
-def validate_signature(key, timestamp, signature, request_body):
+def validate_signature(key: str, timestamp: int, signature: str, request_body: str) -> bool:
     message = f"{key}{timestamp}{request_body}"
     expected_signature = hmac.new(key.encode('utf-8'), message.encode('utf-8'), hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected_signature, signature)
 
-def validate_timestamp(timestamp):
+def validate_timestamp(timestamp: str) -> bool:
     try:
         timestamp = int(timestamp)
     except ValueError:
@@ -36,10 +36,10 @@ def validate_timestamp(timestamp):
     drift = int(time.time()) - timestamp
     return abs(drift) < ALLOWED_TIMESTAMP_DRIFT
 
-def get_services_headers():
+def get_services_headers() -> list[str]:
     return [request.headers.get(header) for header in SERVICES_HEADERS.HEADERS]
 
-def validate_request():
+def validate_request() -> bool:
     [key, timestamp, signature] = get_services_headers()
     validations = [
         lambda: all([key, timestamp, signature]),
@@ -49,7 +49,7 @@ def validate_request():
     return all(validation() for validation in validations)
 
 @blueprint.route(ROUTES.DUMP_LOGS, methods=['GET'])
-def dump_logs():
+def dump_logs() -> tuple[str, int]:
     if validate_request() is False:
         return unauthorized(ROUTES.DUMP_LOGS)
     try:
@@ -61,7 +61,7 @@ def dump_logs():
         return jsonify({ 'error' : str(e) }), 500
     
 @blueprint.route('/services/delete_logs', methods=['GET'])
-def delete_logs():
+def delete_logs() -> tuple[str, int]:
     if validate_request() is False:
         return unauthorized(ROUTES.DELETE_LOGS)
     try:

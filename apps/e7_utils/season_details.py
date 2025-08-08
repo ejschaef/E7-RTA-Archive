@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 
-def get_rta_seasons_df():
+def get_rta_seasons_df() -> pd.DataFrame:
         url = "https://epic7.onstove.com/gg/gameApi/getSeasonList?lang=en"
 
         headers = {

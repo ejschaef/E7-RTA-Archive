@@ -8,7 +8,7 @@ Created on Sun Mar 30 13:54:07 2025
 import apps.e7_utils.references as refs
 import apps.e7_utils.utils as utils
 
-def get_all_user_data(world_code: str):
+def get_all_user_data(world_code: str) -> list:
     """
     Gets the json containing all users for the given world code (ie server)
     """
@@ -56,7 +56,7 @@ class UserManager:
             for user in user_list:
                 yield user
         
-    def load_server_users(self, world_code):
+    def load_server_users(self, world_code) -> list[User]:
         user_data = get_all_user_data(world_code)
         if user_data is None:
             raise Exception(f"No User Data returned: code {world_code} not in {refs.WORLD_CODES}")
@@ -97,7 +97,7 @@ class UserManager:
                 self.load_server_users(world_code)
             return self.name_server_dict.get((user_name.lower(), world_code))
                 
-    def get_user_from_id(self, id, world_code=None, all_servers=True) -> User | None:
+    def get_user_from_id(self, id) -> User | None:
         self.load_all(skip_dupicates=True)
         return self.id_dict.get(id)
     
