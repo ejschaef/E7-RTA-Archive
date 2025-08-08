@@ -20,18 +20,19 @@ else:
 GET_LOGS_URL = f"{URL}/services/dump_logs"
 DELETE_LOGS_URL = f"{URL}/services/delete_logs"
 
-SERVICES_KEY = os.environ.get('SERVICES_KEY', 'default_services_key')
+API_KEY = "SERVICES_KEY"
 
 HEADERS = {
-    "User-Agent"  : "log-getter"
+    "User-Agent"  : "log-getter",
     }
 
-create_headers = lambda: {} | HEADERS | generate_services_headers()
+create_headers = lambda: {} | HEADERS | generate_services_headers(API_KEY)
 
 def get_logs() -> dict:
     response = requests.get(GET_LOGS_URL, headers=create_headers())
     if response.ok:
         data = response.json()
+        print("Got Logs")
         return data['logs']
     else:
         raise Exception(f"Failed to fetch logs from {GET_LOGS_URL}. Status Code: {response.status_code}")
@@ -65,6 +66,7 @@ class LogManager:
         
 if __name__ == "__main__":
     log_manager = LogManager()
+    log_manager.delete_logs()
     logs = log_manager.get_logs()
     
 

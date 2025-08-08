@@ -8465,7 +8465,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
-function addNavListeners() {
+function addNavListener() {
   document.querySelectorAll(".nav-link").forEach(function (link) {
     link.addEventListener("click", /*#__PURE__*/function () {
       var _ref = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(event) {
@@ -8583,7 +8583,7 @@ function addSideBarListener() {
   });
 }
 function addHomePageMainListeners() {
-  addNavListeners();
+  addNavListener();
   addClearDataBtnListener();
   addSideBarHideListener();
   addSideBarListener();
@@ -11104,4 +11104,4 @@ main();
 
 /******/ })()
 ;
-//# sourceMappingURL=home-page.a900cf052ec8e9621edf.bundle.js.map
+//# sourceMappingURL=home-page.799b72b951c208b2325a.bundle.js.map

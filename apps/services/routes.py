@@ -13,8 +13,6 @@ LOGGER = log_utils.get_logger()
 
 ALLOWED_TIMESTAMP_DRIFT = 10 # seconds
 
-KEY = os.environ.get('SERVICES_KEY', 'default_services_key')
-
 class ROUTES:
     DUMP_LOGS = "/services/dump_logs"
     DELETE_LOGS = "/services/delete_logs"
@@ -23,7 +21,8 @@ def unauthorized(route: str) -> tuple[str, int]:
     LOGGER.warning(f"Attempted unauthorized access to {route}")
     return jsonify({ 'error' : "Unauthorized" }), 403
 
-def validate_signature(key: str, timestamp: int, signature: str, request_body: str) -> bool:
+def validate_signature(api_key: str, timestamp: int, signature: str, request_body: str) -> bool:
+    key = os.getenv(api_key, "default_services_key")
     message = f"{key}{timestamp}{request_body}"
     expected_signature = hmac.new(key.encode('utf-8'), message.encode('utf-8'), hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected_signature, signature)
@@ -40,11 +39,11 @@ def get_services_headers() -> list[str]:
     return [request.headers.get(header) for header in SERVICES_HEADERS.HEADERS]
 
 def validate_request() -> bool:
-    [key, timestamp, signature] = get_services_headers()
+    [api_key, timestamp, signature] = get_services_headers()
     validations = [
-        lambda: all([key, timestamp, signature]),
+        lambda: all([api_key,timestamp, signature]),
         lambda: validate_timestamp(timestamp),
-        lambda: validate_signature(key, timestamp, signature, '')
+        lambda: validate_signature(api_key, timestamp, signature, '')
     ]
     return all(validation() for validation in validations)
 
