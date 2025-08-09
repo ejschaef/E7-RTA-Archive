@@ -2,12 +2,13 @@ from apps.services import blueprint
 from flask import request, jsonify
 from apps.models import *
 from apps.tasks import *
-import apps.services.log_utils as log_utils
+import apps.logging.log_utils as log_utils
 import os
 import hmac
 import hashlib
 import time
-from apps.services.references import SERVICES_HEADERS
+from apps.services.request_headers import SERVICES_HEADERS
+from apps.services.api_key_names import ApiKeyNames
 
 LOGGER = log_utils.get_logger()
 
@@ -21,8 +22,12 @@ def unauthorized(route: str) -> tuple[str, int]:
     LOGGER.warning(f"Attempted unauthorized access to {route}")
     return jsonify({ 'error' : "Unauthorized" }), 403
 
-def validate_signature(api_key: str, timestamp: int, signature: str, request_body: str) -> bool:
-    key = os.getenv(api_key, "default_services_key")
+def validate_signature(api_key_id: str, timestamp: int, signature: str, request_body: str) -> bool:
+    if api_key_id not in ApiKeyNames.KEY_MAP:
+        LOGGER.error(f"Invalid API Key ID: {api_key_id}")
+        return False
+    api_key_name = ApiKeyNames.KEY_MAP[api_key_id]
+    key = os.getenv(api_key_name, "default_services_key")
     message = f"{key}{timestamp}{request_body}"
     expected_signature = hmac.new(key.encode('utf-8'), message.encode('utf-8'), hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected_signature, signature)
@@ -39,11 +44,11 @@ def get_services_headers() -> list[str]:
     return [request.headers.get(header) for header in SERVICES_HEADERS.HEADERS]
 
 def validate_request() -> bool:
-    [api_key, timestamp, signature] = get_services_headers()
+    [api_key_id, timestamp, signature] = get_services_headers()
     validations = [
-        lambda: all([api_key,timestamp, signature]),
+        lambda: all([api_key_id,timestamp, signature]),
         lambda: validate_timestamp(timestamp),
-        lambda: validate_signature(api_key, timestamp, signature, '')
+        lambda: validate_signature(api_key_id, timestamp, signature, '')
     ]
     return all(validation() for validation in validations)
 

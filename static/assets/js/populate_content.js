@@ -308,39 +308,51 @@ let CardContent = {};
 
 CardContent.functions = {
 	populateGeneralStats: function (general_stats) {
+
 		document.getElementById("total-battles").textContent =
 			general_stats.total_battles;
+
 		document.getElementById("first-pick-count").textContent =
 			general_stats.first_pick_count;
+
 		document.getElementById(
 			"first-pick-rate"
 		).textContent = ` (${general_stats.first_pick_rate})`;
+
 		document.getElementById("second-pick-count").textContent =
 			general_stats.second_pick_count;
+
 		document.getElementById(
 			"second-pick-rate"
 		).textContent = ` (${general_stats.second_pick_rate})`;
 
 		document.getElementById("total-winrate").textContent =
 			general_stats.total_winrate;
+			
 		document.getElementById("first-pick-winrate").textContent =
 			general_stats.first_pick_winrate;
+
 		document.getElementById("second-pick-winrate").textContent =
 			general_stats.second_pick_winrate;
 
 		document.getElementById("total-wins").textContent =
 			general_stats.total_wins;
+
 		document.getElementById("max-win-streak").textContent =
 			general_stats.max_win_streak;
+
 		document.getElementById("max-loss-streak").textContent =
 			general_stats.max_loss_streak;
+
 		document.getElementById("avg-ppg").textContent = general_stats.avg_ppg;
 		document.getElementById("avg-turns").textContent = general_stats.avg_turns;
 		document.getElementById("avg-time").textContent = general_stats.avg_time;
 		document.getElementById("max-turns").textContent = general_stats.max_turns;
 		document.getElementById("max-time").textContent = general_stats.max_time;
+
 		document.getElementById("first-turn-games").textContent =
 			general_stats.first_turn_games;
+
 		document.getElementById("first-turn-rate").textContent =
 			general_stats.first_turn_rate;
 	},

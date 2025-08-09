@@ -23,7 +23,7 @@ from apps.content_manager import get_mngr
 from e7_rs_tools import get_battle_array
 import traceback
 
-from apps.services import log_utils
+from apps.logging import log_utils
 
 
 LOGGER = log_utils.get_logger()

@@ -14,7 +14,7 @@ from   flask import session
 from sys import exit
 
 from apps.config import config_dict
-from apps.services import log_utils
+from apps.logging import log_utils
 from apps import create_app, db
 import json
 import logging
