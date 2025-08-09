@@ -1,13 +1,13 @@
 import {
 	PageStateManager,
 	HOME_PAGE_STATES,
-} from "../../page-state-manager.js";
-import { NavBarUtils } from "../../../page-utilities/nav-bar-utils.js";
-import {TextUtils} from "../../text-controller.js";
-import { CONTEXT } from "../../home-page-context.js";
-import DOC_ELEMENTS from "../../../page-utilities/doc-element-references.js";
-import UserManager from "../../../../e7/user-manager.js";
-import { stateDispatcher, resizeRankPlot } from "../../dispatchers/home-page-dispatch.js";
+} from "../orchestration/page-state-manager.js";
+import { NavBarUtils } from "../page-utilities/nav-bar-utils.js";
+import { TextUtils } from "../orchestration/text-controller.js";
+import { CONTEXT } from "./home-page-context.js";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
+import UserManager from "../../e7/user-manager.js";
+import { stateDispatcher, resizeRankPlot } from "./home-page-dispatch.js";
 
 function addNavListener() {
 	document.querySelectorAll(".nav-link").forEach((link) => {
@@ -51,7 +51,9 @@ function addClearDataBtnListener() {
 			if (user) {
 				await UserManager.clearUserData();
 				NavBarUtils.writeUserInfo(null);
-				TextUtils.queueSelectDataMsgGreen(`Cleared data of user ${user.name} (${user.id})`);
+				TextUtils.queueSelectDataMsgGreen(
+					`Cleared data of user ${user.name} (${user.id})`
+				);
 				await stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
 				CONTEXT.SCROLL_PERCENTS[HOME_PAGE_STATES.SHOW_STATS] = 0; // reset scroll position of show stats page when user data cleared
 			} else {
@@ -73,18 +75,18 @@ function addSideBarHideListener() {
 }
 
 function addSideBarListener() {
-    DOC_ELEMENTS.NAV_BAR.SIDEBAR_CONTROL.addEventListener(
-        "click",
-        function (_event) {
-            console.log("Triggered sidebar listener");
-            resizeRankPlot();
-        }
-    );
+	DOC_ELEMENTS.NAV_BAR.SIDEBAR_CONTROL.addEventListener(
+		"click",
+		function (_event) {
+			console.log("Triggered sidebar listener");
+			resizeRankPlot();
+		}
+	);
 }
 
-export function addHomePageMainListeners() {
-    addNavListener();
-    addClearDataBtnListener();
-    addSideBarHideListener();
-    addSideBarListener();
+export function addHomePageListeners() {
+	addNavListener();
+	addClearDataBtnListener();
+	addSideBarHideListener();
+	addSideBarListener();
 }

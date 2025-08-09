@@ -3,10 +3,10 @@ import {
 	Tables,
 	ContentManager,
 	SavedFilters,
-} from "../../../../exports.js";
-import { CONTEXT } from "../../../orchestration/home-page-context.js";
-import { HOME_PAGE_STATES } from "../../../orchestration/page-state-manager.js";
-import DOC_ELEMENTS from "../../../page-utilities/doc-element-references.js";
+} from "../../../../../exports.js";
+import { CONTEXT } from "../../../home-page-context.js";
+import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
+import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 
 function addBattleTableFilterToggleListener() {
 	console.log("Setting listener for filter-battle-table checkbox");
@@ -102,4 +102,11 @@ function addPrivateStatsListeners(editor, stateDispatcher) {
 	addFilterButtonListeners(editor, stateDispatcher);
 }
 
-export { addPublicStatsListeners, addPrivateStatsListeners };
+function addStatsListeners(editor, stateDispatcher) {
+	addAutoZoomListener();
+	addBattleTableFilterToggleListener();
+	addPremadeFilterButtonListener(editor);
+	addFilterButtonListeners(editor, stateDispatcher);
+}
+
+export { addStatsListeners };

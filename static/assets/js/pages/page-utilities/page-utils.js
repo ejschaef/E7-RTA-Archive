@@ -3,9 +3,12 @@ import PYAPI from "../../apis/py-API.js";
 import HeroManager from "../../e7/hero-manager.js";
 import FilterSyntaxParser from "../../e7/filter-parsing/filter-syntax-parser.js";
 import ArtifactManager from "../../e7/artifact-manager.js";
-import { CONTEXT } from "../orchestration/home-page-context.js";
+import { CONTEXT } from "../home-page/home-page-context.js";
 import { HOME_PAGE_STATES } from "../orchestration/page-state-manager.js";
-import { TextController, TextPacket } from "../orchestration/text-controller.js";
+import {
+	TextController,
+	TextPacket,
+} from "../orchestration/text-controller.js";
 
 let PageUtils = {
 	queryAndCacheBattles: async function (user, stateDispatcher, HM) {
@@ -44,14 +47,18 @@ let PageUtils = {
 		try {
 			await FilterSyntaxParser.createAndParse(str, HM);
 			TextController.write(
-				new TextPacket("Validation Passed", filterMSG, [TextController.STYLES.GREEN])
-			)
+				new TextPacket("Validation Passed", filterMSG, [
+					TextController.STYLES.GREEN,
+				])
+			);
 			return true;
 		} catch (err) {
 			console.error(err);
 			TextController.write(
-				new TextPacket(`Validation Failed: ${err.message}`, filterMSG, [TextController.STYLES.RED])
-			)
+				new TextPacket(`Validation Failed: ${err.message}`, filterMSG, [
+					TextController.STYLES.RED,
+				])
+			);
 			return false;
 		}
 	},

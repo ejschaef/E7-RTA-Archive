@@ -1,13 +1,17 @@
-import UserManager from "../../../../e7/user-manager.js";
+import UserManager from "../../../../../e7/user-manager.js";
 import {
 	RegExps,
 	Tables,
 	CardContent,
 	ContentManager,
-} from "../../../../exports.js";
-import { addPrivateStatsListeners } from "./stats-listeners.js";
-import { HOME_PAGE_STATES } from "../../../orchestration/page-state-manager.js";
-import DOC_ELEMENTS from "../../../page-utilities/doc-element-references.js";
+} from "../../../../../exports.js";
+import {
+	addPrivateStatsListeners,
+	addStatsListeners,
+} from "./stats-listeners.js";
+import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
+import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
+import { CONTEXT } from "../../../home-page-context.js";
 
 async function populateContent() {
 	const user = await UserManager.getUser();
@@ -76,7 +80,7 @@ async function populateContent() {
 	}
 }
 
-async function addCodeMirror(stateDispatcher) {
+async function addCodeMirror() {
 	CodeMirror.defineMode("filterSyntax", function () {
 		return {
 			token: function (stream, state) {
@@ -108,19 +112,24 @@ async function addCodeMirror(stateDispatcher) {
 
 	// Show the editor after it's initialized
 	textarea.classList.remove("codemirror-hidden");
+	CONTEXT.CODE_MIRROR_EDITOR = editor;
 	return editor;
-}
-
-async function postFirstRenderLogic(stateDispatcher) {
-	const editor = await addCodeMirror(stateDispatcher);
-	addPrivateStatsListeners(editor, stateDispatcher);
 }
 
 async function preFirstRenderLogic() {
 	await populateContent();
 }
 
-async function runStatsLogic(stateDispatcher) {
+async function postFirstRenderLogic() {
+	const editor = CONTEXT.CODE_MIRROR_EDITOR;
+	if (!editor) {
+		console.error("Editor not found in CONTEXT");
+		return;
+	}
+	editor.refresh();
+}
+
+async function runLogic(stateDispatcher) {
 	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
 	const checked = await ContentManager.ClientCache.getFlag("autoZoom");
 	autoZoomCheckbox.checked = checked;
@@ -145,11 +154,17 @@ async function runStatsLogic(stateDispatcher) {
 	DOC_ELEMENTS.HOME_PAGE.USER_QUERY_FORM_NAME.value = "";
 }
 
-let StatsViewFns = {
-	postFirstRenderLogic,
-	runStatsLogic,
-	populateContent,
-	preFirstRenderLogic,
+async function initialize(stateDispatcher) {
+	const editor = await addCodeMirror();
+	await addStatsListeners(editor, stateDispatcher);
+}
+
+let StatsView = {
+	preFirstRenderLogic: preFirstRenderLogic,
+	postFirstRenderLogic: postFirstRenderLogic,
+	runLogic: runLogic,
+	initialize: initialize,
+	populateContent: populateContent,
 };
 
-export { StatsViewFns };
+export { StatsView };

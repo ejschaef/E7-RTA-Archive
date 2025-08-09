@@ -1,18 +1,19 @@
-import { CONTEXT } from "../../../orchestration/home-page-context.js";
+import { CONTEXT } from "../../../home-page-context.js";
 import {
 	HOME_PAGE_FNS,
 	HOME_PAGE_STATES,
-} from "../../../orchestration/page-state-manager.js";
-import ClientCache from "../../../../cache-manager.js";
-import UserManager from "../../../../e7/user-manager.js";
-import BattleManager from "../../../../e7/battle-manager.js";
-import HeroManager from "../../../../e7/hero-manager.js";
-import { ContentManager, CSVParse } from "../../../../exports.js";
-import { PageUtils } from "../../../../exports.js";
-import { StatsViewFns } from "../stats/stats-logic.js";
-import { CLEAN_STR_TO_WORLD_CODE } from "../../../../e7/references.js";
-import { TextUtils } from "../../../orchestration/text-controller.js";
-import { NavBarUtils } from "../../../page-utilities/nav-bar-utils.js";
+} from "../../../../orchestration/page-state-manager.js";
+import ClientCache from "../../../../../cache-manager.js";
+import UserManager from "../../../../../e7/user-manager.js";
+import BattleManager from "../../../../../e7/battle-manager.js";
+import HeroManager from "../../../../../e7/hero-manager.js";
+import { ContentManager, CSVParse } from "../../../../../exports.js";
+import { PageUtils } from "../../../../../exports.js";
+import { StatsView } from "../stats/stats-logic.js";
+import { CLEAN_STR_TO_WORLD_CODE } from "../../../../../e7/references.js";
+import { TextUtils } from "../../../../orchestration/text-controller.js";
+import { NavBarUtils } from "../../../../page-utilities/nav-bar-utils.js";
+import { addLoadDataListeners } from "./load-data-listeners.js";
 
 async function processUpload() {
 	const selectedFile = await ClientCache.get(ClientCache.Keys.RAW_UPLOAD);
@@ -71,7 +72,7 @@ async function redirectError(err, source, stateDispatcher) {
 	return;
 }
 
-async function runLoadDataLogic(stateDispatcher) {
+async function runLogic(stateDispatcher) {
 	let [HM, SOURCE, autoQuery] = [null, null, null];
 	try {
 		HM = await HeroManager.getHeroManager();
@@ -115,8 +116,8 @@ async function runLoadDataLogic(stateDispatcher) {
 		const stats = await BattleManager.getStats(battles, filters, HM);
 		await ClientCache.setStats(stats);
 
-		await StatsViewFns.populateContent(); // populates tables and plots in show stats view before showing
-		CONTEXT.STATS_PRE_RENDER_COMPLETED = true;
+		await StatsView.populateContent(); // populates tables and plots in show stats view before showing
+		CONTEXT.STATS_PRE_RENDER_COMPLETED = true; // flag that the stats page doesn't need to run populate content itself
 		stateDispatcher(HOME_PAGE_STATES.SHOW_STATS);
 		console.log("REACHED END OF LOAD DATA LOGIC");
 		return;
@@ -134,4 +135,13 @@ async function runLoadDataLogic(stateDispatcher) {
 	}
 }
 
-export { runLoadDataLogic };
+function initialize() {
+	addLoadDataListeners();
+}
+
+let LoadDataView = {
+	runLogic: runLogic,
+	initialize: initialize,
+};
+
+export { LoadDataView };

@@ -18,7 +18,7 @@ const USER_DATA_KEYS = {
   FILTER_STR: "filter-str",
 }
 
-const USER_LIST_KEYS = {
+const SERVER_USER_LISTS_KEYS = {
   GLOBAL_USERS: "global-users",
   EU_USERS: "eu-users",
   ASIA_USERS: "asia-users",
@@ -28,7 +28,7 @@ const USER_LIST_KEYS = {
 
 const Keys = {
   ...USER_DATA_KEYS,
-  ...USER_LIST_KEYS,
+  ...SERVER_USER_LISTS_KEYS,
   HERO_MANAGER: "hero-manager",
   SEASON_DETAILS: "season-details",
   AUTO_ZOOM_FLAG: "auto-zoom",
@@ -153,7 +153,7 @@ let ClientCache = {
 
 
   clearUserLists: async function() {
-    const toDelete = Object.values(USER_LIST_KEYS);
+    const toDelete = Object.values(SERVER_USER_LISTS_KEYS);
     await Promise.all(toDelete.map(key => this.delete(key)));
     console.log("User lists cleared from data cache");
   },

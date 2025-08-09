@@ -1,15 +1,15 @@
-import { ContentManager } from "../../../../exports.js";
+import { ContentManager } from "../../../../../exports.js";
 import {
 	HOME_PAGE_STATES,
 	HOME_PAGE_FNS,
-} from "../../../orchestration/page-state-manager.js";
-import { CONTEXT } from "../../../orchestration/home-page-context.js";
-import DOC_ELEMENTS from "../../../page-utilities/doc-element-references.js";
-import { WORLD_CODE_TO_CLEAN_STR } from "../../../../e7/references.js";
+} from "../../../../orchestration/page-state-manager.js";
+import { CONTEXT } from "../../../home-page-context.js";
+import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
+import { WORLD_CODE_TO_CLEAN_STR } from "../../../../../e7/references.js";
 import {
 	TextController,
 	TextPacket,
-} from "../../../orchestration/text-controller.js";
+} from "../../../../orchestration/text-controller.js";
 
 function writeMsgRed(msg) {
 	TextController.write(

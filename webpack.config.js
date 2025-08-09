@@ -13,7 +13,7 @@ module.exports = {
     }),
   ],
   entry: {
-    "home-page"     : './static/assets/js/pages/home-page.js',
+    "home-page"     : './static/assets/js/pages/home-page/home-page.js',
     "filter-syntax" : './static/assets/js/pages/filter-syntax.js',
     "test"          : './static/assets/js/pages/test.js',
     "search"        : './static/assets/js/pages/search.js',

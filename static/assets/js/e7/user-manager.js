@@ -65,37 +65,16 @@ async function getUserMap(world_code) {
 
 const cleanStr = (world_code) => WORLD_CODE_TO_CLEAN_STR[world_code];
 
-// tries to find user by ID using client side call to E7 server
-async function findUserWithIdLocally(uid, userWorldCode = null) {
-	for (const worldCode of WORLD_CODES) {
-		if (userWorldCode && userWorldCode !== worldCode) {
-			continue;
-		}
-		const userMap = await getUserMap(worldCode);
-		const users = Object.values(userMap);
-		if (!users || users.length === 0) {
-			console.log(
-				`User map had no users, falling back to flask server for world code: ${cleanStr(
-					worldCode
-				)}`
-			);
-			return { user: null, ok: false };
-		}
-		const user = users.find((user) => user.id === uid);
-		if (user) {
-			console.log(
-				`Found user: ${JSON.stringify(user)} in world code: ${cleanStr(
-					worldCode
-				)}`
-			);
-			return { user, ok: true };
-		}
+function findUser(userData, users, dataExtractFn) {
+	const user = users.find((user) => dataExtractFn(user) === userData);
+	if (user) {
+		console.log(`Found user: ${JSON.stringify(user)}`);
+		return { user, ok: true };
 	}
 	return { user: null, ok: true };
 }
 
-// tries to find user by name using client side call to E7 server
-async function findUserWithNameLocally(name, userWorldCode) {
+async function findUserClientSide(user, userWorldCode) {
 	const userMap = await getUserMap(userWorldCode);
 	const users = Object.values(userMap);
 	if (!users || users.length === 0) {
@@ -105,20 +84,20 @@ async function findUserWithNameLocally(name, userWorldCode) {
 			)}`
 		);
 		return { user: null, ok: false };
-	} 
-	const lowerCaseName = name.toLowerCase();
-	const user = users.find(
-		(user) => lowerCaseName === user.name.toLowerCase()
-	);
-	if (user) {
-		console.log(
-			`Found user: ${JSON.stringify(user)} in world code: ${cleanStr(
-				userWorldCode
-			)}`
+	}
+	let [userData, dataExtractFn] = [null, null];
+	if (user.id) {
+		userData = user.id;
+		dataExtractFn = (user) => user.id;
+	} else if (user.name) {
+		userData = user.name.toLowerCase();
+		dataExtractFn = (user) => user.name.toLowerCase();
+	} else {
+		throw new Error(
+			"Must pass a user object with either user.name or user.id to find user"
 		);
-		return { user, ok: true };
-	} 
-	return { user: null, ok: true };
+	}
+	return findUser(userData, users, dataExtractFn);
 }
 
 let UserManager = {
@@ -142,21 +121,14 @@ let UserManager = {
 		let identifier = searchUser.id ? `ID: ${searchUser.id}` : `Name: '${searchUser.name}'`;
 		let result = null;
 
-		// try to find user by ID
-		if (searchUser.id) {
-			result = await findUserWithIdLocally(searchUser.id, searchUser.world_code);
-		} 
-		// try to find user by name
-		else if (searchUser.name && searchUser.world_code) {
-			result = await findUserWithNameLocally(searchUser.name, searchUser.world_code);
-		}
+		result = await findUserClientSide(searchUser, searchUser.world_code);
 
 		// if issue, try to fetch from flask
 		if (!result.ok) {
 			result = await PYAPI.fetchUser(searchUser);
 		}
 
-		// result should now be guaranteed to be ok
+		// result should now be guaranteed to be ok otherwise error would have been thrown
 		if (result.ok) {
 			const user = result.user;
 			if (user === null) {
@@ -181,14 +153,7 @@ let UserManager = {
 	},
 
 	clearUserDataLists: async function () {
-		const clearTargets = [
-
-		]
-		await ClientCache.delete(ClientCache.Keys.GLOBAL_USERS);
-		await ClientCache.delete(ClientCache.Keys.EU_USERS);
-		await ClientCache.delete(ClientCache.Keys.ASIA_USERS);
-		await ClientCache.delete(ClientCache.Keys.JPN_USERS);
-		await ClientCache.delete(ClientCache.Keys.KOR_USERS);
+		await ClientCache.clearUserLists();
 	},
 };
 
