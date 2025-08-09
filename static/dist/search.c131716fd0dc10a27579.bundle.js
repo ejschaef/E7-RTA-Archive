@@ -7721,7 +7721,8 @@ var CONTEXT_KEYS = {
   STATS_PRE_RENDER_COMPLETED: "STATS_PRE_RENDER_COMPLETED",
   HOME_PAGE_STATE: "STATE",
   SCROLL_PERCENTS: "SCROLL_PERCENTS",
-  CODE_MIRROR_EDITOR: "CODE_MIRROR_EDITOR"
+  CODE_MIRROR_EDITOR: "CODE_MIRROR_EDITOR",
+  TRY_SET_USER: "TRY_SET_USER"
 };
 var CONTEXT = {
   KEYS: CONTEXT_KEYS,
@@ -7734,6 +7735,7 @@ var CONTEXT = {
   HOME_PAGE_STATE: null,
   SCROLL_PERCENTS: SCROLL_PERCENTS,
   CODE_MIRROR_EDITOR: null,
+  TRY_SET_USER: null,
   popKey: function popKey(key) {
     var value = this[key];
     this[key] = this._getDefault(key);
@@ -7760,6 +7762,8 @@ var CONTEXT = {
         return SCROLL_PERCENTS;
       case CONTEXT_KEYS.CODE_MIRROR_EDITOR:
         throw new Error("No default value for key: ".concat(key, " ; do not use popKey or _getDefault for this key"));
+      case CONTEXT_KEYS.TRY_SET_USER:
+        return null;
       default:
         return null;
     }
@@ -9172,4 +9176,4 @@ function getStrMatches(str, strings) {
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=search.0d464a9e9165a26a195e.bundle.js.map
+//# sourceMappingURL=search.c131716fd0dc10a27579.bundle.js.map

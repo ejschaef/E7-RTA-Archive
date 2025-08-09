@@ -27,6 +27,7 @@ const CONTEXT_KEYS = {
 	HOME_PAGE_STATE: "STATE",
 	SCROLL_PERCENTS: "SCROLL_PERCENTS",
 	CODE_MIRROR_EDITOR: "CODE_MIRROR_EDITOR",
+	TRY_SET_USER: "TRY_SET_USER",
 };
 
 const CONTEXT = {
@@ -41,6 +42,7 @@ const CONTEXT = {
 	HOME_PAGE_STATE: null,
 	SCROLL_PERCENTS: SCROLL_PERCENTS,
 	CODE_MIRROR_EDITOR: null,
+	TRY_SET_USER: null,
 
 	popKey: function (key) {
 		const value = this[key];
@@ -70,6 +72,8 @@ const CONTEXT = {
 				return SCROLL_PERCENTS;
 			case CONTEXT_KEYS.CODE_MIRROR_EDITOR:
 				throw new Error(`No default value for key: ${key} ; do not use popKey or _getDefault for this key`);
+			case CONTEXT_KEYS.TRY_SET_USER:
+				return null;
 			default:
 				return null;
 		}

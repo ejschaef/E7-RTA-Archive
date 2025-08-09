@@ -1,6 +1,6 @@
 from flask import has_request_context, request
 import logging
-from apps.logging.log_ip_hash import hash_ip
+from apps.logging.hash_ip import hash_ip
 
 class RequestInfoFilter(logging.Filter):
     def filter(self, record) -> bool:

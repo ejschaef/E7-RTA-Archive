@@ -14,6 +14,7 @@ import { CLEAN_STR_TO_WORLD_CODE } from "../../../../../e7/references.js";
 import { TextUtils } from "../../../../orchestration/text-controller.js";
 import { NavBarUtils } from "../../../../page-utilities/nav-bar-utils.js";
 import { addLoadDataListeners } from "./load-data-listeners.js";
+import { WORLD_CODE_TO_CLEAN_STR } from "../../../../../e7/references.js";
 
 async function processUpload() {
 	const selectedFile = await ClientCache.get(ClientCache.Keys.RAW_UPLOAD);
@@ -72,6 +73,16 @@ async function redirectError(err, source, stateDispatcher) {
 	return;
 }
 
+async function try_find_user(userObj) {
+	console.log("Finding User using:", userObj);
+	const user = await UserManager.findUser(userObj);
+	console.log("Got data:", JSON.stringify(user));
+	if (user !== null) {
+		return user;
+	}
+	return null;
+}
+
 async function runLogic(stateDispatcher) {
 	let [HM, SOURCE, autoQuery] = [null, null, null];
 	try {
@@ -91,6 +102,13 @@ async function runLogic(stateDispatcher) {
 			await UserManager.setUser(user);
 			NavBarUtils.writeUserInfo(user);
 			await BattleManager.cacheUpload(result.battleArr, HM);
+		} else if (SOURCE === CONTEXT.VALUES.SOURCE.QUERY) {
+			const userObj = CONTEXT.popKey(CONTEXT.KEYS.TRY_SET_USER);
+			if (userObj === null) 
+				throw new Error("TRY_SET_USER User missing from CONTEXT");
+			user = await try_find_user(userObj); // find user automatically throws error if not found
+			await UserManager.setUser(user);
+			NavBarUtils.writeUserInfo(user);
 		}
 
 		if (user === null) {
@@ -98,7 +116,7 @@ async function runLogic(stateDispatcher) {
 		}
 
 		// if new user query or auto query from upload battles we query the users battles from the server and add to cache
-		if (autoQuery) {
+		if (autoQuery || SOURCE === CONTEXT.VALUES.SOURCE.QUERY) {
 			await handleBattleQuery(user, stateDispatcher, HM);
 		}
 

@@ -57,19 +57,11 @@ async function addUserFormListener(stateDispatcher) {
 				const userObj = idSearchFlag
 					? { id: name, world_code }
 					: { name, world_code };
-				console.log("Finding User using:", userObj);
-				const user = await ContentManager.UserManager.findUser(userObj);
-				console.log("Got data:", JSON.stringify(user));
-				if (user !== null) {
-					await HOME_PAGE_FNS.homePageSetUser(user);
-					CONTEXT.AUTO_QUERY = true;
-					CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.QUERY;
-					stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
-					return;
-				}
-				writeMsgRed(
-					`Could not find user: ${name} in server: ${WORLD_CODE_TO_CLEAN_STR[world_code]}`
-				);
+				CONTEXT.TRY_SET_USER = userObj;
+				CONTEXT.AUTO_QUERY = true;
+				CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.QUERY;
+				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
+				return;
 			} catch (err) {
 				console.error("Caught Error:", err);
 				writeMsgRed(err.message);
