@@ -1,0 +1,46 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: e7-redis-server
+    ports:
+      - "6379:6379"
+
+  flask-app:
+    image: ejschaef/e7-flask-app:latest
+    container_name: e7-flask-app
+    environment:
+      - SALT_STRING=${SALT_STRING:-default_salt}
+      - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
+    expose:
+      - "8000"
+    depends_on:
+      - redis
+
+  celery-worker:
+    image: ejschaef/e7-celery-worker:latest
+    container_name: e7-celery-worker
+    environment:
+      - SALT_STRING=${SALT_STRING:-default_salt}
+      - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
+    command: celery -A apps.tasks worker --loglevel=info --concurrency=1
+    depends_on:
+      - redis
+
+  celery-beat:
+    image: ejschaef/e7-celery-beat:latest
+    container_name: e7-celery-beat
+    environment:
+      - SALT_STRING=${SALT_STRING:-default_salt}
+      - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
+    command: celery -A apps.tasks beat --loglevel=info
+    depends_on:
+      - celery-worker
+      - redis
+
+  nginx:
+    image: nginx:latest
+    container_name: e7-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - flask-app

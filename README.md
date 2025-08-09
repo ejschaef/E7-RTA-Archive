@@ -1,4 +1,4 @@
-# [E7-Ventus-Archive](https://not_implemented_8482398710238)
+# [E7-Ventus-Archive](https://Ventus-Archive.org)
 
 Open-source **Flask** project utilizing **Datta Able Dashboard** as a base, an open-source `Bootstrap` design.
 The web app is designed to provide Epic 7 players the ability to maintain their RTA History past 100 battles,
@@ -28,35 +28,106 @@ The web app is not meant to be viewed in portrait mode. The site will work, but 
 - containerization            : docker
 - version control             : github
 - server proxy                : nginx
-- JS bundling                 : webpack
+- JS/CSS bundling             : webpack
 - front end framework         : vanilla JS
 - Domain hosting              : cloudflare
 - instance hosting            : lightsail
 
-## Design
+## Client-Server Design
 
-The web app mainly operates through front end JS. The only API calls that must run through the flask server
+The web app mainly operates through front end JS. The only E7 related API calls that must run through the flask server
 are the latest battle lookups. These api calls are made through Rust and logged. All other content will be primarily
-served through client-side calls and cached whenever possible. 
+served through client-side calls and cached whenever possible. Only when the client-side API calls fall will the client
+make a call to the flask server.
 
-The app does not utilize a JS framework. All functionality related to page and state management is implemented in with
+The app does not utilize a JS framework. All functionality related to page and state management is implemented with
 Vanilla JS and Index DB. 
 
 ## Running Locally
-- **Option 1**: 
-install docker then run the docker-compose.prod.yaml file found in this repo
-- **Option 2** (use if want to make custom changes to the app): 
-locally install the repository to a directory, install docker, then run the docker-compose.dev.yaml 
-file within the directory
-- **Option 3** (use if want to make custom changes and don't want to use docker): 
-    - locally install the repository
-    - install all requirements of Node and Python (see requirements.txt and package.json)
-    - install rust and cargo with rust up
-    - install maturin and develop the rust package to install into the desired Python environment.
-    - run npx webpack to build JS if any changes are made to existing JS
-    - make necessary changes to config files to remove docker specific dependencies
-    - run the commands for the celery, celery beat, redis, and nginx services locally (to mimick the docker services)
-    - use Python to run run.py
+**Option 1** (install docker and run remotely): 
+Install docker, download the docker-compose.release.yaml file from this repository then run while docker is running. For Windows you must first install [Docker for Windows](https://docs.docker.com/desktop/setup/install/windows-install/); for Mac you must first install [Docker for Mac](https://docs.docker.com/desktop/setup/install/mac-install/). Navigate to [localhost](http://localhost) once the server is running.
+
+  - Linux
+      ```sh
+      # Install Docker
+      apt update && sudo apt install -y docker.io
+
+      # Enable and start Docker
+      systemctl enable docker
+      systemctl start docker
+
+      # Install Docker Compose v2
+      curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      sudo chmod +x /usr/local/bin/docker-compose
+
+      # Test it
+      docker-compose version
+
+      # pull the images and run after downloading the yaml file
+      docker-compose -f docker-compose.release.yaml pull
+      docker-compose -f docker-compose.release.yaml up
+      ```
+  - Mac/Windows
+      ```sh
+      # First download docker desktop and run it
+
+      # Verify docker is running
+      docker --version
+      docker-compose --version
+
+
+      # pull the images and run after downloading the yaml file
+      docker-compose -f docker-compose.release.yaml pull
+      docker-compose -f docker-compose.release.yaml up
+      ```
+
+**Option 2** (clone repo and run; sets up local development environement to make custom changes): 
+install docker, locally install the repository to a directory, then run the docker-compose.dev.yaml 
+file within the directory. For Windows you must first install [Docker for Windows](https://docs.docker.com/desktop/setup/install/windows-install/); for Mac you must first install [Docker for Mac](https://docs.docker.com/desktop/setup/install/mac-install/). Navigate to [localhost](http://localhost) once the server is running.
+
+- Linux
+    ```sh
+    # Install Docker
+    apt update && sudo apt install -y docker.io
+
+    # Enable and start Docker
+    systemctl enable docker
+    systemctl start docker
+
+    # Install Docker Compose v2
+    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+
+    # Test it
+    docker-compose version
+
+    # Clone the repository
+    git clone https://github.com/ejschaef/E7-Ventus-Archive
+
+    cd E7-Ventus-Archive
+
+    # pull the images and run
+    docker-compose -f docker-compose.dev.yaml pull
+    docker-compose -f docker-compose.dev.yaml up
+    ```
+- Mac/Windows
+    ```sh
+    # First download docker desktop and run it
+
+    # Verify docker is running
+    docker --version
+    docker-compose --version
+
+    # Clone the repository
+    git clone https://github.com/ejschaef/E7-Ventus-Archive
+
+    cd E7-Ventus-Archive
+
+    # pull the images and run
+    docker-compose -f docker-compose.dev.yaml pull
+    docker-compose -f docker-compose.dev.yaml up
+    ```
+
 <br />
 
 ---
