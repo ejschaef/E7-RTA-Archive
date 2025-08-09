@@ -18,13 +18,9 @@ function getSeasonFromSyntaxStr(str, seasonDetails) {
 }
 
 class DataType {
-	constructor(str, REFS = null, kwargs = null) {
+	constructor(str, REFS = {}, kwargs = null) {
 		this.rawString = str;
-		if (kwargs === null) {
-			this.data = this.getData(str, REFS);
-		} else {
-			this.data = this.getData(str, REFS, kwargs); // kwargs will be an object with specific arguments for the specific datatype
-		}
+		this.data = this.getData(str, REFS, kwargs);
 	}
 
 	asString() {
@@ -38,8 +34,9 @@ class StringType extends DataType {
 	getData(
 		str,
 		REFS,
-		kwargs = { types: STRING_TYPES}
+		kwargs = null
 	) {
+		kwargs = kwargs ?? { types: STRING_TYPES}
 		str = Futils.trimSurroundingQuotes(str);
 		str = str.trim();
 		console.log(`Parsing string: [${str}] with types: [${kwargs.types}]`);
@@ -225,7 +222,7 @@ class SetType extends DataType {
 	getData(
 		str,
 		REFS,
-		kwargs = { types: STRING_TYPES }
+		kwargs = null
 	) {
 		if (!RegExps.VALID_SET_RE.test(str)) {
 			throw new Futils.SyntaxException(

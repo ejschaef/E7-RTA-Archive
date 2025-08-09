@@ -3,6 +3,7 @@ import Futils from "./filter-utils.js";
 import { RegExps } from "../regex.js";
 import SeasonManager from "../season-manager.js";
 import ArtifactManager from "../artifact-manager.js";
+import ClientCache from "../../cache-manager.js";
 import { ACCEPTED_CHARS, PRINT_PREFIX } from "./filter-parse-references.js";
 import { FieldType, INT_FIELDS, SET_FIELDS } from "./field-type.js";
 import { parseDataType, DataType, TYPES } from "./declared-data-types.js";
@@ -56,6 +57,41 @@ function tryParseFilterElement(leftOrRight, strValue, filterStr, REFS) {
 	return parsedValue;
 }
 
+function validateBaseFilter(left, opStr, right, str) {
+	// validate filter
+	if (opStr === "in" || opStr === "!in") {
+		if (!(right instanceof TYPES.Set || right instanceof TYPES.Range)) {
+			if (!(right instanceof FieldType) || !SET_FIELDS.has(right.str)) {
+				throw new Futils.TypeException(
+					`When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '${str}'`
+				);
+			}
+		}
+	}
+
+	if (right instanceof TYPES.Range) {
+		if (right.data.type === "Date") {
+			if (!left.str.includes("date")) {
+				throw new Futils.TypeException(
+					`When using a Date Range, the left side of the operator must be a date field; ${left.str} is not a date field; error found in filter: '${str}'`
+				);
+			}
+		} else if (right.data.type === "Int") {
+			if (!INT_FIELDS.has(left.str)) {
+				throw new Futils.TypeException(
+					`When using an Int Range, the left side of the operator must be an integer field; ${left.str} is not an integer field; error found in filter: '${str}'`
+				);
+			}
+		}
+	}
+
+	if (right instanceof DataType && left instanceof DataType) {
+		throw new Futils.SyntaxException(
+			`Either left or right side of filter must be a data field (a property of a battle); both ${left} and ${right} are user declared data types in filter: "${str}"`
+		);
+	}
+}
+
 class FilterSyntaxParser {
 	static #INTERNAL_KEY = Symbol("internal");
 
@@ -71,23 +107,41 @@ class FilterSyntaxParser {
 		return { localFilters: [], globalFilters: [] };
 	}
 
+	static async getFiltersFromCache(HM) {
+		const filterStr = await ClientCache.getFilterStr();
+		if (!filterStr) {
+			return FilterSyntaxParser.getEmptyFilters();
+		}
+		const seasonDetails = await SeasonManager.getSeasonDetails();
+		const parser = await FilterSyntaxParser.createAndParse(
+			filterStr,
+			HM,
+			seasonDetails
+		);
+		return parser.filters;
+	}
+
+	async addReferences(HM = null, SeasonDetails = null) {
+		HM = HM || (await HeroManager.getHeroManager());
+		SeasonDetails = SeasonDetails || (await SeasonManager.getSeasonDetails());
+		this.HM = HM;
+		this.ARTIFACT_LOWERCASE_STRINGS_MAP =
+			await ArtifactManager.getArtifactLowercaseNameMap();
+		console.log("Got Artifact Lowercase Strings map", this.ARTIFACT_LOWERCASE_STRINGS_MAP);
+		console.log(this.ARTIFACT_LOWERCASE_STRINGS_MAP);
+		this.SeasonDetails = SeasonDetails;
+		this.REFS = {
+			HM: this.HM,
+			ARTIFACT_LOWERCASE_STRINGS_MAP: this.ARTIFACT_LOWERCASE_STRINGS_MAP,
+			SeasonDetails: this.SeasonDetails,
+		};
+	}
+
 	static async createAndParse(string, HM = null, SeasonDetails = null) {
 		console.log("Initialized parsing of string:", string);
 		const parser = new FilterSyntaxParser(FilterSyntaxParser.#INTERNAL_KEY);
-		HM = HM || (await HeroManager.getHeroManager());
-		SeasonDetails = SeasonDetails || (await SeasonManager.getSeasonDetails());
 		parser.rawString = string;
-		parser.HM = HM;
-		parser.ARTIFACT_LOWERCASE_STRINGS_MAP =
-			await ArtifactManager.getArtifactLowercaseNameMap();
-		console.log("Got Artifact Lowercase Strings map", parser.ARTIFACT_LOWERCASE_STRINGS_MAP);
-		console.log(parser.ARTIFACT_LOWERCASE_STRINGS_MAP);
-		parser.SeasonDetails = SeasonDetails;
-		parser.REFS = {
-			HM: parser.HM,
-			ARTIFACT_LOWERCASE_STRINGS_MAP: parser.ARTIFACT_LOWERCASE_STRINGS_MAP,
-			SeasonDetails: parser.SeasonDetails,
-		};
+		await parser.addReferences(HM, SeasonDetails);
 		parser.preParsedString = preParse(string);
 		parser.globalFilters = [];
 		parser.filters = parser.parseFilters(parser.preParsedString);
@@ -97,8 +151,7 @@ class FilterSyntaxParser {
 	}
 
 	asString() {
-		const filters = [...this.filters.localFilters];
-		filters.push(...this.filters.globalFilters);
+		const filters = [...this.filters.globalFilters, ...this.filters.localFilters];
 		return `[\n${filters
 			.map((filter) => filter.asString(PRINT_PREFIX))
 			.join(";\n")}\n]`;
@@ -189,15 +242,15 @@ class FilterSyntaxParser {
 				)}]`
 			);
 		}
-		let [left, operator, right] = tokens;
+		let [left, opStr, right] = tokens;
 
 		// Validate operator
-		if (!OPERATOR_MAP[operator]) {
+		if (!OPERATOR_MAP[opStr]) {
 			throw new Futils.SyntaxException(
-				`Invalid operator in base filter; got: "${operator}" as the operator in filter: [${str}]`
+				`Invalid operator in base filter; got: "${opStr}" as the operator in filter: [${str}]`
 			);
 		}
-		const opFn = OPERATOR_MAP[operator];
+		const opFn = OPERATOR_MAP[opStr];
 
 		// try to converty to field types and data types
 		left = tryParseFilterElement(
@@ -216,37 +269,7 @@ class FilterSyntaxParser {
 		);
 
 		// validate filter
-		if (operator === "in" || operator === "!in") {
-			if (!(right instanceof TYPES.Set || right instanceof TYPES.Range)) {
-				if (!(right instanceof FieldType) || !SET_FIELDS.has(right.str)) {
-					throw new Futils.TypeException(
-						`When using any 'in' or '!in' operator, the right side of the operator must be a Set, Range, or a Field composed of a set (i.e. p1.picks, p2.prebans, etc.); error found in filter: '${str}'`
-					);
-				}
-			}
-		}
-
-		if (right instanceof TYPES.Range) {
-			if (right.data.type === "Date") {
-				if (!left.str.includes("date")) {
-					throw new Futils.TypeException(
-						`When using a Date Range, the left side of the operator must be a date field; ${left.str} is not a date field; error found in filter: '${str}'`
-					);
-				}
-			} else if (right.data.type === "Int") {
-				if (!INT_FIELDS.has(left.str)) {
-					throw new Futils.TypeException(
-						`When using an Int Range, the left side of the operator must be an integer field; ${left.str} is not an integer field; error found in filter: '${str}'`
-					);
-				}
-			}
-		}
-
-		if (right instanceof DataType && left instanceof DataType) {
-			throw new Futils.SyntaxException(
-				`Either left or right side of filter must be a data field (a property of a battle); both ${left} and ${right} are user declared data types in filter: "${str}"`
-			);
-		}
+		validateBaseFilter(left, opStr, right, str);
 
 		// make filter
 		let filterFn = null;
@@ -263,7 +286,7 @@ class FilterSyntaxParser {
 				return opFn(left.extractData(battle), right.extractData(battle));
 			};
 		}
-		const cleanFilterStr = `${left.asString()} ${operator} ${right.asString()}`;
+		const cleanFilterStr = `${left.asString()} ${opStr} ${right.asString()}`;
 		const filter = new BaseFilter(cleanFilterStr, filterFn);
 		console.log("Returning base local filter", [
 			filter.asString(),

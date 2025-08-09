@@ -1,15 +1,13 @@
-import { ContentManager } from "../../../../../exports.js";
 import {
 	HOME_PAGE_STATES,
-	HOME_PAGE_FNS,
 } from "../../../../orchestration/page-state-manager.js";
 import { CONTEXT } from "../../../home-page-context.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
-import { WORLD_CODE_TO_CLEAN_STR } from "../../../../../e7/references.js";
 import {
 	TextController,
 	TextPacket,
 } from "../../../../orchestration/text-controller.js";
+import { CM } from "../../../../../content-manager.js";
 
 function writeMsgRed(msg) {
 	TextController.write(
@@ -19,19 +17,11 @@ function writeMsgRed(msg) {
 	);
 }
 
-function writeMsgGreen(msg) {
-	TextController.write(
-		new TextPacket(msg, DOC_ELEMENTS.HOME_PAGE.SELECT_DATA_MSG, [
-			TextController.STYLES.GREEN,
-		])
-	);
-}
-
 async function addUserFormListener(stateDispatcher) {
 	const checkbox = DOC_ELEMENTS.HOME_PAGE.ID_SEARCH_FLAG;
-	const key = ContentManager.ClientCache.Keys.ID_SEARCH_FLAG;
+	const key = CM.ClientCache.Keys.ID_SEARCH_FLAG;
 	checkbox.addEventListener("click", async () => {
-		await ContentManager.ClientCache.cache(key, checkbox.checked);
+		await CM.ClientCache.cache(key, checkbox.checked);
 	});
 
 	const form = document.getElementById("userForm");
@@ -51,8 +41,8 @@ async function addUserFormListener(stateDispatcher) {
 			writeMsgRed("Must enter username");
 		} else {
 			try {
-				const idSearchFlag = await ContentManager.ClientCache.get(
-					ContentManager.ClientCache.Keys.ID_SEARCH_FLAG
+				const idSearchFlag = await CM.ClientCache.get(
+					CM.ClientCache.Keys.ID_SEARCH_FLAG
 				);
 				const userObj = idSearchFlag
 					? { id: name, world_code }
@@ -73,7 +63,7 @@ async function addUserFormListener(stateDispatcher) {
 async function addUploadFormListener(stateDispatcher) {
 	const checkbox = document.getElementById("auto-query-flag");
 	checkbox.addEventListener("click", async () => {
-		await ContentManager.ClientCache.setFlag("autoQuery", checkbox.checked);
+		await CM.ClientCache.setFlag("autoQuery", checkbox.checked);
 	});
 
 	let selectedFile = null;
@@ -105,8 +95,8 @@ async function addUploadFormListener(stateDispatcher) {
 						selectedFile
 					)}`
 				);
-				await ContentManager.ClientCache.cache(
-					ContentManager.ClientCache.Keys.RAW_UPLOAD,
+				await CM.ClientCache.cache(
+					CM.ClientCache.Keys.RAW_UPLOAD,
 					selectedFile
 				);
 				CONTEXT.AUTO_QUERY = autoQueryFlag;

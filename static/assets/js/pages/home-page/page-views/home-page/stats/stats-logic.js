@@ -1,14 +1,8 @@
 import UserManager from "../../../../../e7/user-manager.js";
-import {
-	RegExps,
-	Tables,
-	CardContent,
-	ContentManager,
-} from "../../../../../exports.js";
-import {
-	addPrivateStatsListeners,
-	addStatsListeners,
-} from "./stats-listeners.js";
+import { Tables, CardContent } from "../../../../../populate_content.js";
+import { CM } from "../../../../../content-manager.js";
+import { RegExps } from "../../../../../e7/regex.js";
+import { addStatsListeners } from "./stats-listeners.js";
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { CONTEXT } from "../../../home-page-context.js";
@@ -25,54 +19,54 @@ async function populateContent() {
 
 	try {
 		console.log("Getting Season Details");
-		const seasonDetails = await ContentManager.SeasonManager.getSeasonDetails();
+		const seasonDetails = await CM.SeasonManager.getSeasonDetails();
 		console.log("Got season details:", seasonDetails, typeof seasonDetails);
 
 		console.log("Getting Stats");
-		const stats = await ContentManager.ClientCache.getStats();
+		const stats = await CM.ClientCache.getStats();
 
 		//console.log("GOT STATS: ", JSON.stringify(stats));
 
 		console.time("populateTables");
 		console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS");
-		Tables.functions.populateSeasonDetailsTable("SeasonDetails", seasonDetails);
-		Tables.functions.populateHeroStatsTable(
+		Tables.populateSeasonDetailsTable("SeasonDetails", seasonDetails);
+		Tables.populateHeroStatsTable(
 			"PlayerTable",
 			stats.playerHeroStats
 		);
-		Tables.functions.populateHeroStatsTable(
+		Tables.populateHeroStatsTable(
 			"OpponentTable",
 			stats.enemyHeroStats
 		);
-		Tables.functions.populatePlayerFirstPickTable(
+		Tables.populatePlayerFirstPickTable(
 			"FirstPickStats",
 			stats.firstPickStats
 		);
-		Tables.functions.populatePlayerPrebansTable(
+		Tables.populatePlayerPrebansTable(
 			"PrebanStats",
 			stats.prebanStats
 		);
-		Tables.functions.populateServerStatsTable(
+		Tables.populateServerStatsTable(
 			"server-stats",
 			stats.serverStats
 		);
 		if (DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE.checked) {
 			console.log("POPULATING AS FILTERED BATTLES TABLE");
-			Tables.functions.populateFullBattlesTable(
+			Tables.populateFullBattlesTable(
 				"BattlesTable",
 				Object.values(stats.filteredBattlesObj),
 				user
 			);
 		} else {
 			console.log("POPULATING AS FULL BATTLES TABLE");
-			Tables.functions.populateFullBattlesTable(
+			Tables.populateFullBattlesTable(
 				"BattlesTable",
 				stats.battles,
 				user
 			);
 		}
-		CardContent.functions.populateGeneralStats(stats.generalStats);
-		await CardContent.functions.populateRankPlot(stats);
+		CardContent.populateGeneralStats(stats.generalStats);
+		await CardContent.populateRankPlot(stats);
 		console.log("FINISHED POPULATING");
 		console.timeEnd("populateTables");
 	} catch (err) {
@@ -99,7 +93,7 @@ async function addCodeMirror() {
 
 	editor.setSize(null, 185);
 
-	const appliedFilter = await ContentManager.ClientCache.getFilterStr();
+	const appliedFilter = await CM.ClientCache.getFilterStr();
 
 	if (appliedFilter) {
 		editor.setValue(appliedFilter);
@@ -131,13 +125,13 @@ async function postFirstRenderLogic() {
 
 async function runLogic(stateDispatcher) {
 	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
-	const checked = await ContentManager.ClientCache.getFlag("autoZoom");
+	const checked = await CM.ClientCache.getFlag("autoZoom");
 	autoZoomCheckbox.checked = checked;
-	const stats = await ContentManager.ClientCache.getStats();
+	const stats = await CM.ClientCache.getStats();
 
 	const filterBattleTableCheckbox = DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE;
 	if (filterBattleTableCheckbox.checked) {
-		Tables.functions.replaceBattleData(Object.values(stats.filteredBattlesObj));
+		Tables.replaceBattleData(Object.values(stats.filteredBattlesObj));
 	}
 
 	const user = await UserManager.getUser();

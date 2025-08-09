@@ -1,22 +1,20 @@
-import {
-	PageUtils,
-	Tables,
-	ContentManager,
-	SavedFilters,
-} from "../../../../../exports.js";
+import SavedFilters from "../../../../../e7/saved-filters.js";
+import PageUtils from "../../../../page-utilities/page-utils.js";
+import { Tables } from "../../../../../populate_content.js";
 import { CONTEXT } from "../../../home-page-context.js";
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
+import { CM } from "../../../../../content-manager.js";
 
 function addBattleTableFilterToggleListener() {
 	console.log("Setting listener for filter-battle-table checkbox");
 	const filterBattleTableCheckbox = DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE;
 	filterBattleTableCheckbox.addEventListener("click", async () => {
-		const stats = await ContentManager.ClientCache.getStats();
+		const stats = await CM.ClientCache.getStats();
 		if (!filterBattleTableCheckbox.checked) {
-			Tables.functions.replaceBattleData(stats.battles);
+			Tables.replaceBattleData(stats.battles);
 		} else {
-			Tables.functions.replaceBattleData(
+			Tables.replaceBattleData(
 				Object.values(stats.filteredBattlesObj)
 			);
 		}
@@ -27,7 +25,7 @@ function addAutoZoomListener() {
 	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
 	autoZoomCheckbox.addEventListener("click", async () => {
 		console.log("Toggling Auto Zoom: ", autoZoomCheckbox.checked);
-		await ContentManager.ClientCache.setFlag(
+		await CM.ClientCache.setFlag(
 			"autoZoom",
 			autoZoomCheckbox.checked
 		);
@@ -65,12 +63,12 @@ function addFilterButtonListeners(editor, stateDispatcher) {
 		const clickedButton = event.submitter;
 		const action = clickedButton?.value;
 		const syntaxStr = editor.getValue();
-		const appliedFilter = await ContentManager.ClientCache.getFilterStr();
+		const appliedFilter = await CM.ClientCache.getFilterStr();
 
 		if (action === "apply") {
 			const validFilter = await PageUtils.validateFilterSyntax(syntaxStr);
 			if (validFilter) {
-				await ContentManager.ClientCache.setFilterStr(syntaxStr);
+				await CM.ClientCache.setFilterStr(syntaxStr);
 				CONTEXT.AUTO_QUERY = false;
 				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
 				return;
@@ -83,7 +81,7 @@ function addFilterButtonListeners(editor, stateDispatcher) {
 			console.log("Found applied filter [", appliedFilter, "] when clearing");
 			if (appliedFilter) {
 				console.log("Found filter str", appliedFilter);
-				await ContentManager.ClientCache.setFilterStr("");
+				await CM.ClientCache.setFilterStr("");
 				CONTEXT.AUTO_QUERY = false;
 				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
 				return;

@@ -1,80 +1,81 @@
+import { Safe } from "../../utils";
 class HomePageElements {
 	get SELECT_DATA_MSG() {
-		return this._SELECT_DATA_MSG ||= document.getElementById("select-data-msg");
+		return this._SELECT_DATA_MSG ||= Safe.unwrapHtmlElt("select-data-msg");
 	}
 	get FILTER_MSG() {
-		return this._FILTER_MSG ||= document.getElementById("filterMSG");
+		return this._FILTER_MSG ||= Safe.unwrapHtmlElt("filterMSG");
 	}
 
     get SELECT_DATA_BODY() {
-        return this._SELECT_DATA_BODY ||= document.getElementById("select-data-body");
+        return this._SELECT_DATA_BODY ||= Safe.unwrapHtmlElt("select-data-body");
     }
 
     get SHOW_STATS_BODY() {
-        return this._SHOW_STATS_BODY ||= document.getElementById("show-stats-body");
+        return this._SHOW_STATS_BODY ||= Safe.unwrapHtmlElt("show-stats-body");
     }
 
     get LOAD_DATA_BODY() {
-        return this._LOAD_DATA_BODY ||= document.getElementById("load-data-body");
+        return this._LOAD_DATA_BODY ||= Safe.unwrapHtmlElt("load-data-body");
     }
 
     get CLEAR_DATA_BTN() {
-        return this._CLEAR_DATA_BTN ||= document.getElementById("clear-data-btn");
+        return this._CLEAR_DATA_BTN ||= Safe.unwrapHtmlElt("clear-data-btn");
     }
 
     get UPLOAD_FORM() {
-        return this._UPLOAD_FORM ||= document.getElementById("uploadForm");
+        return this._UPLOAD_FORM ||= Safe.unwrapHtmlElt("uploadForm");
     }
 
     get CSV_FILE() {
-        return this._CSV_FILE ||= document.getElementById("csvFile");
+        return this._CSV_FILE ||= Safe.unwrapHtmlElt("csvFile");
     }
 
     get USER_QUERY_FORM_NAME() {
         //needs to be kept in sync with id in forms.py of home folder in apps
-        return this._USER_QUERY_FORM_NAME ||= document.getElementById("user-query-form-name"); 
+        return this._USER_QUERY_FORM_NAME ||= Safe.unwrapHtmlElt("user-query-form-name"); 
         
     }
 
     get USER_QUERY_FORM_SERVER() {
         //needs to be kept in sync with id in forms.py of home folder in apps
-        return this._USER_QUERY_FORM_SERVER ||= document.getElementById("user-query-form-server"); 
+        return this._USER_QUERY_FORM_SERVER ||= Safe.unwrapHtmlElt("user-query-form-server"); 
     }
 
     get BATTLES_TABLE() {
-        return this._BATTLES_TABLE ||= document.getElementById("BattlesTable");
+        return this._BATTLES_TABLE ||= Safe.unwrapHtmlElt("BattlesTable");
     }
 
     get AUTO_ZOOM_FLAG() {
-        return this._AUTO_ZOOM_FLAG ||= document.getElementById("auto-zoom-flag");
+        return this._AUTO_ZOOM_FLAG ||= Safe.unwrapHtmlElt("auto-zoom-flag");
     }
 
     get FOOTER_BODY() {
-        return this._FOOTER ||= document.getElementById("footer-body");
+        return this._FOOTER ||= Safe.unwrapHtmlElt("footer-body");
     }
 
     get USER_NAME() {
-        return this._USER_NAME ||= document.getElementById("user-name");
+        return this._USER_NAME ||= Safe.unwrapHtmlElt("user-name");
     }
 
     get USER_ID() {
-        return this._USER_ID ||= document.getElementById("user-id");
+        return this._USER_ID ||= Safe.unwrapHtmlElt("user-id");
     }
 
     get USER_SERVER() {
-        return this._USER_SERVER ||= document.getElementById("user-server");
+        return this._USER_SERVER ||= Safe.unwrapHtmlElt("user-server");
     }
 
     get BATTLE_FILTER_TOGGLE() {
-        return this._BATTLE_FILTER_TOGGLER ||= document.getElementById("filter-battle-table");
+        return this._BATTLE_FILTER_TOGGLER ||= Safe.unwrapHtmlElt("filter-battle-table");
     }
 
     get ID_SEARCH_FLAG() {
-        return this._ID_SEARCH_FLAG ||= document.getElementById("id-search-flag");
+        return this._ID_SEARCH_FLAG ||= Safe.unwrapHtmlElt("id-search-flag");
     }
 
     get ESCAPE_BTN() {
-        return this._ESCAPE_BTN ||= document.getElementById("escape-btn");
+        return this._ESCAPE_BTN ||= Safe.unwrapHtmlElt("escape-btn");
     }
 
     get MESSAGE_ELEMENTS_LIST() {
@@ -84,46 +85,46 @@ class HomePageElements {
 
 class NavBarElements {
     get SIDEBAR_HIDE_BTN() {
-        return this._SIDEBAR_HIDE_BTN ||= document.getElementById("sidebar-hide");
+        return this._SIDEBAR_HIDE_BTN ||= Safe.unwrapHtmlElt("sidebar-hide");
     }
 
     get CLEAR_DATA_BTN() {
-        return this._CLEAR_DATA_BTN ||= document.getElementById("clear-data-btn");
+        return this._CLEAR_DATA_BTN ||= Safe.unwrapHtmlElt("clear-data-btn");
     }
 
     get USER_NAME() {
-        return this._USER_NAME ||= document.getElementById("user-name");
+        return this._USER_NAME ||= Safe.unwrapHtmlElt("user-name");
     }
 
     get USER_ID() {
-        return this._USER_ID ||= document.getElementById("user-id");
+        return this._USER_ID ||= Safe.unwrapHtmlElt("user-id");
     }
 
     get USER_SERVER() {
-        return this._USER_SERVER ||= document.getElementById("user-server");
+        return this._USER_SERVER ||= Safe.unwrapHtmlElt("user-server");
     }
 
     get SIDEBAR_CONTROL() {
-        return this._SIDEBAR_CONTROL ||= document.getElementById("sidebar-control");
+        return this._SIDEBAR_CONTROL ||= Safe.unwrapHtmlElt("sidebar-control");
     }
 }
 
 class SEARCH_PAGE_ELEMENTS {
 
     get SEARCH_DOMAINS() {
-        return this._SEARCH_DOMAINS ||= document.getElementById("search-domains");
+        return this._SEARCH_DOMAINS ||= Safe.unwrapHtmlElt("search-domains");
     }
 
     get SEARCH_SUBMIT_BTN() {
-        return this._SEARCH_SUBMIT_BTN ||= document.getElementById("search-submit-btn");
+        return this._SEARCH_SUBMIT_BTN ||= Safe.unwrapHtmlElt("search-submit-btn");
     }
 
     get SEARCH_FORM() {
-        return this._SEARCH_FORM ||= document.getElementById("searchForm");
+        return this._SEARCH_FORM ||= Safe.unwrapHtmlElt("searchForm");
     }
 
     get SEARCH_TABLE_CONTAINER() {
-        return this._SEARCH_TABLE_CONTAINER ||= document.getElementById("search-table-container");
+        return this._SEARCH_TABLE_CONTAINER ||= Safe.unwrapHtmlElt("search-table-container");
     }
 
 }

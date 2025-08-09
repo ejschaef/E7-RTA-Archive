@@ -6,6 +6,7 @@ import {
 import { generateRankPlot } from "./e7/plots";
 import ClientCache from "./cache-manager";
 import UserManager from "./e7/user-manager";
+import { Safe } from "./utils";
 
 function destroyDataTable(tableid) {
 	const tableSelector = $(`#${tableid}`);
@@ -15,6 +16,14 @@ function destroyDataTable(tableid) {
 	}
 }
 
+/**
+ * Returns a copy of the dataArr with the array columns converted to strings
+ * (using JSON.stringify). This is necessary for the DataTables library to
+ * properly render the data.
+ *
+ * @param {Array<Object>} dataArr - The data array to modify.
+ * @returns {Array<Object>} - The modified data array.
+ */
 function getDataWithStringifiedArrayColumns(dataArr) {
 	dataArr = structuredClone(dataArr);
 	for (const row of dataArr) {
@@ -25,7 +34,6 @@ function getDataWithStringifiedArrayColumns(dataArr) {
 	return dataArr;
 }
 
-let Tables = {};
 
 function convertPercentToColorClass(str) {
 	const num = Number(str.replace("%", ""));
@@ -38,7 +46,7 @@ function convertPercentToColorClass(str) {
 	}
 }
 
-Tables.functions = {
+let Tables = {
 	populateHeroStatsTable: function (tableid, data) {
 		destroyDataTable(tableid);
 
@@ -156,16 +164,13 @@ Tables.functions = {
             <td>${item["count"]}</td>
             <td>${item["frequency"]}</td>
             <td>${item["wins"]}</td>
-            <td class="${convertPercentToColorClass(item["win_rate"])}">${
-				item["win_rate"]
-			}</td>
+            <td class="${convertPercentToColorClass(item["win_rate"])}">${item["win_rate"]
+				}</td>
             <td>${item["+/-"]}</td>
-            <td class="${convertPercentToColorClass(item["fp_wr"])}">${
-				item["fp_wr"]
-			}</td>
-            <td class="${convertPercentToColorClass(item["sp_wr"])}">${
-				item["sp_wr"]
-			}</td>
+            <td class="${convertPercentToColorClass(item["fp_wr"])}">${item["fp_wr"]
+				}</td>
+            <td class="${convertPercentToColorClass(item["sp_wr"])}">${item["sp_wr"]
+				}</td>
             `;
 			tbody.appendChild(row);
 		});
@@ -183,9 +188,8 @@ Tables.functions = {
             <td>${item["preban"]}</td>
             <td>${item["appearances"]}</td>
             <td>${item["appearance_rate"]}</td>
-            <td class="${convertPercentToColorClass(item["win_rate"])}">${
-				item["win_rate"]
-			}</td>
+            <td class="${convertPercentToColorClass(item["win_rate"])}">${item["win_rate"]
+				}</td>
             <td>${item["+/-"]}</td>
             `;
 
@@ -205,9 +209,8 @@ Tables.functions = {
             <td>${item["hero"]}</td>
             <td>${item["appearances"]}</td>
             <td>${item["appearance_rate"]}</td>
-            <td class="${convertPercentToColorClass(item["win_rate"])}">${
-				item["win_rate"]
-			}</td>
+            <td class="${convertPercentToColorClass(item["win_rate"])}">${item["win_rate"]
+				}</td>
             <td>${item["+/-"]}</td>
             `;
 
@@ -238,7 +241,7 @@ Tables.functions = {
 			language: {
 				info: "Total rows: _TOTAL_",
 			},
-			order: [[0, "desc"]], // Sort by Date/Time desc by default
+			order: [[2, "desc"]], // Sort by Date/Time desc by default
 			columnDefs: [
 				{
 					targets: "_all",
@@ -304,61 +307,30 @@ Tables.functions = {
 	},
 };
 
-let CardContent = {};
-
-CardContent.functions = {
+let CardContent = {
 	populateGeneralStats: function (general_stats) {
-
-		document.getElementById("total-battles").textContent =
-			general_stats.total_battles;
-
-		document.getElementById("first-pick-count").textContent =
-			general_stats.first_pick_count;
-
-		document.getElementById(
-			"first-pick-rate"
-		).textContent = ` (${general_stats.first_pick_rate})`;
-
-		document.getElementById("second-pick-count").textContent =
-			general_stats.second_pick_count;
-
-		document.getElementById(
-			"second-pick-rate"
-		).textContent = ` (${general_stats.second_pick_rate})`;
-
-		document.getElementById("total-winrate").textContent =
-			general_stats.total_winrate;
-			
-		document.getElementById("first-pick-winrate").textContent =
-			general_stats.first_pick_winrate;
-
-		document.getElementById("second-pick-winrate").textContent =
-			general_stats.second_pick_winrate;
-
-		document.getElementById("total-wins").textContent =
-			general_stats.total_wins;
-
-		document.getElementById("max-win-streak").textContent =
-			general_stats.max_win_streak;
-
-		document.getElementById("max-loss-streak").textContent =
-			general_stats.max_loss_streak;
-
-		document.getElementById("avg-ppg").textContent = general_stats.avg_ppg;
-		document.getElementById("avg-turns").textContent = general_stats.avg_turns;
-		document.getElementById("avg-time").textContent = general_stats.avg_time;
-		document.getElementById("max-turns").textContent = general_stats.max_turns;
-		document.getElementById("max-time").textContent = general_stats.max_time;
-
-		document.getElementById("first-turn-games").textContent =
-			general_stats.first_turn_games;
-
-		document.getElementById("first-turn-rate").textContent =
-			general_stats.first_turn_rate;
+		Safe.setText("total-battles", general_stats.total_battles);
+		Safe.setText("first-pick-count", general_stats.first_pick_count);
+		Safe.setText("first-pick-rate",` (${general_stats.first_pick_rate})`);
+		Safe.setText("second-pick-count", general_stats.second_pick_count);
+		Safe.setText("second-pick-rate",` (${general_stats.second_pick_rate})`);
+		Safe.setText("total-winrate", general_stats.total_winrate);
+		Safe.setText("first-pick-winrate", general_stats.first_pick_winrate);
+		Safe.setText("second-pick-winrate", general_stats.second_pick_winrate);
+		Safe.setText("total-wins", general_stats.total_wins);
+		Safe.setText("max-win-streak", general_stats.max_win_streak);
+		Safe.setText("max-loss-streak", general_stats.max_loss_streak);
+		Safe.setText("avg-ppg", general_stats.avg_ppg);
+		Safe.setText("avg-turns", general_stats.avg_turns);
+		Safe.setText("avg-time", general_stats.avg_time);
+		Safe.setText("max-turns", general_stats.max_turns);
+		Safe.setText("max-time", general_stats.max_time);
+		Safe.setText("first-turn-games", general_stats.first_turn_games);
+		Safe.setText("first-turn-rate", general_stats.first_turn_rate);
 	},
 
 	populateRankPlot: async function (stats) {
-		const container = document.getElementById("rank-plot-container");
+		const container = Safe.unwrapHtmlElt("rank-plot-container");
 		container.innerHTML = "";
 		const user = await UserManager.getUser();
 		const autoZoom = await ClientCache.get(ClientCache.Keys.AUTO_ZOOM_FLAG);

@@ -57,6 +57,7 @@ build-and-push.sh
 commits.txt
 prod_steps.txt
 .mailmap
+.eslintrc.json
 
 
 #migrations
