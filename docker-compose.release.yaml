@@ -38,7 +38,7 @@ services:
       - redis
 
   nginx:
-    image: nginx:latest
+    image: ejschaef/e7-nginx:latest
     container_name: e7-nginx
     ports:
       - "80:80"

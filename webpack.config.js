@@ -1,6 +1,14 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
+
+const MODES = {
+  PRODUCTION: 'production',
+  DEVELOPMENT: 'development',
+}
+
+const MODE = MODES.PRODUCTION;
 
 module.exports = {
   plugins: [
@@ -11,6 +19,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
     }),
+
   ],
   entry: {
     "home-page"     : './static/assets/js/pages/home-page/home-page.js',
@@ -24,8 +33,22 @@ module.exports = {
     path: path.resolve(__dirname, 'static/dist'),  // Output folder
     clean: true,
   },
-  // mode: 'production',             // Enables minification
-  mode: 'development',
+  mode: MODE,
+  optimization: {
+    minimize: MODE === 'production',
+    minimizer: [new TerserPlugin({
+      terserOptions: {
+        compress: {
+          pure_funcs: [ // keep console.error
+            'console.log',
+            'console.info',
+            'console.debug',
+            'console.warn'
+          ],
+        },
+      },
+    })],
+  },
   devtool: 'source-map',
   module: {
     rules: [
