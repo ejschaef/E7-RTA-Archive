@@ -23,4 +23,5 @@ refresh-and-run.sh
 
 #docker repo push
 build-and-push.sh
+.mailmap
 
