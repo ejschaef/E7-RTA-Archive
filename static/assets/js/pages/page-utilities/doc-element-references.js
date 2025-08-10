@@ -78,6 +78,35 @@ class HomePageElements {
         return this._ESCAPE_BTN ||= Safe.unwrapHtmlElt("escape-btn");
     }
 
+    get SEASON_DETAILS_TBL() {
+        return this._SEASON_DETAILS_TBL ||= Safe.unwrapHtmlElt("season-details-tbl");
+    }
+
+    get SERVER_STATS_TBL() {
+        return this._SERVER_STATS_TBL ||= Safe.unwrapHtmlElt("server-stats-tbl");
+    }
+
+    get FIRST_PICK_STATS_TBL() {
+        return this._FIRST_PICK_STATS_TBL ||= Safe.unwrapHtmlElt("first-pick-stats-tbl");
+    }
+
+    get PREBAN_STATS_TBL() {
+        return this._PREBAN_STATS_TBL ||= Safe.unwrapHtmlElt("preban-stats-tbl");
+    }
+
+    get PLAYER_TBL() {
+        return this._PLAYER_TBL ||= Safe.unwrapHtmlElt("player-tbl");
+    }
+
+    get OPPONENT_TBL() {
+        return this._OPPONENT_TBL ||= Safe.unwrapHtmlElt("opponent-tbl");
+    }
+
+    get BATTLES_TBL() {
+        return this._BATTLE_TBL ||= Safe.unwrapHtmlElt("battles-tbl");
+    }
+
+
     get MESSAGE_ELEMENTS_LIST() {
         return [this.SELECT_DATA_MSG, this.FILTER_MSG];
     }

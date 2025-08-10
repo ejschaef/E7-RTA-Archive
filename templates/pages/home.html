@@ -104,19 +104,8 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="SeasonDetails"
+                            <table id="season-details-tbl"
                                 class="scrollables interior-border-tbl clean-table align-center-except-second col1-justify-start col2-30 col1-w-30 f-12">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col">Season</th>
-                                        <th scope="col">Start</th>
-                                        <th scope="col">End</th>
-                                        <th scope="col">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="SeasonDetailsBody">
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -278,22 +267,8 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="server-stats"
+                            <table id="server-stats-tbl"
                                 class="interior-border-tbl clean-table align-center-except-first col1-150 f-16">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col">Battles</th>
-                                        <th scope="col">Freq</th>
-                                        <th scope="col">Wins</th>
-                                        <th scope="col">Win Rate</th>
-                                        <th scope="col">+/-</th>
-                                        <th scope="col">FP WR</th>
-                                        <th scope="col">SP WR</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="server-stats-body">
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -373,19 +348,8 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="FirstPickStats"
+                            <table id="first-pick-stats-tbl"
                                 class="scrollables interior-border-tbl clean-table align-center-except-first col1-150">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Hero</th>
-                                        <th scope="col">Battles</th>
-                                        <th scope="col">Pick Rate</th>
-                                        <th scope="col">Win Rate</th>
-                                        <th scope="col">+/-</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="FirstPickStatsBody">
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -402,19 +366,8 @@
                     </div>
                     <div class="card-body kpi-body rel-height-80">
                         <div class="rel-height-100">
-                            <table id="PrebanStats"
+                            <table id="preban-stats-tbl"
                                 class="scrollables interior-border-tbl clean-table align-center-except-first col1-150">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Preban</th>
-                                        <th scope="col">Battles</th>
-                                        <th scope="col">Ban Rate</th>
-                                        <th scope="col">Win Rate</th>
-                                        <th scope="col">+/-</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="PrebanStatsBody">
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -450,24 +403,7 @@
                         </h6>
                     </div>
                     <div class="card-body kpi-body">
-                        <table id="PlayerTable" class="display compact cell-border" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Hero Name</th>
-                                    <th scope="col">Battles</th>
-                                    <th scope="col">Pick Rate</th>
-                                    <th scope="col">Wins</th>
-                                    <th scope="col">Win rate</th>
-                                    <th scope="col">Postban Rate</th>
-                                    <th scope="col">Success Rate</th>
-                                    <th scope="col">+/-</th>
-                                    <th scope="col">Point Gain</th>
-                                    <th scope="col">Avg CR</th>
-                                    <th scope="col">First Turn Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody id="PlayerTableBody">
-                            </tbody>
+                        <table id="player-tbl" class="display compact cell-border" style="width:100%">
                         </table>
                     </div>
                 </div>
@@ -486,23 +422,7 @@
                         </h6>
                     </div>
                     <div class="card-body kpi-body">
-                        <table id="OpponentTable" class="display compact cell-border" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Hero Name</th>
-                                    <th scope="col">Battles</th>
-                                    <th scope="col">Pick Rate</th>
-                                    <th scope="col">Wins</th>
-                                    <th scope="col">Win rate</th>
-                                    <th scope="col">Postban Rate</th>
-                                    <th scope="col">+/-</th>
-                                    <th scope="col">Point Gain</th>
-                                    <th scope="col">Avg CR</th>
-                                    <th scope="col">First Turn Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody id="OpponentTableBody">
-                            </tbody>
+                        <table id="opponent-tbl" class="display compact cell-border" style="width:100%">
                         </table>
                     </div>
                 </div>
@@ -529,44 +449,7 @@
                             </label>
                             <h6>Apply Filters to Table</h6>
                         </div>
-                        <table id="BattlesTable" class="display compact cell-border" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Season</th>
-                                    <th scope="col">Season Code</th>
-                                    <th scope="col">Date/Time</th>
-                                    <th scope="col">Seconds</th>
-                                    <th scope="col">Turns</th>
-                                    <th scope="col">Seq Num</th>
-                                    <th scope="col">P1 ID</th>
-                                    <th scope="col">P1 Server</th>
-                                    <th scope="col">P2 ID</th>
-                                    <th scope="col">P2 Server</th>
-                                    <th scope="col">P1 League</th>
-                                    <th scope="col">P2 League</th>
-                                    <th scope="col">P1 Points</th>
-                                    <th scope="col">Point Gain</th>
-                                    <th scope="col">Win</th>
-                                    <th scope="col">First Pick</th>
-                                    <th scope="col">First Turn</th>
-                                    <th scope="col">First Turn Hero</th>
-                                    <th scope="col">CR Bar</th>
-                                    <th scope="col">P1 Prebans</th>
-                                    <th scope="col">P2 Prebans</th>
-                                    <th scope="col">P1 Picks</th>
-                                    <th scope="col">P2 Picks</th>
-                                    <th scope="col">P1 Postban</th>
-                                    <th scope="col">P2 Postban</th>
-                                    <th scope="col">P1 Equipment</th>
-                                    <th scope="col">P2 Equipment</th>
-                                    <th scope="col">P1 Artifacts</th>
-                                    <th scope="col">P2 Artifacts</th>
-                                    <th scope="col">P1 MVP</th>
-                                    <th scope="col">P2 MVP</th>
-                                </tr>
-                            </thead>
-                            <tbody id="BattlesTableBody">
-                            </tbody>
+                        <table id="battles-tbl" class="display compact cell-border" style="width:100%">
                         </table>
                     </div>
                 </div>

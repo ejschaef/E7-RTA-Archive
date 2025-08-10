@@ -29,38 +29,40 @@ async function populateContent() {
 
 		console.time("populateTables");
 		console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS");
-		Tables.populateSeasonDetailsTable("SeasonDetails", seasonDetails);
+		Tables.populateSeasonDetailsTable("season-details-tbl", seasonDetails);
 		Tables.populateHeroStatsTable(
-			"PlayerTable",
+			"player-tbl",
 			stats.playerHeroStats
 		);
+		console.log("Populating opponent table");
 		Tables.populateHeroStatsTable(
-			"OpponentTable",
+			"opponent-tbl",
 			stats.enemyHeroStats
 		);
+		console.log("Populating first pick table");
 		Tables.populatePlayerFirstPickTable(
-			"FirstPickStats",
+			"first-pick-stats-tbl",
 			stats.firstPickStats
 		);
 		Tables.populatePlayerPrebansTable(
-			"PrebanStats",
+			"preban-stats-tbl",
 			stats.prebanStats
 		);
 		Tables.populateServerStatsTable(
-			"server-stats",
+			"server-stats-tbl",
 			stats.serverStats
 		);
 		if (DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE.checked) {
 			console.log("POPULATING AS FILTERED BATTLES TABLE");
 			Tables.populateFullBattlesTable(
-				"BattlesTable",
+				"battles-tbl",
 				Object.values(stats.filteredBattlesObj),
 				user
 			);
 		} else {
 			console.log("POPULATING AS FULL BATTLES TABLE");
 			Tables.populateFullBattlesTable(
-				"BattlesTable",
+				"battles-tbl",
 				stats.battles,
 				user
 			);

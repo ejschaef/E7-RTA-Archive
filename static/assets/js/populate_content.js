@@ -46,14 +46,23 @@ function convertPercentToColorClass(str) {
 	}
 }
 
+
+function getTbody(tableid) {
+	const tbody = document.getElementById(`${tableid}-body`);
+	if (!tbody) {
+		throw new Error(`Could not find tbody with id ${tableid}-body`);
+	}
+	return tbody;
+}
+
 let Tables = {
 	populateHeroStatsTable: function (tableid, data) {
 		destroyDataTable(tableid);
 
-		const tbody = document.getElementById(`${tableid}Body`);
+		const tbody = getTbody(tableid);
 		tbody.innerHTML = ""; // Clear existing rows
 
-		const isP1 = tableid.includes("Player");
+		const isP1 = tableid.toLowerCase().includes("player");
 		const person = isP1 ? "Player" : "Enemy";
 
 		const P1_COLUMNS = [
@@ -133,7 +142,7 @@ let Tables = {
 	},
 
 	populateSeasonDetailsTable: function (tableid, data) {
-		const tbody = document.getElementById(`${tableid}Body`);
+		const tbody = getTbody(tableid);
 		tbody.innerHTML = ""; // Clear existing rows
 
 		data.forEach((item) => {
@@ -152,7 +161,7 @@ let Tables = {
 	},
 
 	populateServerStatsTable: function (tableid, data) {
-		const tbody = document.getElementById(`${tableid}-body`);
+		const tbody = getTbody(tableid);
 		tbody.innerHTML = ""; // Clear existing rows
 
 		data.forEach((item) => {
@@ -177,7 +186,7 @@ let Tables = {
 	},
 
 	populatePlayerPrebansTable: function (tableid, data) {
-		const tbody = document.getElementById(`${tableid}Body`);
+		const tbody = getTbody(tableid);
 		tbody.innerHTML = ""; // Clear existing rows
 
 		data.forEach((item) => {
@@ -198,7 +207,7 @@ let Tables = {
 	},
 
 	populatePlayerFirstPickTable: function (tableid, data) {
-		const tbody = document.getElementById(`${tableid}Body`);
+		const tbody = getTbody(tableid);
 		tbody.innerHTML = ""; // Clear existing rows
 
 		data.forEach((item) => {
@@ -222,7 +231,7 @@ let Tables = {
 		destroyDataTable(tableid);
 
 		data = getDataWithStringifiedArrayColumns(data);
-		const tbody = document.getElementById(`${tableid}Body`);
+		const tbody = getTbody(tableid);
 		tbody.innerHTML = ""; // Clear existing rows
 
 		let name;
@@ -234,7 +243,7 @@ let Tables = {
 
 		const fname = `${name} Battle Data`;
 
-		var table = $("#BattlesTable").DataTable({
+		var table = $(`#${tableid}`).DataTable({
 			layout: {
 				topStart: "buttons",
 			},

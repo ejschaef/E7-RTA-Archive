@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import requests
 import ast
 import datetime as dt
+from typing import Generator
 
 # THIS FILE IS MEANT TO BE RUN INDEPENDENTLY FROM THE APP WITHIN ITS OWN DIRECTORY
 
@@ -13,7 +14,7 @@ from apps.services.api_key_names import ApiKeyNames
 
 load_dotenv()
 
-DEV = True
+DEV = False
 
 if DEV:
     URL = "http://localhost"
@@ -78,22 +79,22 @@ class LogManager:
         self.total_unique_users = 0
         self.min_time_utc = None
 
-    def delete_logs(self):
+    def delete_logs(self) -> None:
         result = delete_logs()
         if result is True:
             print("Logs Deleted")
         else:
             print("Failed to delete logs")
             
-    def iter_logs(self):
+    def iter_logs(self) -> Generator[dict, None, None]:
         for log_file_logs in self.logs.values():
             yield from log_file_logs
 
-    def get_logs(self):
+    def get_logs(self) -> dict[str, list]:
         self.logs = get_logs()
         return self.logs
     
-    def compute_stats(self):
+    def compute_stats(self) -> None:
         if self.logs is None:
             raise Warning("No logs found")
         self.__compute_ip_stats()
@@ -102,7 +103,7 @@ class LogManager:
         self.total_unique_users = len(self.users)
         
         
-    def __compute_ip_stats(self):
+    def __compute_ip_stats(self) -> None:
         results_dict = {}
         for log in self.iter_logs():
             if not LOG_KEYS.IP in log:
@@ -115,7 +116,7 @@ class LogManager:
         self.stats["IP Stats"] = results_dict
         print("Computed IP Stats")
         
-    def __compute_queried_users_stats(self):
+    def __compute_queried_users_stats(self) -> None:
         results_dict = {}
         for log in self.iter_logs():
             if not log["fnName"] == BATTLE_QUERY_API_FN:
@@ -128,13 +129,16 @@ class LogManager:
         self.stats["Queried Users Stats"] = results_dict
         print("Computed Queried Users Stats")
         
-    def __compute_min_time(self):
+    def __compute_min_time(self) -> None:
         times = []
         for log in self.iter_logs():
             times.append(
                 dt.datetime.fromisoformat(log[LOG_KEYS.TIME])
             )
-        self.min_time = min(times)
+        if len(times) == 0:
+            self.min_time = "N/A"
+        else:
+            self.min_time = min(times)
                 
         
 if __name__ == "__main__":

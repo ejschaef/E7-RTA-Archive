@@ -14,7 +14,7 @@ import { addHomePageListeners } from "./home-page-listeners.js";
 import { SelectDataView } from "./page-views/home-page/select-data/select-data-logic.js";
 import { StatsView } from "./page-views/home-page/stats/stats-logic.js";
 import { LoadDataView } from "./page-views/home-page/load-data/load-data-logic.js";
-
+import { buildTables } from "./home-page-build-tables.js";
 
 /**
  * Handles actions sent from other pages to this page.
@@ -69,6 +69,7 @@ async function processIPMState() {
 
 async function initializeHomePage() {
 	addHomePageListeners();
+	buildTables();
 	const VIEWS = [SelectDataView, StatsView, LoadDataView];
 	for (const view of VIEWS) {
 		await view.initialize(stateDispatcher);

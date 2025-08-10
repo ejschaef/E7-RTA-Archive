@@ -107,7 +107,6 @@ file within the directory. For Windows you must first install [Docker for Window
     cd E7-Ventus-Archive
 
     # pull the images and run
-    docker-compose -f docker-compose.dev.yaml pull
     docker-compose -f docker-compose.dev.yaml up
     ```
 - Mac/Windows
@@ -124,7 +123,6 @@ file within the directory. For Windows you must first install [Docker for Window
     cd E7-Ventus-Archive
 
     # pull the images and run
-    docker-compose -f docker-compose.dev.yaml pull
     docker-compose -f docker-compose.dev.yaml up
     ```
 
