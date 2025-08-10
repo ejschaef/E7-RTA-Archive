@@ -3,7 +3,7 @@ import { PRINT_PREFIX } from "./filter-parse-references.js";
 import Futils from "./filter-utils.js";
 import { RegExps } from "../regex.js";
 import { COLUMNS_MAP } from "../references.js";
-import { strArrToCountMap } from "../../utils.js";
+import { strArrToCountMap } from "../../utils.ts";
 
 class Fn {
 	constructor() {}
@@ -185,7 +185,9 @@ class EquipmentFn extends DirectFn {
 			return false;
 		}
 		const equippedCounts = strArrToCountMap(equipped);
-		return Object.entries(this.equipmentCounts).every(([eq, count]) => equippedCounts[eq] === count);
+		return Object.entries(this.equipmentCounts).every(
+			([eq, count]) => equippedCounts[eq] === count
+		);
 	}
 }
 
@@ -238,7 +240,8 @@ class ArtifactFn extends DirectFn {
 		this.hero = hero.data;
 		this.artifactArr = [...artifactSet.data];
 		this.str =
-			(p1Flag ? "p1" : "p2") + `.artifact(${hero.asString()}, ${artifactSet.asString()})`;
+			(p1Flag ? "p1" : "p2") +
+			`.artifact(${hero.asString()}, ${artifactSet.asString()})`;
 		this.isPlayer1 = p1Flag;
 	}
 
@@ -300,11 +303,18 @@ class CombatReadinessGeqFn extends DirectFn {
 	}
 
 	constructor(hero, crThreshold, p1Flag) {
-		console.log(`Received CR-GEQ fn args`, hero.asString(), crThreshold.asString(), p1Flag);
+		console.log(
+			`Received CR-GEQ fn args`,
+			hero.asString(),
+			crThreshold.asString(),
+			p1Flag
+		);
 		super();
 		this.hero = hero.data;
 		this.crThreshold = crThreshold.data;
-		this.str = (p1Flag ? "p1" : "p2") + `.CR-GEQ(${hero.asString()}, ${crThreshold.asString()})`;
+		this.str =
+			(p1Flag ? "p1" : "p2") +
+			`.CR-GEQ(${hero.asString()}, ${crThreshold.asString()})`;
 		this.isPlayer1 = p1Flag;
 	}
 
@@ -362,11 +372,18 @@ class CombatReadinessLtFn extends DirectFn {
 	}
 
 	constructor(hero, crThreshold, p1Flag) {
-		console.log(`Received CR-LT fn args`, hero.asString(), crThreshold.asString(), p1Flag);
+		console.log(
+			`Received CR-LT fn args`,
+			hero.asString(),
+			crThreshold.asString(),
+			p1Flag
+		);
 		super();
 		this.hero = hero.data;
 		this.crThreshold = crThreshold.data;
-		this.str = (p1Flag ? "p1" : "p2") + `.CR-LT(${hero.asString()}, ${crThreshold.asString()})`;
+		this.str =
+			(p1Flag ? "p1" : "p2") +
+			`.CR-LT(${hero.asString()}, ${crThreshold.asString()})`;
 		this.isPlayer1 = p1Flag;
 	}
 
@@ -389,8 +406,6 @@ class CombatReadinessLtFn extends DirectFn {
 	}
 }
 
-
-
 const FN_MAP = {
 	and: AND,
 	or: OR,
@@ -405,7 +420,6 @@ const FN_MAP = {
 	"p2.cr-geq": CombatReadinessGeqFn,
 	"p1.cr-lt": CombatReadinessLtFn,
 	"p2.cr-lt": CombatReadinessLtFn,
-
 };
 
 export {

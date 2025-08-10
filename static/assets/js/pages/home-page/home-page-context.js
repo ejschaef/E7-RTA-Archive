@@ -1,6 +1,6 @@
 // Reference for context flags that are used within single pages to communicate accross vies for the page
 
-import { HOME_PAGE_STATES } from "../page-utilities/page-state-references";
+import { HOME_PAGE_STATES } from "../page-utilities/page-state-references.js";
 
 const SOURCE_CONTEXT_VALUES = {
 	QUERY: "query",

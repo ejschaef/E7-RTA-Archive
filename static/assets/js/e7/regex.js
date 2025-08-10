@@ -1,4 +1,4 @@
-import { FieldType } from "./filter-parsing/field-type";
+import { FieldType } from "./filter-parsing/field-type.js";
 
 /**
  * Returns a new RegExp object that matches if the input pattern matches the beginning of a string

@@ -1,6 +1,6 @@
-import { TableConstructor } from "../html-constructor/html-constructor";
-import DOC_ELEMENTS from "../page-utilities/doc-element-references";
-import { COLUMNS_MAP } from "../../e7/references";
+import { TableConstructor } from "../html-constructor/html-constructor.js";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
+import { COLUMNS_MAP } from "../../e7/references.js";
 
 const HERO_TBL_COLS = [
     "Hero Name",

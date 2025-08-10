@@ -11,7 +11,7 @@ export function strArrToCountMap(strArr) {
     }, {})
 }
 
-export function getStrMatches(str, strings, numMatches = null, customConfig = null) {
+export function getStrMatches(str: string, strings: string[], numMatches: number | null = null, customConfig: any = null) {
     const config = { 
         includeScore: true, 
         threshold: 0.3,
@@ -32,7 +32,7 @@ export function getStrMatches(str, strings, numMatches = null, customConfig = nu
 
 export const Safe = {
 
-    unwrapHtmlElt: function (eltID) {
+    unwrapHtmlElt: function (eltID: string): HTMLElement {
         const elt = document.getElementById(eltID);
         if (elt === null) {
             throw new Error(`Could not find element with ID ${eltID}`);
@@ -40,7 +40,7 @@ export const Safe = {
         return elt;
     },
 
-    setText: function (eltID, text) {
+    setText: function (eltID: string, text: string): void {
         const elt = this.unwrapHtmlElt(eltID);
         elt.textContent = text;
     },

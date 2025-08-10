@@ -2,11 +2,11 @@ import {
 	COLUMNS_MAP,
 	ARRAY_COLUMNS,
 	HERO_STATS_COLUMN_MAP,
-} from "./e7/references";
-import { generateRankPlot } from "./e7/plots";
-import ClientCache from "./cache-manager";
-import UserManager from "./e7/user-manager";
-import { Safe } from "./utils";
+} from "./e7/references.js";
+import { generateRankPlot } from "./e7/plots.js";
+import ClientCache from "./cache-manager.js";
+import UserManager from "./e7/user-manager.js";
+import { Safe } from "./utils.ts";
 
 function destroyDataTable(tableid) {
 	const tableSelector = $(`#${tableid}`);
@@ -34,7 +34,6 @@ function getDataWithStringifiedArrayColumns(dataArr) {
 	return dataArr;
 }
 
-
 function convertPercentToColorClass(str) {
 	const num = Number(str.replace("%", ""));
 	if (num > 50) {
@@ -45,7 +44,6 @@ function convertPercentToColorClass(str) {
 		return "";
 	}
 }
-
 
 function getTbody(tableid) {
 	const tbody = document.getElementById(`${tableid}-body`);
@@ -173,13 +171,16 @@ let Tables = {
             <td>${item["count"]}</td>
             <td>${item["frequency"]}</td>
             <td>${item["wins"]}</td>
-            <td class="${convertPercentToColorClass(item["win_rate"])}">${item["win_rate"]
-				}</td>
+            <td class="${convertPercentToColorClass(item["win_rate"])}">${
+				item["win_rate"]
+			}</td>
             <td>${item["+/-"]}</td>
-            <td class="${convertPercentToColorClass(item["fp_wr"])}">${item["fp_wr"]
-				}</td>
-            <td class="${convertPercentToColorClass(item["sp_wr"])}">${item["sp_wr"]
-				}</td>
+            <td class="${convertPercentToColorClass(item["fp_wr"])}">${
+				item["fp_wr"]
+			}</td>
+            <td class="${convertPercentToColorClass(item["sp_wr"])}">${
+				item["sp_wr"]
+			}</td>
             `;
 			tbody.appendChild(row);
 		});
@@ -197,8 +198,9 @@ let Tables = {
             <td>${item["preban"]}</td>
             <td>${item["appearances"]}</td>
             <td>${item["appearance_rate"]}</td>
-            <td class="${convertPercentToColorClass(item["win_rate"])}">${item["win_rate"]
-				}</td>
+            <td class="${convertPercentToColorClass(item["win_rate"])}">${
+				item["win_rate"]
+			}</td>
             <td>${item["+/-"]}</td>
             `;
 
@@ -218,8 +220,9 @@ let Tables = {
             <td>${item["hero"]}</td>
             <td>${item["appearances"]}</td>
             <td>${item["appearance_rate"]}</td>
-            <td class="${convertPercentToColorClass(item["win_rate"])}">${item["win_rate"]
-				}</td>
+            <td class="${convertPercentToColorClass(item["win_rate"])}">${
+				item["win_rate"]
+			}</td>
             <td>${item["+/-"]}</td>
             `;
 
@@ -320,9 +323,9 @@ let CardContent = {
 	populateGeneralStats: function (general_stats) {
 		Safe.setText("total-battles", general_stats.total_battles);
 		Safe.setText("first-pick-count", general_stats.first_pick_count);
-		Safe.setText("first-pick-rate",` (${general_stats.first_pick_rate})`);
+		Safe.setText("first-pick-rate", ` (${general_stats.first_pick_rate})`);
 		Safe.setText("second-pick-count", general_stats.second_pick_count);
-		Safe.setText("second-pick-rate",` (${general_stats.second_pick_rate})`);
+		Safe.setText("second-pick-rate", ` (${general_stats.second_pick_rate})`);
 		Safe.setText("total-winrate", general_stats.total_winrate);
 		Safe.setText("first-pick-winrate", general_stats.first_pick_winrate);
 		Safe.setText("second-pick-winrate", general_stats.second_pick_winrate);

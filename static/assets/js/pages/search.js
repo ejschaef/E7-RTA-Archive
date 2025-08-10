@@ -1,4 +1,4 @@
-import { Searcher } from "../e7/searcher";
+import { Searcher } from "../e7/searcher.js";
 import DataTableUtils from "../data-table-utils.js";
 import PageUtils from "./page-utilities/page-utils.js";
 import { NavBarUtils } from "./page-utilities/nav-bar-utils.js";

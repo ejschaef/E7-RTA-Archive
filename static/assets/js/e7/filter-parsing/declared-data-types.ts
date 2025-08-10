@@ -6,11 +6,9 @@ import { EQUIPMENT_LOWERCASE_STRINGS_MAP } from "./filter-parse-references.js";
 import { LEAGUE_MAP } from "../references.js";
 import { WORLD_CODE_TO_CLEAN_STR } from "../references.js";
 
-function getSeasonFromSyntaxStr(str, seasonDetails) {
+function getSeasonFromSyntaxStr(str: string, seasonDetails) {
 	const seasonNum = str.split("-")[1];
-	const season = seasonDetails.find(
-		(season) => season["Season Number"] === seasonNum
-	);
+	const season = seasonDetails.find((season) => season["Season Number"] === seasonNum);
 	if (!season) {
 		throw new Error(
 			`Invalid season specified; ${seasonNum} is not a valid season number; failed on str: '${str}'`
@@ -20,9 +18,14 @@ function getSeasonFromSyntaxStr(str, seasonDetails) {
 }
 
 class DataType {
-	constructor(str, REFS = {}, kwargs = null) {
+	rawString: any;
+	data: any;
+	constructor(str: string, REFS = null, kwargs: null | Object = null) {
 		this.rawString = str;
-		this.data = this.getData(str, REFS, kwargs);
+		this.data = this.getData(str, REFS, kwargs); // kwargs will be an object with specific arguments for the specific datatype
+	}
+	getData(str: string, REFS: any, kwargs: any): any {
+		throw new Error("Method not implemented.");
 	}
 
 	asString() {
@@ -30,18 +33,14 @@ class DataType {
 	}
 }
 
-const STRING_TYPES = [
-	"hero",
-	"league",
-	"server",
-	"equipment",
-	"artifact",
-	"season-code",
-];
+const STRING_TYPES = ["hero", "league", "server", "equipment", "artifact", "season-code"];
 
 class StringType extends DataType {
-	getData(str, REFS, kwargs = null) {
-		kwargs = kwargs ?? { types: STRING_TYPES };
+	getData(
+		str,
+		REFS,
+		kwargs = { types: STRING_TYPES }
+	) {
 		str = Futils.trimSurroundingQuotes(str);
 		str = str.trim();
 		console.log(`Parsing string: [${str}] with types: [${kwargs.types}]`);
@@ -71,9 +70,7 @@ class StringType extends DataType {
 		for (const type of kwargs.types) {
 			const parsed = parseFn(type, str);
 			if (parsed) {
-				console.log(
-					`Parsed string: [${str}] to [${parsed}] with type: [${type}]`
-				);
+				console.log(`Parsed string: [${str}] to [${parsed}] with type: [${type}]`);
 				return parsed;
 			}
 		}
@@ -151,6 +148,7 @@ class RangeType extends DataType {
 			start: null,
 			end: null,
 			endInclusive: endInclusive,
+			type: "",
 		};
 		if (RegExps.VALID_DATE_LITERAL_RE.test(start)) {
 			output.start = Futils.tryConvert(
@@ -165,7 +163,7 @@ class RangeType extends DataType {
 				end,
 				`Could not convert '${end}' to Date in declared range: '${str}' ; Ranges must have homogenous types`
 			);
-			if (output.start > output.end) {
+			if (output.start && output.end && output.start > output.end) {
 				throw new Futils.SyntaxException(
 					`Invalid range; start date must be on or before end date; ${output.start} > ${output.end}`
 				);
@@ -184,7 +182,7 @@ class RangeType extends DataType {
 				end,
 				`Could not convert '${end}' to Int in declared range: '${str}' ; Ranges must have homogenous types`
 			).data;
-			if (output.start > output.end) {
+			if (output.start && output.end && output.start > output.end) {
 				throw new Futils.SyntaxException(
 					`Invalid range; start integer must be equal to or less than end integer; ${output.start} > ${output.end}`
 				);
@@ -201,9 +199,7 @@ class RangeType extends DataType {
 	asString() {
 		const rangeSymb = this.data.endInclusive ? "...=" : "...";
 		if (this.data.type === "Date") {
-			return `${this.data.start
-				.toISOString()
-				.slice(0, 10)}${rangeSymb}${this.data.end.toISOString().slice(0, 10)}`;
+			return `${this.data.start.toISOString().slice(0, 10)}${rangeSymb}${this.data.end.toISOString().slice(0, 10)}`;
 		} else if (this.data.type === "Int") {
 			return `${this.data.start}${rangeSymb}${this.data.end}`;
 		} else {
@@ -213,8 +209,11 @@ class RangeType extends DataType {
 }
 
 class SetType extends DataType {
+	type: any;
+	str: string;
+	list: any[];
 	getType(elements) {
-		let types = new Set();
+		let types: Set<DataType> | DataType[] = new Set();
 		for (const element of elements) {
 			types.add(element.constructor.name);
 		}
@@ -228,14 +227,18 @@ class SetType extends DataType {
 		}
 		return types[0];
 	}
-	getData(str, REFS, kwargs = null) {
+	getData(
+		str,
+		REFS,
+		kwargs = { types: STRING_TYPES }
+	) {
 		if (!RegExps.VALID_SET_RE.test(str)) {
 			throw new Futils.SyntaxException(
 				`Invalid set; must be in the format: { element1, element2,... }, where elements have either string format or date format; ( case insensitive regex: ${RegExps.VALID_SET_RE.source} ) (Just chat gpt this one bro); got: '${str}'`
 			);
 		}
-		const elements = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true).map(
-			(elt) => {
+		const elements = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true)
+			.map((elt) => {
 				if (RegExps.VALID_SEASON_LITERAL_RE.test(elt)) {
 					const season = getSeasonFromSyntaxStr(elt, REFS.SeasonDetails);
 					return new StringType(season.Code, REFS, { types: ["season-code"] });
@@ -248,8 +251,7 @@ class SetType extends DataType {
 						`Invalid set element; must be a string or date; got: '${elt}'`
 					);
 				}
-			}
-		);
+			});
 		console.log("GOT ELEMENTS: ", elements);
 		this.type = this.getType(elements);
 		this.str = `{${elements.map((data) => data.asString()).join(", ")}}`;
@@ -333,5 +335,14 @@ const TYPES = {
 	Set: SetType,
 	Range: RangeType,
 };
+
+type TYPES = {
+	Date: typeof DateType;
+	String: typeof StringType;
+	Int: typeof IntType;
+	Bool: typeof BoolType;
+	Set: typeof SetType;
+	Range: typeof RangeType;
+}
 
 export { parseDataType, TYPES, DataType };

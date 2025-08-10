@@ -1,4 +1,4 @@
-import DOC_ELEMENTS from "../page-utilities/doc-element-references";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 
 const STYLES = {
     RED : "text-danger",
