@@ -3,11 +3,11 @@ import {
 	HOME_PAGE_FNS,
 	HOME_PAGE_STATES,
 } from "../../../../orchestration/page-state-manager.js";
-import FilterSyntaxParser from "../../../../../e7/filter-parsing/filter-syntax-parser.js";
+import FilterSyntaxParser from "../../../../../e7/filter-parsing/filter-syntax-parser.ts";
 import { CM } from "../../../../../content-manager.js";
 import CSVParse from "../../../../../csv-parse.js";
 import { StatsView } from "../stats/stats-logic.js";
-import { CLEAN_STR_TO_WORLD_CODE } from "../../../../../e7/references.js";
+import { CLEAN_STR_TO_WORLD_CODE } from "../../../../../e7/references.ts";
 import { TextUtils } from "../../../../orchestration/text-controller.js";
 import { NavBarUtils } from "../../../../page-utilities/nav-bar-utils.js";
 import { addLoadDataListeners } from "./load-data-listeners.js";
@@ -119,7 +119,7 @@ async function runLogic(stateDispatcher) {
 			await CM.BattleManager.cacheUpload(result.battleArr, HM);
 		} else if (SOURCE === CONTEXT.VALUES.SOURCE.QUERY) {
 			const userObj = CONTEXT.popKey(CONTEXT.KEYS.TRY_SET_USER);
-			if (userObj === null) 
+			if (userObj === null)
 				throw new Error("TRY_SET_USER User missing from CONTEXT");
 			user = await try_find_user(userObj); // find user automatically throws error if not found
 			await replaceUser(user);

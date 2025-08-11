@@ -2,7 +2,7 @@ import {
 	PageStateManager,
 	HOME_PAGE_STATES,
 } from "../orchestration/page-state-manager.js";
-import { WORLD_CODE_TO_CLEAN_STR } from "../../e7/references.js";
+import { WORLD_CODE_TO_CLEAN_STR } from "../../e7/references.ts";
 import UserManager from "../../e7/user-manager.js";
 import DOC_ELEMENTS from "./doc-element-references.js";
 import IPM from "../orchestration/inter-page-manager.js";

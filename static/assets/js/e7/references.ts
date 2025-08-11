@@ -1,4 +1,4 @@
-export const WORLD_CODES = new Set([
+export const WORLD_CODES: Set<string> = new Set([
 	"world_kor",
 	"world_global",
 	"world_jpn",
@@ -6,7 +6,7 @@ export const WORLD_CODES = new Set([
 	"world_eu",
 ]);
 
-export const WORLD_CODE_ENUM = {
+export const WORLD_CODE_ENUM: Record<string, string> = {
 	GLOBAL: "world_global",
 	KOR: "world_kor",
 	JPN: "world_jpn",
@@ -14,7 +14,7 @@ export const WORLD_CODE_ENUM = {
 	EU: "world_eu",
 };
 
-export const WORLD_CODE_TO_CLEAN_STR = {
+export const WORLD_CODE_TO_CLEAN_STR: Record<string, string> = {
 	[WORLD_CODE_ENUM.GLOBAL]: "Global",
 	[WORLD_CODE_ENUM.KOR]: "Korea",
 	[WORLD_CODE_ENUM.JPN]: "Japan",
@@ -22,7 +22,7 @@ export const WORLD_CODE_TO_CLEAN_STR = {
 	[WORLD_CODE_ENUM.EU]: "Europe",
 };
 
-export const CLEAN_STR_TO_WORLD_CODE = {
+export const CLEAN_STR_TO_WORLD_CODE: Record<string, string> = {
 	[WORLD_CODE_TO_CLEAN_STR.world_global]: WORLD_CODE_ENUM.GLOBAL,
 	[WORLD_CODE_TO_CLEAN_STR.world_kor]: WORLD_CODE_ENUM.KOR,
 	[WORLD_CODE_TO_CLEAN_STR.world_jpn]: WORLD_CODE_ENUM.JPN,
@@ -30,7 +30,7 @@ export const CLEAN_STR_TO_WORLD_CODE = {
 	[WORLD_CODE_TO_CLEAN_STR.world_eu]: WORLD_CODE_ENUM.EU,
 };
 
-export const EQUIPMENT_SET_MAP = {
+export const EQUIPMENT_SET_MAP: Record<string, string> = {
 	set_speed: "Speed",
 	set_acc: "Hit",
 	set_cri: "Critical",
@@ -51,9 +51,9 @@ export const EQUIPMENT_SET_MAP = {
 	set_scar: "Injury",
 };
 
-export const ONE_DAY = 1000 * 60 * 60 * 24;
+export const ONE_DAY: number = 1000 * 60 * 60 * 24;
 
-export const LEAGUE_MAP = {
+export const LEAGUE_MAP: Record<string, number> = {
 	bronze: 0,
 	silver: 1,
 	gold: 2,
@@ -64,40 +64,6 @@ export const LEAGUE_MAP = {
 	emperor: 7,
 	legend: 8,
 };
-
-export const COLUMNS = [
-	"Date/Time",
-	"Seq Num",
-
-	"P1 ID",
-	"P1 Server",
-	"P1 League",
-	"P1 Points",
-	"P2 ID",
-	"P2 Server",
-	"P2 League",
-
-	"Win",
-	"First Pick",
-	"P1 Preban 1",
-	"P1 Preban 2",
-	"P2 Preban 1",
-	"P2 Preban 2",
-
-	"P1 Pick 1",
-	"P1 Pick 2",
-	"P1 Pick 3",
-	"P1 Pick 4",
-	"P1 Pick 5",
-	"P2 Pick 1",
-	"P2 Pick 2",
-	"P2 Pick 3",
-	"P2 Pick 4",
-	"P2 Pick 5",
-
-	"P1 Postban",
-	"P2 Postban",
-];
 
 export const COLUMNS_MAP = {
 	SEASON: "Season",
@@ -139,9 +105,51 @@ export const COLUMNS_MAP = {
 	P1_PREBANS_PRIME_PRODUCT: "P1 Prebans Prime Product",
 	P2_PREBANS_PRIMES: "P2 Prebans Primes",
 	P2_PREBANS_PRIME_PRODUCT: "P2 Prebans Prime Product",
+} as const;
+
+export type BattleType = {
+    [COLUMNS_MAP.SEASON]: string;
+    [COLUMNS_MAP.SEASON_CODE]: string;
+    [COLUMNS_MAP.DATE_TIME]: string;
+    [COLUMNS_MAP.SECONDS]: number;
+    [COLUMNS_MAP.TURNS]: number;
+    [COLUMNS_MAP.SEQ_NUM]: string;
+    [COLUMNS_MAP.P1_ID]: string;
+    [COLUMNS_MAP.P1_SERVER]: string;
+    [COLUMNS_MAP.P2_ID]: string;
+    [COLUMNS_MAP.P2_SERVER]: string;
+    [COLUMNS_MAP.P1_LEAGUE]: string;
+    [COLUMNS_MAP.P2_LEAGUE]: string;
+    [COLUMNS_MAP.P1_POINTS]: number | null;
+    [COLUMNS_MAP.POINT_GAIN]: number | null;
+    [COLUMNS_MAP.WIN]: boolean;
+    [COLUMNS_MAP.FIRST_PICK]: boolean;
+    [COLUMNS_MAP.FIRST_TURN]: boolean;
+    [COLUMNS_MAP.FIRST_TURN_HERO]: string;
+    [COLUMNS_MAP.CR_BAR]: Array<[string, number]>;
+    [COLUMNS_MAP.P1_PREBANS]: string[];
+    [COLUMNS_MAP.P2_PREBANS]: string[];
+    [COLUMNS_MAP.P1_PICKS]: string[];
+    [COLUMNS_MAP.P2_PICKS]: string[];
+    [COLUMNS_MAP.P1_POSTBAN]: string;
+    [COLUMNS_MAP.P2_POSTBAN]: string;
+    [COLUMNS_MAP.P1_EQUIPMENT]: Array<Array<string>>;
+    [COLUMNS_MAP.P2_EQUIPMENT]: Array<Array<string>>;
+    [COLUMNS_MAP.P1_ARTIFACTS]: string[];
+    [COLUMNS_MAP.P2_ARTIFACTS]: string[];
+    [COLUMNS_MAP.P1_MVP]: string;
+    [COLUMNS_MAP.P2_MVP]: string;
+    [COLUMNS_MAP.P1_PICKS_PRIMES]: number[];
+    [COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT]: number[];
+    [COLUMNS_MAP.P2_PICKS_PRIMES]: number[];
+    [COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT]: number[];
+    [COLUMNS_MAP.P1_PREBANS_PRIMES]: number[];
+    [COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT]: number[];
+    [COLUMNS_MAP.P2_PREBANS_PRIMES]: number[];
+    [COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT]: number[];
 };
 
-export const ARRAY_COLUMNS = [
+export const ARRAY_COLUMNS: string[] = [
 	COLUMNS_MAP.P1_EQUIPMENT,
 	COLUMNS_MAP.P2_EQUIPMENT,
 	COLUMNS_MAP.P1_ARTIFACTS,
@@ -153,25 +161,25 @@ export const ARRAY_COLUMNS = [
 	COLUMNS_MAP.P2_PICKS,
 ];
 
-export const BOOLS_COLS = [
+export const BOOLS_COLS: string[] = [
 	COLUMNS_MAP.FIRST_PICK,
 	COLUMNS_MAP.FIRST_TURN,
 	COLUMNS_MAP.WIN,
 ];
 
-export const INT_COLUMNS = [
+export const INT_COLUMNS: string[] = [
 	COLUMNS_MAP.SECONDS,
 	COLUMNS_MAP.TURNS,
 	COLUMNS_MAP.P1_POINTS,
 	COLUMNS_MAP.POINT_GAIN,
 ];
 
-export const TITLE_CASE_COLUMNS = [
+export const TITLE_CASE_COLUMNS: string[] = [
 	COLUMNS_MAP.P1_LEAGUE,
 	COLUMNS_MAP.P2_LEAGUE,
 ];
 
-export const HERO_STATS_COLUMN_MAP = {
+export const HERO_STATS_COLUMN_MAP: Record<string, string> = {
 	HERO_NAME: "Hero Name",
 	BATTLES: "Battles",
 	PICK_RATE: "Pick Rate",
@@ -198,7 +206,7 @@ export const HERO_STATS_COLUMN_MAP = {
  * @param {number} limit - The upper limit of the prime numbers to generate. Must be a positive integer.
  * @returns {number[]} - A list of all prime numbers up to and including the given limit.
  */
-function getPrimes(limit) {
+function getPrimes(limit: number): number[] {
 	const sieve = new Uint8Array(limit + 1);
 	const primes = [];
 	for (let i = 2; i <= limit; i++) {
@@ -212,4 +220,4 @@ function getPrimes(limit) {
 	return primes;
 }
 
-export const PRIMES = getPrimes(30000);
+export const PRIMES: number[] = getPrimes(30000);

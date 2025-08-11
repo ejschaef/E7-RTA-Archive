@@ -1,12 +1,11 @@
 import HeroManager from "../../e7/hero-manager.js";
-import FilterSyntaxParser from "../../e7/filter-parsing/filter-syntax-parser.js";
+import FilterSyntaxParser from "../../e7/filter-parsing/filter-syntax-parser.ts";
 import {
 	TextController,
 	TextPacket,
 } from "../orchestration/text-controller.js";
 
 let PageUtils = {
-
 	addStrParam: function (URL, key, val) {
 		const encodedParam = encodeURIComponent(val);
 		URL = `${URL}?${key}=${encodedParam}`;

@@ -1,4 +1,4 @@
-import { FieldType } from "./filter-parsing/field-type.js";
+import { FieldType } from "./filter-parsing/field-type.ts";
 
 /**
  * Returns a new RegExp object that matches if the input pattern matches the beginning of a string
@@ -152,7 +152,7 @@ function tokenMatch(stream) {
 		console.log("Matched stream as Data Field:", stream);
 		return "field";
 	}
-    if (stream.match(padRegex(VALID_DATA_WORD_RE))) {
+	if (stream.match(padRegex(VALID_DATA_WORD_RE))) {
 		console.log("Matched stream as Data Field:", stream);
 		return "declared-data";
 	}

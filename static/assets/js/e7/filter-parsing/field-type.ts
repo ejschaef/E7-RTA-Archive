@@ -1,10 +1,10 @@
-import Futils from "./filter-utils.js";
-import { COLUMNS_MAP } from "../references.js";
+import Futils from "./filter-utils.ts";
+import { COLUMNS_MAP, BattleType } from "../references.ts";
 
-const INT_FIELDS = new Set(["victory-points", "point-gain"]);
+const INT_FIELDS: Set<string> = new Set(["victory-points", "point-gain"]);
 
 // Fields that will extract arrays and can be used with the 'in' operators
-const SET_FIELDS = new Set([
+const SET_FIELDS: Set<string> = new Set([
 	"prebans",
 	"p1.picks",
 	"p2.picks",
@@ -13,13 +13,16 @@ const SET_FIELDS = new Set([
 ]);
 
 class FieldType {
+	str: string;
+	extractData: (battle: BattleType) => any;
+
 	// FNS that take in a clean format battle and return the appropriate data
-	static FIELD_EXTRACT_FN_MAP = {
+	static FIELD_EXTRACT_FN_MAP: { [key: string]: (battle: BattleType) => any } = {
 		date: (battle) =>
 			battle[COLUMNS_MAP.DATE_TIME]
-				? new Date(`${battle[COLUMNS_MAP.DATE_TIME]?.slice(0, 10)}T00:00:00`)
+				? new Date(`${(battle[COLUMNS_MAP.DATE_TIME] as string).slice(0, 10)}T00:00:00`)
 				: "N/A",
-		"season" : (battle) => battle[COLUMNS_MAP.SEASON_CODE],
+		season: (battle) => battle[COLUMNS_MAP.SEASON_CODE],
 		"is-first-pick": (battle) => (battle[COLUMNS_MAP.FIRST_PICK] ? 1 : 0),
 		"is-win": (battle) => (battle[COLUMNS_MAP.WIN] ? 1 : 0),
 		"victory-points": (battle) => battle[COLUMNS_MAP.P1_POINTS],
@@ -29,7 +32,10 @@ class FieldType {
 		"p2.prebans": (battle) => battle[COLUMNS_MAP.P2_PREBANS],
 		"p1.postban": (battle) => battle[COLUMNS_MAP.P1_POSTBAN],
 		"p2.postban": (battle) => battle[COLUMNS_MAP.P2_POSTBAN],
-		prebans: (battle) => [...battle[COLUMNS_MAP.P1_PREBANS], ...battle[COLUMNS_MAP.P2_PREBANS]],
+		prebans: (battle) => [
+			...battle[COLUMNS_MAP.P1_PREBANS],
+			...battle[COLUMNS_MAP.P2_PREBANS],
+		],
 		"p1.pick1": (battle) => battle[COLUMNS_MAP.P1_PICKS][0],
 		"p1.pick2": (battle) => battle[COLUMNS_MAP.P1_PICKS][1],
 		"p1.pick3": (battle) => battle[COLUMNS_MAP.P1_PICKS][2],
@@ -55,7 +61,7 @@ class FieldType {
 		"point-gain": (battle) => battle[COLUMNS_MAP.POINT_GAIN],
 	};
 
-	constructor(str) {
+	constructor(str: string) {
 		const fn = FieldType.FIELD_EXTRACT_FN_MAP[str];
 		if (!fn) {
 			throw new Futils.ValidationError(
@@ -70,7 +76,7 @@ class FieldType {
 		this.extractData = fn;
 	}
 
-	asString() {
+	asString(): string {
 		return this.str;
 	}
 }

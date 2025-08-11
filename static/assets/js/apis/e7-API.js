@@ -1,4 +1,4 @@
-import { WORLD_CODES } from "../e7/references.js";
+import { WORLD_CODES } from "../e7/references.ts";
 
 const HERO_URL =
 	"https://static.smilegatemegaport.com/gameRecord/epic7/epic7_hero.json";

@@ -2,7 +2,7 @@ import {
 	WORLD_CODES,
 	WORLD_CODE_TO_CLEAN_STR,
 	WORLD_CODE_ENUM,
-} from "./references.js";
+} from "./references.ts";
 import ClientCache from "../cache-manager.js";
 import E7API from "../apis/e7-API.js";
 import PYAPI from "../apis/py-API.js";
@@ -44,7 +44,7 @@ async function getUserMapFromE7Server(world_code) {
 }
 
 /**
- * Gets a user map from the E7 server for the given world code. 
+ * Gets a user map from the E7 server for the given world code.
  * The user map is a map of user IDs to user objects.
  * If the user map is cached, it will be returned from the cache.
  * Otherwise, it will be fetched from the E7 server and cached.
@@ -101,14 +101,13 @@ async function findUserClientSide(user, userWorldCode) {
 }
 
 let UserManager = {
-
 	getUserMap: getUserMap,
 
 	/**
 	 * Finds a user in the user map for the given world code using either user ID or name
 	 * The world code is required
 	 * If the user maps api call fails, will try to find the user by calling flask server
-	 * 
+	 *
 	 * @param {Object} searchUser - Object with either user ID or name, and world code
 	 * @returns {Object} - Found user object
 	 * @throws {Error} - If user is not found with given identifier in given world code
@@ -116,9 +115,13 @@ let UserManager = {
 	findUser: async function (searchUser) {
 		console.log(`Attempting to find user: ${JSON.stringify(searchUser)}`);
 		if (!(searchUser.name || searchUser.id) || !searchUser.world_code) {
-            throw new Error("Must pass a user object with either user.name or user.id, and user.world_code to find user");
-        }
-		let identifier = searchUser.id ? `ID: ${searchUser.id}` : `Name: '${searchUser.name}'`;
+			throw new Error(
+				"Must pass a user object with either user.name or user.id, and user.world_code to find user"
+			);
+		}
+		let identifier = searchUser.id
+			? `ID: ${searchUser.id}`
+			: `Name: '${searchUser.name}'`;
 		let result = null;
 
 		result = await findUserClientSide(searchUser, searchUser.world_code);
@@ -132,12 +135,18 @@ let UserManager = {
 		if (result.ok) {
 			const user = result.user;
 			if (user === null) {
-				throw new Error(`Could not find user with ${identifier} in Server: ${cleanStr(searchUser.world_code)}`);
+				throw new Error(
+					`Could not find user with ${identifier} in Server: ${cleanStr(
+						searchUser.world_code
+					)}`
+				);
 			}
 			return user;
 		}
 
-		throw new Error(`Function did not properly terminate: ${JSON.stringify(result)}`);
+		throw new Error(
+			`Function did not properly terminate: ${JSON.stringify(result)}`
+		);
 	},
 
 	setUser: async function (userData) {

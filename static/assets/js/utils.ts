@@ -1,14 +1,24 @@
 import Fuse from "fuse.js";
 
-export function toTitleCase(str) {
+export function toTitleCase(str: string): string {
     return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }
 
-export function strArrToCountMap(strArr) {
+export function strArrToCountMap(strArr: string[]): Record<string, number> {
+    let acc: Record<string, number> = {};
     return strArr.reduce((acc, elt) => {
         acc[elt] = (acc[elt] || 0) + 1;
         return acc;
-    }, {})
+    }, acc);
+}
+
+export function arrToCountMap<T>(arr: T[]): Record<string, number> {
+    let acc: Record<string, number> = {};
+    return arr.reduce((acc, elt) => {
+        const key = `${elt}`;
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+    }, acc);
 }
 
 export function getStrMatches(str: string, strings: string[], numMatches: number | null = null, customConfig: any = null) {

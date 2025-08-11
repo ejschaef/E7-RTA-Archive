@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import { COLUMNS_MAP } from "./e7/references.js";
+import { COLUMNS_MAP } from "./e7/references.ts";
 
 const COLUMNS = Object.values(COLUMNS_MAP);
 

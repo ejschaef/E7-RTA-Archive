@@ -1,11 +1,10 @@
 import ClientCache from "../cache-manager.js";
 import PYAPI from "../apis/py-API.js";
-import { ONE_DAY } from "./references.js";
+import { ONE_DAY } from "./references.ts";
 
 // a Season record has the following fields: "Season Number", "Code", "Season", "Start", "End", "Status"
 
 let SeasonManager = {
-
 	fetchAndCacheSeasonDetails: async function () {
 		const result = await PYAPI.fetchSeasonDetails();
 		if (result.error) {
@@ -19,7 +18,9 @@ let SeasonManager = {
 			season["Season Number"] = String(season["Season Number"]);
 		});
 
-		seasonDetails.sort((a, b) => parseInt(a["Season Number"]) - parseInt(b["Season Number"]));
+		seasonDetails.sort(
+			(a, b) => parseInt(a["Season Number"]) - parseInt(b["Season Number"])
+		);
 
 		// add pre seasons
 		const preSeasonFilled = [seasonDetails[0]];

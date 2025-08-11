@@ -3,7 +3,7 @@ import {
 	WORLD_CODE_TO_CLEAN_STR,
 	COLUMNS_MAP,
 	HERO_STATS_COLUMN_MAP,
-} from "./references.js";
+} from "./references.ts";
 
 const getWins = (battleList) => battleList.filter((b) => b[COLUMNS_MAP.WIN]);
 const getFirstPickSubset = (battleList) =>
@@ -80,7 +80,7 @@ function queryStats(battleList, totalBattles, heroName) {
 		[HERO_STATS_COLUMN_MAP.POSTBANS]: postBanned,
 		[HERO_STATS_COLUMN_MAP.POSTBAN_RATE]: divideToPercentString(
 			postBanned,
-      gamesAppeared
+			gamesAppeared
 		),
 		[HERO_STATS_COLUMN_MAP.SUCCESS_RATE]: divideToPercentString(
 			successes,
@@ -111,7 +111,6 @@ function getPrimes(battleList, isP1 = true) {
 }
 
 function getHeroStats(battleList, HM) {
-
 	if (battleList.length === 0) {
 		return { playerHeroStats: [], enemyHeroStats: [] };
 	}
@@ -187,13 +186,10 @@ function getFirstPickStats(battleList, HM) {
 	return result;
 }
 
-
-
 function getPrebanStats(battleList, HM) {
 	//console.log(`Got HM: ${HM}`);
 
 	const emptyPrime = HeroManager.getHeroByName("Empty", HM).prime;
-
 
 	if (battleList.length === 0) {
 		return [];
@@ -276,16 +272,16 @@ function getGeneralStats(battleList, HM) {
 	const totalTurns = battleList.reduce((acc, b) => acc + b["Turns"], 0);
 	const avgTurns = totalBattles > 0 ? totalTurns / totalBattles : 0;
 
-	const maxTurns = battleList.length > 0 
-		? Math.max(...battleList.map((b) => b["Turns"]))
-		: 0;
+	const maxTurns =
+		battleList.length > 0 ? Math.max(...battleList.map((b) => b["Turns"])) : 0;
 
 	const totalSeconds = battleList.reduce((acc, b) => acc + b["Seconds"], 0);
 	const avgSeconds = totalBattles > 0 ? totalSeconds / totalBattles : 0;
 
-	const maxSeconds = battleList.length > 0 
-		? Math.max(...battleList.map((b) => b["Seconds"]))
-		: 0;
+	const maxSeconds =
+		battleList.length > 0
+			? Math.max(...battleList.map((b) => b["Seconds"]))
+			: 0;
 
 	let avgTimeStr = secondsToTimeStr(avgSeconds);
 	let maxTimeStr = secondsToTimeStr(maxSeconds);

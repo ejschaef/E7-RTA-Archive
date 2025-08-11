@@ -8,7 +8,7 @@ import {
 	BOOLS_COLS,
 	INT_COLUMNS,
 	TITLE_CASE_COLUMNS,
-} from "./references.js";
+} from "./references.ts";
 import { toTitleCase } from "../utils.ts";
 
 // takes in cleaned battle row (including from uploaded file or in formatBattleAsRow)

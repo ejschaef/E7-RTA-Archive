@@ -1,33 +1,23 @@
+import { RangeData } from "./declared-data-types.ts";
+
+type inOperatorSet = Set<any> | RangeData;
+
 // must handle both regular sets and ranges
-function inOperatorFn(a, b) {
+function inOperatorFn(a: string | Date, b: inOperatorSet): boolean {
 	if (b instanceof Set) {
 		return b.has(a);
 	}
 	// handle ranges
 	else if (
-		typeof b === "object" &&
-		b !== null &&
-		!Array.isArray(b) &&
-		["start", "end", "endInclusive", "type"].every((key) =>
-			b.hasOwnProperty(key)
-		)
+		!Array.isArray(b)
 	) {
 		return a >= b.start && (b.endInclusive ? a <= b.end : a < b.end);
 	}
-
 	// handles fields that are arrays (ie p1.picks)
-	else if (Array.isArray(b)) {
-		return b.includes(a);
-	} else {
-		throw new Error(
-			`Invalid match pattern for 'in' operators; got: '${a}' and '${JSON.stringify(
-				b
-			)}}' (${b.constructor.name})`
-		);
-	}
+	return b.includes(a);
 }
 
-const OPERATOR_MAP = {
+const OPERATOR_MAP: Record<string, (a: any, b: any) => boolean> = {
 	">": (a, b) => a > b,
 	"<": (a, b) => a < b,
 	"=": (a, b) => a === b,

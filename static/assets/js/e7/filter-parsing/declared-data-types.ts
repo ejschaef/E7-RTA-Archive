@@ -1,14 +1,14 @@
-import Futils from "./filter-utils.js";
+import Futils from "./filter-utils.ts";
 import { RegExps } from "../regex.js";
 import { toTitleCase } from "../../utils.ts";
 import HeroManager from "../hero-manager.js";
-import { EQUIPMENT_LOWERCASE_STRINGS_MAP } from "./filter-parse-references.js";
-import { LEAGUE_MAP } from "../references.js";
-import { WORLD_CODE_TO_CLEAN_STR } from "../references.js";
+import { EQUIPMENT_LOWERCASE_STRINGS_MAP } from "./filter-parse-references.ts";
+import { WORLD_CODE_TO_CLEAN_STR, LEAGUE_MAP } from "../references.ts";
+import { BaseFilterElement, FilterRefs } from "./filter-ts-types.ts";
 
-function getSeasonFromSyntaxStr(str: string, seasonDetails) {
+function getSeasonFromSyntaxStr(str: string, seasonDetails: any[]) {
 	const seasonNum = str.split("-")[1];
-	const season = seasonDetails.find((season) => season["Season Number"] === seasonNum);
+	const season = seasonDetails.find((season: { [x: string]: string; }) => season["Season Number"] === seasonNum);
 	if (!season) {
 		throw new Error(
 			`Invalid season specified; ${seasonNum} is not a valid season number; failed on str: '${str}'`
@@ -18,14 +18,11 @@ function getSeasonFromSyntaxStr(str: string, seasonDetails) {
 }
 
 class DataType {
-	rawString: any;
+	rawString: string;
 	data: any;
-	constructor(str: string, REFS = null, kwargs: null | Object = null) {
+	constructor(str: string) {
 		this.rawString = str;
-		this.data = this.getData(str, REFS, kwargs); // kwargs will be an object with specific arguments for the specific datatype
-	}
-	getData(str: string, REFS: any, kwargs: any): any {
-		throw new Error("Method not implemented.");
+		this.data = null;
 	}
 
 	asString() {
@@ -36,11 +33,17 @@ class DataType {
 const STRING_TYPES = ["hero", "league", "server", "equipment", "artifact", "season-code"];
 
 class StringType extends DataType {
+
+	constructor(str: string, REFS: FilterRefs, kwargs: any) {
+		super(str);
+		this.data = this.getData(str, REFS, kwargs || { types: STRING_TYPES });
+	}
+
 	getData(
-		str,
-		REFS,
+		str: string,
+		REFS: FilterRefs,
 		kwargs = { types: STRING_TYPES }
-	) {
+	): string {
 		str = Futils.trimSurroundingQuotes(str);
 		str = str.trim();
 		console.log(`Parsing string: [${str}] with types: [${kwargs.types}]`);
@@ -49,7 +52,7 @@ class StringType extends DataType {
 				`Invalid string; all string content must start with a letter followed by either num, hyphen or period ( case insensitive regex: ${RegExps.VALID_STRING_LITERAL_RE.source} ); got: [${str}]`
 			);
 		}
-		function parseFn(type, str) {
+		function parseFn(type: string, str: string) {
 			switch (type) {
 				case "hero":
 					return HeroManager.getHeroByName(str, REFS.HM)?.name;
@@ -64,7 +67,7 @@ class StringType extends DataType {
 				case "artifact":
 					return REFS.ARTIFACT_LOWERCASE_STRINGS_MAP[str];
 				case "season-code":
-					return REFS.SeasonDetails.find((season) => season.Code === str)?.Code;
+					return REFS.SeasonDetails.find((season: { Code: any; }) => season.Code === str)?.Code;
 			}
 		}
 		for (const type of kwargs.types) {
@@ -87,7 +90,12 @@ class StringType extends DataType {
 }
 
 class DateType extends DataType {
-	getData(str, _REFS = null) {
+
+	constructor(str: string) {
+		super(str);
+		this.data = this.getData(str);
+	}
+	getData(str: string): Date {
 		return Futils.parseDate(str);
 	}
 
@@ -97,7 +105,12 @@ class DateType extends DataType {
 }
 
 class IntType extends DataType {
-	getData(str, _REFS = null) {
+
+	constructor(str: string) {
+		super(str);
+		this.data = this.getData(str);
+	}
+	getData(str: string): number {
 		if (!RegExps.VALID_INT_LITERAL_RE.test(str)) {
 			throw new Futils.SyntaxException(
 				`Invalid integer; must be a number; got: '${str}'`
@@ -117,7 +130,13 @@ class IntType extends DataType {
 }
 
 class BoolType extends DataType {
-	getData(str, _REFS = null) {
+
+	constructor(str: string) {
+		super(str);
+		this.data = this.getData(str);
+	}
+
+	getData(str: string) {
 		if (!RegExps.VALID_BOOL_LITERAL_RE.test(str)) {
 			throw new Futils.SyntaxException(
 				`Invalid boolean; must be 'true' or 'false'; got: '${str}'`
@@ -130,8 +149,16 @@ class BoolType extends DataType {
 	}
 }
 
+export type RangeData = { start: Date; end: Date; endInclusive: boolean; type: string };
+
 class RangeType extends DataType {
-	getData(str, _REFS = null) {
+
+	constructor(str: string) {
+		super(str);
+		this.data = this.getData(str);
+	}	
+
+	getData(str: string) {
 		let split = str.split("...");
 		if (split.length !== 2) {
 			throw new Futils.SyntaxException(
@@ -144,9 +171,9 @@ class RangeType extends DataType {
 			end = end.replace("=", "");
 			endInclusive = true;
 		}
-		let output = {
-			start: null,
-			end: null,
+		let output: RangeData = {
+			start: new Date(),
+			end: new Date(),
 			endInclusive: endInclusive,
 			type: "",
 		};
@@ -171,13 +198,13 @@ class RangeType extends DataType {
 			output.type = "Date";
 		} else if (RegExps.VALID_INT_LITERAL_RE.test(start)) {
 			output.start = Futils.tryConvert(
-				(i) => new IntType(i),
+				(i: string) => new IntType(i),
 				"Int",
 				start,
 				`Could not convert '${start}' to Int in declared range: '${str}'`
 			).data;
 			output.end = Futils.tryConvert(
-				(i) => new IntType(i),
+				(i: string) => new IntType(i),
 				"Int",
 				end,
 				`Could not convert '${end}' to Int in declared range: '${str}' ; Ranges must have homogenous types`
@@ -211,9 +238,18 @@ class RangeType extends DataType {
 class SetType extends DataType {
 	type: any;
 	str: string;
-	list: any[];
-	getType(elements) {
-		let types: Set<DataType> | DataType[] = new Set();
+	list: Date[] | string[];
+
+	constructor(str: string, REFS: any = null, kwargs: any = null) {
+		super(str);
+		this.list = [];
+		this.str = "{}";
+		this.data = this.getData(str, REFS, kwargs);
+	}
+
+
+	getType(elements: (StringType | DateType)[]): string {
+		let types: Set<string> | string[] = new Set();
 		for (const element of elements) {
 			types.add(element.constructor.name);
 		}
@@ -228,8 +264,8 @@ class SetType extends DataType {
 		return types[0];
 	}
 	getData(
-		str,
-		REFS,
+		str: string,
+		REFS: FilterRefs,
 		kwargs = { types: STRING_TYPES }
 	) {
 		if (!RegExps.VALID_SET_RE.test(str)) {
@@ -255,15 +291,16 @@ class SetType extends DataType {
 		console.log("GOT ELEMENTS: ", elements);
 		this.type = this.getType(elements);
 		this.str = `{${elements.map((data) => data.asString()).join(", ")}}`;
-		this.list = elements.map((data) => data.data);
-		return new Set(this.list);
+		const list = elements.map((data) => data.data);
+		this.list = list;
+		return new Set(list);
 	}
-	asString() {
+	asString(): string {
 		return this.str;
 	}
 }
 
-function parseKeywordAsDataType(str, REFS) {
+function parseKeywordAsDataType(str: string, REFS: FilterRefs) {
 	if (RegExps.VALID_SEASON_LITERAL_RE.test(str)) {
 		console.log("Parsing as season");
 		if (REFS.SeasonDetails.length < 1) {
@@ -272,7 +309,7 @@ function parseKeywordAsDataType(str, REFS) {
 			);
 		} else if (str === "current-season") {
 			const seasonCode = REFS.SeasonDetails.find(
-				(season) => season["Status"] === "Active"
+				(season: { [x: string]: string; }) => season["Status"] === "Active"
 			).Code;
 			return new StringType(seasonCode, REFS, { types: ["season-code"] });
 		} else {
@@ -283,11 +320,11 @@ function parseKeywordAsDataType(str, REFS) {
 	throw new Error(`Unrecognized keyword: '${str}'`);
 }
 
-function parseDataType(str, REFS) {
+function parseDataType(str: string, REFS: FilterRefs): BaseFilterElement {
 	console.log(`Trying to Parse DataType: ${str}`);
 	if (RegExps.VALID_STRING_LITERAL_RE.test(str)) {
 		console.log("Parsing as StringType");
-		return new StringType(str, REFS);
+		return new StringType(str, REFS, { types: STRING_TYPES });
 	} else if (RegExps.VALID_DATE_LITERAL_RE.test(str)) {
 		console.log("Parsing as DateType");
 		return new DateType(str);
@@ -337,12 +374,12 @@ const TYPES = {
 };
 
 type TYPES = {
-	Date: typeof DateType;
-	String: typeof StringType;
-	Int: typeof IntType;
-	Bool: typeof BoolType;
-	Set: typeof SetType;
-	Range: typeof RangeType;
+	Date: DateType;
+	String: StringType;
+	Int: IntType;
+	Bool: BoolType;
+	Set: SetType;
+	Range: RangeType;
 }
 
 export { parseDataType, TYPES, DataType };

@@ -1,6 +1,6 @@
 import ClientCache from "../cache-manager.js";
 import { printObjStruct } from "./e7-utils.js";
-import { PRIMES } from "./references.js";
+import { PRIMES } from "./references.ts";
 import PYAPI from "../apis/py-API.js";
 import E7API from "../apis/e7-API.js";
 

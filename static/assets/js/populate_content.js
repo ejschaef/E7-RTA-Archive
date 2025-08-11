@@ -2,7 +2,7 @@ import {
 	COLUMNS_MAP,
 	ARRAY_COLUMNS,
 	HERO_STATS_COLUMN_MAP,
-} from "./e7/references.js";
+} from "./e7/references.ts";
 import { generateRankPlot } from "./e7/plots.js";
 import ClientCache from "./cache-manager.js";
 import UserManager from "./e7/user-manager.js";
