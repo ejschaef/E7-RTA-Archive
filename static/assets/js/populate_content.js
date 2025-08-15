@@ -3,7 +3,7 @@ import {
 	ARRAY_COLUMNS,
 	HERO_STATS_COLUMN_MAP,
 } from "./e7/references.ts";
-import { generateRankPlot } from "./e7/plots.js";
+import { generateRankPlot } from "./e7/plots.ts";
 import ClientCache from "./cache-manager.ts";
 import UserManager from "./e7/user-manager.ts";
 import { Safe } from "./utils.ts";

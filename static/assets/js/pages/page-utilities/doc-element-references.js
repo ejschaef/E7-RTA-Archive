@@ -174,6 +174,12 @@ class FILTER_SYNTAX_PAGE_ELEMENTS {
 		));
 	}
 
+	get ALL_CONTENT_CONTAINER() {
+		return (this._ALL_CONTENT_CONTAINER ||= Safe.unwrapHtmlElt(
+			"all-content-container"
+		));
+	}
+
 }
 
 let DOC_ELEMENTS = {

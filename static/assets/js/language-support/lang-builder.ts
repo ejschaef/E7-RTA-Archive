@@ -1,7 +1,6 @@
-import { LangManager } from "../lang-manager";
 import { LanguageCode, LANGUAGES } from "../e7/references";
 
-export type LangContent = string | string[] | { [key: string]: string } | readonly string[];
+export type LangContent = string | string[] | readonly string[];
 
 export type LangBlock = {
     [LANGUAGES.CODES.EN]: LangContent,
@@ -19,4 +18,3 @@ export type LangBlock = {
 export function getText(lang: LanguageCode, block: LangBlock): LangContent {
     return block[lang] ?? block[LANGUAGES.CODES.EN];
 }
-

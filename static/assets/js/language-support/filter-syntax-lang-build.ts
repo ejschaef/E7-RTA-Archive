@@ -1,6 +1,6 @@
-import { getText, LangBlock, LangContent } from "./lang-builder";
+import { getText, LangBlock } from "./lang-builder";
 import { LanguageCode, LANGUAGES } from "../e7/references";
-import { HTMLComposeElement } from "../pages/html-constructor/html-constructor";
+import { HTMLComposeElement, ComposeOption } from "../pages/html-constructor/html-constructor";
 
 const EN = LANGUAGES.CODES.EN;
 
@@ -311,6 +311,7 @@ function injectInCard(composeList: HTMLComposeElement[]): HTMLComposeElement {
   }
 }
 
+
 function paragraph(text: string, classes?: string[]): HTMLComposeElement {
   return {
     tag: "p",
@@ -342,10 +343,17 @@ function cardHeader(title: string, hNum = 1, subheader?: string): HTMLComposeEle
   return header
 }
 
-function cardBody(composeList: HTMLComposeElement[], classes?: string[]): HTMLComposeElement {
+type CardBodyArgs = {
+  composeList?: HTMLComposeElement[],
+  classes?: string[]
+  option?: ComposeOption
+}
+
+function cardBody({ composeList, classes, option }: CardBodyArgs): HTMLComposeElement {
   return {
     tag: "div",
     classes: ["card-body", "pc-component"].concat(classes ?? []),
+    option: option,
     children: composeList
   }
 }
@@ -353,13 +361,6 @@ function cardBody(composeList: HTMLComposeElement[], classes?: string[]): HTMLCo
 function hr(): HTMLComposeElement {
   return {
     tag: "hr"
-  }
-}
-
-function clearFix(): HTMLComposeElement {
-  return {
-    tag: "div",
-    classes: ["clearfix"]
   }
 }
 
@@ -454,7 +455,6 @@ function makeComposeList(lang: LanguageCode): HTMLComposeElement[] {
     return textString;
   }
 
-
   function textList(block: LangBlock) {
     const textList = text(block);
     if (!Array.isArray(textList)) {
@@ -465,108 +465,96 @@ function makeComposeList(lang: LanguageCode): HTMLComposeElement[] {
 
   let overviewBody: HTMLComposeElement[] = [
     cardHeader(textStr(Overview.generalOverviewTitle), 3, textStr(Overview.generalOverviewDescription)),
-    cardBody([
-      header(textStr(Overview.filterUsageTitle), 4),
-      paragraph(textStr(Overview.filterUsageDescription)),
-      clearFix(),
-      hr(),
-      header(textStr(Overview.objectTypesTitle), 4),
-      paragraph(textStr(Overview.objectTypesDescription)),
-      listElement({
-        outertag: "ol",
-        outerclasses: ["text-sm"],
-        textList: textList(Overview.objectTypesList)
-      }),
-      clearFix(),
-      hr(),
-      header(textStr(Overview.highLevelRulesTitle), 4),
-      listElement({
-        outertag: "ol",
-        outerclasses: ["text-sm"],
-        textList: textList(Overview.highLevelRulesList)
-      }),
-      clearFix()
-    ],
-      ["text-sm"]
-    )
+    cardBody({option: ComposeOption.NEST}),
+    header(textStr(Overview.filterUsageTitle), 4),
+    paragraph(textStr(Overview.filterUsageDescription)),
+    hr(),
+    header(textStr(Overview.objectTypesTitle), 4),
+    paragraph(textStr(Overview.objectTypesDescription)),
+    listElement({
+      outertag: "ol",
+      outerclasses: ["text-sm"],
+      textList: textList(Overview.objectTypesList)
+    }),
+    hr(),
+    header(textStr(Overview.highLevelRulesTitle), 4),
+    listElement({
+      outertag: "ol",
+      outerclasses: ["text-sm"],
+      textList: textList(Overview.highLevelRulesList)
+    }),
   ]
   const overviewCard = injectInCard(overviewBody);
 
   let fieldBody = [
     cardHeader(textStr(Fields.title), 5),
-    cardBody([
-      filterSyntaxTable(
-        SyntaxRulesTableRows({
-          entries: [
-            ["date", textStr(Fields.date)],
-            ["season", textStr(Fields.season)],
-            ["is-win", textStr(Fields.isWin)],
-            ["is-first-pick", textStr(Fields.isFirstPick)],
-            ["is-first-turn", textStr(Fields.isFirstTurn)],
-            ["first-turn-hero", textStr(Fields.firstTurnHero)],
-            ["victory-points", textStr(Fields.victoryPoints)],
-            ["prebans", textStr(Fields.prebans)],
-            ["postbans", textStr(Fields.postbans)],
-            ["turns", textStr(Fields.turns)],
-            ["seconds", textStr(Fields.seconds)],
-            ["point-gain", textStr(Fields.pointGain)],
-          ],
-          leftClasses: ["cm-datafield"],
-          rightClasses: ["cm-default"]
-        })
-      ),
-      paragraph(textStr(Fields.attributesTitle)),
-      {
-        tag : "p",
-        textContent: textStr(Fields.attributesTitle),
-      },
-      {
-        tag : "p",
-        classes: ["text-sm"],
-        textContent: textStr(Fields.attributesDescription),
-      },
-      filterSyntaxTable(
-        SyntaxRulesTableRows({
-          entries: [
-            ["pick[n]", textStr(Fields.pickN)],
-            ["picks", textStr(Fields.picks)],
-            ["league", textStr(Fields.league)],
-            ["prebans", textStr(Fields.prebansAttribute)],
-            ["postban", textStr(Fields.postban)],
-            ["server", textStr(Fields.server)],
-            ["id", textStr(Fields.id)],
-            ["mvp", textStr(Fields.mvp)],
-          ],
-          leftClasses: ["cm-datafield"],
-          rightClasses: ["cm-default"]
-        })
-      )
-    ],
-      ["text-sm"]
+    cardBody({ classes: ["text-sm"], option: ComposeOption.NEST }),
+    filterSyntaxTable(
+      SyntaxRulesTableRows({
+        entries: [
+          ["date", textStr(Fields.date)],
+          ["season", textStr(Fields.season)],
+          ["is-win", textStr(Fields.isWin)],
+          ["is-first-pick", textStr(Fields.isFirstPick)],
+          ["is-first-turn", textStr(Fields.isFirstTurn)],
+          ["first-turn-hero", textStr(Fields.firstTurnHero)],
+          ["victory-points", textStr(Fields.victoryPoints)],
+          ["prebans", textStr(Fields.prebans)],
+          ["postbans", textStr(Fields.postbans)],
+          ["turns", textStr(Fields.turns)],
+          ["seconds", textStr(Fields.seconds)],
+          ["point-gain", textStr(Fields.pointGain)],
+        ],
+        leftClasses: ["cm-datafield"],
+        rightClasses: ["cm-default"]
+      })
+    ),
+    paragraph(textStr(Fields.attributesTitle)),
+    {
+      tag : "p",
+      textContent: textStr(Fields.attributesTitle),
+    },
+    {
+      tag : "p",
+      classes: ["text-sm"],
+      textContent: textStr(Fields.attributesDescription),
+    },
+    filterSyntaxTable(
+      SyntaxRulesTableRows({
+        entries: [
+          ["pick[n]", textStr(Fields.pickN)],
+          ["picks", textStr(Fields.picks)],
+          ["league", textStr(Fields.league)],
+          ["prebans", textStr(Fields.prebansAttribute)],
+          ["postban", textStr(Fields.postban)],
+          ["server", textStr(Fields.server)],
+          ["id", textStr(Fields.id)],
+          ["mvp", textStr(Fields.mvp)],
+        ],
+        leftClasses: ["cm-datafield"],
+        rightClasses: ["cm-default"]
+      })
     )
   ]
   const fieldCard = injectInCard(fieldBody);
 
   const declaredDataBody = [
     cardHeader(textStr(DeclaredData.title), 5),
-    cardBody([
-      filterSyntaxTable(
-        SyntaxRulesTableRows({
-          entries: [
-            ["Integer", textStr(DeclaredData.Integer)],
-            ["Date", textStr(DeclaredData.Date)],
-            ["String", textStr(DeclaredData.String)],
-            ["Boolean", textStr(DeclaredData.Boolean)],
-            ["Set", textStr(DeclaredData.Set)],
-            ["Range", textStr(DeclaredData.Range)],
-            ["Season", textStr(DeclaredData.Season)],
-          ],
-          leftClasses: ["cm-declared-data"],
-          rightClasses: ["cm-default"]
-        })
-      )
-    ],
-      ["text-sm"]
+    cardBody({ classes: ["text-sm"], option: ComposeOption.NEST }),
+    filterSyntaxTable(
+      SyntaxRulesTableRows({
+        entries: [
+          ["Integer", textStr(DeclaredData.Integer)],
+          ["Date", textStr(DeclaredData.Date)],
+          ["String", textStr(DeclaredData.String)],
+          ["Boolean", textStr(DeclaredData.Boolean)],
+          ["Set", textStr(DeclaredData.Set)],
+          ["Range", textStr(DeclaredData.Range)],
+          ["Season", textStr(DeclaredData.Season)],
+        ],
+        leftClasses: ["cm-declared-data"],
+        rightClasses: ["cm-default"]
+      })
     )
   ]
   const declaredDataCard = injectInCard(declaredDataBody);
@@ -574,25 +562,22 @@ function makeComposeList(lang: LanguageCode): HTMLComposeElement[] {
 
   const operatorsBody = [
     cardHeader(textStr(Operators.title), 5),
-    cardBody([
-      filterSyntaxTable(
-        SyntaxRulesTableRows({
-          entries: [
-            ["=", textStr(Operators.equal)],
-            ["!=", textStr(Operators.notEqual)],
-            [">", textStr(Operators.gt)],
-            [">=", textStr(Operators.gte)],
-            ["<", textStr(Operators.lt)],
-            ["<=", textStr(Operators.lte)],
-            ["in", textStr(Operators.in)],
-            ["!in", textStr(Operators.notIn)],
-          ],
-          leftClasses: ["cm-operator"],
-          rightClasses: ["cm-default"]
-        })
-      )
-    ],
-      ["text-sm"]
+    cardBody({ classes: ["text-sm"], option: ComposeOption.NEST }),
+    filterSyntaxTable(
+      SyntaxRulesTableRows({
+        entries: [
+          ["=", textStr(Operators.equal)],
+          ["!=", textStr(Operators.notEqual)],
+          [">", textStr(Operators.gt)],
+          [">=", textStr(Operators.gte)],
+          ["<", textStr(Operators.lt)],
+          ["<=", textStr(Operators.lte)],
+          ["in", textStr(Operators.in)],
+          ["!in", textStr(Operators.notIn)],
+        ],
+        leftClasses: ["cm-operator"],
+        rightClasses: ["cm-default"]
+      })
     )
   ]
   const operatorsCard = injectInCard(operatorsBody);
@@ -600,68 +585,62 @@ function makeComposeList(lang: LanguageCode): HTMLComposeElement[] {
 
   const functionsBody = [
     cardHeader(textStr(Functions.title), 5),
-    cardBody([
-      paragraph(textStr(Functions.clauseFunctionsTitle)),
-      paragraph(textStr(Functions.clauseFunctionsDescription), ["text-sm"]),
-      filterSyntaxTable(
-        SyntaxRulesTableRows({
-          entries: [
-            ["AND", textStr(Functions.AND)],
-            ["OR", textStr(Functions.OR)],
-            ["XOR", textStr(Functions.XOR)],
-            ["NOT", textStr(Functions.NOT)],
-          ],
-          leftClasses: ["cm-keyword"],
-          rightClasses: ["cm-default"]
-        })
-      ),
-      paragraph(textStr(Functions.directFunctionsTitle)),
-      paragraph(textStr(Functions.directFunctionsDescription), ["text-sm"]),
-      filterSyntaxTable(
-        SyntaxRulesTableRows({
-          entries: [
-            ["[p1/p2].equipment(hero, str/set)", textStr(Functions.EQUIPMENT)],
-            ["[p1/p2].artifact(hero, str/set)", textStr(Functions.ARTIFACT)],
-            ["[p1/p2].CR(hero, operator, integer)", textStr(Functions.CR)],
-          ],
-          leftClasses: ["cm-keyword"],
-          rightClasses: ["cm-default"]
-        })
-      ),
-      paragraph(textStr(Functions.globalFiltersTitle)),
-      paragraph(textStr(Functions.globalFiltersDescription), ["text-sm"]),
-      filterSyntaxTable(
-        SyntaxRulesTableRows({
-          entries: [
-            ["last-N", textStr(Functions.lastN)],
-          ],
-          leftClasses: ["cm-keyword"],
-          rightClasses: ["cm-default"]
-        })
-      ),
-    ],
-    ["text-sm"]
-    )
+    cardBody({ classes: ["text-sm"], option: ComposeOption.NEST }),
+    paragraph(textStr(Functions.clauseFunctionsTitle)),
+    paragraph(textStr(Functions.clauseFunctionsDescription), ["text-sm"]),
+    filterSyntaxTable(
+      SyntaxRulesTableRows({
+        entries: [
+          ["AND", textStr(Functions.AND)],
+          ["OR", textStr(Functions.OR)],
+          ["XOR", textStr(Functions.XOR)],
+          ["NOT", textStr(Functions.NOT)],
+        ],
+        leftClasses: ["cm-keyword"],
+        rightClasses: ["cm-default"]
+      })
+    ),
+    paragraph(textStr(Functions.directFunctionsTitle)),
+    paragraph(textStr(Functions.directFunctionsDescription), ["text-sm"]),
+    filterSyntaxTable(
+      SyntaxRulesTableRows({
+        entries: [
+          ["[p1/p2].equipment(hero, str/set)", textStr(Functions.EQUIPMENT)],
+          ["[p1/p2].artifact(hero, str/set)", textStr(Functions.ARTIFACT)],
+          ["[p1/p2].CR(hero, operator, integer)", textStr(Functions.CR)],
+        ],
+        leftClasses: ["cm-keyword"],
+        rightClasses: ["cm-default"]
+      })
+    ),
+    paragraph(textStr(Functions.globalFiltersTitle)),
+    paragraph(textStr(Functions.globalFiltersDescription), ["text-sm"]),
+    filterSyntaxTable(
+      SyntaxRulesTableRows({
+        entries: [
+          ["last-N", textStr(Functions.lastN)],
+        ],
+        leftClasses: ["cm-keyword"],
+        rightClasses: ["cm-default"]
+      })
+    ),
   ]
   const functionsCard = injectInCard(functionsBody);
 
   const syntaxBody = [
     cardHeader(textStr(Syntax.title), 5),
-    cardBody([
-      filterSyntaxTable(
-        SyntaxRulesTableRows({
-          entries: [
-            [";", textStr(Syntax.semiColon)],
-            [",", textStr(Syntax.comma)], 
-            ["(", textStr(Syntax.parentheses)],
-            ["{", textStr(Syntax.braces)],
-          ],
-          leftClasses: ["cm-bracket"],
-          rightClasses: ["cm-default"]
-        })
-      )
-    ],
-      ["text-sm"]
+    cardBody({ classes: ["text-sm"], option: ComposeOption.NEST }),
+    filterSyntaxTable(
+      SyntaxRulesTableRows({
+        entries: [
+          [";", textStr(Syntax.semiColon)],
+          [",", textStr(Syntax.comma)], 
+          ["(", textStr(Syntax.parentheses)],
+          ["{", textStr(Syntax.braces)],
+        ],
+        leftClasses: ["cm-bracket"],
+        rightClasses: ["cm-default"]
+      })
     )
   ]
   const syntaxCard = injectInCard(syntaxBody);

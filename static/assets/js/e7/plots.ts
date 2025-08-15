@@ -1,7 +1,20 @@
-export function generateRankPlot(container, battles, user, filteredBattles = null, zoomFiltered = false) {
+import { BattleType } from "./references";
+import { User } from "./user-manager";
+
+export function getSizes(numBattles: number): {markerSize: number, lineWidth: number} {
+    const length = numBattles;
+    const minMarkerSize = 2;
+    const minLineWidth = 1;
+    const markerSize = Math.max(minMarkerSize, 6 - Math.log10(length) * 0.5);
+    const lineWidth = Math.max(minLineWidth, 3 - Math.log10(length) * 0.5);
+    return {markerSize, lineWidth};
+}
+
+
+export function generateRankPlot(container: HTMLElement, battles: BattleType[], user: {name: string}, filteredBattles = null, zoomFiltered = false) {
 
     // Sort battles chronologically by time
-    battles.sort((a, b) => new Date(a["Date/Time"]) - new Date(b["Date/Time"]));
+    battles.sort((a, b) => a["Date/Time"].localeCompare(b["Date/Time"]));
 
     // if the user is not passed, default the username to the ID of the player
     if (!user) {
@@ -15,7 +28,7 @@ export function generateRankPlot(container, battles, user, filteredBattles = nul
     const y = battles.map(b => b["P1 Points"]);
 
     const markerMask = [];
-    const zoom = {
+    const zoom: { [key: string] : number | null} = {
         startX: null,
         endX: null,
         startY: null,
@@ -30,10 +43,10 @@ export function generateRankPlot(container, battles, user, filteredBattles = nul
     for (let [idx, battle] of battles.entries()) {
         if (filteredBattles && battle["Seq Num"] in filteredBattles) {
             if (zoomFiltered === true) {
-                zoom.startX = idx < zoom.startX || zoom.startX === null ? idx - zoomXPadding : zoom.startX;
-                zoom.startY = battle["P1 Points"] < zoom.startY + zoomYPadding || zoom.startY === null ? battle["P1 Points"] - zoomYPadding : zoom.startY;
-                zoom.endX = idx > zoom.endX || zoom.endX === null ? idx + zoomXPadding : zoom.endX;
-                zoom.endY = battle["P1 Points"] > zoom.endY - zoomYPadding || zoom.endY === null ? battle["P1 Points"] + zoomYPadding : zoom.endY;
+                zoom.startX = (zoom.startX === null || idx < zoom.startX) ? idx - zoomXPadding : zoom.startX;
+                zoom.startY = (zoom.startY === null || battle["P1 Points"] < zoom.startY + zoomYPadding) ? battle["P1 Points"] - zoomYPadding : zoom.startY;
+                zoom.endX = (zoom.endX === null || idx > zoom.endX)  ? idx + zoomXPadding : zoom.endX;
+                zoom.endY = (zoom.endY === null || battle["P1 Points"] > zoom.endY - zoomYPadding) ? battle["P1 Points"] + zoomYPadding : zoom.endY;
             }
             markerMask.push(markerFilteredColor);
         } else {
@@ -46,17 +59,19 @@ export function generateRankPlot(container, battles, user, filteredBattles = nul
         b["P1 League"]              // league
     ]);
 
+    const sizes = getSizes(battles.length);
+
     const trace = {
         x: x,
         y: y,
         mode: 'lines+markers',
         line: {
             color: '#4f9293',
-            width: 2
+            width: sizes.lineWidth
         },
         marker: {
             symbol: 'circle',
-            size: 4,
+            size: sizes.markerSize,
             color: markerMask
         },
         customdata: customdata,
@@ -112,20 +127,23 @@ export function generateRankPlot(container, battles, user, filteredBattles = nul
     };
 
     let plotDiv;
+    let plotDivExists = true;
     plotDiv = document.getElementById("rank-plot");
     if (!plotDiv) {
+        plotDivExists = false;
         plotDiv = document.createElement("div");
         plotDiv.id = "rank-plot"; // or use a dynamic ID if needed
         container.appendChild(plotDiv);
     }
 	plotDiv.style.width = "100%";
 	plotDiv.style.height = "100%";
-    if (container.__plotted) {
+    if (plotDivExists) {
         console.log("updating plot");
+        // @ts-ignore
         Plotly.react(plotDiv, [trace], layout, config);
     } else {
         console.log("creating plot");
+        // @ts-ignore
         Plotly.newPlot(plotDiv, [trace], layout, config);
     }
-    container.__plotted = true;
 }

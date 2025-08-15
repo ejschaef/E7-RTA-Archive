@@ -3614,7 +3614,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
     return entry[1] === 100;
   });
   var p1TookFirstTurn = firstTurnHero ? raw.p1_picks.includes(firstTurnHero[0]) : false;
-  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON_CODE, raw.season_code || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_ts__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_ts__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, (0,_utils_ts__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p1_league) || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, (0,_utils_ts__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p2_league) || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score || null), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "n/a"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(P1, raw.p1_artifacts)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(P2, raw.p2_artifacts)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _defineProperty(_battle, _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
+  var battle = (_battle = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON, raw.season_name || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEASON_CODE, raw.season_code || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.DATE_TIME, raw.date_time), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SECONDS, raw.seconds), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.TURNS, raw.turns), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.SEQ_NUM, raw.seq_num), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ID, raw.p1_id.toString()), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_SERVER, _references_ts__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p1_server] || raw.p1_server || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ID, raw.p2_id.toString()), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_SERVER, _references_ts__WEBPACK_IMPORTED_MODULE_2__.WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None"), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_LEAGUE, (0,_utils_ts__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p1_league) || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_LEAGUE, (0,_utils_ts__WEBPACK_IMPORTED_MODULE_3__.toTitleCase)(raw.p2_league) || "None"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POINTS, raw.p1_win_score), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.POINT_GAIN, raw.p1_point_delta || null), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.WIN, raw.win === 1 ? true : false), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_PICK, raw.first_pick === 1 ? true : false), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN, p1TookFirstTurn ? true : false), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.FIRST_TURN_HERO, firstTurnHero ? getChampName(firstTurnHero[0]) : "n/a"), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.CR_BAR, formatCRBar(raw.cr_bar)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PREBANS, raw.p1_prebans.map(getChampName)), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_battle, _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PREBANS, raw.p2_prebans.map(getChampName)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_PICKS, raw.p1_picks.map(getChampName)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_PICKS, raw.p2_picks.map(getChampName)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_POSTBAN, getChampName(raw.p1_postban)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_POSTBAN, getChampName(raw.p2_postban)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_EQUIPMENT, formatEquipment(raw.p1_equipment)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_EQUIPMENT, formatEquipment(raw.p2_equipment)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_ARTIFACTS, formatArtifacts(P1, raw.p1_artifacts)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_ARTIFACTS, formatArtifacts(P2, raw.p2_artifacts)), _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P1_MVP, getChampName(raw.p1_mvp)), _defineProperty(_battle, _references_ts__WEBPACK_IMPORTED_MODULE_2__.COLUMNS_MAP.P2_MVP, getChampName(raw.p2_mvp)));
 
   // finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
   addPrimeFields(battle, HM);
@@ -5205,181 +5205,152 @@ let HeroManager = {
 
 /***/ }),
 
-/***/ "./static/assets/js/e7/plots.js":
+/***/ "./static/assets/js/e7/plots.ts":
 /*!**************************************!*\
-  !*** ./static/assets/js/e7/plots.js ***!
+  !*** ./static/assets/js/e7/plots.ts ***!
   \**************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   generateRankPlot: () => (/* binding */ generateRankPlot)
+/* harmony export */   generateRankPlot: () => (/* binding */ generateRankPlot),
+/* harmony export */   getSizes: () => (/* binding */ getSizes)
 /* harmony export */ });
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function generateRankPlot(container, battles, user) {
-  var filteredBattles = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-  var zoomFiltered = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-  // Sort battles chronologically by time
-  battles.sort(function (a, b) {
-    return new Date(a["Date/Time"]) - new Date(b["Date/Time"]);
-  });
-
-  // if the user is not passed, default the username to the ID of the player
-  if (!user) {
-    user = {
-      name: "UID: ".concat(battles[0]["P1 ID"])
-    };
-  }
-  var markerDefaultColor = '#0df8fd';
-  var markerFilteredColor = '#ff9900';
-  var x = battles.map(function (_, i) {
-    return i;
-  });
-  var y = battles.map(function (b) {
-    return b["P1 Points"];
-  });
-  var markerMask = [];
-  var zoom = {
-    startX: null,
-    endX: null,
-    startY: null,
-    endY: null
-  };
-  var zoomYPadding = 50;
-  var zoomXPadding = 0.5;
-
-  // iterate through battles and build list to color filtered battles distinctly 
-  // and determine the area to zoom on if needed
-  var _iterator = _createForOfIteratorHelper(battles.entries()),
-    _step;
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var _step$value = _slicedToArray(_step.value, 2),
-        idx = _step$value[0],
-        battle = _step$value[1];
-      if (filteredBattles && battle["Seq Num"] in filteredBattles) {
-        if (zoomFiltered === true) {
-          zoom.startX = idx < zoom.startX || zoom.startX === null ? idx - zoomXPadding : zoom.startX;
-          zoom.startY = battle["P1 Points"] < zoom.startY + zoomYPadding || zoom.startY === null ? battle["P1 Points"] - zoomYPadding : zoom.startY;
-          zoom.endX = idx > zoom.endX || zoom.endX === null ? idx + zoomXPadding : zoom.endX;
-          zoom.endY = battle["P1 Points"] > zoom.endY - zoomYPadding || zoom.endY === null ? battle["P1 Points"] + zoomYPadding : zoom.endY;
-        }
-        markerMask.push(markerFilteredColor);
-      } else {
-        markerMask.push(markerDefaultColor);
-      }
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-  ;
-  var customdata = battles.map(function (b) {
-    return [b["Date/Time"].slice(0, 10),
-    // date
-    b["P1 League"] // league
-    ];
-  });
-  var trace = {
-    x: x,
-    y: y,
-    mode: 'lines+markers',
-    line: {
-      color: '#4f9293',
-      width: 2
-    },
-    marker: {
-      symbol: 'circle',
-      size: 4,
-      color: markerMask
-    },
-    customdata: customdata,
-    hovertemplate: 'Points: %{y}<br>' + 'Date: %{customdata[0]}<br>' + 'League: %{customdata[1]}<extra></extra>'
-  };
-  var layout = {
-    autosize: true,
-    font: {
-      family: 'Roboto, Open Sans'
-    },
-    title: {
-      text: "".concat(user.name, "'s RTA Point Plot"),
-      font: {
-        size: 24,
-        color: '#dddddd'
-      },
-      xanchor: 'center',
-      yanchor: 'top',
-      y: 0.95,
-      x: 0.5
-    },
-    xaxis: {
-      title: {
-        text: 'Battle Number (Chronological)',
-        font: {
-          size: 18,
-          color: '#dddddd'
-        }
-      },
-      showgrid: true,
-      gridcolor: '#8d8d8d',
-      zeroline: false,
-      tickfont: {
-        size: 12,
-        color: '#dddddd'
-      },
-      range: zoom.startX ? [zoom.startX, zoom.endX] : null
-    },
-    yaxis: {
-      title: {
-        text: 'Victory Points',
-        font: {
-          size: 18,
-          color: '#dddddd'
-        }
-      },
-      showgrid: true,
-      gridcolor: '#8d8d8d',
-      zeroline: true,
-      zerolinecolor: '#dddddd',
-      zerolinewidth: 2,
-      tickfont: {
-        size: 12,
-        color: '#dddddd'
-      },
-      range: zoom.startY ? [zoom.startY, zoom.endY] : null
-    },
-    plot_bgcolor: '#1e222d',
-    paper_bgcolor: '#1e222d'
-  };
-  var config = {
-    responsive: true
-  };
-  var plotDiv;
-  plotDiv = document.getElementById("rank-plot");
-  if (!plotDiv) {
-    plotDiv = document.createElement("div");
-    plotDiv.id = "rank-plot"; // or use a dynamic ID if needed
-    container.appendChild(plotDiv);
-  }
-  plotDiv.style.width = "100%";
-  plotDiv.style.height = "100%";
-  if (container.__plotted) {
-    console.log("updating plot");
-    Plotly.react(plotDiv, [trace], layout, config);
-  } else {
-    console.log("creating plot");
-    Plotly.newPlot(plotDiv, [trace], layout, config);
-  }
-  container.__plotted = true;
+function getSizes(numBattles) {
+    const length = numBattles;
+    const minMarkerSize = 2;
+    const minLineWidth = 1;
+    const markerSize = Math.max(minMarkerSize, 6 - Math.log10(length) * 0.5);
+    const lineWidth = Math.max(minLineWidth, 3 - Math.log10(length) * 0.5);
+    return { markerSize, lineWidth };
 }
+function generateRankPlot(container, battles, user, filteredBattles = null, zoomFiltered = false) {
+    // Sort battles chronologically by time
+    battles.sort((a, b) => a["Date/Time"].localeCompare(b["Date/Time"]));
+    // if the user is not passed, default the username to the ID of the player
+    if (!user) {
+        user = { name: `UID: ${battles[0]["P1 ID"]}` };
+    }
+    const markerDefaultColor = '#0df8fd';
+    const markerFilteredColor = '#ff9900';
+    const x = battles.map((_, i) => i);
+    const y = battles.map(b => b["P1 Points"]);
+    const markerMask = [];
+    const zoom = {
+        startX: null,
+        endX: null,
+        startY: null,
+        endY: null
+    };
+    const zoomYPadding = 50;
+    const zoomXPadding = 0.5;
+    // iterate through battles and build list to color filtered battles distinctly 
+    // and determine the area to zoom on if needed
+    for (let [idx, battle] of battles.entries()) {
+        if (filteredBattles && battle["Seq Num"] in filteredBattles) {
+            if (zoomFiltered === true) {
+                zoom.startX = (zoom.startX === null || idx < zoom.startX) ? idx - zoomXPadding : zoom.startX;
+                zoom.startY = (zoom.startY === null || battle["P1 Points"] < zoom.startY + zoomYPadding) ? battle["P1 Points"] - zoomYPadding : zoom.startY;
+                zoom.endX = (zoom.endX === null || idx > zoom.endX) ? idx + zoomXPadding : zoom.endX;
+                zoom.endY = (zoom.endY === null || battle["P1 Points"] > zoom.endY - zoomYPadding) ? battle["P1 Points"] + zoomYPadding : zoom.endY;
+            }
+            markerMask.push(markerFilteredColor);
+        }
+        else {
+            markerMask.push(markerDefaultColor);
+        }
+    }
+    ;
+    const customdata = battles.map(b => [
+        b["Date/Time"].slice(0, 10), // date
+        b["P1 League"] // league
+    ]);
+    const sizes = getSizes(battles.length);
+    const trace = {
+        x: x,
+        y: y,
+        mode: 'lines+markers',
+        line: {
+            color: '#4f9293',
+            width: sizes.lineWidth
+        },
+        marker: {
+            symbol: 'circle',
+            size: sizes.markerSize,
+            color: markerMask
+        },
+        customdata: customdata,
+        hovertemplate: 'Points: %{y}<br>' +
+            'Date: %{customdata[0]}<br>' +
+            'League: %{customdata[1]}<extra></extra>'
+    };
+    const layout = {
+        autosize: true,
+        font: {
+            family: 'Roboto, Open Sans'
+        },
+        title: {
+            text: `${user.name}'s RTA Point Plot`,
+            font: { size: 24, color: '#dddddd' },
+            xanchor: 'center',
+            yanchor: 'top',
+            y: 0.95,
+            x: 0.5
+        },
+        xaxis: {
+            title: {
+                text: 'Battle Number (Chronological)',
+                font: { size: 18, color: '#dddddd' }
+            },
+            showgrid: true,
+            gridcolor: '#8d8d8d',
+            zeroline: false,
+            tickfont: { size: 12, color: '#dddddd' },
+            range: zoom.startX ? [zoom.startX, zoom.endX] : null
+        },
+        yaxis: {
+            title: {
+                text: 'Victory Points',
+                font: { size: 18, color: '#dddddd' }
+            },
+            showgrid: true,
+            gridcolor: '#8d8d8d',
+            zeroline: true,
+            zerolinecolor: '#dddddd',
+            zerolinewidth: 2,
+            tickfont: { size: 12, color: '#dddddd' },
+            range: zoom.startY ? [zoom.startY, zoom.endY] : null
+        },
+        plot_bgcolor: '#1e222d',
+        paper_bgcolor: '#1e222d'
+    };
+    const config = {
+        responsive: true
+    };
+    let plotDiv;
+    let plotDivExists = true;
+    plotDiv = document.getElementById("rank-plot");
+    if (!plotDiv) {
+        plotDivExists = false;
+        plotDiv = document.createElement("div");
+        plotDiv.id = "rank-plot"; // or use a dynamic ID if needed
+        container.appendChild(plotDiv);
+    }
+    plotDiv.style.width = "100%";
+    plotDiv.style.height = "100%";
+    if (plotDivExists) {
+        console.log("updating plot");
+        // @ts-ignore
+        Plotly.react(plotDiv, [trace], layout, config);
+    }
+    else {
+        console.log("creating plot");
+        // @ts-ignore
+        Plotly.newPlot(plotDiv, [trace], layout, config);
+    }
+}
+
 
 /***/ }),
 
@@ -6487,7 +6458,7 @@ function getPerformanceStats(battlesList) {
   } finally {
     _iterator9.f();
   }
-  return [].concat(_toConsumableArray(perfStatsContainer.servers), _toConsumableArray(perfStatsContainer.leagues.slice(-6)));
+  return [].concat(_toConsumableArray(perfStatsContainer.servers), _toConsumableArray(perfStatsContainer.leagues.slice(-4)));
 }
 var StatsBuilder = {
   getHeroStats: getHeroStats,
@@ -7812,10 +7783,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../page-utilities/doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
 /* harmony import */ var _content_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../content-manager.js */ "./static/assets/js/content-manager.js");
 /* harmony import */ var _cache_manager_ts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../cache-manager.ts */ "./static/assets/js/cache-manager.ts");
+/* harmony import */ var _e7_plots_ts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../e7/plots.ts */ "./static/assets/js/e7/plots.ts");
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
 
 
 
@@ -7966,7 +7939,7 @@ function addPlotlyLineAndMarkWidthListener() {
   plotDiv.__zoomListenerAttached = true;
   plotDiv.on("plotly_relayout", /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(e) {
-      var stats, originalXRange, filteredXRange, markerBaseWidth, markerMaxWidth, lineBaseWidth, lineMaxWidth, newRange, zoomFactor, newMarkerSize, newLineWidth, _zoomFactor, isFilterApplied, _newMarkerSize, _newLineWidth;
+      var stats, originalXRange, filteredXRange, sizes, markerMaxWidth, lineMaxWidth, newRange, zoomFactor, newMarkerSize, newLineWidth, _zoomFactor, isFilterApplied, _newMarkerSize, _newLineWidth;
       return _regenerator().w(function (_context4) {
         while (1) switch (_context4.n) {
           case 0:
@@ -7977,9 +7950,8 @@ function addPlotlyLineAndMarkWidthListener() {
             stats = _context4.v;
             originalXRange = Object.values(stats.battles).length;
             filteredXRange = Object.values(stats.filteredBattlesObj).length;
-            markerBaseWidth = 4;
+            sizes = (0,_e7_plots_ts__WEBPACK_IMPORTED_MODULE_8__.getSizes)(originalXRange);
             markerMaxWidth = 16;
-            lineBaseWidth = 2;
             lineMaxWidth = 8;
             if (!(e["xaxis.range[0]"] !== undefined)) {
               _context4.n = 2;
@@ -7987,8 +7959,8 @@ function addPlotlyLineAndMarkWidthListener() {
             }
             newRange = [e["xaxis.range[0]"], e["xaxis.range[1]"]]; // Zoom ratio: smaller range = more zoom
             zoomFactor = originalXRange / (newRange[1] - newRange[0]); // Adjust sizes proportionally (with a min/max clamp)
-            newMarkerSize = Math.min(Math.max(markerBaseWidth * zoomFactor, markerBaseWidth), markerMaxWidth);
-            newLineWidth = Math.min(Math.max(lineBaseWidth * zoomFactor, lineBaseWidth), lineMaxWidth);
+            newMarkerSize = Math.min(Math.max(sizes.markerSize * zoomFactor, sizes.markerSize), markerMaxWidth);
+            newLineWidth = Math.min(Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth), lineMaxWidth);
             Plotly.restyle(plotDiv.id, {
               "marker.size": [newMarkerSize],
               "line.width": [newLineWidth]
@@ -8007,8 +7979,8 @@ function addPlotlyLineAndMarkWidthListener() {
               break;
             }
             _home_page_context_js__WEBPACK_IMPORTED_MODULE_3__.CONTEXT.PLOT_AUTO_ADJUSTED = true;
-            _newMarkerSize = Math.min(Math.max(markerBaseWidth * _zoomFactor, markerBaseWidth), markerMaxWidth);
-            _newLineWidth = Math.min(Math.max(lineBaseWidth * _zoomFactor, lineBaseWidth), lineMaxWidth);
+            _newMarkerSize = Math.min(Math.max(sizes.markerSize * _zoomFactor, sizes.markerSize), markerMaxWidth);
+            _newLineWidth = Math.min(Math.max(sizes.lineWidth * _zoomFactor, sizes.lineWidth), lineMaxWidth);
             Plotly.restyle(plotDiv.id, {
               "marker.size": [_newMarkerSize],
               "line.width": [_newLineWidth]
@@ -8016,8 +7988,8 @@ function addPlotlyLineAndMarkWidthListener() {
             return _context4.a(2);
           case 4:
             Plotly.restyle(plotDiv.id, {
-              "marker.size": [markerBaseWidth],
-              "line.width": [lineBaseWidth]
+              "marker.size": [sizes.markerSize],
+              "line.width": [sizes.lineWidth]
             });
           case 5:
             return _context4.a(2);
@@ -8319,6 +8291,8 @@ var StatsView = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ComposeFns: () => (/* binding */ ComposeFns),
+/* harmony export */   ComposeOption: () => (/* binding */ ComposeOption),
 /* harmony export */   HTMLConstructor: () => (/* binding */ HTMLConstructor),
 /* harmony export */   TableConstructor: () => (/* binding */ TableConstructor)
 /* harmony export */ });
@@ -8329,6 +8303,10 @@ function generateID() {
     ID_COUNTER += 1;
     return `id-${ID_COUNTER}`;
 }
+const ComposeOption = {
+    NEST: "nest", // all subsequent compose elements will be children
+    ADJ: "adj", // all subsequent compose elements will be siblings
+};
 class HTMLConstructor {
     htmlElt;
     children;
@@ -8399,9 +8377,28 @@ class HTMLConstructor {
     addTextContent(text) {
         this.htmlElt.textContent = text;
     }
+    /**
+     * Constructs a tree of HTMLConstructors from an array of HTMLComposeElements.
+     *
+     * @param {HTMLComposeElement[]} elements - An array of HTMLComposeElements
+     * representing the structure and content of the HTML tree.
+     */
     compose(elements) {
-        for (const element of elements) {
-            if (element.textContent instanceof Array) {
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            if (element.option === ComposeOption.NEST) { // all subsequent compose elements will be children
+                if (element.children) {
+                    element.children = [...element.children, ...elements.slice(i + 1)];
+                }
+                else {
+                    element.children = elements.slice(i + 1);
+                }
+                element.option = ComposeOption.ADJ;
+                this.compose([element]);
+                return;
+            }
+            ;
+            if (element.textContent instanceof Array) { // create adjacent copies of element using the different text
                 const subElements = [];
                 for (const text of element.textContent) {
                     const subElt = Object.assign({}, element);
@@ -8451,6 +8448,75 @@ class TableConstructor extends HTMLConstructor {
         });
     }
 }
+function cardNest({ content, classes } = {}) {
+    return [
+        {
+            tag: "div",
+            classes: ["col-sm-12"].concat(classes ?? []),
+            option: ComposeOption.NEST
+        },
+        {
+            tag: "div",
+            classes: ["card"],
+            children: content,
+            option: ComposeOption.NEST
+        },
+    ];
+}
+function cardBody({ composeList, classes, option }) {
+    return {
+        tag: "div",
+        classes: ["card-body", "pc-component"].concat(classes ?? []),
+        option: option,
+        children: composeList
+    };
+}
+function paragraph(text, classes) {
+    return {
+        tag: "p",
+        textContent: text,
+        classes: classes
+    };
+}
+function header(text, hNum = 1, classes) {
+    return {
+        tag: "h" + hNum,
+        textContent: text,
+        classes: classes
+    };
+}
+function hr() {
+    return {
+        tag: "hr"
+    };
+}
+function br() {
+    return {
+        tag: "br"
+    };
+}
+function listElement({ outertag, outerclasses, innertag, innerclasses, textList }) {
+    return {
+        tag: outertag ?? "ul",
+        classes: outerclasses ?? [],
+        children: [
+            {
+                tag: innertag ?? "li",
+                classes: innerclasses ?? [],
+                textContent: textList
+            }
+        ]
+    };
+}
+const ComposeFns = {
+    cardNest,
+    cardBody,
+    paragraph,
+    header,
+    hr,
+    br,
+    listElement,
+};
 
 
 
@@ -9161,6 +9227,11 @@ var FILTER_SYNTAX_PAGE_ELEMENTS = /*#__PURE__*/function () {
     get: function get() {
       return this._FILTER_SYNTAX_RULES || (this._FILTER_SYNTAX_RULES = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("filter-syntax-rules-container"));
     }
+  }, {
+    key: "ALL_CONTENT_CONTAINER",
+    get: function get() {
+      return this._ALL_CONTENT_CONTAINER || (this._ALL_CONTENT_CONTAINER = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("all-content-container"));
+    }
   }]);
 }();
 var DOC_ELEMENTS = {
@@ -9491,7 +9562,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Tables: () => (/* binding */ Tables)
 /* harmony export */ });
 /* harmony import */ var _e7_references_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./e7/references.ts */ "./static/assets/js/e7/references.ts");
-/* harmony import */ var _e7_plots_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7/plots.js */ "./static/assets/js/e7/plots.js");
+/* harmony import */ var _e7_plots_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./e7/plots.ts */ "./static/assets/js/e7/plots.ts");
 /* harmony import */ var _cache_manager_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cache-manager.ts */ "./static/assets/js/cache-manager.ts");
 /* harmony import */ var _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./e7/user-manager.ts */ "./static/assets/js/e7/user-manager.ts");
 /* harmony import */ var _utils_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils.ts */ "./static/assets/js/utils.ts");
@@ -9799,7 +9870,7 @@ var CardContent = {
             return _cache_manager_ts__WEBPACK_IMPORTED_MODULE_2__["default"].get(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_2__["default"].Keys.AUTO_ZOOM_FLAG);
           case 2:
             autoZoom = _context.v;
-            (0,_e7_plots_js__WEBPACK_IMPORTED_MODULE_1__.generateRankPlot)(container, stats.battles, user, stats.numFilters > 0 ? stats.filteredBattlesObj : null, autoZoom);
+            (0,_e7_plots_ts__WEBPACK_IMPORTED_MODULE_1__.generateRankPlot)(container, stats.battles, user, stats.numFilters > 0 ? stats.filteredBattlesObj : null, autoZoom);
           case 3:
             return _context.a(2);
         }
@@ -10184,4 +10255,4 @@ main();
 
 /******/ })()
 ;
-//# sourceMappingURL=home-page.3bf47b74f2c04fdb38c5.bundle.js.map
+//# sourceMappingURL=home-page.69bf59951f29fe61b71c.bundle.js.map

@@ -6,6 +6,7 @@ import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.j
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { CM } from "../../../../../content-manager.js";
 import ClientCache from "../../../../../cache-manager.ts";
+import { getSizes } from "../../../../../e7/plots.ts";
 
 function addBattleTableFilterToggleListener() {
 	console.log("Setting listener for filter-battle-table checkbox");
@@ -113,9 +114,9 @@ function addPlotlyLineAndMarkWidthListener() {
 		const originalXRange = Object.values(stats.battles).length;
 		const filteredXRange = Object.values(stats.filteredBattlesObj).length;
 
-		const markerBaseWidth = 4;
+		const sizes = getSizes(originalXRange);
+
 		const markerMaxWidth = 16;
-		const lineBaseWidth = 2;
 		const lineMaxWidth = 8;
 
 		if (e["xaxis.range[0]"] !== undefined) {
@@ -126,11 +127,11 @@ function addPlotlyLineAndMarkWidthListener() {
 
 			// Adjust sizes proportionally (with a min/max clamp)
 			let newMarkerSize = Math.min(
-				Math.max(markerBaseWidth * zoomFactor, markerBaseWidth),
+				Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
 				markerMaxWidth
 			);
 			let newLineWidth = Math.min(
-				Math.max(lineBaseWidth * zoomFactor, lineBaseWidth),
+				Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth),
 				lineMaxWidth
 			);
 
@@ -149,11 +150,11 @@ function addPlotlyLineAndMarkWidthListener() {
 			if (isFilterApplied && !CONTEXT.PLOT_AUTO_ADJUSTED) {
 				CONTEXT.PLOT_AUTO_ADJUSTED = true;
 				let newMarkerSize = Math.min(
-					Math.max(markerBaseWidth * zoomFactor, markerBaseWidth),
+					Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
 					markerMaxWidth
 				);
 				let newLineWidth = Math.min(
-					Math.max(lineBaseWidth * zoomFactor, lineBaseWidth),
+					Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth),
 					lineMaxWidth
 				);
 
@@ -164,8 +165,8 @@ function addPlotlyLineAndMarkWidthListener() {
 				return;
 			} else {
 				Plotly.restyle(plotDiv.id, {
-					"marker.size": [markerBaseWidth],
-					"line.width": [lineBaseWidth],
+					"marker.size": [sizes.markerSize],
+					"line.width": [sizes.lineWidth],
 				});
 			}
 		}

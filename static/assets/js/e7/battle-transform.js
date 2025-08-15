@@ -98,7 +98,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
 			WORLD_CODE_TO_CLEAN_STR[raw.p2_server] || raw.p2_server || "None",
 		[COLUMNS_MAP.P1_LEAGUE]: toTitleCase(raw.p1_league) || "None",
 		[COLUMNS_MAP.P2_LEAGUE]: toTitleCase(raw.p2_league) || "None",
-		[COLUMNS_MAP.P1_POINTS]: raw.p1_win_score || null,
+		[COLUMNS_MAP.P1_POINTS]: raw.p1_win_score,
 		[COLUMNS_MAP.POINT_GAIN]: raw.p1_point_delta || null,
 		[COLUMNS_MAP.WIN]: raw.win === 1 ? true : false,
 		[COLUMNS_MAP.FIRST_PICK]: raw.first_pick === 1 ? true : false,

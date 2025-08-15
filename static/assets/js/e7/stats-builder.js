@@ -414,7 +414,7 @@ function getPerformanceStats(battlesList) {
 	}
 	return [
 		...perfStatsContainer.servers,
-		...perfStatsContainer.leagues.slice(-6),
+		...perfStatsContainer.leagues.slice(-4),
 	];
 }
 

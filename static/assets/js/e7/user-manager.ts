@@ -15,7 +15,7 @@ const userMapCacheKeyMap = {
 	[WORLD_CODE_ENUM.KOR]: ClientCache.Keys.KOR_USERS,
 };
 
-type User = {
+export type User = {
 	id: number;
 	name: string;
 	code: string;

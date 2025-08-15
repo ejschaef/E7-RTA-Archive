@@ -7,6 +7,13 @@ function generateID() {
 	return `id-${ID_COUNTER}`;
 }
 
+export const ComposeOption ={
+	NEST: "nest", // all subsequent compose elements will be children
+	ADJ: "adj", // all subsequent compose elements will be siblings
+} as const;
+
+export type ComposeOption = typeof ComposeOption[keyof typeof ComposeOption];
+
 export type HTMLComposeElement = {
 	tag: string;
 	attributes?: { [key: string]: string };
@@ -15,6 +22,7 @@ export type HTMLComposeElement = {
 	textContent?: string[] | string;
 	classes?: string[];
 	innerHtml?: string;
+	option?: ComposeOption;
 }
 
 class HTMLConstructor {
@@ -100,9 +108,26 @@ class HTMLConstructor {
 		this.htmlElt.textContent = text;
 	}
 
-	compose(elements: HTMLComposeElement[]) {
-		for (const element of elements) {
-			if (element.textContent instanceof Array) {
+	/**
+	 * Constructs a tree of HTMLConstructors from an array of HTMLComposeElements.
+	 *
+	 * @param {HTMLComposeElement[]} elements - An array of HTMLComposeElements
+	 * representing the structure and content of the HTML tree.
+	 */
+	compose(elements: HTMLComposeElement[]): void {
+		for (let i = 0 ; i < elements.length; i++) {
+			const element = elements[i];
+			if (element.option === ComposeOption.NEST) {  // all subsequent compose elements will be children
+				if (element.children) {
+					element.children = [...element.children, ...elements.slice(i + 1)];
+				} else {
+					element.children = elements.slice(i + 1);
+				}
+				element.option = ComposeOption.ADJ;
+				this.compose([element]);
+				return;
+			};
+			if (element.textContent instanceof Array) { // create adjacent copies of element using the different text
 				const subElements = [];
 				for (const text of element.textContent) {
 					const subElt = Object.assign({}, element);
@@ -118,7 +143,6 @@ class HTMLConstructor {
 			if (element.textContent) child.addTextContent(element.textContent);
 			if (element.style) child.addStyle(element.style);
 			if (element.innerHtml) child.setInnerHtml(element.innerHtml);
-		
 		};
 	}
 }
@@ -151,4 +175,106 @@ class TableConstructor extends HTMLConstructor {
 	}
 }
 
-export { TableConstructor, HTMLConstructor };
+
+// Compose Functions used to more easly write HTML compose lists
+
+type CardArg = {
+	content?: HTMLComposeElement[],
+	classes?: string[],
+}
+
+function cardNest({ content, classes }: CardArg = {}): HTMLComposeElement[] {
+  return [
+	{
+		tag: "div",
+   		classes: ["col-sm-12"].concat(classes ?? []),
+		option: ComposeOption.NEST
+	},
+	{
+		tag: "div",
+		classes: ["card"],
+		children: content,
+		option: ComposeOption.NEST
+	},
+  ]
+}
+
+type CardBodyArgs = {
+  composeList?: HTMLComposeElement[],
+  classes?: string[]
+  option?: ComposeOption
+}
+
+function cardBody({ composeList, classes, option }: CardBodyArgs): HTMLComposeElement {
+  return {
+    tag: "div",
+    classes: ["card-body", "pc-component"].concat(classes ?? []),
+    option: option,
+    children: composeList
+  }
+}
+
+function paragraph(text: string, classes?: string[]): HTMLComposeElement {
+  return {
+    tag: "p",
+    textContent: text,
+    classes: classes
+  }
+}
+
+function header(text: string, hNum = 1, classes?: string[]): HTMLComposeElement {
+  return {
+    tag: "h" + hNum,
+    textContent: text,
+    classes: classes
+  }
+}
+
+function hr(): HTMLComposeElement {
+  return {
+	tag: "hr"
+  }
+}
+
+function br(): HTMLComposeElement {
+  return {
+	tag: "br"
+  }
+}
+
+type ListElementArgs = {
+  outertag?: string,
+  outerclasses?: string[],
+  innertag?: string,
+  innerclasses?: string[],
+  textList: string[]
+}
+
+function listElement({ outertag, outerclasses, innertag, innerclasses, textList }: ListElementArgs): HTMLComposeElement {
+  return {
+    tag: outertag ?? "ul",
+    classes: outerclasses ?? [],
+    children: [
+      {
+        tag: innertag ?? "li",
+        classes: innerclasses ?? [],
+        textContent: textList
+      }
+    ]
+  }
+}
+
+
+const ComposeFns = {
+	cardNest,
+	cardBody,
+	paragraph,
+	header,
+	hr,
+	br,
+	listElement,
+}
+
+
+
+export { TableConstructor, HTMLConstructor, ComposeFns };

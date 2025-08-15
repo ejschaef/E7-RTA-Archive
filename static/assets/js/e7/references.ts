@@ -159,7 +159,7 @@ export type BattleType = {
     [COLUMNS_MAP.P2_SERVER]: string;
     [COLUMNS_MAP.P1_LEAGUE]: string;
     [COLUMNS_MAP.P2_LEAGUE]: string;
-    [COLUMNS_MAP.P1_POINTS]: number | null;
+    [COLUMNS_MAP.P1_POINTS]: number;
     [COLUMNS_MAP.POINT_GAIN]: number | null;
     [COLUMNS_MAP.WIN]: boolean;
     [COLUMNS_MAP.FIRST_PICK]: boolean;

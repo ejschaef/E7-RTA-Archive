@@ -56,7 +56,6 @@ build-and-push.sh
 # misc
 commits.txt
 prod_steps.txt
-.mailmap
 .eslintrc.json
 
 
