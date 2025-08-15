@@ -1,5 +1,5 @@
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
-import UserManager from "../../../../../e7/user-manager.js";
+import UserManager from "../../../../../e7/user-manager.ts";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { NavBarUtils } from "../../../../page-utilities/nav-bar-utils.js";
 

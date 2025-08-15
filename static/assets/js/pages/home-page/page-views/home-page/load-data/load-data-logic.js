@@ -3,7 +3,7 @@ import {
 	HOME_PAGE_FNS,
 	HOME_PAGE_STATES,
 } from "../../../../orchestration/page-state-manager.js";
-import FilterSyntaxParser from "../../../../../e7/filter-parsing/filter-syntax-parser.ts";
+import { FilterParser } from "../../../../../e7/filter-parsing/filter-parser.ts";
 import { CM } from "../../../../../content-manager.js";
 import CSVParse from "../../../../../csv-parse.js";
 import { StatsView } from "../stats/stats-logic.js";
@@ -142,10 +142,12 @@ async function runLogic(stateDispatcher) {
 		console.log(battles);
 
 		console.log("Getting Filters From Cache");
-		const filters = await FilterSyntaxParser.getFiltersFromCache(HM);
+		const filters = await FilterParser.getFiltersFromCache(HM);
 
 		console.log(`Received Filters: ${JSON.stringify(filters)}`);
 		const stats = await CM.BattleManager.getStats(battles, filters, HM);
+		
+		console.log("Got Stats: ", stats);
 		await CM.ClientCache.setStats(stats);
 
 		await StatsView.populateContent(); // populates tables and plots in show stats view before showing

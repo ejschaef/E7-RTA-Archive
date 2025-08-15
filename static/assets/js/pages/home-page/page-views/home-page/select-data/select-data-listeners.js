@@ -63,7 +63,7 @@ async function addUserFormListener(stateDispatcher) {
 async function addUploadFormListener(stateDispatcher) {
 	const checkbox = document.getElementById("auto-query-flag");
 	checkbox.addEventListener("click", async () => {
-		await CM.ClientCache.setFlag("autoQuery", checkbox.checked);
+		await CM.ClientCache.cache(CM.ClientCache.Keys.AUTO_QUERY_FLAG, checkbox.checked);
 	});
 
 	let selectedFile = null;

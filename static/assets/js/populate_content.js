@@ -4,9 +4,10 @@ import {
 	HERO_STATS_COLUMN_MAP,
 } from "./e7/references.ts";
 import { generateRankPlot } from "./e7/plots.js";
-import ClientCache from "./cache-manager.js";
-import UserManager from "./e7/user-manager.js";
+import ClientCache from "./cache-manager.ts";
+import UserManager from "./e7/user-manager.ts";
 import { Safe } from "./utils.ts";
+import DOC_ELEMENTS from "./pages/page-utilities/doc-element-references.js";
 
 function destroyDataTable(tableid) {
 	const tableSelector = $(`#${tableid}`);
@@ -164,10 +165,13 @@ let Tables = {
 
 		data.forEach((item) => {
 			const row = document.createElement("tr");
+			const labelColorClass = item["label"].includes("Server")
+				? "cm-keyword"
+				: "cm-declared-data";
 
 			// Populate each <td> in order
 			row.innerHTML = `
-            <td>${item["server"]}</td>
+            <td class="${labelColorClass}">${item["label"]}</td>
             <td>${item["count"]}</td>
             <td>${item["frequency"]}</td>
             <td>${item["wins"]}</td>
@@ -315,7 +319,8 @@ let Tables = {
 
 	replaceBattleData(data) {
 		data = getDataWithStringifiedArrayColumns(data);
-		this.replaceDatatableData("BattlesTable", data);
+		const id = DOC_ELEMENTS.HOME_PAGE.BATTLES_TBL.id;
+		this.replaceDatatableData(id, data);
 	},
 };
 
@@ -343,7 +348,6 @@ let CardContent = {
 
 	populateRankPlot: async function (stats) {
 		const container = Safe.unwrapHtmlElt("rank-plot-container");
-		container.innerHTML = "";
 		const user = await UserManager.getUser();
 		const autoZoom = await ClientCache.get(ClientCache.Keys.AUTO_ZOOM_FLAG);
 

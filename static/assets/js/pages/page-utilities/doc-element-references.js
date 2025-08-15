@@ -45,10 +45,6 @@ class HomePageElements {
 		));
 	}
 
-	get BATTLES_TABLE() {
-		return (this._BATTLES_TABLE ||= Safe.unwrapHtmlElt("BattlesTable"));
-	}
-
 	get AUTO_ZOOM_FLAG() {
 		return (this._AUTO_ZOOM_FLAG ||= Safe.unwrapHtmlElt("auto-zoom-flag"));
 	}
@@ -88,8 +84,8 @@ class HomePageElements {
 			Safe.unwrapHtmlElt("season-details-tbl"));
 	}
 
-	get SERVER_STATS_TBL() {
-		return (this._SERVER_STATS_TBL ||= Safe.unwrapHtmlElt("server-stats-tbl"));
+	get PERFORMANCE_STATS_TBL() {
+		return (this._PERFORMANCE_STATS_TBL ||= Safe.unwrapHtmlElt("performance-stats-tbl"));
 	}
 
 	get FIRST_PICK_STATS_TBL() {
@@ -113,6 +109,10 @@ class HomePageElements {
 	get BATTLES_TBL() {
 		return (this._BATTLE_TBL ||= Safe.unwrapHtmlElt("battles-tbl"));
 	}
+
+    get RANK_PLOT() {
+        return (this._RANK_PLOT ||= Safe.unwrapHtmlElt("rank-plot"));
+    }
 
 	get MESSAGE_ELEMENTS_LIST() {
 		return [this.SELECT_DATA_MSG, this.FILTER_MSG];
@@ -166,10 +166,21 @@ class SEARCH_PAGE_ELEMENTS {
 	}
 }
 
+class FILTER_SYNTAX_PAGE_ELEMENTS {
+
+	get FILTER_SYNTAX_RULES_CONTAINER() {
+		return (this._FILTER_SYNTAX_RULES ||= Safe.unwrapHtmlElt(
+			"filter-syntax-rules-container"
+		));
+	}
+
+}
+
 let DOC_ELEMENTS = {
 	HOME_PAGE: new HomePageElements(),
 	NAV_BAR: new NavBarElements(),
 	SEARCH_PAGE: new SEARCH_PAGE_ELEMENTS(),
+	FILTER_SYNTAX_PAGE: new FILTER_SYNTAX_PAGE_ELEMENTS(),
 };
 
 export default DOC_ELEMENTS;

@@ -1,9 +1,10 @@
-import ClientCache from "../cache-manager.js";
+import ClientCache from "../cache-manager.ts";
 import StatsBuilder from "./stats-builder.js";
 import {
 	buildFormattedBattleMap,
 	parsedCSVToFormattedBattleMap,
 } from "./battle-transform.js";
+import { StandardFilter, GlobalFilter } from "./filter-parsing/functions.ts";
 
 let BattleManager = {
 	loaded_servers: new Set(),
@@ -35,13 +36,13 @@ let BattleManager = {
   battle key all battles are stored in their clean format, not numerical format; convert after to compute metrics */
 	applyFilter: async function (filters) {
 		let battles = await this.getBattles();
-		const localFilterList = filters.localFilters || [];
-		const globalFilterList = filters.globalFilters || [];
+		const localFilterList = filters.filter((f) => f instanceof StandardFilter);
+		const globalFilterList = filters.filter((f) => f instanceof GlobalFilter);
 
 		// apply global filters (filters that require context of all battles); these are always applied before local filters in order of appearance
 		let battleList = Object.values(battles);
 		for (let filter of globalFilterList) {
-			console.log(`Applying global filter: ${filter}`);
+			console.log(`Applying global filter: ${filter.asString()}`);
 			const startLen = battleList.length;
 			battleList = filter.call(battleList);
 			battles = Object.fromEntries(battleList.map((b) => [b["Seq Num"], b]));
@@ -54,7 +55,7 @@ let BattleManager = {
 
 		// apply local filters (filters that can be resolved on each battle without context of other battles)
 		for (let filter of localFilterList) {
-			console.log(`Applying local filter: ${filter}`);
+			console.log(`Applying local filter: ${filter.asString()}`);
 			const startLen = Object.keys(battles).length;
 			battles = Object.fromEntries(
 				Object.entries(battles).filter(([key, battle]) => {
@@ -100,7 +101,8 @@ let BattleManager = {
 			return [];
 		}
 		console.log(
-			`Caching queried battles: ${battleList.length} battles; modified [BATTLES];`, battleList
+			`Caching queried battles: ${battleList.length} battles; modified [BATTLES];`,
+			battleList
 		);
 		const cleanBattleMap = buildFormattedBattleMap(battleList, HM, artifacts);
 
@@ -126,8 +128,7 @@ let BattleManager = {
 
 	getStats: async function (battles, filters, HM) {
 		console.log("Getting stats");
-		const numFilters =
-			filters.localFilters.length + filters.globalFilters.length;
+		const numFilters = filters.length;
 
 		console.log(`Applying ${numFilters} filters`);
 		const battlesList = Object.values(battles);
@@ -135,7 +136,10 @@ let BattleManager = {
 		const filteredBattlesList = Object.values(filteredBattles);
 
 		console.log("Getting preban stats");
-		const prebanStats = await StatsBuilder.getPrebanStats(filteredBattlesList, HM);
+		const prebanStats = await StatsBuilder.getPrebanStats(
+			filteredBattlesList,
+			HM
+		);
 		console.log("Getting first pick stats");
 		const firstPickStats = await StatsBuilder.getFirstPickStats(
 			filteredBattlesList,
@@ -149,7 +153,9 @@ let BattleManager = {
 		console.log("Getting hero stats");
 		const heroStats = await StatsBuilder.getHeroStats(filteredBattlesList, HM);
 		console.log("Getting server stats");
-		const serverStats = await StatsBuilder.getServerStats(filteredBattlesList);
+		const performanceStats = await StatsBuilder.getPerformanceStats(
+			filteredBattlesList
+		);
 
 		console.log("Returning stats");
 		return {
@@ -160,7 +166,7 @@ let BattleManager = {
 			firstPickStats: firstPickStats,
 			playerHeroStats: heroStats.playerHeroStats,
 			enemyHeroStats: heroStats.enemyHeroStats,
-			serverStats: serverStats,
+			performanceStats: performanceStats,
 			numFilters: numFilters,
 		};
 	},

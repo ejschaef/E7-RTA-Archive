@@ -1,4 +1,4 @@
-import ClientCache from "../cache-manager.js";
+import ClientCache from "../cache-manager.ts";
 import PYAPI from "../apis/py-API.js";
 import { ONE_DAY } from "./references.ts";
 
@@ -66,15 +66,17 @@ let SeasonManager = {
 	},
 
 	getSeasonDetails: async function () {
-		return (
-			(await ClientCache.get(ClientCache.Keys.SEASON_DETAILS)) ??
-			(await SeasonManager.fetchAndCacheSeasonDetails())
-		);
+		const cached = await ClientCache.get(ClientCache.Keys.SEASON_DETAILS);
+		return cached ?? (await SeasonManager.fetchAndCacheSeasonDetails());
 	},
 
 	clearSeasonDetails: async function () {
 		await ClientCache.delete(ClientCache.Keys.SEASON_DETAILS);
 		console.log("Season details cleared from data cache");
+	},
+
+	getSeasonNumFromCode: function (seasonCode) {
+		return seasonCode.split("_")[-1];
 	},
 };
 

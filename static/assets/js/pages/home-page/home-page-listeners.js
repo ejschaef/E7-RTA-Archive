@@ -6,7 +6,7 @@ import { NavBarUtils } from "../page-utilities/nav-bar-utils.js";
 import { TextUtils } from "../orchestration/text-controller.js";
 import { CONTEXT } from "./home-page-context.js";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
-import UserManager from "../../e7/user-manager.js";
+import UserManager from "../../e7/user-manager.ts";
 import { stateDispatcher, resizeRankPlot } from "./home-page-dispatch.js";
 
 function addNavListener() {

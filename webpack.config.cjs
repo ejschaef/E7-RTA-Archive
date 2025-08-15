@@ -23,7 +23,7 @@ module.exports = {
   ],
   entry: {
     "home-page"     : './static/assets/js/pages/home-page/home-page.js',
-    "filter-syntax" : './static/assets/js/pages/filter-syntax.js',
+    "filter-syntax" : './static/assets/js/pages/filter-syntax.ts',
     "test"          : './static/assets/js/pages/test.js',
     "search"        : './static/assets/js/pages/search.js',
     "bundled-css"   : './static/assets/css/bundled-css.css',

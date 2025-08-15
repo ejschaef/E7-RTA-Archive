@@ -1,8 +1,11 @@
-import UserManager from "../../../../../e7/user-manager.js";
+import UserManager from "../../../../../e7/user-manager.ts";
 import { Tables, CardContent } from "../../../../../populate_content.js";
 import { CM } from "../../../../../content-manager.js";
-import { RegExps } from "../../../../../e7/regex.js";
-import { addStatsListeners } from "./stats-listeners.js";
+import { RegExps } from "../../../../../e7/regex.ts";
+import {
+	addPlotlyLineAndMarkWidthListener,
+	addStatsListeners,
+} from "./stats-listeners.js";
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { CONTEXT } from "../../../home-page-context.js";
@@ -30,27 +33,18 @@ async function populateContent() {
 		console.time("populateTables");
 		console.log("POPULATING TABLES, CARD CONTENT, AND PLOTS");
 		Tables.populateSeasonDetailsTable("season-details-tbl", seasonDetails);
-		Tables.populateHeroStatsTable(
-			"player-tbl",
-			stats.playerHeroStats
-		);
+		Tables.populateHeroStatsTable("player-tbl", stats.playerHeroStats);
 		console.log("Populating opponent table");
-		Tables.populateHeroStatsTable(
-			"opponent-tbl",
-			stats.enemyHeroStats
-		);
+		Tables.populateHeroStatsTable("opponent-tbl", stats.enemyHeroStats);
 		console.log("Populating first pick table");
 		Tables.populatePlayerFirstPickTable(
 			"first-pick-stats-tbl",
 			stats.firstPickStats
 		);
-		Tables.populatePlayerPrebansTable(
-			"preban-stats-tbl",
-			stats.prebanStats
-		);
+		Tables.populatePlayerPrebansTable("preban-stats-tbl", stats.prebanStats);
 		Tables.populateServerStatsTable(
-			"server-stats-tbl",
-			stats.serverStats
+			"performance-stats-tbl",
+			stats.performanceStats
 		);
 		if (DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE.checked) {
 			console.log("POPULATING AS FILTERED BATTLES TABLE");
@@ -61,13 +55,10 @@ async function populateContent() {
 			);
 		} else {
 			console.log("POPULATING AS FULL BATTLES TABLE");
-			Tables.populateFullBattlesTable(
-				"battles-tbl",
-				stats.battles,
-				user
-			);
+			Tables.populateFullBattlesTable("battles-tbl", stats.battles, user);
 		}
 		CardContent.populateGeneralStats(stats.generalStats);
+		CONTEXT.PLOT_AUTO_ADJUSTED = false; // used to trigger plotly line and mark width listener if autozoom is applied
 		await CardContent.populateRankPlot(stats);
 		console.log("FINISHED POPULATING");
 		console.timeEnd("populateTables");
@@ -123,11 +114,12 @@ async function postFirstRenderLogic() {
 		return;
 	}
 	editor.refresh();
+	addPlotlyLineAndMarkWidthListener();
 }
 
 async function runLogic(stateDispatcher) {
 	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
-	const checked = await CM.ClientCache.getFlag("autoZoom");
+	const checked = await CM.ClientCache.get(CM.ClientCache.Keys.AUTO_ZOOM_FLAG);
 	autoZoomCheckbox.checked = checked;
 	const stats = await CM.ClientCache.getStats();
 

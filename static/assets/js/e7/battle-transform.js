@@ -1,4 +1,4 @@
-import HeroManager from "./hero-manager.js";
+import HeroManager from "./hero-manager.ts";
 import ArtifactManager from "./artifact-manager.js";
 import {
 	EQUIPMENT_SET_MAP,

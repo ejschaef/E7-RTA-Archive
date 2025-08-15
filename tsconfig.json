@@ -15,7 +15,6 @@
     "allowImportingTsExtensions": true,
     "lib": [ "esnext", "dom" ],
     "types": [ "node" ],
-    "baseUrl": "./",
   },
   "include": [
     "./static/assets/js/**/*"

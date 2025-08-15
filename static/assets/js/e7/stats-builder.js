@@ -1,8 +1,9 @@
-import HeroManager from "./hero-manager.js";
+import HeroManager from "./hero-manager.ts";
 import {
 	WORLD_CODE_TO_CLEAN_STR,
 	COLUMNS_MAP,
 	HERO_STATS_COLUMN_MAP,
+	LEAGUE_TO_CLEAN_STR,
 } from "./references.ts";
 
 const getWins = (battleList) => battleList.filter((b) => b[COLUMNS_MAP.WIN]);
@@ -354,11 +355,29 @@ function getGeneralStats(battleList, HM) {
 	};
 }
 
-function getServerStats(battlesList) {
-	const allServerStats = [];
+function getPerformanceStats(battlesList) {
+	const perfStatsContainer = {
+		servers: [],
+		leagues: [],
+	};
 	const totalBattles = battlesList.length;
-	for (const server of Object.values(WORLD_CODE_TO_CLEAN_STR)) {
-		const subset = battlesList.filter((b) => b["P2 Server"] === server);
+	const servers = Object.values(WORLD_CODE_TO_CLEAN_STR);
+	const leagues = Object.values(LEAGUE_TO_CLEAN_STR);
+
+	const subsetFilters = [
+		...servers.map((server) => [
+			`Server: ${server}`,
+			(b) => b["P2 Server"] === server,
+		]),
+		...leagues.map((league) => [
+			`League: ${league}`,
+			(b) => b["P2 League"] === league,
+		]),
+	];
+
+	for (const [label, subsetFilter] of subsetFilters) {
+		const subset = battlesList.filter(subsetFilter);
+		if (subset.length === 0) continue;
 		const count = subset.length;
 		const wins = subset.reduce((acc, b) => acc + b.Win, 0);
 		const winRate = count > 0 ? wins / count : "N/A";
@@ -370,8 +389,12 @@ function getServerStats(battlesList) {
 		const secondPickGames = subset.filter((b) => !b["First Pick"]);
 		const spWins = secondPickGames.reduce((acc, b) => acc + b.Win, 0);
 
-		allServerStats.push({
-			server,
+		const targetList = label.toLowerCase().includes("server")
+			? perfStatsContainer.servers
+			: perfStatsContainer.leagues;
+
+		targetList.push({
+			label,
 			count,
 			wins,
 			win_rate: winRate === "N/A" ? "N/A" : toPercent(winRate),
@@ -389,15 +412,17 @@ function getServerStats(battlesList) {
 					: "N/A",
 		});
 	}
-	allServerStats.sort((a, b) => a.server.localeCompare(b.server));
-	return allServerStats;
+	return [
+		...perfStatsContainer.servers,
+		...perfStatsContainer.leagues.slice(-6),
+	];
 }
 
 let StatsBuilder = {
 	getHeroStats,
 	getFirstPickStats,
 	getPrebanStats,
-	getServerStats,
+	getPerformanceStats,
 	getGeneralStats,
 };
 

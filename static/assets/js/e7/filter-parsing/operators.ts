@@ -1,31 +1,70 @@
-import { RangeData } from "./declared-data-types.ts";
+import { RangeData } from "./base-elements";
 
-type inOperatorSet = Set<any> | RangeData;
+const COMPARISON_OPERATORS: Record<string, (a: any, b: any) => boolean> = {
+    ">": (a, b) => a > b,
+    "<": (a, b) => a < b,
+    "=": (a, b) => a === b,
+    ">=": (a, b) => a >= b,
+    "<=": (a, b) => a <= b,
+    "!=": (a, b) => a !== b,
+} as const;
 
-// must handle both regular sets and ranges
-function inOperatorFn(a: string | Date, b: inOperatorSet): boolean {
-	if (b instanceof Set) {
-		return b.has(a);
-	}
-	// handle ranges
-	else if (
-		!Array.isArray(b)
-	) {
-		return a >= b.start && (b.endInclusive ? a <= b.end : a < b.end);
-	}
-	// handles fields that are arrays (ie p1.picks)
-	return b.includes(a);
+const OPERATOR_TYPES = {
+	IN: "in",
+	COMPARE: "compare",
+} as const;
+
+
+abstract class Operator {
+    abstract type: typeof OPERATOR_TYPES[keyof typeof OPERATOR_TYPES]
+    abstract opStr: string;
+    abstract call(a: any, b: any): boolean
 }
 
-const OPERATOR_MAP: Record<string, (a: any, b: any) => boolean> = {
-	">": (a, b) => a > b,
-	"<": (a, b) => a < b,
-	"=": (a, b) => a === b,
-	"in": (a, b) => inOperatorFn(a, b),
-	">=": (a, b) => a >= b,
-	"<=": (a, b) => a <= b,
-	"!=": (a, b) => a !== b,
-	"!in": (a, b) => !inOperatorFn(a, b),
-};
+type Collection = Set<any> | any[] | RangeData<any>;
 
-export { OPERATOR_MAP };
+class InOperator extends Operator {
+    type = OPERATOR_TYPES.IN;
+    opStr: string;
+    negate = false;
+
+    constructor(negate = false) {
+        super();
+        this.negate = negate;
+        this.opStr = this.negate ? "!in" : "in";
+    }
+
+    call(a: any, b: Collection): boolean {
+        const contains = Array.isArray(b) ? b.includes(a) : b.has(a);
+        return this.negate ? !contains : contains
+    }
+}
+
+class CompareOperator extends Operator {
+    type = OPERATOR_TYPES.COMPARE
+    opStr: string
+    compareFn: (a: any, b: any) => boolean
+
+    constructor(opStr: string) {
+        super();
+        this.opStr = opStr;
+        this.compareFn = COMPARISON_OPERATORS[opStr];
+        if (!this.compareFn) {
+            throw new Error(`Unknown operator: ${opStr}`);
+        }
+    }
+
+    call(a: any, b: any): boolean {
+        return this.compareFn(a, b);
+    }
+}
+
+function parseOperator(opStr: string): Operator {
+    switch (opStr) {
+        case "in" : return new InOperator();
+        case "!in" : return new InOperator(true);
+        default: return new CompareOperator(opStr);
+    }
+}
+
+export { COMPARISON_OPERATORS, parseOperator, Operator, CompareOperator, InOperator };

@@ -1,5 +1,5 @@
-import HeroManager from "../../e7/hero-manager.js";
-import FilterSyntaxParser from "../../e7/filter-parsing/filter-syntax-parser.ts";
+import HeroManager from "../../e7/hero-manager.ts";
+import { FilterParser } from "../../e7/filter-parsing/filter-parser.ts";
 import {
 	TextController,
 	TextPacket,
@@ -23,7 +23,8 @@ let PageUtils = {
 		const HM = await HeroManager.getHeroManager();
 		let filterMSG = document.getElementById("filterMSG");
 		try {
-			await FilterSyntaxParser.createAndParse(str, HM);
+			let parser = await FilterParser.fromFilterStr(str, HM);
+			console.log(parser.asString());
 			TextController.write(
 				new TextPacket("Validation Passed", filterMSG, [
 					TextController.STYLES.GREEN,

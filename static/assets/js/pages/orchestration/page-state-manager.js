@@ -1,8 +1,8 @@
-import ClientCache from "../../cache-manager.js";
+import ClientCache from "../../cache-manager.ts";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 import PageUtils from "../page-utilities/page-utils.js";
 import { HOME_PAGE_STATES } from "../page-utilities/page-state-references.js";
-import UserManager from "../../e7/user-manager.js";
+import UserManager from "../../e7/user-manager.ts";
 import { WORLD_CODE_TO_CLEAN_STR } from "../../e7/references.ts";
 
 const VALIDATION_SET = new Set(Object.values(HOME_PAGE_STATES));

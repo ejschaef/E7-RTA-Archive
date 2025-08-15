@@ -1,7 +1,7 @@
 import { getStrMatches } from "../utils.ts";
-import HeroManager from "./hero-manager.js";
+import HeroManager from "./hero-manager.ts";
 import ArtifactManager from "./artifact-manager.js";
-import UserManager from "./user-manager.js";
+import UserManager from "./user-manager.ts";
 import { WORLD_CODE_ENUM } from "./references.ts";
 
 const SEARCH_DOMAINS = {

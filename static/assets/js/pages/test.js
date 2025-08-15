@@ -6,6 +6,7 @@ import { getStrMatches } from "../utils.ts";
 import { Searcher } from "../e7/searcher.js";
 import ArtifactManager from "../e7/artifact-manager.js";
 import SeasonManager from "../e7/season-manager.js";
+import { FilterParser } from "../e7/filter-parsing/filter-parser.ts";
 
 document.addEventListener("DOMContentLoaded", async () => {
 	await CM.ClientCache.clearData();
@@ -24,26 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 	console.log(`Got seasons:`, seasons, typeof seasons, seasons.length);
 
 	let HM = await CM.HeroManager.getHeroManager();
-	let artifacts = await CM.ArtifactManager.getArtifacts();
-	console.log(`Got artifacts:`, artifacts, typeof artifacts, artifacts.length);
-
-	console.log(
-		getStrMatches("wolf", Object.values(global_users), 10, {
-			keys: ["name"],
-			distance: 4,
-		})
-	);
-
-	const searcher = new Searcher();
-
-	let wolf = await searcher.search("Global Server", "wolf");
-
-	let artiList = await ArtifactManager.getArtifactObjectList();
-
-	console.log(artiList);
-
-	let elbris = await searcher.search(Searcher.DOMAINS.ARTIFACTS, "elbris");
-
-	console.log(wolf.map((user) => [user.item.name, user.item.id]));
-	console.log(elbris);
+	
+	const filterStr = `
+	"Zio" in 
+	`
 });

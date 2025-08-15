@@ -1,499 +1,410 @@
-import { TYPES } from "./declared-data-types.ts";
-import { PRINT_PREFIX } from "./filter-parse-references.ts";
-import Futils from "./filter-utils.ts";
-import { RegExps } from "../regex.js";
-import { COLUMNS_MAP, BattleType } from "../references.ts";
-import { arrToCountMap } from "../../utils.ts";
-import { FilterContainer, FilterRefs } from "./filter-ts-types.ts";
+import { strArrToCountMap } from "../../utils";
+import { BattleType, COLUMNS_MAP } from "../references";
+import { BaseElement, BaseElements } from "./base-elements";
+import { Operator, CompareOperator, parseOperator, COMPARISON_OPERATORS, InOperator } from "./operators";
+import { PRINT_PREFIX } from "./filter-parse-references";
+import { FilterReferences } from "./filter-parse-references";
+import Futils from "./filter-utils";
+import { STRING_LITERAL_PARSERS } from "./string-literal-parse";
 
-class Fn {
-	constructor() {}
+const FUNCTION_STRS = {
+    AND: "and",
+    OR: "or",
+    XOR: "xor",
+    NOT: "not",
+    LAST_N: "last-n",
+    EQUIPMENT: "equipment",
+    ARTIFACT: "artifact",
+    CR: "cr",
+    BASE_FILTER: "base-filter",
+} as const;
 
-	call(_battle: BattleType | BattleType[]): any {
-		console.error(
-			`Base class ${this.constructor.name} does not implement the 'call' method. Implement this method in a subclass.`
-		);
-		return false;
-	}
+const FN_TYPES = {
+    CLAUSE_FN: "CLAUSE_FN",
+    HERO_LIST_FN: "HERO_LIST_FN",
+    GLOBAL_FN: "GLOBAL_FN",
+    BASE_FILTER: "BASE_FILTER",
+} as const;
+
+const CR_FN_TYPES = {
+    GEQ : "GEQ",
+    LEQ : "LEQ",
+    LT : "LT",
+    GT : "GT",
+} as const;
+
+
+abstract class Fn {
+    abstract fnName: typeof FUNCTION_STRS[keyof typeof FUNCTION_STRS] | null;
+    abstract fnType: typeof FN_TYPES[keyof typeof FN_TYPES];
+    abstract asString(prefix: string): string;
+
+    constructor(...args: any[]) {
+
+    }
+}  
+
+abstract class StandardFilter extends Fn {
+    abstract call(b: BattleType): boolean;
 }
 
-class GlobalFilterFn extends Fn {
-	str: string;
+abstract class ClauseFn extends StandardFilter {
+    abstract fnName: typeof FUNCTION_STRS[keyof typeof FUNCTION_STRS];
+    fnType = FN_TYPES.CLAUSE_FN;
+    fns: StandardFilter[] = [];
 
-	constructor() {
-		super();
-		this.str = "";
-	}
+    constructor(...fns: StandardFilter[]) {
+        super();
+        this.fns = fns;
+    }
 
-	asString(prefix = "") {
-		return `${prefix}${this.str}`;
-	}
-}
-
-class lastN extends GlobalFilterFn {
-	name: string;
-	n: number;
-	constructor(args: string[]) {
-		super();
-		this.name = "last-N";
-		if (args.length !== 1) {
-			throw new Futils.SyntaxException(
-				`${this.name} expects 1 argument, got ${args.length}`
-			);
-		}
-		const num = Number(args[0]);
-		if (!Number.isInteger(num)) {
-			throw new Futils.TypeException(
-				`${this.name} expects an integer argument, could not parse '${args[0]}' as integer`
-			);
-		}
-		this.str = `${this.name}(${num})`;
-		this.n = num;
-	}
-
-	call(battles: BattleType[]) {
-		battles.sort((b1, b2) => b1[COLUMNS_MAP.DATE_TIME].localeCompare(b2[COLUMNS_MAP.DATE_TIME]));
-		return battles.slice(-this.n);
-	}
-}
-
-class ClauseFn extends Fn {
-	filterContainer: FilterContainer;
-	str: string;
-	constructor(filterContainer: FilterContainer) {
-		super();
-		this.filterContainer = filterContainer;
-		console.log("Clause Fn constructor got filterContainer:", filterContainer);
-		this.str = "Generic ClauseFn";
-	}
-
-	asString(prefix = "") {
-		let output = "";
-		const newPrefix = prefix + PRINT_PREFIX;
-		this.filterContainer.localFilters.forEach(
-			(fn) => (output += `${fn.asString(newPrefix)},\n`)
-		);
-		console.log("Clause Fn asString got output:", output);
-		return `${prefix}${this.str}(\n${output.trimEnd()}\n${prefix})`;
-	}
+    asString(prefix: string = ""): string {
+        let strBody = "";
+        const newPrefix = prefix + PRINT_PREFIX;
+        this.fns.forEach(
+            (fn) => (strBody += `${fn.asString(newPrefix)},\n`)
+        );
+        console.log("Clause Fn asString got strBody:", strBody);
+        return `${prefix}${this.fnName}(\n${strBody.trimEnd()}\n${prefix})`;
+    }
 }
 
 class AND extends ClauseFn {
-	str: string;
-	constructor(filterContainer: FilterContainer) {
-		super(filterContainer);
-		this.str = "AND";
-	}
-	call(battle: BattleType) {
-		return this.filterContainer.localFilters.every((fn) => fn.call(battle));
-	}
+    fnName = FUNCTION_STRS.AND;
+    fnType = FN_TYPES.CLAUSE_FN;
+
+    call(battle: BattleType): boolean {
+        return this.fns.every((fn) => fn.call(battle));
+    }
 }
 
 class OR extends ClauseFn {
-	str: string;
-	constructor(filterContainer: FilterContainer) {
-		super(filterContainer);
-		this.str = "OR";
-	}
-	call(battle: BattleType) {
-		return this.filterContainer.localFilters.some((fn) => {
-			return fn.call(battle);
-		});
-	}
+    fnName = FUNCTION_STRS.OR;
+    fnType = FN_TYPES.CLAUSE_FN;
+
+    call(battle: BattleType): boolean {
+        return this.fns.some((fn) => fn.call(battle));
+    }
 }
 
 class XOR extends ClauseFn {
-	str: string;
-	constructor(filterContainer: FilterContainer) {
-		super(filterContainer);
-		this.str = "XOR";
-	}
-	call(battle: BattleType) {
-		let result = false;
-		// Cascading XOR
-		for (let fn of this.filterContainer.localFilters) {
-			result = (!result && fn.call(battle)) || (result && !fn.call(battle));
-		}
-		return result;
-	}
+    fnName = FUNCTION_STRS.XOR;
+    fnType = FN_TYPES.CLAUSE_FN;
+
+    call(battle: BattleType): boolean {
+        let result = false;
+        for (let fn of this.fns) {
+            result = (!result && fn.call(battle)) || (result && !fn.call(battle));
+        }
+        return result;
+    }
 }
 
 class NOT extends ClauseFn {
-	str: string;
-	constructor(filterContainer: FilterContainer) {
-		super(filterContainer);
-		this.str = "NOT";
-	}
-	call(battle: BattleType) {
-		return !this.filterContainer.localFilters[0].call(battle);
-	}
+    fnName = FUNCTION_STRS.NOT;
+    fnType = FN_TYPES.CLAUSE_FN;
+
+    constructor(...fns: StandardFilter[]) {
+        super(...fns);
+        if (this.fns.length !== 1) {
+            throw new Futils.SyntaxException(
+                `Invalid NOT function call ; accepts exactly 1 argument ; got: [${this.fns}]`
+            );
+        }
+    }
+
+    call(battle: BattleType): boolean {
+        return !this.fns[0].call(battle);
+    }
 }
 
-// Direct functions resolve to a single base filter ; they cannot contain nested filterContainer
-class DirectFn extends Fn {
-	str: string;
-	constructor() {
-		super();
-		this.str = "Generic DirectFn";
-	}
+abstract class HeroListFn extends StandardFilter {
+    abstract fnName: typeof FUNCTION_STRS[keyof typeof FUNCTION_STRS];
+    abstract isPlayer1: boolean;
+    fnType = FN_TYPES.HERO_LIST_FN;
+    abstract heroName: string;
+    abstract targetField: typeof BaseElements.FIELD_EXTRACT_FN_MAP[keyof typeof BaseElements.FIELD_EXTRACT_FN_MAP];
+    abstract argFmtString: string;
 
-	asString(prefix = "") {
-		return `${prefix}${this.str}`;
-	}
+    getHeroes(battle: BattleType): string[] {
+        return this.isPlayer1 ? battle[COLUMNS_MAP.P1_PICKS] : battle[COLUMNS_MAP.P2_PICKS];
+    }
+
+    asString(prefix: string = ""): string {
+        return `${prefix}${this.fnName}(${this.argFmtString})`;
+    }
 }
 
-function getHeroEquipment(heroName: string, picks: string[], equipment: Array<Array<string>>): string[] | null {
-	// picks is either P1 Picks or P2 Picks and equipment is either P1 Equipment or P2 Equipment from a battle record
-	for (let i = 0; i < picks.length; i++) {
-		if (picks[i] === heroName) {
-			return equipment[i];
-		}
-	}
-	return null;
+class CRFn extends HeroListFn {
+    fnName = FUNCTION_STRS.CR;
+    fnType = FN_TYPES.HERO_LIST_FN;
+    heroName: string;
+    crThreshold: number = 0;
+    operator: CompareOperator;
+    targetField: (battle: BattleType) => any;
+    isPlayer1: boolean = false;
+    argFmtString: string;
+
+    constructor(str: string, REFS: FilterReferences) {
+        super();
+        const splitChar = str.includes(",") ? "," : " ";
+        const args = Futils.tokenizeWithNestedEnclosures(str, splitChar, 1, true);
+        if (args.length !== 3) {
+            throw new Futils.SyntaxException(
+                `Invalid CR function call ; accepts exactly 3 arguments ; got: [${args}] from str: ${str}`
+            )
+        }
+        const threshold = parseInt(args[2]);
+        if (isNaN(threshold)) {
+            throw new Futils.TypeException(
+                `Invalid CR function call ; third argument must be a valid integer literal ; got: '${args[2]}' from str: ${str}`
+            );
+        }
+        const operator = parseOperator(args[1]);
+        if (!(operator instanceof CompareOperator) ) {
+            throw new Futils.TypeException(
+                `Invalid CR function call ; second argument must be a valid comparison operator ; got: '${args[1]}' from str: ${str}`);
+        }
+        this.heroName = new BaseElements.StringLiteral(args[0], REFS, [STRING_LITERAL_PARSERS.Hero]).data;
+        this.crThreshold = threshold;
+        this.operator = operator;
+        this.isPlayer1 = str.includes("p1.");
+        this.targetField = (battle: BattleType) => battle[COLUMNS_MAP.CR_BAR];
+        this.argFmtString = `${this.heroName} ${this.operator.opStr} ${this.crThreshold}`
+    }
+
+    call(battle: BattleType): boolean {
+        const heroes = this.getHeroes(battle);
+        const crBar = this.targetField(battle);
+        const heroCr = crBar.find((entry: [string, number]) => entry[0] === this.heroName);
+        if (!heroCr) {
+            return false;
+        } else if (!heroes.includes(this.heroName)) {
+            return false;
+        }
+        return this.operator.call(heroCr, this.crThreshold);
+    }
 }
 
-class EquipmentFn extends DirectFn {
-	hero: string;
-	equipmentCounts: { [x: string]: number };
-	isPlayer1: boolean;
 
-	static fromFilterStr(str: string, REFS: FilterRefs) {
-		const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
-		if (!(args.length === 2)) {
-			throw new Futils.SyntaxException(
-				`Invalid equipment function call ; accepts exactly 2 arguments ; got: [${args}] from str: ${str}`
-			);
-		}
-		if (!RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
-			throw new Futils.TypeException(
-				`Invalid equipment function call ; first argument must be a valid string literal ; got: '${args[0]}' from str: ${str}`
-			);
-		}
-		const equipSetStr = /^\{[",'a-z\s]*\}$/i.test(args[1])
-			? args[1]
-			: `{${args[1]}}`;
-		let hero: TYPES["String"], equipmentSet: TYPES["Set"];
-		try {
-			[hero, equipmentSet] = [
-				new TYPES.String(args[0], REFS, { types: ["hero"] }),
-				new TYPES.Set(equipSetStr, REFS, { types: ["equipment"] }),
-			];
-		} catch (e) {
-			throw new Futils.TypeException(
-				`Invalid type in equipment function call; got str: ${str} ; error: ${e}`
-			);
-		}
-		const p1Flag = str.split(".")[0] === "p1";
-		console.log(`Sending equipment fn args`, hero, equipmentSet, p1Flag);
-		return new EquipmentFn(hero, equipmentSet, p1Flag);
-	}
-
-	constructor(hero: TYPES["String"], equipmentSet: TYPES["Set"], p1Flag: boolean) {
-		console.log(`Received equipment fn args`, hero, equipmentSet, p1Flag);
-		super();
-		this.hero = hero.data;
-		this.equipmentCounts = arrToCountMap<string | Date>(equipmentSet.list);
-		this.str =
-			(p1Flag ? "p1" : "p2") +
-			`.equipment(${hero.asString()}, ${equipmentSet.asString()})`;
-		this.isPlayer1 = p1Flag;
-	}
-
-	call(battle: BattleType) {
-		const equipment = this.isPlayer1
-			? battle["P1 Equipment"]
-			: battle["P2 Equipment"];
-		const picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
-		const equipped = getHeroEquipment(this.hero, picks, equipment);
-		if (!equipped) {
-			return false;
-		}
-		const equippedCounts: { [x: string]: number } = arrToCountMap<string>(equipped);
-		return Object.entries(this.equipmentCounts).every(
-			([eq, count]) => equippedCounts[eq] === count
-		);
-	}
+/**
+ * Returns true if all the equipment counts in target are matched or exceeded in the instance.
+ * In other words, target is a subset of instance.
+ * If a hero has additional equipment, the function will still return true
+ * @param target the target object to check against
+ * @param instance the object to check
+ * @returns boolean indicating if all the equipment counts in target are present in instance
+ */
+function validateEquipmentCounts(target: Record<string, number>, instance: Record<string, number>): boolean {
+    for (const key in target) {
+        if (target[key] > (instance[key] || 0)) {
+            return false;
+        }
+    }
+    return true;
 }
 
-function getHeroArtifact(heroName: string, picks: string[], artifacts: string[]): string | null {
-	// picks is either P1 Picks or P2 Picks and artifacts is either P1 Artifacts or P2 Artifacts from a battle record
-	for (let i = 0; i < picks.length; i++) {
-		if (picks[i] === heroName) {
-			return artifacts[i];
-		}
-	}
-	return null;
+// TODO: consolidate code with ArtifactFn where possible to reduce duplication
+class EquipmentFn extends HeroListFn {
+    fnName = FUNCTION_STRS.EQUIPMENT;
+    fnType = FN_TYPES.HERO_LIST_FN;
+    heroName: string;
+    targetEquipCounts: Record<string, number>;
+    isPlayer1: boolean = false;
+    argFmtString: string;
+    targetField: (battle: BattleType) => any;
+
+    constructor(str: string, REFS: FilterReferences) {
+        super();
+        const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
+        if (args.length !== 2) {
+            throw new Futils.SyntaxException(
+                `Invalid equipment function call ; accepts exactly 2 arguments ; got: [${args}] from str: ${str}`
+            )
+        }
+        const equipmentSetStr = args[1].includes("{") ? args[1] : `{${args[1]}}`;
+        let equipmentList = Futils.tokenizeWithNestedEnclosures(equipmentSetStr, ",", 1, true);
+        equipmentList = equipmentList.map((equip) => new BaseElements.StringLiteral(equip, REFS, [STRING_LITERAL_PARSERS.Equipment]).data);
+        this.targetEquipCounts = strArrToCountMap(equipmentList);
+        this.heroName = new BaseElements.StringLiteral(args[0], REFS, [STRING_LITERAL_PARSERS.Hero]).data;
+        this.isPlayer1 = str.includes("p1.");
+        this.argFmtString = `${this.heroName}, {${equipmentList.join(",")}}`;
+        this.targetField = (battle: BattleType) => this.isPlayer1 ? battle[COLUMNS_MAP.P1_EQUIPMENT] : battle[COLUMNS_MAP.P2_EQUIPMENT];
+    }
+
+    call(battle: BattleType): boolean {
+        const heroes = this.getHeroes(battle);
+        const heroEq: Array<string[]> = this.targetField(battle)
+        for (let i=0; i < heroes.length; i++) {
+            if (heroes[i] === this.heroName) {
+                const counts = strArrToCountMap(heroEq[i]);
+                return validateEquipmentCounts(this.targetEquipCounts, counts);
+            }
+        }
+        return false;
+    }
 }
 
-class ArtifactFn extends DirectFn {
-	hero: string;
-	artifactArr: string[];
-	isPlayer1: boolean;
-	static fromFilterStr(str: string, REFS: FilterRefs) {
-		const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
-		if (!(args.length === 2)) {
-			throw new Futils.SyntaxException(
-				`Invalid artifact function call ; accepts exactly 2 arguments ; got: [${args}] from str: ${str}`
-			);
-		}
-		if (!RegExps.anchorExp(RegExps.VALID_STRING_LITERAL_RE).test(args[0])) {
-			throw new Futils.TypeException(
-				`Invalid artifact function call ; first argument must be a valid string literal ; got: '${args[0]}' from str: ${str}`
-			);
-		}
-		const artifactSetStr = RegExps.VALID_SET_RE.test(args[1])
-			? args[1]
-			: `{${args[1]}}`;
-		let hero: TYPES["String"], artifactSet: TYPES["Set"];
-		try {
-			[hero, artifactSet] = [
-				new TYPES.String(args[0], REFS, { types: ["hero"] }),
-				new TYPES.Set(artifactSetStr, REFS, { types: ["artifact"] }),
-			];
-		} catch (e) {
-			console.error(e);
-			throw new Futils.TypeException(
-				`Invalid type in artifact function call; got str: ${str} ; error: ${e}`
-			);
-		}
-		const p1Flag = str.split(".")[0] === "p1";
-		console.log(`Sending artifact fn args`, hero, artifactSet, p1Flag);
-		return new ArtifactFn(hero, artifactSet, p1Flag);
-	}
+class ArtifactFn extends HeroListFn {
+    fnName = FUNCTION_STRS.ARTIFACT;
+    fnType = FN_TYPES.HERO_LIST_FN;
+    heroName: string;
+    targetArtifacts: string[];
+    isPlayer1: boolean = false;
+    argFmtString: string;
+    targetField: (battle: BattleType) => any;
 
-	constructor(hero: TYPES["String"], artifactSet: TYPES["Set"], p1Flag: boolean) {
-		console.log(`Received artifact fn args`, hero, artifactSet, p1Flag);
-		super();
-		this.hero = hero.data;
-		this.artifactArr = [...artifactSet.data];
-		this.str =
-			(p1Flag ? "p1" : "p2") +
-			`.artifact(${hero.asString()}, ${artifactSet.asString()})`;
-		this.isPlayer1 = p1Flag;
-	}
+    constructor(str: string, REFS: FilterReferences) {
+        super();
+        const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
+        if (args.length !== 2) {
+            throw new Futils.SyntaxException(
+                `Invalid artifact function call ; accepts exactly 2 arguments ; got: [${args}] from str: ${str}`
+            )
+        }
+        const artifactSetStr = args[1].includes("{") ? args[1] : `{${args[1]}}`;
+        let artifactList = Futils.tokenizeWithNestedEnclosures(artifactSetStr, ",", 1, true);
+        artifactList = artifactList.map((artifact) => new BaseElements.StringLiteral(artifact, REFS, [STRING_LITERAL_PARSERS.Artifact]).data);
+        this.targetArtifacts = artifactList;
+        this.heroName = new BaseElements.StringLiteral(args[0], REFS, [STRING_LITERAL_PARSERS.Hero]).data;
+        this.isPlayer1 = str.includes("p1.");
+        this.argFmtString = `${this.heroName}, {${artifactList.join(", ")}}`;
+        this.targetField = (battle: BattleType) => this.isPlayer1 ? battle[COLUMNS_MAP.P1_ARTIFACTS] : battle[COLUMNS_MAP.P2_ARTIFACTS];
+    }
 
-	call(battle: BattleType) {
-		const artifacts = this.isPlayer1
-			? battle["P1 Artifacts"]
-			: battle["P2 Artifacts"];
-		const picks = this.isPlayer1 ? battle["P1 Picks"] : battle["P2 Picks"];
-		const equippedArtifact = getHeroArtifact(this.hero, picks, artifacts);
-		console.log(
-			`Got equipped Artifact: ${equippedArtifact}, hero: ${
-				this.hero
-			}, picks: ${JSON.stringify(picks)}, artifacts: ${JSON.stringify(
-				artifacts
-			)}`
-		);
-		if (!equippedArtifact) {
-			return false;
-		}
-		return this.artifactArr.some(
-			(arti) => equippedArtifact.toLowerCase() === arti.toLowerCase()
-		);
-	}
+    call(battle: BattleType): boolean {
+        const heroes = this.getHeroes(battle);
+        const heroArtifacts: Array<string[]> = this.targetField(battle);
+        for (let i=0; i < heroes.length; i++) {
+            if (heroes[i] === this.heroName) {
+                return this.targetArtifacts.every((artifact) => heroArtifacts[i].includes(artifact));
+            }
+        }
+        return false;
+    }
 }
 
-// filterContainer for battles where a hero as greater or equal starting CR as the passed integer value (indicating the percentage value)
-class CombatReadinessGeqFn extends DirectFn {
-	hero: string;
-	crThreshold: number;
-	isPlayer1: boolean;
+abstract class GlobalFilter extends Fn {
+    abstract fnName: typeof FUNCTION_STRS[keyof typeof FUNCTION_STRS]
+    fnType = FN_TYPES.GLOBAL_FN
+    abstract argFmtString: string
+    abstract call(battles: BattleType[]): BattleType[]
 
-	static fromFilterStr(str: string, REFS: FilterRefs) {
-		const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
-		if (!(args.length === 2)) {
-			throw new Futils.SyntaxException(
-				`Invalid artifact function call ; accepts exactly 2 arguments ; got: [${args}] from str: ${str}`
-			);
-		}
-		if (!RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
-			throw new Futils.TypeException(
-				`Invalid CR-GEQ function call ; first argument must be a valid string literal ; got: '${args[0]}' from str: ${str}`
-			);
-		} else if (!RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
-			throw new Futils.TypeException(
-				`Invalid CR-GEQ function call ; second argument must be a valid integer literal ; got: '${args[1]}' from str: ${str}`
-			);
-		}
-		const crThresholdStr = args[1];
-		let hero: TYPES["String"], crThreshold: TYPES["Int"];
-		try {
-			[hero, crThreshold] = [
-				new TYPES.String(args[0], REFS, { types: ["hero"] }),
-				new TYPES.Int(crThresholdStr),
-			];
-		} catch (e) {
-			throw new Futils.TypeException(
-				`Invalid type in CR-GEQ function call; got str: ${str} ; error: ${e}`
-			);
-		}
-		const p1Flag = str.split(".")[0] === "p1";
-		console.log(`Sending CR fn args`, hero, crThreshold, p1Flag);
-		return new CombatReadinessGeqFn(hero, crThreshold, p1Flag);
-	}
-
-	constructor(hero: TYPES["String"], crThreshold: TYPES["Int"], p1Flag: boolean) {
-		console.log(
-			`Received CR-GEQ fn args`,
-			hero.asString(),
-			crThreshold.asString(),
-			p1Flag
-		);
-		super();
-		this.hero = hero.data;
-		this.crThreshold = crThreshold.data;
-		this.str =
-			(p1Flag ? "p1" : "p2") +
-			`.CR-GEQ(${hero.asString()}, ${crThreshold.asString()})`;
-		this.isPlayer1 = p1Flag;
-	}
-
-	call(battle: BattleType): boolean {
-		const findFn = (entry: [string, number], picks: string[]) =>
-			picks.includes(entry[0]) &&
-			entry[1] >= this.crThreshold &&
-			entry[0] === this.hero;
-		const result = this.isPlayer1
-			? battle[COLUMNS_MAP.CR_BAR].find((entry) =>
-					findFn(entry, battle[COLUMNS_MAP.P1_PICKS])
-			  )
-			: battle[COLUMNS_MAP.CR_BAR].find((entry) =>
-					findFn(entry, battle[COLUMNS_MAP.P2_PICKS])
-			  );
-		console.log(
-			`Got CR Result: ${result}, hero: ${this.hero}, minValue: ${this.crThreshold}`
-		);
-		return Boolean(result);
-	}
+    asString(prefix: string = ""): string {
+        return `${prefix}${this.fnName}(${this.argFmtString})`;
+    }
 }
 
-class CombatReadinessLtFn extends DirectFn {
-	hero: string;
-	crThreshold: number;
-	isPlayer1: boolean;
-	static fromFilterStr(str: string, REFS: FilterRefs) {
-		const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
-		if (!(args.length === 2)) {
-			throw new Futils.SyntaxException(
-				`Invalid artifact function call ; accepts exactly 2 arguments ; got: [${args}] from str: ${str}`
-			);
-		}
-		if (!RegExps.VALID_STRING_LITERAL_RE.test(args[0])) {
-			throw new Futils.TypeException(
-				`Invalid CR-LT function call ; first argument must be a valid string literal ; got: '${args[0]}' from str: ${str}`
-			);
-		} else if (!RegExps.VALID_INT_LITERAL_RE.test(args[1])) {
-			throw new Futils.TypeException(
-				`Invalid CR-LT function call ; second argument must be a valid integer literal ; got: '${args[1]}' from str: ${str}`
-			);
-		}
-		const crThresholdStr = args[1];
-		let hero: TYPES["String"], crThreshold: TYPES["Int"];
-		try {
-			[hero, crThreshold] = [
-				new TYPES.String(args[0], REFS, { types: ["hero"] }),
-				new TYPES.Int(crThresholdStr),
-			];
-		} catch (e) {
-			throw new Futils.TypeException(
-				`Invalid type in CR-LT function call; got str: ${str} ; error: ${e}`
-			);
-		}
-		const p1Flag = str.split(".")[0] === "p1";
-		console.log(`Sending CR fn args`, hero, crThreshold, p1Flag);
-		return new CombatReadinessLtFn(hero, crThreshold, p1Flag);
-	}
+class LastNFn extends GlobalFilter {
+    fnName = FUNCTION_STRS.LAST_N;
+    fnType = FN_TYPES.GLOBAL_FN;
+    argFmtString: string;
+    n: number;
 
-	constructor(hero: TYPES["String"], crThreshold: TYPES["Int"], p1Flag: boolean) {
-		console.log(
-			`Received CR-LT fn args`,
-			hero.asString(),
-			crThreshold.asString(),
-			p1Flag
-		);
-		super();
-		this.hero = hero.data;
-		this.crThreshold = crThreshold.data;
-		this.str =
-			(p1Flag ? "p1" : "p2") +
-			`.CR-LT(${hero.asString()}, ${crThreshold.asString()})`;
-		this.isPlayer1 = p1Flag;
-	}
+    constructor(str: string) {
+        super();
+        const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
+        if (args.length !== 1) {
+            throw new Futils.SyntaxException(
+                `Invalid last-n function call ; accepts exactly 1 argument ; got: [${args}] from str: ${str}`
+            )
+        }
+        this.n = new BaseElements.IntLiteral(args[0]).data;
+        this.argFmtString = `${this.n}`;
+    }
 
-	call(battle: BattleType): boolean {
-		const findFn = (entry: [string, number], picks: string[]) =>
-			picks.includes(entry[0]) &&
-			entry[1] < this.crThreshold &&
-			entry[0] === this.hero;
-		const result = this.isPlayer1
-			? battle[COLUMNS_MAP.CR_BAR].find((entry) =>
-					findFn(entry, battle[COLUMNS_MAP.P1_PICKS])
-			  )
-			: battle[COLUMNS_MAP.CR_BAR].find((entry) =>
-					findFn(entry, battle[COLUMNS_MAP.P2_PICKS])
-			  );
-		console.log(
-			`Got CR Result: ${result}, hero: ${this.hero}, minValue: ${this.crThreshold}`
-		);
-		return !!result;
-	}
+    call(battles: BattleType[]): BattleType[] {
+        return battles.slice(-this.n);
+    }
 }
 
-const FN_MAP: { 
-	CLAUSE_FNS: { [key: string]: ClauseFnClass<ClauseFn> },
-	DIRECT_FNS: { [key: string]: DirectFnClass<DirectFn> },
-	GLOBAL_FNS: { [key: string]: GlobalFilterFnClass<GlobalFilterFn> },
-} 
-= {
-	CLAUSE_FNS: {
-		"and": AND,
-		"or": OR,
-		"xor": XOR,
-		"not": NOT,
-	},
-	DIRECT_FNS: {
-		"p1.equipment": EquipmentFn,
-		"p2.equipment": EquipmentFn,
-		"p1.artifact": ArtifactFn,
-		"p2.artifact": ArtifactFn,
-		"p1.cr-geq": CombatReadinessGeqFn,
-		"p2.cr-geq": CombatReadinessGeqFn,
-		"p1.cr-lt": CombatReadinessLtFn,
-		"p2.cr-lt": CombatReadinessLtFn,
-	},
-	GLOBAL_FNS: {
-		"last-n": lastN
-	}
-};
 
-export type ClauseFnClass<T extends ClauseFn> = {
-	new (fc: FilterContainer): T;
+function isCollection(baseElt: BaseElement): boolean {
+    return BaseElements.COLLECTION_FIELDS_SET.has(baseElt.rawString)
 }
 
-export type FnClass<T extends Fn> = {
-	new (...args: any[]): T,
+function validateBaseFilterTypes(left: BaseElement, op: Operator, right: BaseElement): boolean {
+    const str = `${left.asString()} ${op.opStr} ${right.asString()}`
+    if (left instanceof BaseElements.Field && right instanceof BaseElements.Field) {
+        throw new Futils.ValidationError(
+            `Invalid base filter; fields cannot be compared with other fields ; got string: [${str}]`
+        )
+    } else if (!(left.type === BaseElements.BaseEltTypes.FIELD) && !(right.type === BaseElements.BaseEltTypes.FIELD)) {
+        throw new Futils.ValidationError(
+            `Invalid base filter; every base filter must have at least one field ; got string: [${str}]`
+        )
+    } else if (op instanceof InOperator && !(isCollection(right) || right instanceof BaseElements.RangeLiteral || right instanceof BaseElements.SetLiteral)) {
+        throw new Futils.ValidationError(
+            `Invalid base filter; 'in' operators can only be used with Ranges, Sets, or Fields that correspond to sets like 'p1.picks' ; got string: [${str}]`
+        )
+    }
+    return true;
 }
 
-export type DirectFnClass<T extends DirectFn> = {
-	fromFilterStr: (str: string, REFS: FilterRefs) => T
+class BaseFilter extends StandardFilter {
+    fnType = FN_TYPES.BASE_FILTER;
+    fnName = FUNCTION_STRS.BASE_FILTER;
+    fmtString: string;
+    fn: (b: BattleType) => boolean;
+    constructor(str: string, REFS: FilterReferences) {
+        super();
+        const tokens = Futils.tokenizeWithNestedEnclosures(str, " ", 0, true);
+        if (tokens.length !== 3) {
+            throw new Futils.SyntaxException(
+                `Invalid base filter; filters must have 3 tokens and be of the form: ['X', operator, 'Y']; got: [${tokens}] tokens from str: ${str}`
+            )
+        }
+        let [leftStr, opStr, rightStr] = tokens;
+        console.log(`PARSING BASE FILTER: Left: ${leftStr}, Op: ${opStr}, Right: ${rightStr}`);
+        const operator = parseOperator(opStr);
+        const left = BaseElements.parseBaseElement(leftStr, REFS);
+        const right = BaseElements.parseBaseElement(rightStr, REFS);
+        console.log(`PARSED BASE FILTER: Left: ${left.asString()}, Op: ${opStr}, Right: ${right.asString()}`);
+        validateBaseFilterTypes(left, operator, right);
+        if (left instanceof BaseElements.Field && !(right instanceof BaseElements.Field)) {
+            this.fn = (battle: BattleType) => operator.call(left.extractData(battle), right.getData());
+        } else if (!(left instanceof BaseElements.Field) && right instanceof BaseElements.Field) {
+            this.fn = (battle: BattleType) => operator.call(left.getData(), right.extractData(battle));
+        } else {
+            throw new Futils.ValidationError(
+                "Invalid base filter; filters must contain a Field and a Literal; got: " + str
+            )
+        }
+        this.fmtString = `${left.asString()} ${opStr} ${right.asString()}`;
+    }
+
+    call(b: BattleType): boolean {
+        return this.fn(b);
+    }
+
+    asString(prefix: string = ""): string {
+        return `${prefix}${this.fmtString}`;
+    }
 }
 
-export type GlobalFilterFnClass<T extends GlobalFilterFn> = {
-	new (...args: any[]): T,
+const FN_STR_MAP = {
+    [FUNCTION_STRS.BASE_FILTER]: BaseFilter,
+    [FUNCTION_STRS.AND]: AND,
+    [FUNCTION_STRS.OR]: OR,
+    [FUNCTION_STRS.NOT]: NOT,
+    [FUNCTION_STRS.XOR]: XOR,
+    [FUNCTION_STRS.LAST_N]: LastNFn,
+    [FUNCTION_STRS.EQUIPMENT]: EquipmentFn,
+    [FUNCTION_STRS.ARTIFACT]: ArtifactFn,
+    [FUNCTION_STRS.CR]: CRFn,
+} as const;
+
+const FNS = {
+    AND: AND,
+    OR: OR,
+    NOT: NOT,
+    XOR: XOR,
+    LAST_N: LastNFn,
+    EQUIPMENT: EquipmentFn,
+    ARTIFACT: ArtifactFn,
+    CR: CRFn,
+    BASE_FILTER: BaseFilter,
 }
 
-export {
-	FN_MAP,
-	AND,
-	OR,
-	XOR,
-	NOT,
-	lastN,
-	EquipmentFn,
-	ArtifactFn,
-	CombatReadinessGeqFn,
-	ClauseFn, 
-	DirectFn,
-	GlobalFilterFn
-};
+
+export { StandardFilter, GlobalFilter, FNS, FN_STR_MAP, FUNCTION_STRS };

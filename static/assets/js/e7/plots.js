@@ -1,7 +1,6 @@
 export function generateRankPlot(container, battles, user, filteredBattles = null, zoomFiltered = false) {
+
     // Sort battles chronologically by time
-    // console.log("Creating plot HTML for:", JSON.stringify(battles));
-    // console.log("received Filtered Battles:", JSON.stringify(filteredBattles));
     battles.sort((a, b) => new Date(a["Date/Time"]) - new Date(b["Date/Time"]));
 
     // if the user is not passed, default the username to the ID of the player
@@ -112,10 +111,21 @@ export function generateRankPlot(container, battles, user, filteredBattles = nul
         responsive: true
     };
 
-    const plotDiv = document.createElement("div");
-	plotDiv.id = "rank-plot"; // or use a dynamic ID if needed
+    let plotDiv;
+    plotDiv = document.getElementById("rank-plot");
+    if (!plotDiv) {
+        plotDiv = document.createElement("div");
+        plotDiv.id = "rank-plot"; // or use a dynamic ID if needed
+        container.appendChild(plotDiv);
+    }
 	plotDiv.style.width = "100%";
 	plotDiv.style.height = "100%";
-	container.appendChild(plotDiv);
-    Plotly.newPlot(plotDiv, [trace], layout, config);
+    if (container.__plotted) {
+        console.log("updating plot");
+        Plotly.react(plotDiv, [trace], layout, config);
+    } else {
+        console.log("creating plot");
+        Plotly.newPlot(plotDiv, [trace], layout, config);
+    }
+    container.__plotted = true;
 }

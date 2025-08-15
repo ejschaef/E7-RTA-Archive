@@ -5,18 +5,25 @@ import { CONTEXT } from "../../../home-page-context.js";
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { CM } from "../../../../../content-manager.js";
+import ClientCache from "../../../../../cache-manager.ts";
 
 function addBattleTableFilterToggleListener() {
 	console.log("Setting listener for filter-battle-table checkbox");
 	const filterBattleTableCheckbox = DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE;
 	filterBattleTableCheckbox.addEventListener("click", async () => {
+		console.log(
+			"Toggling Filter Battle Table: ",
+			filterBattleTableCheckbox.checked
+		);
 		const stats = await CM.ClientCache.getStats();
 		if (!filterBattleTableCheckbox.checked) {
 			Tables.replaceBattleData(stats.battles);
 		} else {
-			Tables.replaceBattleData(
-				Object.values(stats.filteredBattlesObj)
+			console.log(
+				"Replacing table with filtered data:",
+				stats.filteredBattlesObj
 			);
+			Tables.replaceBattleData(Object.values(stats.filteredBattlesObj));
 		}
 	});
 }
@@ -25,8 +32,8 @@ function addAutoZoomListener() {
 	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
 	autoZoomCheckbox.addEventListener("click", async () => {
 		console.log("Toggling Auto Zoom: ", autoZoomCheckbox.checked);
-		await CM.ClientCache.setFlag(
-			"autoZoom",
+		await CM.ClientCache.cache(
+			CM.ClientCache.Keys.AUTO_ZOOM_FLAG,
 			autoZoomCheckbox.checked
 		);
 	});
@@ -70,12 +77,14 @@ function addFilterButtonListeners(editor, stateDispatcher) {
 			if (validFilter) {
 				await CM.ClientCache.setFilterStr(syntaxStr);
 				CONTEXT.AUTO_QUERY = false;
+				CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.STATS;
 				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
 				return;
 			}
 		} else if (action === "check") {
 			console.log("Checking Str", syntaxStr);
 			await PageUtils.validateFilterSyntax(syntaxStr);
+			return;
 		} else if (action === "clear") {
 			editor.setValue("");
 			console.log("Found applied filter [", appliedFilter, "] when clearing");
@@ -83,6 +92,7 @@ function addFilterButtonListeners(editor, stateDispatcher) {
 				console.log("Found filter str", appliedFilter);
 				await CM.ClientCache.setFilterStr("");
 				CONTEXT.AUTO_QUERY = false;
+				CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.STATS;
 				stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
 				return;
 			}
@@ -90,14 +100,76 @@ function addFilterButtonListeners(editor, stateDispatcher) {
 	});
 }
 
-function addPublicStatsListeners() {
-	addAutoZoomListener();
-	addBattleTableFilterToggleListener();
-}
+function addPlotlyLineAndMarkWidthListener() {
+	const plotDiv = DOC_ELEMENTS.HOME_PAGE.RANK_PLOT;
+	if (plotDiv.__zoomListenerAttached) return;
+	plotDiv.__zoomListenerAttached = true;
 
-function addPrivateStatsListeners(editor, stateDispatcher) {
-	addPremadeFilterButtonListener(editor);
-	addFilterButtonListeners(editor, stateDispatcher);
+	plotDiv.on("plotly_relayout", async function (e) {
+		console.log("TRIGGERED PLOTLY_RELAYOUT EVENT");
+
+		const stats = await ClientCache.getStats();
+
+		const originalXRange = Object.values(stats.battles).length;
+		const filteredXRange = Object.values(stats.filteredBattlesObj).length;
+
+		const markerBaseWidth = 4;
+		const markerMaxWidth = 16;
+		const lineBaseWidth = 2;
+		const lineMaxWidth = 8;
+
+		if (e["xaxis.range[0]"] !== undefined) {
+			let newRange = [e["xaxis.range[0]"], e["xaxis.range[1]"]];
+
+			// Zoom ratio: smaller range = more zoom
+			let zoomFactor = originalXRange / (newRange[1] - newRange[0]);
+
+			// Adjust sizes proportionally (with a min/max clamp)
+			let newMarkerSize = Math.min(
+				Math.max(markerBaseWidth * zoomFactor, markerBaseWidth),
+				markerMaxWidth
+			);
+			let newLineWidth = Math.min(
+				Math.max(lineBaseWidth * zoomFactor, lineBaseWidth),
+				lineMaxWidth
+			);
+
+			Plotly.restyle(plotDiv.id, {
+				"marker.size": [newMarkerSize],
+				"line.width": [newLineWidth],
+			});
+		} else {
+			let zoomFactor = originalXRange / filteredXRange;
+
+			let isFilterApplied = await ClientCache.get(
+				ClientCache.Keys.AUTO_ZOOM_FLAG
+			);
+			isFilterApplied = isFilterApplied && originalXRange !== filteredXRange;
+
+			if (isFilterApplied && !CONTEXT.PLOT_AUTO_ADJUSTED) {
+				CONTEXT.PLOT_AUTO_ADJUSTED = true;
+				let newMarkerSize = Math.min(
+					Math.max(markerBaseWidth * zoomFactor, markerBaseWidth),
+					markerMaxWidth
+				);
+				let newLineWidth = Math.min(
+					Math.max(lineBaseWidth * zoomFactor, lineBaseWidth),
+					lineMaxWidth
+				);
+
+				Plotly.restyle(plotDiv.id, {
+					"marker.size": [newMarkerSize],
+					"line.width": [newLineWidth],
+				});
+				return;
+			} else {
+				Plotly.restyle(plotDiv.id, {
+					"marker.size": [markerBaseWidth],
+					"line.width": [lineBaseWidth],
+				});
+			}
+		}
+	});
 }
 
 function addStatsListeners(editor, stateDispatcher) {
@@ -107,4 +179,4 @@ function addStatsListeners(editor, stateDispatcher) {
 	addFilterButtonListeners(editor, stateDispatcher);
 }
 
-export { addStatsListeners };
+export { addStatsListeners, addPlotlyLineAndMarkWidthListener };

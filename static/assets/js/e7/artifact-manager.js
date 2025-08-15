@@ -1,4 +1,4 @@
-import ClientCache from "../cache-manager.js";
+import ClientCache from "../cache-manager.ts";
 import E7API from "../apis/e7-API.js";
 import PYAPI from "../apis/py-API.js";
 
@@ -17,38 +17,48 @@ async function getArtifactMap() {
 	}
 	console.log(`Got artifact Json for language: 'en'`);
 	return Object.fromEntries(
-		rawJSON.filter((artifact) => artifact.name !== null).map((artifact) => [artifact.code, artifact.name])
+		rawJSON
+			.filter((artifact) => artifact.name !== null)
+			.map((artifact) => [artifact.code, artifact.name])
 	);
 }
 
 let ArtifactManager = {
-	getArtifacts: async function () {
-		return (
-			(await ClientCache.get(ClientCache.Keys.ARTIFACTS)) ??
-			(await this.fetchAndCacheArtifacts())
-		);
+	async getArtifacts() {
+		let artifacts = await ClientCache.get(ClientCache.Keys.ARTIFACTS);
+		if (!artifacts) {
+			artifacts = await this.fetchAndCacheArtifacts();
+		}
+		return artifacts;
 	},
 
-    getArtifactLowercaseNameMap: async function () {
-        let artiMap = await ClientCache.get(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_MAP);
-        if (artiMap !== null) {
+	getArtifactLowercaseNameMap: async function () {
+		let artiMap = await ClientCache.get(
+			ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_MAP
+		);
+		if (artiMap !== null) {
 			console.log("Got artifact lowercase name map from cache");
-            return artiMap;
-        }
-        const artifacts = await this.getArtifacts();
+			return artiMap;
+		}
+		const artifacts = await this.getArtifacts();
 		artiMap = Object.fromEntries(
 			Object.values(artifacts)
-			.filter((name) => name !== null)
-			.map((name) => {
-				return [name.toLowerCase(), name];
-			})
-		)
-        await ClientCache.cache(ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_MAP, artiMap);
-        return artiMap;
-    },
+				.filter((name) => name !== null)
+				.map((name) => {
+					return [name.toLowerCase(), name];
+				})
+		);
+		await ClientCache.cache(
+			ClientCache.Keys.ARTIFACTS_LOWERCASE_NAMES_MAP,
+			artiMap
+		);
+		return artiMap;
+	},
 
 	getArtifactObjectList: async function () {
-		let objectList = await ClientCache.get(ClientCache.Keys.ARTIFACT_OBJECT_LIST);
+		let objectList = await ClientCache.get(
+			ClientCache.Keys.ARTIFACT_OBJECT_LIST
+		);
 		if (objectList !== null) {
 			console.log("Got artifact object list from cache");
 			return objectList;

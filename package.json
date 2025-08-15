@@ -34,6 +34,8 @@
     "webpack-manifest-plugin": "^5.0.1"
   },
   "dependencies": {
+    "@types/codemirror": "^5.60.16",
+    "codemirror": "^6.0.2",
     "fuse.js": "^7.1.0",
     "idb": "^8.0.3",
     "papaparse": "^5.5.3"

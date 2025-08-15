@@ -1,3 +1,36 @@
+import { toTitleCase } from "../utils";
+
+export const LANGUAGES = {
+	CODES : {
+		DE : "de",
+		KO : "ko",
+		PT : "pt",
+		TH : "th",
+		ZH_TW : "zh-TW",
+		JA : "ja",
+		EN : "en",
+		FR : "fr",
+		ZH_CN : "zh-CN",
+		ES : "es",
+	},
+
+	NAMES : {
+		DE : "German",
+		KO : "Korean",
+		PT : "Portuguese",
+		TH : "Thai",
+		ZH_TW : "Chinese (Traditional, Taiwan)",
+		JA : "Japanese",
+		EN : "English",
+		FR : "French",
+		ZH_CN : "Chinese (Simplified, China)",
+		ES : "Spanish",
+	}
+} as const;
+
+export type LanguageCode = typeof LANGUAGES.CODES[keyof typeof LANGUAGES.CODES];
+export type LanguageName = typeof LANGUAGES.NAMES[keyof typeof LANGUAGES.NAMES];
+
 export const WORLD_CODES: Set<string> = new Set([
 	"world_kor",
 	"world_global",
@@ -29,6 +62,9 @@ export const CLEAN_STR_TO_WORLD_CODE: Record<string, string> = {
 	[WORLD_CODE_TO_CLEAN_STR.world_asia]: WORLD_CODE_ENUM.ASIA,
 	[WORLD_CODE_TO_CLEAN_STR.world_eu]: WORLD_CODE_ENUM.EU,
 };
+
+export const WORLD_CODE_LOWERCASE_TO_CLEAN_STR: Record<string, string> = 
+	Object.fromEntries(Object.values(WORLD_CODE_TO_CLEAN_STR).map((v) => [v.toLowerCase(), v]));
 
 export const EQUIPMENT_SET_MAP: Record<string, string> = {
 	set_speed: "Speed",
@@ -64,6 +100,9 @@ export const LEAGUE_MAP: Record<string, number> = {
 	emperor: 7,
 	legend: 8,
 };
+
+export const LEAGUE_TO_CLEAN_STR = 
+	Object.fromEntries(Object.keys(LEAGUE_MAP).sort((a, b) => LEAGUE_MAP[a] - LEAGUE_MAP[b]).map((k) => [k, toTitleCase(k)]));
 
 export const COLUMNS_MAP = {
 	SEASON: "Season",

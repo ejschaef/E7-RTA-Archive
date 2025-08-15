@@ -1,4 +1,4 @@
-import { TableConstructor } from "../html-constructor/html-constructor.js";
+import { TableConstructor } from "../html-constructor/html-constructor.ts";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 import { COLUMNS_MAP } from "../../e7/references.ts";
 
@@ -22,7 +22,7 @@ let TO_BUILD = [
 		cols: ["", "Season", "Start", "End", "Status"],
 	},
 	{
-		tbl: DOC_ELEMENTS.HOME_PAGE.SERVER_STATS_TBL,
+		tbl: DOC_ELEMENTS.HOME_PAGE.PERFORMANCE_STATS_TBL,
 		cols: ["", "Battles", "Freq", "Wins", "Win Rate", "+/-", "FP WR", "SP WR"],
 	},
 	{

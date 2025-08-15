@@ -1,4 +1,4 @@
-import { RegExps } from "../regex.js";
+import { RegExps } from "../regex.ts";
 import { BattleType } from "../references.ts";
 
 class SyntaxException extends Error {
@@ -142,9 +142,9 @@ function getCharCounts(str: string): Record<string, number> {
 }
 
 function parseDate(dateStr: string): Date {
-	if (!RegExps.VALID_DATE_LITERAL_RE.test(dateStr)) {
+	if (!RegExps.DATE_LITERAL_RE.test(dateStr)) {
 		throw new SyntaxException(
-			`Invalid date; must be in the format: YYYY-MM-DD ( regex: ${RegExps.VALID_DATE_LITERAL_RE.source} ); got: '${dateStr}'`
+			`Invalid date; must be in the format: YYYY-MM-DD ( regex: ${RegExps.DATE_LITERAL_RE.source} ); got: '${dateStr}'`
 		);
 	}
 

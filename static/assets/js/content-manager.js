@@ -1,8 +1,8 @@
-import HeroManager from "./e7/hero-manager.js";
+import HeroManager from "./e7/hero-manager.ts";
 import BattleManager from "./e7/battle-manager.js";
 import SeasonManager from "./e7/season-manager.js";
-import ClientCache from "./cache-manager.js";
-import UserManager from "./e7/user-manager.js";
+import ClientCache from "./cache-manager.ts";
+import UserManager from "./e7/user-manager.ts";
 import ArtifactManager from "./e7/artifact-manager.js";
 
 let CM = {

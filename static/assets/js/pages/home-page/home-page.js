@@ -8,7 +8,7 @@ import { CONTEXT } from "./home-page-context.js";
 import PageUtils from "../page-utilities/page-utils.js";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 import IPM from "../orchestration/inter-page-manager.js";
-import UserManager from "../../e7/user-manager.js";
+import UserManager from "../../e7/user-manager.ts";
 import { stateDispatcher } from "./home-page-dispatch.js";
 import { addHomePageListeners } from "./home-page-listeners.js";
 import { SelectDataView } from "./page-views/home-page/select-data/select-data-logic.js";
