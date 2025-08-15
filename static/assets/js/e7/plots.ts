@@ -1,17 +1,50 @@
 import { BattleType } from "./references";
-import { User } from "./user-manager";
+
+export const PLOT_REFS = {
+    markerMaxWidth : 16,
+	lineMaxWidth : 8,
+    minMarkerSize : 2,
+    minLineWidth : 1
+}
 
 export function getSizes(numBattles: number): {markerSize: number, lineWidth: number} {
     const length = numBattles;
-    const minMarkerSize = 2;
-    const minLineWidth = 1;
-    const markerSize = Math.max(minMarkerSize, 6 - Math.log10(length) * 0.5);
-    const lineWidth = Math.max(minLineWidth, 3 - Math.log10(length) * 0.5);
+    const markerSize = Math.max(PLOT_REFS.minMarkerSize, 6 - Math.log10(length) * 0.5);
+    const lineWidth = Math.max(PLOT_REFS.minLineWidth, 3 - Math.log10(length) * 0.5);
     return {markerSize, lineWidth};
 }
 
+type ZoomConfig = {
+    startX: number | null;
+    endX: number | null;
+    startY: number | null;
+    endY: number | null;
+}
 
-export function generateRankPlot(container: HTMLElement, battles: BattleType[], user: {name: string}, filteredBattles = null, zoomFiltered = false) {
+export function getZoom(battlesList: BattleType[], filteredBattlesList: {[key: string] : BattleType}): ZoomConfig {
+    const zoom: ZoomConfig = {
+        startX: null,
+        endX: null,
+        startY: null,
+        endY: null
+    }
+
+    const zoomYPadding = 50;
+    const zoomXPadding = 0.5;
+
+    for (const [idx, battle] of battlesList.entries()) {
+        if (battle["Seq Num"] in filteredBattlesList) {
+            zoom.startX = (zoom.startX === null || idx < zoom.startX) ? idx - zoomXPadding : zoom.startX;
+                zoom.startY = (zoom.startY === null || battle["P1 Points"] < zoom.startY + zoomYPadding) ? battle["P1 Points"] - zoomYPadding : zoom.startY;
+                zoom.endX = (zoom.endX === null || idx > zoom.endX)  ? idx + zoomXPadding : zoom.endX;
+                zoom.endY = (zoom.endY === null || battle["P1 Points"] > zoom.endY - zoomYPadding) ? battle["P1 Points"] + zoomYPadding : zoom.endY;
+        }
+    }
+    return zoom;
+}
+
+
+export function generateRankPlot(container: HTMLElement, battles: BattleType[], user: {name: string}, filteredBattles = null): HTMLElement {
 
     // Sort battles chronologically by time
     battles.sort((a, b) => a["Date/Time"].localeCompare(b["Date/Time"]));
@@ -28,26 +61,11 @@ export function generateRankPlot(container: HTMLElement, battles: BattleType[], 
     const y = battles.map(b => b["P1 Points"]);
 
     const markerMask = [];
-    const zoom: { [key: string] : number | null} = {
-        startX: null,
-        endX: null,
-        startY: null,
-        endY: null
-    }
-
-    const zoomYPadding = 50;
-    const zoomXPadding = 0.5;
 
     // iterate through battles and build list to color filtered battles distinctly 
     // and determine the area to zoom on if needed
     for (let [idx, battle] of battles.entries()) {
         if (filteredBattles && battle["Seq Num"] in filteredBattles) {
-            if (zoomFiltered === true) {
-                zoom.startX = (zoom.startX === null || idx < zoom.startX) ? idx - zoomXPadding : zoom.startX;
-                zoom.startY = (zoom.startY === null || battle["P1 Points"] < zoom.startY + zoomYPadding) ? battle["P1 Points"] - zoomYPadding : zoom.startY;
-                zoom.endX = (zoom.endX === null || idx > zoom.endX)  ? idx + zoomXPadding : zoom.endX;
-                zoom.endY = (zoom.endY === null || battle["P1 Points"] > zoom.endY - zoomYPadding) ? battle["P1 Points"] + zoomYPadding : zoom.endY;
-            }
             markerMask.push(markerFilteredColor);
         } else {
             markerMask.push(markerDefaultColor);
@@ -103,7 +121,7 @@ export function generateRankPlot(container: HTMLElement, battles: BattleType[], 
             gridcolor: '#8d8d8d',
             zeroline: false,
             tickfont: { size: 12, color: '#dddddd' },
-            range: zoom.startX ? [zoom.startX, zoom.endX] : null
+            range: null
         },
         yaxis: {
             title: {
@@ -116,7 +134,7 @@ export function generateRankPlot(container: HTMLElement, battles: BattleType[], 
             zerolinecolor: '#dddddd',
             zerolinewidth: 2,
             tickfont: { size: 12, color: '#dddddd' },
-            range: zoom.startY ? [zoom.startY, zoom.endY] : null
+            range: null
         },
         plot_bgcolor: '#1e222d',
         paper_bgcolor: '#1e222d'
@@ -146,4 +164,5 @@ export function generateRankPlot(container: HTMLElement, battles: BattleType[], 
         // @ts-ignore
         Plotly.newPlot(plotDiv, [trace], layout, config);
     }
+    return plotDiv;
 }

@@ -28,14 +28,12 @@ RUN groupadd -g 1001 e7_user && \
 # Set working directory
 WORKDIR /code
 
-# Install maturin
-RUN pip install maturin
-
+# Create logs directory
 RUN mkdir -p /code/logs
 
 # Install dependencies
-COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+COPY pyproject.toml .
+RUN pip install --upgrade pip && pip install .
 
 COPY e7_rs_tools /code/e7_rs_tools
 

@@ -1,4 +1,5 @@
 import UserManager from "../../../../../e7/user-manager.ts";
+import ClientCache from "../../../../../cache-manager.ts";
 import { Tables, CardContent } from "../../../../../populate_content.js";
 import { CM } from "../../../../../content-manager.js";
 import { RegExps } from "../../../../../e7/regex.ts";
@@ -9,6 +10,61 @@ import {
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { CONTEXT } from "../../../home-page-context.js";
+import { Safe } from "../../../../../utils.ts";
+import { getZoom, generateRankPlot, PLOT_REFS, getSizes } from "../../../../../e7/plots.ts";
+
+async function populatePlot(stats) {
+	const container = Safe.unwrapHtmlElt("rank-plot-container");
+	const user = await UserManager.getUser();
+	const autoZoom = await ClientCache.get(ClientCache.Keys.AUTO_ZOOM_FLAG);
+
+	const plotDiv = generateRankPlot(
+		container,
+		stats.battles,
+		user,
+		stats.numFilters > 0 ? stats.filteredBattlesObj : null
+	);
+
+	addPlotlyLineAndMarkWidthListener(plotDiv);
+
+	if (autoZoom && stats.areFiltersApplied) {
+
+		// compute the needed zoom level
+		const zoom = getZoom(stats.battles, stats.filteredBattlesObj);
+		console.log("Zooming to:", zoom);
+
+		// compute the zoom factor to adjust markers and line width
+		const originalXRange = Object.values(stats.battles).length;
+		const filteredXRange = Object.values(stats.filteredBattlesObj).length;
+
+		const sizes = getSizes(originalXRange);
+
+		const zoomFactor = originalXRange / filteredXRange;
+
+		let newMarkerSize = Math.min(
+							Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
+							PLOT_REFS.markerMaxWidth
+		);
+
+		let newLineWidth = Math.min(
+			Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth),
+			PLOT_REFS.lineMaxWidth
+		);
+
+		const relayoutConfig = {
+			"xaxis.range": [zoom.startX, zoom.endX],
+			"yaxis.range": [zoom.startY, zoom.endY],
+		}
+
+		const markerConfig = {
+			"marker.size": newMarkerSize,
+			"line.width": newLineWidth,
+		}
+		CONTEXT.IGNORE_RELAYOUT = true;
+		Plotly.restyle(plotDiv, markerConfig);
+		Plotly.relayout(plotDiv, relayoutConfig);
+	}
+}
 
 async function populateContent() {
 	const user = await UserManager.getUser();
@@ -58,8 +114,7 @@ async function populateContent() {
 			Tables.populateFullBattlesTable("battles-tbl", stats.battles, user);
 		}
 		CardContent.populateGeneralStats(stats.generalStats);
-		CONTEXT.PLOT_AUTO_ADJUSTED = false; // used to trigger plotly line and mark width listener if autozoom is applied
-		await CardContent.populateRankPlot(stats);
+		await populatePlot(stats);
 		console.log("FINISHED POPULATING");
 		console.timeEnd("populateTables");
 	} catch (err) {
@@ -114,7 +169,6 @@ async function postFirstRenderLogic() {
 		return;
 	}
 	editor.refresh();
-	addPlotlyLineAndMarkWidthListener();
 }
 
 async function runLogic(stateDispatcher) {

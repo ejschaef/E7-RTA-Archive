@@ -47,20 +47,26 @@ class ArtifactParser extends StringLiteralParser {
 
 class SeasonCodeParser extends StringLiteralParser {
     parse(str: string, REFS: FilterReferences): string | null {
+        console.log(`Parsing season code: ${str}`);
         let seasonNum: string;
         if ( str === "current-season" ) {
             return REFS.SEASON_DETAILS[0].Code;
         }
         else if (RegExps.SEASON_LITERAL_RE.test(str)) {
-            seasonNum = str.split("-")[-1];
+            console.log(`Parsing season literal: ${str}`);
+            seasonNum = str.split("-").at(-1)!;
         } 
         else if (RegExps.SEASON_CODE_LITERAL_RE.test(str)) {
-            seasonNum = str.split("_")[-1]
+            console.log(`Parsing season code literal: ${str}`);
+            seasonNum = str.split("_ss").at(-1)!;
         } 
         else {
             return null
         }
-        return REFS.SEASON_DETAILS.find((season: { Code: string; }) => season.Code.split("_")[-1] === seasonNum)?.Code;
+        console.log(`Season num: ${seasonNum}`);
+        const seasonNums = REFS.SEASON_DETAILS.map((season: {Code: string; }) => season.Code.split("_").at(-1)!);
+        console.log(`Season nums: ${seasonNums}`);
+        return REFS.SEASON_DETAILS.find((season: { Code: string; }) => season.Code.split("_ss").at(-1) === seasonNum)?.Code;
     }
     parserType = "Season Code";
 }

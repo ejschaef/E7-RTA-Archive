@@ -6,7 +6,7 @@ import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.j
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { CM } from "../../../../../content-manager.js";
 import ClientCache from "../../../../../cache-manager.ts";
-import { getSizes } from "../../../../../e7/plots.ts";
+import { getSizes, PLOT_REFS } from "../../../../../e7/plots.ts";
 
 function addBattleTableFilterToggleListener() {
 	console.log("Setting listener for filter-battle-table checkbox");
@@ -106,20 +106,22 @@ function addPlotlyLineAndMarkWidthListener() {
 	if (plotDiv.__zoomListenerAttached) return;
 	plotDiv.__zoomListenerAttached = true;
 
+	console.log("Attaching plotly relayout listener");
+
 	plotDiv.on("plotly_relayout", async function (e) {
+		const ignore = CONTEXT.popKey(CONTEXT.KEYS.IGNORE_RELAYOUT);
+		if (ignore) return;
 		console.log("TRIGGERED PLOTLY_RELAYOUT EVENT");
 
 		const stats = await ClientCache.getStats();
 
 		const originalXRange = Object.values(stats.battles).length;
-		const filteredXRange = Object.values(stats.filteredBattlesObj).length;
 
 		const sizes = getSizes(originalXRange);
 
-		const markerMaxWidth = 16;
-		const lineMaxWidth = 8;
 
 		if (e["xaxis.range[0]"] !== undefined) {
+			console.log("Refitting marker and line sizes");
 			let newRange = [e["xaxis.range[0]"], e["xaxis.range[1]"]];
 
 			// Zoom ratio: smaller range = more zoom
@@ -128,11 +130,11 @@ function addPlotlyLineAndMarkWidthListener() {
 			// Adjust sizes proportionally (with a min/max clamp)
 			let newMarkerSize = Math.min(
 				Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
-				markerMaxWidth
+				PLOT_REFS.markerMaxWidth
 			);
 			let newLineWidth = Math.min(
 				Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth),
-				lineMaxWidth
+				PLOT_REFS.lineMaxWidth
 			);
 
 			Plotly.restyle(plotDiv.id, {
@@ -140,35 +142,11 @@ function addPlotlyLineAndMarkWidthListener() {
 				"line.width": [newLineWidth],
 			});
 		} else {
-			let zoomFactor = originalXRange / filteredXRange;
-
-			let isFilterApplied = await ClientCache.get(
-				ClientCache.Keys.AUTO_ZOOM_FLAG
-			);
-			isFilterApplied = isFilterApplied && originalXRange !== filteredXRange;
-
-			if (isFilterApplied && !CONTEXT.PLOT_AUTO_ADJUSTED) {
-				CONTEXT.PLOT_AUTO_ADJUSTED = true;
-				let newMarkerSize = Math.min(
-					Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
-					markerMaxWidth
-				);
-				let newLineWidth = Math.min(
-					Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth),
-					lineMaxWidth
-				);
-
-				Plotly.restyle(plotDiv.id, {
-					"marker.size": [newMarkerSize],
-					"line.width": [newLineWidth],
-				});
-				return;
-			} else {
-				Plotly.restyle(plotDiv.id, {
-					"marker.size": [sizes.markerSize],
-					"line.width": [sizes.lineWidth],
-				});
-			}
+			console.log("Resetting marker and line sizes");
+			Plotly.restyle(plotDiv.id, {
+				"marker.size": [sizes.markerSize],
+				"line.width": [sizes.lineWidth],
+			});
 		}
 	});
 }

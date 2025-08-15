@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "celery-dependencies"
+version = "0.1.0"
+description = "Used to build the celery and celery-beat docker images"
+authors = [{ name = "EJS" }]
+requires-python = ">=3.12"
+
+dependencies = [
+    # core
+    "flask==3.1.0",
+    "celery==5.4.0",
+    "redis==5.2.1",
+
+    # flask-features
+    "flask_sqlalchemy==3.1.1",
+    "flask_login==0.6.3",
+    "flask-dance==7.1.0",
+
+    # tools
+    "jsonpickle==4.0.5",
+
+    # e7 content tools
+    "sympy==1.14.0",
+    "requests==2.32.3",
+    "pandas==2.2.3",
+
+    # env
+    "python-dotenv==1.0.1",
+]

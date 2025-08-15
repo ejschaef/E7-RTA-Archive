@@ -1,0 +1,36 @@
+
+FROM python:3.12-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV COMPOSE_BAKE=true
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    python3-dev \
+    libssl-dev \
+    pkg-config \
+    patchelf \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user and group; allows celery to read/write local files
+RUN groupadd -g 1001 e7_user && \
+    useradd -u 1001 -g e7_user -m e7_user
+
+# Set working directory
+WORKDIR /code
+
+# Install dependencies
+COPY pyproject.celery.toml /code/pyproject.toml
+RUN pip install --upgrade pip && pip install .
+
+# Copy project files
+COPY ./apps /code/apps
+
+# Let celery user own files
+RUN chown -R e7_user:e7_user /code
+
+USER e7_user

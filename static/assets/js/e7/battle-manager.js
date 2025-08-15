@@ -135,6 +135,8 @@ let BattleManager = {
 		const filteredBattles = await this.applyFilter(filters);
 		const filteredBattlesList = Object.values(filteredBattles);
 
+		const areFiltersApplied = numFilters > 0;
+
 		console.log("Getting preban stats");
 		const prebanStats = await StatsBuilder.getPrebanStats(
 			filteredBattlesList,
@@ -168,6 +170,7 @@ let BattleManager = {
 			enemyHeroStats: heroStats.enemyHeroStats,
 			performanceStats: performanceStats,
 			numFilters: numFilters,
+			areFiltersApplied: areFiltersApplied,
 		};
 	},
 };

@@ -23,7 +23,7 @@ services:
   celery-worker:
     build:
       context: ./
-      dockerfile: dockerfile.prod
+      dockerfile: dockerfile.celery.prod
     environment:
       - SALT_STRING=${SALT_STRING:-default_salt}
       - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
@@ -36,7 +36,7 @@ services:
   celery-beat:
     build: 
       context: ./
-      dockerfile: dockerfile.prod
+      dockerfile: dockerfile.celery.prod
     environment:
       - SALT_STRING=${SALT_STRING:-default_salt}
       - SERVICES_KEY=${SERVICES_KEY:-default_services_key}

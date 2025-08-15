@@ -3321,7 +3321,7 @@ var BattleManager = {
   }(),
   getStats: function () {
     var _getStats = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(battles, filters, HM) {
-      var numFilters, battlesList, filteredBattles, filteredBattlesList, prebanStats, firstPickStats, generalStats, heroStats, performanceStats;
+      var numFilters, battlesList, filteredBattles, filteredBattlesList, areFiltersApplied, prebanStats, firstPickStats, generalStats, heroStats, performanceStats;
       return _regenerator().w(function (_context9) {
         while (1) switch (_context9.n) {
           case 0:
@@ -3334,6 +3334,7 @@ var BattleManager = {
           case 1:
             filteredBattles = _context9.v;
             filteredBattlesList = Object.values(filteredBattles);
+            areFiltersApplied = numFilters > 0;
             console.log("Getting preban stats");
             _context9.n = 2;
             return _stats_builder_js__WEBPACK_IMPORTED_MODULE_1__["default"].getPrebanStats(filteredBattlesList, HM);
@@ -3369,7 +3370,8 @@ var BattleManager = {
               playerHeroStats: heroStats.playerHeroStats,
               enemyHeroStats: heroStats.enemyHeroStats,
               performanceStats: performanceStats,
-              numFilters: numFilters
+              numFilters: numFilters,
+              areFiltersApplied: areFiltersApplied
             });
         }
       }, _callee8, this);
@@ -4832,20 +4834,26 @@ class ArtifactParser extends StringLiteralParser {
 }
 class SeasonCodeParser extends StringLiteralParser {
     parse(str, REFS) {
+        console.log(`Parsing season code: ${str}`);
         let seasonNum;
         if (str === "current-season") {
             return REFS.SEASON_DETAILS[0].Code;
         }
         else if (_regex__WEBPACK_IMPORTED_MODULE_3__.RegExps.SEASON_LITERAL_RE.test(str)) {
-            seasonNum = str.split("-")[-1];
+            console.log(`Parsing season literal: ${str}`);
+            seasonNum = str.split("-").at(-1);
         }
         else if (_regex__WEBPACK_IMPORTED_MODULE_3__.RegExps.SEASON_CODE_LITERAL_RE.test(str)) {
-            seasonNum = str.split("_")[-1];
+            console.log(`Parsing season code literal: ${str}`);
+            seasonNum = str.split("_ss").at(-1);
         }
         else {
             return null;
         }
-        return REFS.SEASON_DETAILS.find((season) => season.Code.split("_")[-1] === seasonNum)?.Code;
+        console.log(`Season num: ${seasonNum}`);
+        const seasonNums = REFS.SEASON_DETAILS.map((season) => season.Code.split("_").at(-1));
+        console.log(`Season nums: ${seasonNums}`);
+        return REFS.SEASON_DETAILS.find((season) => season.Code.split("_ss").at(-1) === seasonNum)?.Code;
     }
     parserType = "Season Code";
 }
@@ -5356,7 +5364,7 @@ const DATE_RE = /\d{4}-\d{2}-\d{2}/;
 const EMPTY_SET_RE = /\{\s*\}/;
 const INT_RE = /-?\d+/;
 const SEASON_RE = /season-[1-9]+[0-9]*f?|current-season/i;
-const SEASON_CODE_RE = /pvp_rta_ss_[1-9]+[0-9]*f?/i;
+const SEASON_CODE_RE = /pvp_rta_ss[1-9]+[0-9]*f?/i;
 const GLOBAL_FILTER_RE = /last-n\(\d+\)/i;
 const DATE_LITERAL_RE = new RegExp(`^${DATE_RE.source}$`, "i");
 const INT_LITERAL_RE = /^-?\d+$/;
@@ -6669,4 +6677,4 @@ document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#
 
 /******/ })()
 ;
-//# sourceMappingURL=test.c2a5da4040e39639a7be.bundle.js.map
+//# sourceMappingURL=test.81e7cf66cc3c06cedcdc.bundle.js.map

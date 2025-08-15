@@ -22,6 +22,7 @@ docker-compose -f docker-compose.release.build.yaml build
 docker-compose -f docker-compose.dev.yaml build
 
 docker-compose -f docker-compose.release.build.yaml up
+docker-compose -f docker-compose.release.yaml up
 docker-compose -f docker-compose.dev.yaml up
 
 docker-compose -f docker-compose.release.build.yaml build && docker-compose -f docker-compose.release.build.yaml push

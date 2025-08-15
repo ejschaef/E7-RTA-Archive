@@ -83,7 +83,7 @@ const DATE_RE = /\d{4}-\d{2}-\d{2}/;
 const EMPTY_SET_RE = /\{\s*\}/;
 const INT_RE = /-?\d+/;
 const SEASON_RE = /season-[1-9]+[0-9]*f?|current-season/i;
-const SEASON_CODE_RE = /pvp_rta_ss_[1-9]+[0-9]*f?/i;
+const SEASON_CODE_RE = /pvp_rta_ss[1-9]+[0-9]*f?/i;
 
 const GLOBAL_FILTER_RE = /last-n\(\d+\)/i;
 

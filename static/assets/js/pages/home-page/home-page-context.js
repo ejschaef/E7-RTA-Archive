@@ -28,7 +28,7 @@ const CONTEXT_KEYS = {
 	SCROLL_PERCENTS: "SCROLL_PERCENTS",
 	CODE_MIRROR_EDITOR: "CODE_MIRROR_EDITOR",
 	TRY_SET_USER: "TRY_SET_USER",
-	PLOT_AUTO_ADJUSTED: "PLOT_AUTO_ADJUSTED",
+	IGNORE_RELAYOUT: "IGNORE_RELAYOUT",
 };
 
 const CONTEXT = {
@@ -44,7 +44,7 @@ const CONTEXT = {
 	SCROLL_PERCENTS: SCROLL_PERCENTS,
 	CODE_MIRROR_EDITOR: null,
 	TRY_SET_USER: null,
-	PLOT_AUTO_ADJUSTED: false,
+	IGNORE_RELAYOUT: false,
 
 	popKey: function (key) {
 		const value = this[key];
@@ -76,7 +76,7 @@ const CONTEXT = {
 				throw new Error(`No default value for key: ${key} ; do not use popKey or _getDefault for this key`);
 			case CONTEXT_KEYS.TRY_SET_USER:
 				return null;
-			case CONTEXT_KEYS.PLOT_AUTO_ADJUSTED:
+			case CONTEXT_KEYS.IGNORE_RELAYOUT:
 				return false;
 			default:
 				return null;

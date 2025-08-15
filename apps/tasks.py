@@ -2,9 +2,6 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
-from datetime import datetime
-
 import json
 from apps.config import *
 

@@ -1,3 +1,5 @@
+# Uses local code base for volumes
+
 services:
   
   redis:

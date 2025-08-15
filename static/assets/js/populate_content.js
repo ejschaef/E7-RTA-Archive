@@ -3,7 +3,7 @@ import {
 	ARRAY_COLUMNS,
 	HERO_STATS_COLUMN_MAP,
 } from "./e7/references.ts";
-import { generateRankPlot } from "./e7/plots.ts";
+import { generateRankPlot, getZoom } from "./e7/plots.ts";
 import ClientCache from "./cache-manager.ts";
 import UserManager from "./e7/user-manager.ts";
 import { Safe } from "./utils.ts";
@@ -344,20 +344,6 @@ let CardContent = {
 		Safe.setText("max-time", general_stats.max_time);
 		Safe.setText("first-turn-games", general_stats.first_turn_games);
 		Safe.setText("first-turn-rate", general_stats.first_turn_rate);
-	},
-
-	populateRankPlot: async function (stats) {
-		const container = Safe.unwrapHtmlElt("rank-plot-container");
-		const user = await UserManager.getUser();
-		const autoZoom = await ClientCache.get(ClientCache.Keys.AUTO_ZOOM_FLAG);
-
-		generateRankPlot(
-			container,
-			stats.battles,
-			user,
-			stats.numFilters > 0 ? stats.filteredBattlesObj : null,
-			autoZoom
-		);
 	},
 };
 

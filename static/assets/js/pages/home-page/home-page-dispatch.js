@@ -12,6 +12,8 @@ import { CONTEXT } from "./home-page-context.js";
 import PageUtils from "../page-utilities/page-utils.js";
 
 export function resizeRankPlot() {
+	console.log("Resizing rank plot");
+	CONTEXT.IGNORE_RELAYOUT = true;
 	setTimeout(() => {
 		Plotly.Plots.resize(document.getElementById("rank-plot"));
 	}, 20);
