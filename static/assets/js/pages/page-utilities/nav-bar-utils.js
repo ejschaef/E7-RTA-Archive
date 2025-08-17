@@ -2,10 +2,12 @@ import {
 	PageStateManager,
 	HOME_PAGE_STATES,
 } from "../orchestration/page-state-manager.js";
-import { WORLD_CODE_TO_CLEAN_STR } from "../../e7/references.ts";
+import { E7_GG_HOME_URL, E7_STOVE_HOME_URL, WORLD_CODE_TO_CLEAN_STR } from "../../e7/references.ts";
 import UserManager from "../../e7/user-manager.ts";
 import DOC_ELEMENTS from "./doc-element-references.js";
-import IPM from "../orchestration/inter-page-manager.js";
+import IPM from "../orchestration/inter-page-manager.ts";
+import { CM } from "../../content-manager.js";
+import { convertBattlesToCSV, currentTimestamp, downloadCSV, openUrlInNewTab } from "../../utils.ts";
 
 function navToHome() {
 	window.location.href = URL_UTILS.HOME_PAGE_URL;
@@ -26,7 +28,10 @@ function addNavListeners() {
 					// Stats will not show if there is no active user ; will redirect to select data view with error
 					if (!user) {
 						await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
-						await IPM.pushActions([IPM.ACTIONS.SHOW_NO_USER_MSG]);
+						await IPM.pushState({
+							messages: ["Active user not found; you must either query a valid user or upload battles to view hero stats."],
+							actions: [IPM.ACTIONS.SHOW_NO_USER_MSG],
+						})
 						navToHome();
 					} else {
 						await PageStateManager.setState(HOME_PAGE_STATES.SHOW_STATS);
@@ -71,11 +76,55 @@ function writeUserInfo(user) {
 	}
 }
 
+function addExportCSVBtnListener() {
+	DOC_ELEMENTS.NAV_BAR.EXPORT_CSV_BTN.addEventListener("click", async function () {
+		const user = await CM.UserManager.getUser();
+		if (!user) {
+			await IPM.pushState({
+				messages: ["User not found; cannot export data without an active user"],
+				actions: [IPM.ACTIONS.SHOW_NO_USER_MSG],
+			})
+			await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
+			navToHome();
+		}
+		const timestamp = currentTimestamp().split("T")[0] || "";
+		const fileName = `${user.name} (${user.id}) ${timestamp}.csv`;
+		const battles = await CM.BattleManager.getBattles();
+		const battlesList = Object.values(battles);
+		const csvStr = convertBattlesToCSV(battlesList);
+		downloadCSV(csvStr, fileName);
+	});
+}
+
+
+function generateGGLink(user, lang) {
+	const url = `${E7_STOVE_HOME_URL}/${lang}/gg/battlerecord/${user.world_code}/${user.id}`;
+	return url;
+}
+
+function addOfficialSiteBtnListener() {
+	DOC_ELEMENTS.NAV_BAR.OFFICIAL_SITE_BTN.addEventListener("click", async function () {
+		const user = await CM.UserManager.getUser();
+		if (!user) {
+			openUrlInNewTab(E7_GG_HOME_URL);
+		}
+		else {
+			const lang = await CM.LangManager.getLang();
+			const url = generateGGLink(user, lang);
+			openUrlInNewTab(url);
+		}
+	});
+}
+
+
+
 async function initialize() {
 	const user = await UserManager.getUser();
 	writeUserInfo(user);
 	addNavListeners();
 	addClearDataBtnListener();
+	addExportCSVBtnListener();
+	addOfficialSiteBtnListener();
 }
 
 let NavBarUtils = {
@@ -84,6 +133,8 @@ let NavBarUtils = {
 	writeUserInfo: writeUserInfo,
 	initialize: initialize,
 	navToHome: navToHome,
+	addExportCSVBtnListener: addExportCSVBtnListener,
+	addOfficialSiteBtnListener: addOfficialSiteBtnListener
 };
 
 export { NavBarUtils };

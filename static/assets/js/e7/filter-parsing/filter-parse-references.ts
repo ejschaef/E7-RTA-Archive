@@ -1,5 +1,6 @@
 import { EQUIPMENT_SET_MAP } from "../references.ts";
 
+
 export const ACCEPTED_CHARS = new Set(
 	`'"(),_-.=; ><!1234567890{}` +
 	`abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`

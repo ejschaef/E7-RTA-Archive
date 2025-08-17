@@ -128,6 +128,16 @@ class NavBarElements {
 		return (this._CLEAR_DATA_BTN ||= Safe.unwrapHtmlElt("clear-data-btn"));
 	}
 
+	get EXPORT_CSV_BTN() {
+		return (this._EXPORT_CSV_BTN ||= Safe.unwrapHtmlElt("export-csv-btn"));
+	}
+
+	get OFFICIAL_SITE_BTN() {
+		return (this._OFFICIAL_SITE_BTN ||= Safe.unwrapHtmlElt(
+			"official-site-btn"
+		));
+	}
+
 	get USER_NAME() {
 		return (this._USER_NAME ||= Safe.unwrapHtmlElt("user-name"));
 	}
@@ -143,6 +153,8 @@ class NavBarElements {
 	get SIDEBAR_CONTROL() {
 		return (this._SIDEBAR_CONTROL ||= Safe.unwrapHtmlElt("sidebar-control"));
 	}
+
+
 }
 
 class SEARCH_PAGE_ELEMENTS {

@@ -10,7 +10,6 @@ import jsonpickle
 from apps.home import blueprint
 from flask import render_template, request, redirect, url_for, session, jsonify
 from flask_login import login_required
-from jinja2 import TemplateNotFound
 from flask_login import login_required, current_user
 from apps import db, config
 from apps.models import *
@@ -20,6 +19,7 @@ from flask_wtf import FlaskForm
 from werkzeug.exceptions import RequestEntityTooLarge
 from apps.home.forms import UserQueryForm, FileUploadForm, CodeForm, SearchForm
 from apps.content_manager import get_mngr
+from apps.e7_utils.user_manager import fetch_user_info
 from e7_rs_tools import get_battle_array
 import traceback
 
@@ -72,11 +72,24 @@ def typography():
 # START JS PYAPI DATA SECTION: used for getting data from E7 server to cache client side ; called from PYAPI.js file
 ########################################################################################################
 
+def validate_user(uid: str | int, world_code: str, lang: str = "en") -> bool:
+    """
+    Validate Epic7 user information. Used for validating if user info should be obfuscated
+    """
+    info = fetch_user_info(uid, world_code, lang)
+    if info is None: # if request fails we will not obfuscate
+        return True
+    return fetch_user_info(uid, world_code, lang).get("return_code") == 0
+
 @blueprint.route('api/rs_get_battle_data', methods=["POST"])
 def rs_get_battle_data() -> tuple[str, int]:
     try:
         user_dict = request.get_json()["user"]
-        world_code, uid = user_dict["world_code"], user_dict["id"]
+        world_code, uid, name = user_dict["world_code"], user_dict["id"], user_dict["name"]
+
+        if not validate_user(uid, world_code):
+            return jsonify({ 'error' : f"{name} (ID: {uid}) is currently obfuscated by Smilegate" }), 403
+
         battle_data = get_battle_array(int(uid), world_code)
         log_msg = {
             "len" : len(battle_data),

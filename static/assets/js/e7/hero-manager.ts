@@ -1,5 +1,4 @@
 import ClientCache from "../cache-manager.ts";
-import { printObjStruct } from "./e7-utils.js";
 import { LanguageCode, LANGUAGES, PRIMES } from "./references.ts";
 import PYAPI from "../apis/py-API.js";
 import E7API from "../apis/e7-API.js";
@@ -164,7 +163,7 @@ let HeroManager = {
 		const HM = await this.fetchHeroManager(lang);
 		await ClientCache.cache(ClientCache.Keys.HERO_MANAGER, HM);
 		console.log("Cached HeroManager using raw data recieved from server");
-		printObjStruct(HM);
+		console.log(HM);
 		return HM;
 	},
 

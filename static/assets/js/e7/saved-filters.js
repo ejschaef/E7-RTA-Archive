@@ -1,5 +1,8 @@
 let SavedFilters = {
+
+    // Filter Name Keys must match the text content in home.html
     "Current Season" : "season = current-season",
+    "Last Season" : "season = last-season",
     "First Pick" : "is-first-pick = true",
     "Second Pick" : "is-first-pick = false",
     "Champion+ Opponent" : "p2.league in {champion, warlord, emperor, legend}",

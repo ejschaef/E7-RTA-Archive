@@ -65,10 +65,41 @@ async function fetchUserJSON(world_code) {
 	return data;
 }
 
+async function fetchInfo(uid, worldCode, lang = "en") {
+    const url = "https://epic7.onstove.com/gg/gameApi/getUserInfo";
+    const payload = new URLSearchParams({
+        nick_no: uid,
+        world_code: worldCode,
+        lang: lang,
+    });
+
+    try {
+        const resp = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: payload.toString(),
+        });
+
+        if (!resp.ok) {
+            console.error("Error fetching battle list:", resp.status, resp.statusText);
+            return null;
+        }
+
+        const data = await resp.json();
+        return data;
+    } catch (err) {
+        console.error("Request failed:", err);
+        return null;
+    }
+}
+
 let E7API = {
 	fetchHeroJSON: fetchHeroJSON,
 	fetchUserJSON: fetchUserJSON,
 	fetchArtifactJSON: fetchArtifactJSON,
+	fetchInfo: fetchInfo
 };
 
 export default E7API;

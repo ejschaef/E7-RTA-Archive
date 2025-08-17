@@ -1,4 +1,4 @@
-import { BaseElements } from "./filter-parsing/base-elements.ts";
+import { FIELD_EXTRACT_FN_MAP } from "./filter-parsing/field-extract-map";
 
 /**
  * Returns a new RegExp object that matches if the input pattern matches the beginning of a string
@@ -39,7 +39,7 @@ function orRegex(patterns: RegExp[], flags = "i") {
 
 const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const FIELD_WORDS = Object.keys(BaseElements.FIELD_EXTRACT_FN_MAP);
+const FIELD_WORDS = Object.keys(FIELD_EXTRACT_FN_MAP);
 
 const FIELD_WORD_RE = new RegExp(
 	`^(?:${FIELD_WORDS.map(escapeRegex).join("|")})`,
@@ -82,7 +82,7 @@ const STRING_RE = /.*/i; // matches any string
 const DATE_RE = /\d{4}-\d{2}-\d{2}/;
 const EMPTY_SET_RE = /\{\s*\}/;
 const INT_RE = /-?\d+/;
-const SEASON_RE = /season-[1-9]+[0-9]*f?|current-season/i;
+const SEASON_RE = /season-[1-9]+[0-9]*f?|current-season|last-season/i;
 const SEASON_CODE_RE = /pvp_rta_ss[1-9]+[0-9]*f?/i;
 
 const GLOBAL_FILTER_RE = /last-n\(\d+\)/i;

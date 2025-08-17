@@ -1,4 +1,5 @@
 import Fuse from "fuse.js";
+import { BattleType, CSVHeaders } from "./e7/references";
 
 export function toTitleCase(str: string): string {
     return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
@@ -22,13 +23,13 @@ export function arrToCountMap<T>(arr: T[]): Record<string, number> {
 }
 
 export function getStrMatches(str: string, strings: string[], numMatches: number | null = null, customConfig: any = null) {
-    const config = { 
-        includeScore: true, 
+    const config = {
+        includeScore: true,
         threshold: 0.3,
     }
     let fuse = null;
-    if ( customConfig) {
-        fuse = new Fuse(strings, {...config, ...customConfig});
+    if (customConfig) {
+        fuse = new Fuse(strings, { ...config, ...customConfig });
     } else {
         fuse = new Fuse(strings, config);
     }
@@ -55,4 +56,45 @@ export const Safe = {
         elt.textContent = text;
     },
 
+}
+
+
+// TODO: move to battle transform after typescript migration
+export function convertBattlesToCSV(arr: BattleType[]): string {
+    const headers = CSVHeaders;
+    const csvRows = [];
+
+    // add headers
+    csvRows.push(headers.map(h => `"${h}"`).join(","));
+
+    // add rows
+    for (const obj of arr) {
+        const values = headers.map(h => {
+            let v = obj[h] ?? "";
+            if (Array.isArray(v)) v = JSON.stringify(v).replace(/"/g, '""');
+            return `"${v}"`;
+        });
+        csvRows.push(values.join(","));
+    }
+    return csvRows.join("\n");
+}
+
+export function currentTimestamp() {
+    return new Date().toISOString();
+}
+
+export function downloadCSV(csv: string, filename: string) {
+    const BOM = "\uFEFF";
+    const csvFile = new Blob([BOM + csv], { type: "text/csv;charset=utf-8;" });
+    const downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
+export function openUrlInNewTab(url: string) {
+    window.open(url, "_blank", "noopener,noreferrer");
 }

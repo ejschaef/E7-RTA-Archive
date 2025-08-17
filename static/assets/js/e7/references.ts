@@ -1,30 +1,30 @@
 import { toTitleCase } from "../utils";
 
 export const LANGUAGES = {
-	CODES : {
-		DE : "de",
-		KO : "ko",
-		PT : "pt",
-		TH : "th",
-		ZH_TW : "zh-TW",
-		JA : "ja",
-		EN : "en",
-		FR : "fr",
-		ZH_CN : "zh-CN",
-		ES : "es",
+	CODES: {
+		DE: "de",
+		KO: "ko",
+		PT: "pt",
+		TH: "th",
+		ZH_TW: "zh-TW",
+		JA: "ja",
+		EN: "en",
+		FR: "fr",
+		ZH_CN: "zh-CN",
+		ES: "es",
 	},
 
-	NAMES : {
-		DE : "German",
-		KO : "Korean",
-		PT : "Portuguese",
-		TH : "Thai",
-		ZH_TW : "Chinese (Traditional, Taiwan)",
-		JA : "Japanese",
-		EN : "English",
-		FR : "French",
-		ZH_CN : "Chinese (Simplified, China)",
-		ES : "Spanish",
+	NAMES: {
+		DE: "German",
+		KO: "Korean",
+		PT: "Portuguese",
+		TH: "Thai",
+		ZH_TW: "Chinese (Traditional, Taiwan)",
+		JA: "Japanese",
+		EN: "English",
+		FR: "French",
+		ZH_CN: "Chinese (Simplified, China)",
+		ES: "Spanish",
 	}
 } as const;
 
@@ -63,7 +63,7 @@ export const CLEAN_STR_TO_WORLD_CODE: Record<string, string> = {
 	[WORLD_CODE_TO_CLEAN_STR.world_eu]: WORLD_CODE_ENUM.EU,
 };
 
-export const WORLD_CODE_LOWERCASE_TO_CLEAN_STR: Record<string, string> = 
+export const WORLD_CODE_LOWERCASE_TO_CLEAN_STR: Record<string, string> =
 	Object.fromEntries(Object.values(WORLD_CODE_TO_CLEAN_STR).map((v) => [v.toLowerCase(), v]));
 
 export const EQUIPMENT_SET_MAP: Record<string, string> = {
@@ -101,7 +101,7 @@ export const LEAGUE_MAP: Record<string, number> = {
 	legend: 8,
 };
 
-export const LEAGUE_TO_CLEAN_STR = 
+export const LEAGUE_TO_CLEAN_STR =
 	Object.fromEntries(Object.keys(LEAGUE_MAP).sort((a, b) => LEAGUE_MAP[a] - LEAGUE_MAP[b]).map((k) => [k, toTitleCase(k)]));
 
 export const COLUMNS_MAP = {
@@ -146,46 +146,50 @@ export const COLUMNS_MAP = {
 	P2_PREBANS_PRIME_PRODUCT: "P2 Prebans Prime Product",
 } as const;
 
+export type ColumnKey = keyof typeof COLUMNS_MAP;
+export type ColumnHeader = typeof COLUMNS_MAP[ColumnKey];
+
+export const CSVHeaders: ColumnHeader[] = Object.values(COLUMNS_MAP).filter(h => !h.toLowerCase().includes("prime"));
 export type BattleType = {
-    [COLUMNS_MAP.SEASON]: string;
-    [COLUMNS_MAP.SEASON_CODE]: string;
-    [COLUMNS_MAP.DATE_TIME]: string;
-    [COLUMNS_MAP.SECONDS]: number;
-    [COLUMNS_MAP.TURNS]: number;
-    [COLUMNS_MAP.SEQ_NUM]: string;
-    [COLUMNS_MAP.P1_ID]: string;
-    [COLUMNS_MAP.P1_SERVER]: string;
-    [COLUMNS_MAP.P2_ID]: string;
-    [COLUMNS_MAP.P2_SERVER]: string;
-    [COLUMNS_MAP.P1_LEAGUE]: string;
-    [COLUMNS_MAP.P2_LEAGUE]: string;
-    [COLUMNS_MAP.P1_POINTS]: number;
-    [COLUMNS_MAP.POINT_GAIN]: number | null;
-    [COLUMNS_MAP.WIN]: boolean;
-    [COLUMNS_MAP.FIRST_PICK]: boolean;
-    [COLUMNS_MAP.FIRST_TURN]: boolean;
-    [COLUMNS_MAP.FIRST_TURN_HERO]: string;
-    [COLUMNS_MAP.CR_BAR]: Array<[string, number]>;
-    [COLUMNS_MAP.P1_PREBANS]: string[];
-    [COLUMNS_MAP.P2_PREBANS]: string[];
-    [COLUMNS_MAP.P1_PICKS]: string[];
-    [COLUMNS_MAP.P2_PICKS]: string[];
-    [COLUMNS_MAP.P1_POSTBAN]: string;
-    [COLUMNS_MAP.P2_POSTBAN]: string;
-    [COLUMNS_MAP.P1_EQUIPMENT]: Array<Array<string>>;
-    [COLUMNS_MAP.P2_EQUIPMENT]: Array<Array<string>>;
-    [COLUMNS_MAP.P1_ARTIFACTS]: string[];
-    [COLUMNS_MAP.P2_ARTIFACTS]: string[];
-    [COLUMNS_MAP.P1_MVP]: string;
-    [COLUMNS_MAP.P2_MVP]: string;
-    [COLUMNS_MAP.P1_PICKS_PRIMES]: number[];
-    [COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT]: number[];
-    [COLUMNS_MAP.P2_PICKS_PRIMES]: number[];
-    [COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT]: number[];
-    [COLUMNS_MAP.P1_PREBANS_PRIMES]: number[];
-    [COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT]: number[];
-    [COLUMNS_MAP.P2_PREBANS_PRIMES]: number[];
-    [COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT]: number[];
+	[COLUMNS_MAP.SEASON]: string;
+	[COLUMNS_MAP.SEASON_CODE]: string;
+	[COLUMNS_MAP.DATE_TIME]: string;
+	[COLUMNS_MAP.SECONDS]: number;
+	[COLUMNS_MAP.TURNS]: number;
+	[COLUMNS_MAP.SEQ_NUM]: string;
+	[COLUMNS_MAP.P1_ID]: string;
+	[COLUMNS_MAP.P1_SERVER]: string;
+	[COLUMNS_MAP.P2_ID]: string;
+	[COLUMNS_MAP.P2_SERVER]: string;
+	[COLUMNS_MAP.P1_LEAGUE]: string;
+	[COLUMNS_MAP.P2_LEAGUE]: string;
+	[COLUMNS_MAP.P1_POINTS]: number;
+	[COLUMNS_MAP.POINT_GAIN]: number | null;
+	[COLUMNS_MAP.WIN]: boolean;
+	[COLUMNS_MAP.FIRST_PICK]: boolean;
+	[COLUMNS_MAP.FIRST_TURN]: boolean;
+	[COLUMNS_MAP.FIRST_TURN_HERO]: string;
+	[COLUMNS_MAP.CR_BAR]: Array<[string, number]>;
+	[COLUMNS_MAP.P1_PREBANS]: string[];
+	[COLUMNS_MAP.P2_PREBANS]: string[];
+	[COLUMNS_MAP.P1_PICKS]: string[];
+	[COLUMNS_MAP.P2_PICKS]: string[];
+	[COLUMNS_MAP.P1_POSTBAN]: string;
+	[COLUMNS_MAP.P2_POSTBAN]: string;
+	[COLUMNS_MAP.P1_EQUIPMENT]: Array<Array<string>>;
+	[COLUMNS_MAP.P2_EQUIPMENT]: Array<Array<string>>;
+	[COLUMNS_MAP.P1_ARTIFACTS]: string[];
+	[COLUMNS_MAP.P2_ARTIFACTS]: string[];
+	[COLUMNS_MAP.P1_MVP]: string;
+	[COLUMNS_MAP.P2_MVP]: string;
+	[COLUMNS_MAP.P1_PICKS_PRIMES]: number[];
+	[COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT]: number[];
+	[COLUMNS_MAP.P2_PICKS_PRIMES]: number[];
+	[COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT]: number[];
+	[COLUMNS_MAP.P1_PREBANS_PRIMES]: number[];
+	[COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT]: number[];
+	[COLUMNS_MAP.P2_PREBANS_PRIMES]: number[];
+	[COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT]: number[];
 };
 
 export const ARRAY_COLUMNS: string[] = [
@@ -234,6 +238,8 @@ export const HERO_STATS_COLUMN_MAP: Record<string, string> = {
 	FIRST_TURN_RATE: "First Turn Rate",
 };
 
+export const E7_STOVE_HOME_URL: string = "https://epic7.onstove.com"
+export const E7_GG_HOME_URL: string = E7_STOVE_HOME_URL + "/gg"
 
 /**
  * Generates a list of all prime numbers up to and including the given limit.

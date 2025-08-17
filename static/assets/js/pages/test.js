@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	// await CM.UserManager.clearUserDataLists();
 
-	let global_users = await CM.UserManager.getUserMap("world_global");
+	// let global_users = await CM.UserManager.getUserMap("world_global");
 	// let first_ten = Object.values(global_users).slice(0, 10);
 	// console.log(first_ten);
 
@@ -25,8 +25,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 	console.log(`Got seasons:`, seasons, typeof seasons, seasons.length);
 
 	let HM = await CM.HeroManager.getHeroManager();
+
+	let info = await E7API.fetchInfo(119456895, "world_korea");
+	console.log(info);
+
+	info = await E7API.fetchInfo(195863691, "world_global");
+	console.log(info);
 	
-	const filterStr = `
-	"Zio" in 
-	`
 });

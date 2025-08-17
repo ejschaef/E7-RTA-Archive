@@ -7,6 +7,7 @@ Created on Sun Mar 30 13:54:07 2025
 
 import apps.e7_utils.references as refs
 import apps.e7_utils.utils as utils
+import requests
 
 def get_all_user_data(world_code: str) -> list:
     """
@@ -22,6 +23,33 @@ def get_all_user_data(world_code: str) -> list:
         print(f"No User Data returned: code {world_code} not in {refs.WORLD_CODES}")
         return None
     return result['users']
+
+def fetch_user_info(uid: str, world_code: str, lang: str = "en") -> dict | None:
+    """
+    Fetch Epic7 user information. Used for validating if user info should be obfuscated
+
+    Args:
+        uid (str): The user ID (`nick_no`).
+        world_code (str): The server/world code.
+        season_code (str): Season code (default: "recent").
+        lang (str): Language code (default: "en").
+
+    Returns:
+        dict | None: Parsed JSON response, or None if request fails.
+    """
+    url = "https://epic7.onstove.com/gg/gameApi/getUserInfo"
+    payload = {
+        "nick_no": uid,
+        "world_code": world_code,
+        "lang": lang,
+    }
+ 
+    try:
+        resp = requests.post(url, data=payload, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException as e:
+        return None
 
 class User:
     __slots__ = 'id', 'name', 'level', 'world_code'

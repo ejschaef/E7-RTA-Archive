@@ -1,5 +1,4 @@
 import { RegExps } from "../regex.ts";
-import { BattleType } from "../references.ts";
 
 class SyntaxException extends Error {
 	constructor(message: string) {

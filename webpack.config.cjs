@@ -27,6 +27,7 @@ module.exports = {
     "test"          : './static/assets/js/pages/test.js',
     "search"        : './static/assets/js/pages/search.js',
     "bundled-css"   : './static/assets/css/bundled-css.css',
+    "default"       : './static/assets/js/pages/default.ts',
   },
   output: {
     filename: '[name].[contenthash].bundle.js',    // Output bundled files with hash

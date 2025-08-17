@@ -241,14 +241,13 @@ let Tables = {
 		const tbody = getTbody(tableid);
 		tbody.innerHTML = ""; // Clear existing rows
 
-		let name;
+		let fileName;
+		const timestamp = currentTimestamp().split("T")[0] || "";
 		if (user) {
-			name = user.name;
+			fileName = `${user.name} (${user.id}) ${timestamp}`;
 		} else {
-			name = data.length === 0 ? "Empty" : `UID(${data[0]["P1 ID"]})`;
+			fileName = data.length === 0 ? "Empty" : `UID(${data[0]["P1 ID"]}) ${timestamp}`;
 		}
-
-		const fname = `${name} Battle Data`;
 
 		var table = $(`#${tableid}`).DataTable({
 			layout: {
@@ -290,12 +289,12 @@ let Tables = {
 					{
 						extend: "csv",
 						text: "CSV",
-						filename: fname,
+						filename: fileName,
 					},
 					{
 						extend: "excel",
 						text: "Excel",
-						filename: fname,
+						filename: fileName,
 					},
 				],
 			},

@@ -167,7 +167,7 @@ const DeclaredData = {
     [EN]: `Used to easily filter battles to particular seasons or preseasons.
      Can be declared by writing "season-n" without quotes, where n is the number of the desired season.
       Season numbers and dates can be seen in the season details table at the top of the stats page.
-       The keyword "current-season" can alternatively be used to access the active season.
+       The keywords "current-season" and "last-season" can alternatively be used to access the respective season based on the current active season.
         A season number appended with "f" will access the preseason immediately following the season if one exists.`,
   },
 };

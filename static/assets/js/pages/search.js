@@ -4,7 +4,7 @@ import PageUtils from "./page-utilities/page-utils.js";
 import { NavBarUtils } from "./page-utilities/nav-bar-utils.js";
 import DOC_ELEMENTS from "./page-utilities/doc-element-references.js";
 import UserManager from "../e7/user-manager.ts";
-import IPM from "./orchestration/inter-page-manager.js";
+import IPM from "./orchestration/inter-page-manager.ts";
 
 const SEARCH_TABLE_ID = "search-table";
 

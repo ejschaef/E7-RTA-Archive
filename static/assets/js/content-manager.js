@@ -4,6 +4,7 @@ import SeasonManager from "./e7/season-manager.js";
 import ClientCache from "./cache-manager.ts";
 import UserManager from "./e7/user-manager.ts";
 import ArtifactManager from "./e7/artifact-manager.js";
+import { LangManager } from "./lang-manager.ts";
 
 let CM = {
 	HeroManager: HeroManager,
@@ -12,6 +13,7 @@ let CM = {
 	UserManager: UserManager,
 	ClientCache: ClientCache,
 	ArtifactManager: ArtifactManager,
+	LangManager: LangManager,
 };
 
 export { CM };

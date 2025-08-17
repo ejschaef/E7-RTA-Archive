@@ -37,19 +37,17 @@ async function processUpload() {
 	return { user, battleArr };
 }
 
-async function handleBattleQuery(user, stateDispatcher, HM) {
+async function handleBattleQuery(user, HM) {
 	console.log(
 		"querying and caching user battles for user: ",
 		JSON.stringify(user)
 	);
 	let artifacts = await CM.ArtifactManager.getArtifacts();
 	let response = await PYAPI.rsFetchBattleData(user);
+	console.log("Got response", response);
 	if (!response.ok) {
-		const error = await response.json().error;
-		const errorMSG = `Error while fetching data: ${error}`;
-		console.error(`Error while fetching data: ${error}`);
-		CONTEXT.ERROR_MSG = errorMSG;
-		stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+		const data = await response.json();
+		throw new Error(data.error);
 	} else {
 		const data = await response.json();
 		const rawBattles = data.battles;
@@ -163,7 +161,8 @@ async function runLogic(stateDispatcher) {
 				`Something went wrong ; redirecting to select data ; error:`,
 				err
 			);
-			await HOME_PAGE_FNS.homePageClearUserData();
+			await CM.UserManager.clearUserData();
+			NavBarUtils.writeUserInfo(null);
 			stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
 		}
 	}

@@ -3,20 +3,15 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-import atexit
 import os
-import secrets
-from datetime import timedelta
 from   flask_migrate import Migrate
 from   flask_minify  import Minify
 from   flask_session import Session 
-from   flask import session
 from sys import exit
 
 from apps.config import config_dict
 from apps.logging import log_utils
 from apps import create_app, db
-import json
 import logging
 import apps.manifest as manifest
 

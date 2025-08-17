@@ -48,7 +48,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 # Test it
 docker-compose version
 
-git clone https://github.com/ejschaef/E7-Ventus-Archive
+git clone https://github.com/ejschaef/E7-RTA-Archive
 
 #Stop Docker
 docker stop $(docker ps -q)

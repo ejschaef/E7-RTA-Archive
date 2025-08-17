@@ -7,7 +7,7 @@ import { TextController, TextUtils } from "../orchestration/text-controller.js";
 import { CONTEXT } from "./home-page-context.js";
 import PageUtils from "../page-utilities/page-utils.js";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
-import IPM from "../orchestration/inter-page-manager.js";
+import IPM from "../orchestration/inter-page-manager.ts";
 import UserManager from "../../e7/user-manager.ts";
 import { stateDispatcher } from "./home-page-dispatch.js";
 import { addHomePageListeners } from "./home-page-listeners.js";
@@ -21,7 +21,7 @@ import { buildTables } from "./home-page-build-tables.js";
  * @param {string} action - one of the actions defined in IPM.ACTIONS
  * @returns {Promise<boolean>} - true if the action caused a state dispatch to occur (we will skip the state dispatcher later if this is true)
  */
-async function handleAction(action) {
+async function handleAction(action, messages) {
 	let dispatchedToState = false;
 	switch (action) {
 		case IPM.ACTIONS.CLEAR_USER:
@@ -40,8 +40,9 @@ async function handleAction(action) {
 			break;
 
 		case IPM.ACTIONS.SHOW_NO_USER_MSG:
+			const message = messages.pop() || "Cannot perform action; no active user found."
 			TextUtils.queueSelectDataMsgRed(
-				"User not found; Must either query a valid user or upload battles to view hero stats"
+				message
 			);
 			break;
 
@@ -62,7 +63,7 @@ async function processIPMState() {
 	const ipmState = await IPM.flushState();
 	let dispatchedToState = false;
 	for (const action of ipmState.actions) {
-		dispatchedToState = await handleAction(action);
+		dispatchedToState = await handleAction(action, ipmState.messages);
 	}
 	return dispatchedToState;
 }
@@ -77,6 +78,8 @@ async function initializeHomePage() {
 	const user = await UserManager.getUser();
 	console.log("GOT USER", user);
 	NavBarUtils.writeUserInfo(user);
+	NavBarUtils.addExportCSVBtnListener();
+	NavBarUtils.addOfficialSiteBtnListener();
 	TextController.bindAutoClear(DOC_ELEMENTS.HOME_PAGE.MESSAGE_ELEMENTS_LIST);
 }
 

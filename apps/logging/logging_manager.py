@@ -19,7 +19,7 @@ DEV = False
 if DEV:
     URL = "http://localhost"
 else:
-    URL = "https://Ventus-Archive.org"
+    URL = "https://E7-RTA-Archive.cc"
     
 GET_LOGS_URL = f"{URL}/services/dump_logs"
 DELETE_LOGS_URL = f"{URL}/services/delete_logs"

@@ -1,14 +1,16 @@
 {
-  "home-page.js": "dist/home-page.373bbcba9133d38d986d.bundle.js",
-  "filter-syntax.js": "dist/filter-syntax.9cd3d00f30ed1052be03.bundle.js",
-  "test.js": "dist/test.81e7cf66cc3c06cedcdc.bundle.js",
-  "search.js": "dist/search.90c8f3f25ee25bfb556b.bundle.js",
-  "bundled-css.css": "dist/bundled-css.c6d751d82d34545085b1.css",
+  "home-page.js": "dist/home-page.f86c41ea50451580171a.bundle.js",
+  "filter-syntax.js": "dist/filter-syntax.6e8763e98d2886488597.bundle.js",
+  "test.js": "dist/test.004eead6a4278e3aea7a.bundle.js",
+  "search.js": "dist/search.2349b4a2d48103fd055b.bundle.js",
+  "bundled-css.css": "dist/bundled-css.a9eb00129d470dec4736.css",
   "bundled-css.js": "dist/bundled-css.6f62da5cfbec7eb283b3.bundle.js",
-  "home-page.bundle.js.map": "dist/home-page.373bbcba9133d38d986d.bundle.js.map",
-  "filter-syntax.bundle.js.map": "dist/filter-syntax.9cd3d00f30ed1052be03.bundle.js.map",
-  "test.bundle.js.map": "dist/test.81e7cf66cc3c06cedcdc.bundle.js.map",
-  "search.bundle.js.map": "dist/search.90c8f3f25ee25bfb556b.bundle.js.map",
-  "bundled-css.css.map": "dist/bundled-css.c6d751d82d34545085b1.css.map",
-  "bundled-css.bundle.js.map": "dist/bundled-css.6f62da5cfbec7eb283b3.bundle.js.map"
+  "default.js": "dist/default.20b8747af874f59e0cf4.bundle.js",
+  "home-page.bundle.js.map": "dist/home-page.f86c41ea50451580171a.bundle.js.map",
+  "filter-syntax.bundle.js.map": "dist/filter-syntax.6e8763e98d2886488597.bundle.js.map",
+  "test.bundle.js.map": "dist/test.004eead6a4278e3aea7a.bundle.js.map",
+  "search.bundle.js.map": "dist/search.2349b4a2d48103fd055b.bundle.js.map",
+  "bundled-css.css.map": "dist/bundled-css.a9eb00129d470dec4736.css.map",
+  "bundled-css.bundle.js.map": "dist/bundled-css.6f62da5cfbec7eb283b3.bundle.js.map",
+  "default.bundle.js.map": "dist/default.20b8747af874f59e0cf4.bundle.js.map"
 }

@@ -51,6 +51,8 @@ class SeasonCodeParser extends StringLiteralParser {
         let seasonNum: string;
         if ( str === "current-season" ) {
             return REFS.SEASON_DETAILS[0].Code;
+        } else if ( str === "last-season") {
+            return REFS.SEASON_DETAILS[1].Code;
         }
         else if (RegExps.SEASON_LITERAL_RE.test(str)) {
             console.log(`Parsing season literal: ${str}`);
