@@ -43,12 +43,6 @@ const Keys = {
   INTER_PAGE_MANAGER: "inter-page-manager",
 };
 
-const FlagsToKeys = {
-  "autoZoom": Keys.AUTO_ZOOM_FLAG,
-  "autoQuery": Keys.AUTO_QUERY_FLAG,
-  "idSearch": Keys.ID_SEARCH_FLAG
-};
-
 let ClientCache = {
   consts: {
     DB_NAME: 'E7ArenaStatsClientDB',
@@ -103,7 +97,7 @@ let ClientCache = {
   },
 
   cache: async function(id: string, data: any) {
-    console.log(`Caching ${id} with data: ${data}`);
+    console.log(`Caching ${id}`);
     const db = await this.openDB();
     await db.put(this.consts.STORE_NAME, data, id);
     await this.setTimestamp(id, Date.now());
@@ -120,11 +114,11 @@ let ClientCache = {
     console.log('Database deleted');
   },
 
-  getTimestamp: async function(id: string): Promise<number | null> {
+  getTimestamp: async function(id: string): Promise<number> {
     const db = await this.openDB();
     const key = `${id+this.MetaKeys.TIMESTAMP}`;
     const timestamp = await db.get(this.consts.META_STORE_NAME, key);
-    return timestamp ?? null;
+    return timestamp ?? 0;
   },
 
   setTimestamp: async function(id: string, timestamp: number): Promise<void> {
@@ -169,7 +163,7 @@ let ClientCache = {
     const timestamp = await this.getTimestamp(id);
     const currentTime = Date.now();
     if (!timestamp || (currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
-      console.log(`Cache timeout for ${id}`);
+      console.log(`Cache timeout for ${id}; timestamp: ${timestamp}; currentTime: ${currentTime}`);
       await this.delete(id);
       return false;
     }

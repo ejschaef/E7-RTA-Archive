@@ -1,6 +1,6 @@
 import UserManager from "../../../../../e7/user-manager.ts";
 import ClientCache from "../../../../../cache-manager.ts";
-import { Tables, CardContent } from "../../../../../populate_content.js";
+import { Tables, CardContent } from "../../../../../populate-content.js";
 import { CM } from "../../../../../content-manager.js";
 import { RegExps } from "../../../../../e7/regex.ts";
 import {
@@ -11,7 +11,12 @@ import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.j
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { CONTEXT } from "../../../home-page-context.js";
 import { Safe } from "../../../../../utils.ts";
-import { getZoom, generateRankPlot, PLOT_REFS, getSizes } from "../../../../../e7/plots.ts";
+import {
+	getZoom,
+	generateRankPlot,
+	PLOT_REFS,
+	getSizes,
+} from "../../../../../e7/plots.ts";
 
 async function populatePlot(stats) {
 	const container = Safe.unwrapHtmlElt("rank-plot-container");
@@ -28,7 +33,6 @@ async function populatePlot(stats) {
 	addPlotlyLineAndMarkWidthListener(plotDiv);
 
 	if (autoZoom && stats.areFiltersApplied) {
-
 		// compute the needed zoom level
 		const zoom = getZoom(stats.battles, stats.filteredBattlesObj);
 		console.log("Zooming to:", zoom);
@@ -42,8 +46,8 @@ async function populatePlot(stats) {
 		const zoomFactor = originalXRange / filteredXRange;
 
 		let newMarkerSize = Math.min(
-							Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
-							PLOT_REFS.markerMaxWidth
+			Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
+			PLOT_REFS.markerMaxWidth
 		);
 
 		let newLineWidth = Math.min(
@@ -54,12 +58,12 @@ async function populatePlot(stats) {
 		const relayoutConfig = {
 			"xaxis.range": [zoom.startX, zoom.endX],
 			"yaxis.range": [zoom.startY, zoom.endY],
-		}
+		};
 
 		const markerConfig = {
 			"marker.size": newMarkerSize,
 			"line.width": newLineWidth,
-		}
+		};
 		CONTEXT.IGNORE_RELAYOUT = true;
 		Plotly.restyle(plotDiv, markerConfig);
 		Plotly.relayout(plotDiv, relayoutConfig);

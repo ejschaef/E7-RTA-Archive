@@ -14,9 +14,9 @@ const SEARCH_DOMAINS = {
 	ARTIFACTS: "Artifacts",
 };
 
-const HERO_SEARCH_CONFIG = { keys: ["name"], threshold: 0.2 };
-const USER_SEARCH_CONFIG = { keys: ["name"], threshold: 0.2 };
-const ARTIFACT_SEARCH_CONFIG = { keys: ["name"], threshold: 0.2 };
+const HERO_SEARCH_CONFIG = { keys: ["name"], threshold: 0.4 };
+const USER_SEARCH_CONFIG = { keys: ["name"], threshold: 0.4 };
+const ARTIFACT_SEARCH_CONFIG = { keys: ["name"], threshold: 0.4 };
 
 function searchHeroes(heroName, heroes) {
 	return getStrMatches(heroName, heroes, null, HERO_SEARCH_CONFIG);

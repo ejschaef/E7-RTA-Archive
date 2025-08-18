@@ -277,7 +277,7 @@ class ArtifactFn extends HeroListFn {
         const heroArtifacts: Array<string[]> = this.targetField(battle);
         for (let i=0; i < heroes.length; i++) {
             if (heroes[i] === this.heroName) {
-                return this.targetArtifacts.every((artifact) => heroArtifacts[i].includes(artifact));
+                return this.targetArtifacts.some((artifact) => heroArtifacts[i].includes(artifact));
             }
         }
         return false;

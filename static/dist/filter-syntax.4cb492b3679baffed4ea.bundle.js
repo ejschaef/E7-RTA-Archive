@@ -2649,11 +2649,6 @@ const Keys = {
     HOME_PAGE_STATE: "home-page-state",
     INTER_PAGE_MANAGER: "inter-page-manager",
 };
-const FlagsToKeys = {
-    "autoZoom": Keys.AUTO_ZOOM_FLAG,
-    "autoQuery": Keys.AUTO_QUERY_FLAG,
-    "idSearch": Keys.ID_SEARCH_FLAG
-};
 let ClientCache = {
     consts: {
         DB_NAME: 'E7ArenaStatsClientDB',
@@ -2704,7 +2699,7 @@ let ClientCache = {
         }
     },
     cache: async function (id, data) {
-        console.log(`Caching ${id} with data: ${data}`);
+        console.log(`Caching ${id}`);
         const db = await this.openDB();
         await db.put(this.consts.STORE_NAME, data, id);
         await this.setTimestamp(id, Date.now());
@@ -2722,7 +2717,7 @@ let ClientCache = {
         const db = await this.openDB();
         const key = `${id + this.MetaKeys.TIMESTAMP}`;
         const timestamp = await db.get(this.consts.META_STORE_NAME, key);
-        return timestamp ?? null;
+        return timestamp ?? 0;
     },
     setTimestamp: async function (id, timestamp) {
         const db = await this.openDB();
@@ -2759,7 +2754,7 @@ let ClientCache = {
         const timestamp = await this.getTimestamp(id);
         const currentTime = Date.now();
         if (!timestamp || (currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
-            console.log(`Cache timeout for ${id}`);
+            console.log(`Cache timeout for ${id}; timestamp: ${timestamp}; currentTime: ${currentTime}`);
             await this.delete(id);
             return false;
         }
@@ -3543,7 +3538,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
   addPrimeFields(battle, HM);
   return battle;
 }
-function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
+function buildFormattedBattleMap(rawBattles, HM, artifacts) {
   artifacts = artifacts !== null && artifacts !== void 0 ? artifacts : _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getArtifacts();
   var entries = [];
   var _iterator = _createForOfIteratorHelper(rawBattles),
@@ -3551,7 +3546,7 @@ function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
   try {
     for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var rawBattle = _step.value;
-      var battle = formatBattleAsRow(rawBattle, HeroManager, artifacts);
+      var battle = formatBattleAsRow(rawBattle, HM, artifacts);
       entries.push([battle["Seq Num"], battle]);
     }
   } catch (err) {
@@ -4577,7 +4572,7 @@ class ArtifactFn extends HeroListFn {
         const heroArtifacts = this.targetField(battle);
         for (let i = 0; i < heroes.length; i++) {
             if (heroes[i] === this.heroName) {
-                return this.targetArtifacts.every((artifact) => heroArtifacts[i].includes(artifact));
+                return this.targetArtifacts.some((artifact) => heroArtifacts[i].includes(artifact));
             }
         }
         return false;
@@ -5469,206 +5464,6 @@ let RegExps = {
 
 /***/ }),
 
-/***/ "./static/assets/js/e7/searcher.js":
-/*!*****************************************!*\
-  !*** ./static/assets/js/e7/searcher.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Searcher: () => (/* binding */ Searcher)
-/* harmony export */ });
-/* harmony import */ var _utils_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils.ts */ "./static/assets/js/utils.ts");
-/* harmony import */ var _hero_manager_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hero-manager.ts */ "./static/assets/js/e7/hero-manager.ts");
-/* harmony import */ var _artifact_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
-/* harmony import */ var _user_manager_ts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./user-manager.ts */ "./static/assets/js/e7/user-manager.ts");
-/* harmony import */ var _references_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./references.ts */ "./static/assets/js/e7/references.ts");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-
-
-
-
-
-var SEARCH_DOMAINS = {
-  GLOBAL_SERVER: "Global Server",
-  KOR_SERVER: "Korea Server",
-  JPN_SERVER: "Japan Server",
-  ASIA_SERVER: "Asia Server",
-  EU_SERVER: "Europe Server",
-  HEROES: "Heroes",
-  ARTIFACTS: "Artifacts"
-};
-var HERO_SEARCH_CONFIG = {
-  keys: ["name"],
-  threshold: 0.2
-};
-var USER_SEARCH_CONFIG = {
-  keys: ["name"],
-  threshold: 0.2
-};
-var ARTIFACT_SEARCH_CONFIG = {
-  keys: ["name"],
-  threshold: 0.2
-};
-function searchHeroes(heroName, heroes) {
-  return (0,_utils_ts__WEBPACK_IMPORTED_MODULE_0__.getStrMatches)(heroName, heroes, null, HERO_SEARCH_CONFIG);
-}
-function searchUsers(userName, userList) {
-  return (0,_utils_ts__WEBPACK_IMPORTED_MODULE_0__.getStrMatches)(userName, userList, null, USER_SEARCH_CONFIG);
-}
-function searchArtifacts(artiName, artiList) {
-  return (0,_utils_ts__WEBPACK_IMPORTED_MODULE_0__.getStrMatches)(artiName, artiList, null, ARTIFACT_SEARCH_CONFIG);
-}
-var Searcher = /*#__PURE__*/function () {
-  function Searcher() {
-    _classCallCheck(this, Searcher);
-    _defineProperty(this, "DOMAIN_CACHE", {});
-  }
-  return _createClass(Searcher, [{
-    key: "get_domain",
-    value: function () {
-      var _get_domain = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(domain) {
-        var elements, _t;
-        return _regenerator().w(function (_context) {
-          while (1) switch (_context.n) {
-            case 0:
-              if (this.DOMAIN_CACHE[domain]) {
-                _context.n = 10;
-                break;
-              }
-              _t = domain;
-              _context.n = _t === SEARCH_DOMAINS.GLOBAL_SERVER ? 1 : _t === SEARCH_DOMAINS.KOR_SERVER ? 2 : _t === SEARCH_DOMAINS.JPN_SERVER ? 3 : _t === SEARCH_DOMAINS.ASIA_SERVER ? 4 : _t === SEARCH_DOMAINS.EU_SERVER ? 5 : _t === SEARCH_DOMAINS.HEROES ? 6 : _t === SEARCH_DOMAINS.ARTIFACTS ? 7 : 8;
-              break;
-            case 1:
-              this.DOMAIN_CACHE[domain] = _user_manager_ts__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_ts__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.GLOBAL);
-              return _context.a(3, 8);
-            case 2:
-              this.DOMAIN_CACHE[domain] = _user_manager_ts__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_ts__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.KOR);
-              return _context.a(3, 8);
-            case 3:
-              this.DOMAIN_CACHE[domain] = _user_manager_ts__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_ts__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.JPN);
-              return _context.a(3, 8);
-            case 4:
-              this.DOMAIN_CACHE[domain] = _user_manager_ts__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_ts__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.ASIA);
-              return _context.a(3, 8);
-            case 5:
-              this.DOMAIN_CACHE[domain] = _user_manager_ts__WEBPACK_IMPORTED_MODULE_3__["default"].getUserMap(_references_ts__WEBPACK_IMPORTED_MODULE_4__.WORLD_CODE_ENUM.EU);
-              return _context.a(3, 8);
-            case 6:
-              this.DOMAIN_CACHE[domain] = _hero_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].getHeroManager();
-              return _context.a(3, 8);
-            case 7:
-              this.DOMAIN_CACHE[domain] = _artifact_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"].getArtifactObjectList();
-              return _context.a(3, 8);
-            case 8:
-              _context.n = 9;
-              return this.DOMAIN_CACHE[domain];
-            case 9:
-              elements = _context.v;
-              if (!Array.isArray(elements)) {
-                if (domain === SEARCH_DOMAINS.HEROES) {
-                  this.DOMAIN_CACHE[domain] = elements.heroes;
-                } else {
-                  this.DOMAIN_CACHE[domain] = Object.values(elements);
-                }
-              }
-            case 10:
-              _context.n = 11;
-              return this.DOMAIN_CACHE[domain];
-            case 11:
-              return _context.a(2, _context.v);
-          }
-        }, _callee, this);
-      }));
-      function get_domain(_x) {
-        return _get_domain.apply(this, arguments);
-      }
-      return get_domain;
-    }()
-  }, {
-    key: "search",
-    value: function () {
-      var _search = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(domain, searchTerm) {
-        var domainElements, _t2;
-        return _regenerator().w(function (_context2) {
-          while (1) switch (_context2.n) {
-            case 0:
-              console.log("Searching ".concat(domain, " for ").concat(searchTerm));
-              _t2 = domain;
-              _context2.n = _t2 === SEARCH_DOMAINS.GLOBAL_SERVER ? 1 : _t2 === SEARCH_DOMAINS.KOR_SERVER ? 3 : _t2 === SEARCH_DOMAINS.JPN_SERVER ? 5 : _t2 === SEARCH_DOMAINS.ASIA_SERVER ? 7 : _t2 === SEARCH_DOMAINS.EU_SERVER ? 9 : _t2 === SEARCH_DOMAINS.HEROES ? 11 : _t2 === SEARCH_DOMAINS.ARTIFACTS ? 13 : 15;
-              break;
-            case 1:
-              _context2.n = 2;
-              return this.get_domain(domain);
-            case 2:
-              domainElements = _context2.v;
-              return _context2.a(2, searchUsers(searchTerm, domainElements));
-            case 3:
-              _context2.n = 4;
-              return this.get_domain(domain);
-            case 4:
-              domainElements = _context2.v;
-              return _context2.a(2, searchUsers(searchTerm, domainElements));
-            case 5:
-              _context2.n = 6;
-              return this.get_domain(domain);
-            case 6:
-              domainElements = _context2.v;
-              return _context2.a(2, searchUsers(searchTerm, domainElements));
-            case 7:
-              _context2.n = 8;
-              return this.get_domain(domain);
-            case 8:
-              domainElements = _context2.v;
-              return _context2.a(2, searchUsers(searchTerm, domainElements));
-            case 9:
-              _context2.n = 10;
-              return this.get_domain(domain);
-            case 10:
-              domainElements = _context2.v;
-              return _context2.a(2, searchUsers(searchTerm, domainElements));
-            case 11:
-              _context2.n = 12;
-              return this.get_domain(domain);
-            case 12:
-              domainElements = _context2.v;
-              return _context2.a(2, searchHeroes(searchTerm, domainElements));
-            case 13:
-              _context2.n = 14;
-              return this.get_domain(domain);
-            case 14:
-              domainElements = _context2.v;
-              return _context2.a(2, searchArtifacts(searchTerm, domainElements));
-            case 15:
-              throw new Error("Unknown domain: ".concat(domain));
-            case 16:
-              return _context2.a(2);
-          }
-        }, _callee2, this);
-      }));
-      function search(_x2, _x3) {
-        return _search.apply(this, arguments);
-      }
-      return search;
-    }()
-  }]);
-}();
-_defineProperty(Searcher, "DOMAINS", SEARCH_DOMAINS);
-
-
-/***/ }),
-
 /***/ "./static/assets/js/e7/season-manager.js":
 /*!***********************************************!*\
   !*** ./static/assets/js/e7/season-manager.js ***!
@@ -6502,6 +6297,1990 @@ const LangManager = {
 
 /***/ }),
 
+/***/ "./static/assets/js/language-support/filter-syntax-lang-build.ts":
+/*!***********************************************************************!*\
+  !*** ./static/assets/js/language-support/filter-syntax-lang-build.ts ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   makeComposeList: () => (/* binding */ makeComposeList)
+/* harmony export */ });
+/* harmony import */ var _lang_builder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang-builder */ "./static/assets/js/language-support/lang-builder.ts");
+/* harmony import */ var _e7_references__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../e7/references */ "./static/assets/js/e7/references.ts");
+/* harmony import */ var _pages_html_constructor_html_constructor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pages/html-constructor/html-constructor */ "./static/assets/js/pages/html-constructor/html-constructor.ts");
+
+
+
+const EN = _e7_references__WEBPACK_IMPORTED_MODULE_1__.LANGUAGES.CODES.EN;
+const Overview = {
+    generalOverviewTitle: {
+        [EN]: "General Overview",
+    },
+    generalOverviewDescription: {
+        [EN]: "This page details the rules for writing filters within the Hero Stats page. Examples will be shown below along with space to practice writing and validating filters.",
+    },
+    filterUsageTitle: {
+        [EN]: "Filter Usage",
+    },
+    filterUsageDescription: {
+        [EN]: `Filters are primarily used to adjust which battles the user wants to 
+    include when calculating stats like win rate and pick rate. They can also be used to 
+    automatically adjust the chart to the filtered subset if desired. Almost all columns 
+    listed in the full table of battles at the bottom of the stats page can filtered on using 
+    the custom syntax. The rest of this page will detail the exact syntax and rules for writing filters.`,
+    },
+    objectTypesTitle: {
+        [EN]: "Object Types",
+    },
+    objectTypesDescription: {
+        [EN]: "There are 5 main syntactic objects:",
+    },
+    objectTypesList: {
+        [EN]: [
+            "Fields: keywords corresponding to data from each of the battles, such as if the battle is a win, the victory points the player ended the battle at, the first hero the player picked, etc.",
+            "Declared Data: data values the user defines to filter the data on. They include integers, dates, strings, sets, booleans, and ranges. There are also some keywords like 'current-season' that allow the user to conveniently utilize declared data based on predefined logic (in this case, the keyword would translate to a range of dates capturing the current season).",
+            "Operators: the operations that allow the comparison of Fields to Declared Data and are the core of the filters (includes operations like >, <, =, set membership, etc.).",
+            "Functions: higher level operators that may allow the combination of filters in a logical manner or correspond to complex predefined filters.",
+            "Pure Syntax Elements: characters like brackets, quotes, commas, and semicolons that define how the filters are broken up and parsed.",
+            "Some operations require specific data types; if this is the case, an error will be thrown specifying the necessary data type.",
+        ],
+    },
+    highLevelRulesTitle: {
+        [EN]: "High Level Rules",
+    },
+    highLevelRulesList: {
+        [EN]: [
+            "Filter syntax is entirely case insensitive. It will be converted to lowercase in the backend.",
+            "All filters must be separated by a semicolon ( ; ) if multiple are applied.",
+            "The terminating semicolon ( ; ) for the last filter (including if only one filter) is optional.",
+            "Every filter must either be a function call or a base filter of the form: X operator Y",
+            "Functions and sets will have their constituent arguments separated by commas ( , ) not semicolons ( ; )",
+            "Clause functions like And(...), OR(...), etc. can take nested clause functions as arguments but must ultimately terminate as base filters.",
+            "Certain functions, like last-N(), are global filters that must take into account all battles when filtering (last-N captures only the N most recent battles). Since these filters are affected by other filters, to regulate the logic, all global filters will be hoisted to the top and executed in the order they were written.",
+            "Apart from global filter hoisting, all filters will execute in the order they are written.",
+            "Some filters or sets of filters are valid but will never return true. For instance, comparing different data types or using two filters which together specify a hero must be picked by both the player and the opponent. These filters will pass validation, and the resulting stats will be empty.",
+        ],
+    },
+};
+const Fields = {
+    title: {
+        [EN]: "Fields",
+    },
+    attributesTitle: {
+        [EN]: "Attributes",
+    },
+    attributesDescription: {
+        [EN]: `Attributes are types of fields that are accessed by using the syntax
+          p1.'attribute here' or p2.'attribute here' ; for example, 'p1.pick1' is used to access the
+          first picked hero by player 1 in the battle.`,
+    },
+    date: {
+        [EN]: "the date the battle occurred",
+    },
+    season: {
+        [EN]: "the season the battle occured (resolves to the internal season code, not the name or number)",
+    },
+    isWin: {
+        [EN]: "boolean indicator flagging if the player won",
+    },
+    isFirstPick: {
+        [EN]: "boolean indicator flagging if the player got first pick",
+    },
+    isFirstTurn: {
+        [EN]: "boolean indicator flagging if the player got the first turn",
+    },
+    firstTurnHero: {
+        [EN]: "string of the hero that got the first turn (regardless of player)",
+    },
+    victoryPoints: {
+        [EN]: "integer indicating the victory points the player ended the battle at",
+    },
+    prebans: {
+        [EN]: "set of all the prebanned heroes",
+    },
+    postbans: {
+        [EN]: "set of the two postbanned heroes",
+    },
+    turns: {
+        [EN]: "the number of turns the battle lasted (0 for incomplete battles)",
+    },
+    seconds: {
+        [EN]: "the number of seconds the battle lasted",
+    },
+    pointGain: {
+        [EN]: "a signed integer indicating how many victory points the player gained",
+    },
+    pickN: {
+        [EN]: "accesses pick n for the corresponding player. Replace [n] with numbers 1 - 5 to access the corresponding pick.",
+    },
+    picks: {
+        [EN]: "accesses a set of all 5 picks for the specified player",
+    },
+    league: {
+        [EN]: "a string value that gives the league the specified player ended the battle in (i.e. emperor, warlord, etc.)",
+    },
+    prebansAttribute: {
+        [EN]: "accesses the set of the 2 heroes prebanned by the specified player",
+    },
+    postban: {
+        [EN]: "accesses the hero postbanned by the specified player",
+    },
+    server: {
+        [EN]: "the server of the specified player",
+    },
+    id: {
+        [EN]: "the numerical id of the specified player",
+    },
+    mvp: {
+        [EN]: "accesses the mvp hero for the specified player",
+    },
+};
+const DeclaredData = {
+    title: {
+        [EN]: "Declared Data",
+    },
+    Integer: {
+        [EN]: `Any valid non-negative integer (declare like '2787' without the quotes)`,
+    },
+    Date: {
+        [EN]: `Date value using YYYY-MM-DD format exclusively (declare like '2025-01-07' without the quotes). Date must be valid.`,
+    },
+    String: {
+        [EN]: `Text based data declared within either double or single quotes (example: "lone wolf peira"). The quotes are necessary when declared outside of a set. When the string contains a quote, you must use the opposite quote type to wrap the string. Season keywords like "current-season" will be converted to string types automatically. They will take the form of their season code (ie 'pvp_rta_ss[season number here]' like 'pvp_rta_ss17' or 'pvp_rta_ss17f'). Therefore, season codes are valid string literals.`,
+    },
+    Boolean: {
+        [EN]: `Corresponds to true or false values; declare using 'true' or 'false' without the quotes`,
+    },
+    Set: {
+        [EN]: `Used to group multiple individual pieces of data together; 
+    declare using the format { x, y, z, ... }. A trailing comma after the last element is optional. 
+    Sets can only contain string, integer, and date literals. They can be of heterogeneous types. 
+    Strings within sets do not need to be quoted unless they contain a quote. Since season keywords like "current-season" 
+    will be converted to string types automatically, they can be used in sets.`,
+    },
+    Range: {
+        [EN]: `Used to define a continuous range of either integers or dates.
+     Can be used in cases where a set can be used. 
+     Declare using the syntax: 'X...Y' or 'X...=Y', where the '=' indicates if Y 
+     should be included in the set. X and Y must either both be integers or 
+     both be dates (example: 2025-05-01...2025-06-01 yields a set of all dates in May 2025)`,
+    },
+    Season: {
+        [EN]: `Used to easily filter battles to particular seasons or preseasons.
+     Can be declared by writing "season-n" without quotes, where n is the number of the desired season.
+      Season numbers and dates can be seen in the season details table at the top of the stats page.
+       The keywords "current-season" and "last-season" can alternatively be used to access the respective season based on the current active season.
+        A season number appended with "f" will access the preseason immediately following the season if one exists.`,
+    },
+};
+const Operators = {
+    title: {
+        [EN]: "Operators",
+    },
+    equal: {
+        [EN]: `Checks if left side is equal to right side.`,
+    },
+    notEqual: {
+        [EN]: `Checks if left side is not equal to right side.`,
+    },
+    gt: {
+        [EN]: `Checks if left side is greater than right side.`,
+    },
+    gte: {
+        [EN]: `Checks if left side is greater than or equal to right side.`,
+    },
+    lt: {
+        [EN]: `Checks if left side is less than right side.`,
+    },
+    lte: {
+        [EN]: `Checks if left side is less than or equal to right side.`,
+    },
+    in: {
+        [EN]: `Checks if the left side of the operator is contained within the right side. The right side of the operator must be a Range, Set, or Field that corresponds to a set (i.e. p1.picks, p2.prebans, etc.).`,
+    },
+    notIn: {
+        [EN]: `Checks if the left side of the operator is not contained within the right side. The right side of the operator must be a Range, Set, or Field that corresponds to a set (i.e. p1.picks, p2.prebans, etc.).`,
+    },
+};
+const Functions = {
+    title: {
+        [EN]: "Functions",
+    },
+    // Clause Functions
+    clauseFunctionsTitle: {
+        [EN]: "Clause Functions",
+    },
+    clauseFunctionsDescription: {
+        [EN]: `Clause functions generally take 1 or more filters as arguments and create logic gates to combine the
+    result. Clause functions can take other clause functions as arguments, but the syntax tree must eventually
+    terminate as base filters. Global Filter Functions cannot be used within Clause Functions.`,
+    },
+    AND: {
+        [EN]: `Creates an AND gate for the filter arguments, returning true if all arguments return true. An empty AND function will always return true. Call using the syntax 'AND( arg1, arg2, ...)'`,
+    },
+    OR: {
+        [EN]: `Creates an OR gate for the filter arguments, returning true if any argument returns true. An empty OR function will always return false. Call using the syntax 'OR( arg1, arg2, ...)'`,
+    },
+    XOR: {
+        [EN]: `Creates an XOR gate for the filter arguments, returning a boolean value based on a cascading XOR. XOR requires at least 2 arguments to pass validation. Call using the syntax 'XOR( arg1, arg2, ...)'`,
+    },
+    NOT: {
+        [EN]: `The NOT function takes exactly one argument which must be a filter (not an individual Field or Data Declaration) and inverts the boolean result. Call using the syntax 'NOT(arg)'.`,
+    },
+    // Direct Functions
+    directFunctionsTitle: {
+        [EN]: "Direct Functions",
+    },
+    directFunctionsDescription: {
+        [EN]: `Direct functions are compound filters that perform a specific operation which would be otherwise
+    impossible to express using the standard filter syntax. They include functions for filtering
+    based on equipment, artifacts, and CR.`,
+    },
+    EQUIPMENT: {
+        [EN]: `Creates a filter that checks if the specified hero has the specified equipment. Call using the syntax '[p1/p2].equipment(hero, equip str or set)' where [p1/p2] is replaced with either 'p1' or 'p2' to specify the player to check. Hero must be a string literal of any valid hero name, and the second argument must either be a string literal of a valid equipment set name or a set of equipment sets. When a set is passed, the filter will return true if the hero has all of the sets equipped (it will always be false if more than 2 unique sets are passed). You can pass a set like {torrent, torrent, torrent} to filter for 2 piece sets equipped multiple times. As long as the passed equipment is equipped by the specified hero, the function will return true even if the hero has an additional set equipped. Also note that a post-banned hero will not have any equipment. Example function call: p1.equipment("Arbiter Vildred", {Torrent, Torrent, Immunity})`,
+    },
+    ARTIFACT: {
+        [EN]: `Creates a filter that checks if the specified hero has the specified artifact equipped. It is called symmetrically to the equipment function. The only difference is that if a set of artifacts is passed, unlike the equipment filter, the artifact filter will return true if the hero has any of the artifacts equipped, whereas the equipment filter requires all of the equipment sets to be equipped. Also note that a post-banned hero will not have any artifact. Example function call: p1.artifact("Arbiter Vildred", "Alexa's Basket")`,
+    },
+    CR: {
+        [EN]: `Creates a filter that compares the starting CR of the specified hero to the integer passed using the specified operator. Only comparison operators can be used (includes > , >=, <, <=, =, !=). Call using simplified syntax without commas like 'p1.cr("Zio" = 100)' or comma separated syntax like 'p2.cr("Amid", > , 95)'. Use either 'p1.' or 'p2.' to specify the player to check. This filter will return false if the hero specified was post banned. Note that this function implicitly includes the filter "hero in [p1 or p2].picks", therefore, negating this filter with a NOT clause will not simply return games where the hero had less than the specific CR; it will also include games where the specified player did not pick the hero. Therefore, to negate the function, use the complimentary operator instead.`,
+    },
+    globalFiltersTitle: {
+        [EN]: `Global Filter Functions`,
+    },
+    globalFiltersDescription: {
+        [EN]: `Global filter functions are context aware, meaning that they cannot be applied to one battle in a
+                vacuum.
+                They require knowledge of the other battles to determine resulting truth value for the battle being
+                processed.
+                As such, they are affected by other filters in the chain. Therefore, to standardize behavior, all global
+                filter functions are hoisted to the top of the filter chain and executed in order.`,
+    },
+    // Global Filter Functions
+    lastN: {
+        [EN]: `Filters for the most recent N battles. Requires and Integer as an argument. Call using the syntax 'last-N(Integer)'`,
+    },
+};
+const Syntax = {
+    title: {
+        [EN]: "Syntax Elements",
+    },
+    semiColon: {
+        [EN]: `Must use semicolons to separate filters when multiple are used. Do not use semicolons in functions.`,
+    },
+    comma: {
+        [EN]: `Commas are used to separate arguments to functions or sets.`,
+    },
+    parentheses: {
+        [EN]: `Parentheses are used to bound the arguments to function calls.`,
+    },
+    braces: {
+        [EN]: `Braces are used to bound the arguments to a set declaration.`,
+    },
+};
+function injectInCard(composeList) {
+    return {
+        tag: "div",
+        classes: ["col-sm-12"],
+        children: [
+            {
+                tag: "div",
+                classes: ["card"],
+                children: composeList
+            },
+        ],
+    };
+}
+function paragraph(text, classes) {
+    return {
+        tag: "p",
+        textContent: text,
+        classes: classes
+    };
+}
+function header(text, hNum = 1, classes) {
+    return {
+        tag: "h" + hNum,
+        textContent: text,
+        classes: classes
+    };
+}
+function cardHeader(title, hNum = 1, subheader) {
+    const header = {
+        tag: "div",
+        classes: ["card-header"],
+        children: [
+            {
+                tag: "h" + hNum,
+                textContent: title
+            }
+        ]
+    };
+    if (subheader)
+        header.children?.push(paragraph(subheader));
+    return header;
+}
+function cardBody({ composeList, classes, option }) {
+    return {
+        tag: "div",
+        classes: ["card-body", "pc-component"].concat(classes ?? []),
+        option: option,
+        children: composeList
+    };
+}
+function hr() {
+    return {
+        tag: "hr"
+    };
+}
+function listElement({ outertag, outerclasses, innertag, innerclasses, textList }) {
+    return {
+        tag: outertag ?? "ul",
+        classes: outerclasses ?? [],
+        children: [
+            {
+                tag: innertag ?? "li",
+                classes: innerclasses ?? [],
+                textContent: textList
+            }
+        ]
+    };
+}
+function filterSyntaxTable(composeList) {
+    return {
+        tag: "table",
+        style: "width: 100%;",
+        classes: ["table", "filter-syntax-table"],
+        children: [
+            {
+                tag: "tbody",
+                children: composeList
+            }
+        ]
+    };
+}
+function syntaxRulesTableRow({ leftText, rightText, leftClasses, rightClasses }) {
+    return {
+        tag: "tr",
+        children: [
+            {
+                tag: "td",
+                style: "white-space: nowrap;",
+                classes: leftClasses ?? [],
+                textContent: leftText
+            },
+            {
+                tag: "td",
+                classes: ["cm-def"],
+                innerHtml: "&rarr;"
+            },
+            {
+                tag: "td",
+                classes: rightClasses ?? [],
+                textContent: rightText
+            }
+        ]
+    };
+}
+function SyntaxRulesTableRows({ entries, leftClasses, rightClasses }) {
+    return entries.map(([leftText, rightText]) => syntaxRulesTableRow({ leftText, rightText, leftClasses, rightClasses }));
+}
+function makeComposeList(lang) {
+    const text = _lang_builder__WEBPACK_IMPORTED_MODULE_0__.TextRetrieveFns[lang];
+    let overviewBody = [
+        cardHeader(text(Overview.generalOverviewTitle), 3, text(Overview.generalOverviewDescription)),
+        cardBody({ option: _pages_html_constructor_html_constructor__WEBPACK_IMPORTED_MODULE_2__.ComposeOption.NEST }),
+        header(text(Overview.filterUsageTitle), 4),
+        paragraph(text(Overview.filterUsageDescription)),
+        hr(),
+        header(text(Overview.objectTypesTitle), 4),
+        paragraph(text(Overview.objectTypesDescription)),
+        listElement({
+            outertag: "ol",
+            outerclasses: ["text-sm"],
+            textList: text(Overview.objectTypesList)
+        }),
+        hr(),
+        header(text(Overview.highLevelRulesTitle), 4),
+        listElement({
+            outertag: "ol",
+            outerclasses: ["text-sm"],
+            textList: text(Overview.highLevelRulesList)
+        }),
+    ];
+    const overviewCard = injectInCard(overviewBody);
+    let fieldBody = [
+        cardHeader(text(Fields.title), 5),
+        cardBody({ classes: ["text-sm"], option: _pages_html_constructor_html_constructor__WEBPACK_IMPORTED_MODULE_2__.ComposeOption.NEST }),
+        filterSyntaxTable(SyntaxRulesTableRows({
+            entries: [
+                ["date", text(Fields.date)],
+                ["season", text(Fields.season)],
+                ["is-win", text(Fields.isWin)],
+                ["is-first-pick", text(Fields.isFirstPick)],
+                ["is-first-turn", text(Fields.isFirstTurn)],
+                ["first-turn-hero", text(Fields.firstTurnHero)],
+                ["victory-points", text(Fields.victoryPoints)],
+                ["prebans", text(Fields.prebans)],
+                ["postbans", text(Fields.postbans)],
+                ["turns", text(Fields.turns)],
+                ["seconds", text(Fields.seconds)],
+                ["point-gain", text(Fields.pointGain)],
+            ],
+            leftClasses: ["cm-datafield"],
+            rightClasses: ["cm-default"]
+        })),
+        paragraph(text(Fields.attributesTitle)),
+        paragraph(text(Fields.attributesDescription), ["text-sm"]),
+        filterSyntaxTable(SyntaxRulesTableRows({
+            entries: [
+                ["pick[n]", text(Fields.pickN)],
+                ["picks", text(Fields.picks)],
+                ["league", text(Fields.league)],
+                ["prebans", text(Fields.prebansAttribute)],
+                ["postban", text(Fields.postban)],
+                ["server", text(Fields.server)],
+                ["id", text(Fields.id)],
+                ["mvp", text(Fields.mvp)],
+            ],
+            leftClasses: ["cm-datafield"],
+            rightClasses: ["cm-default"]
+        }))
+    ];
+    const fieldCard = injectInCard(fieldBody);
+    const declaredDataBody = [
+        cardHeader(text(DeclaredData.title), 5),
+        cardBody({ classes: ["text-sm"], option: _pages_html_constructor_html_constructor__WEBPACK_IMPORTED_MODULE_2__.ComposeOption.NEST }),
+        filterSyntaxTable(SyntaxRulesTableRows({
+            entries: [
+                ["Integer", text(DeclaredData.Integer)],
+                ["Date", text(DeclaredData.Date)],
+                ["String", text(DeclaredData.String)],
+                ["Boolean", text(DeclaredData.Boolean)],
+                ["Set", text(DeclaredData.Set)],
+                ["Range", text(DeclaredData.Range)],
+                ["Season", text(DeclaredData.Season)],
+            ],
+            leftClasses: ["cm-declared-data"],
+            rightClasses: ["cm-default"]
+        }))
+    ];
+    const declaredDataCard = injectInCard(declaredDataBody);
+    const operatorsBody = [
+        cardHeader(text(Operators.title), 5),
+        cardBody({ classes: ["text-sm"], option: _pages_html_constructor_html_constructor__WEBPACK_IMPORTED_MODULE_2__.ComposeOption.NEST }),
+        filterSyntaxTable(SyntaxRulesTableRows({
+            entries: [
+                ["=", text(Operators.equal)],
+                ["!=", text(Operators.notEqual)],
+                [">", text(Operators.gt)],
+                [">=", text(Operators.gte)],
+                ["<", text(Operators.lt)],
+                ["<=", text(Operators.lte)],
+                ["in", text(Operators.in)],
+                ["!in", text(Operators.notIn)],
+            ],
+            leftClasses: ["cm-operator"],
+            rightClasses: ["cm-default"]
+        }))
+    ];
+    const operatorsCard = injectInCard(operatorsBody);
+    const functionsBody = [
+        cardHeader(text(Functions.title), 5),
+        cardBody({ classes: ["text-sm"], option: _pages_html_constructor_html_constructor__WEBPACK_IMPORTED_MODULE_2__.ComposeOption.NEST }),
+        paragraph(text(Functions.clauseFunctionsTitle)),
+        paragraph(text(Functions.clauseFunctionsDescription), ["text-sm"]),
+        filterSyntaxTable(SyntaxRulesTableRows({
+            entries: [
+                ["AND", text(Functions.AND)],
+                ["OR", text(Functions.OR)],
+                ["XOR", text(Functions.XOR)],
+                ["NOT", text(Functions.NOT)],
+            ],
+            leftClasses: ["cm-keyword"],
+            rightClasses: ["cm-default"]
+        })),
+        paragraph(text(Functions.directFunctionsTitle)),
+        paragraph(text(Functions.directFunctionsDescription), ["text-sm"]),
+        filterSyntaxTable(SyntaxRulesTableRows({
+            entries: [
+                ["[p1/p2].equipment(hero, str/set)", text(Functions.EQUIPMENT)],
+                ["[p1/p2].artifact(hero, str/set)", text(Functions.ARTIFACT)],
+                ["[p1/p2].CR(hero, operator, integer)", text(Functions.CR)],
+            ],
+            leftClasses: ["cm-keyword"],
+            rightClasses: ["cm-default"]
+        })),
+        paragraph(text(Functions.globalFiltersTitle)),
+        paragraph(text(Functions.globalFiltersDescription), ["text-sm"]),
+        filterSyntaxTable(SyntaxRulesTableRows({
+            entries: [
+                ["last-N", text(Functions.lastN)],
+            ],
+            leftClasses: ["cm-keyword"],
+            rightClasses: ["cm-default"]
+        })),
+    ];
+    const functionsCard = injectInCard(functionsBody);
+    const syntaxBody = [
+        cardHeader(text(Syntax.title), 5),
+        cardBody({ classes: ["text-sm"], option: _pages_html_constructor_html_constructor__WEBPACK_IMPORTED_MODULE_2__.ComposeOption.NEST }),
+        filterSyntaxTable(SyntaxRulesTableRows({
+            entries: [
+                [";", text(Syntax.semiColon)],
+                [",", text(Syntax.comma)],
+                ["(", text(Syntax.parentheses)],
+                ["{", text(Syntax.braces)],
+            ],
+            leftClasses: ["cm-bracket"],
+            rightClasses: ["cm-default"]
+        }))
+    ];
+    const syntaxCard = injectInCard(syntaxBody);
+    return [overviewCard, fieldCard, declaredDataCard, operatorsCard, functionsCard, syntaxCard];
+}
+
+
+
+/***/ }),
+
+/***/ "./static/assets/js/language-support/lang-builder.ts":
+/*!***********************************************************!*\
+  !*** ./static/assets/js/language-support/lang-builder.ts ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TextRetrieveFns: () => (/* binding */ TextRetrieveFns),
+/* harmony export */   getText: () => (/* binding */ getText)
+/* harmony export */ });
+/* harmony import */ var _e7_references__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/references */ "./static/assets/js/e7/references.ts");
+
+function getText(lang, block) {
+    return block[lang] ?? block[_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.EN];
+}
+const TextRetrieveFns = {
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.EN]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.EN, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.DE]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.DE, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.KO]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.KO, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.PT]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.PT, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.TH]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.TH, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ZH_TW]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ZH_TW, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.JA]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.JA, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.FR]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.FR, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ZH_CN]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ZH_CN, block); },
+    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ES]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ES, block); },
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/filter-syntax.ts":
+/*!*************************************************!*\
+  !*** ./static/assets/js/pages/filter-syntax.ts ***!
+  \*************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _e7_regex_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/regex.ts */ "./static/assets/js/e7/regex.ts");
+/* harmony import */ var _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./page-utilities/page-utils.js */ "./static/assets/js/pages/page-utilities/page-utils.js");
+/* harmony import */ var _page_utilities_nav_bar_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-utilities/nav-bar-utils.js */ "./static/assets/js/pages/page-utilities/nav-bar-utils.js");
+/* harmony import */ var _language_support_filter_syntax_lang_build_ts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../language-support/filter-syntax-lang-build.ts */ "./static/assets/js/language-support/filter-syntax-lang-build.ts");
+/* harmony import */ var _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./html-constructor/html-constructor.ts */ "./static/assets/js/pages/html-constructor/html-constructor.ts");
+/* harmony import */ var _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./page-utilities/doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
+/* harmony import */ var _utils_ts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils.ts */ "./static/assets/js/utils.ts");
+/* harmony import */ var _lang_manager_ts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lang-manager.ts */ "./static/assets/js/lang-manager.ts");
+
+
+
+
+
+
+
+
+function makeExFilter(textAreaID, str) {
+    const textArea = _utils_ts__WEBPACK_IMPORTED_MODULE_6__.Safe.unwrapHtmlElt(textAreaID);
+    textArea.value = str.replace(/^\n/, "");
+    // @ts-ignore
+    CodeMirror.fromTextArea(textArea, {
+        mode: "filterSyntax",
+        lineNumbers: true,
+        theme: "default",
+        readOnly: true,
+    });
+    textArea.classList.remove("codemirror-hidden");
+}
+function initializeCodeBlocksAndAddListeners() {
+    // @ts-ignore
+    CodeMirror.defineMode("filterSyntax", function () {
+        return {
+            token: function (stream, _state) {
+                return _e7_regex_ts__WEBPACK_IMPORTED_MODULE_0__.RegExps.tokenMatch(stream);
+            },
+        };
+    });
+    const ex1Str = `
+season = current-season;
+is-first-pick = true;
+p1.pick1 in {lone wolf peira, new moon luna};
+OR("harsetti" in p1.prebans, "harsetti" in p2.prebans);`;
+    makeExFilter("exFilter1", ex1Str);
+    const ex2Str = `
+last-n(500);
+date in 2025-04-01...2025-07-01;
+is-first-pick = false;
+OR(
+	AND(
+		p2.league in {warlord, emperor, legend},
+    	p2.pick3 = "zio"
+    ),
+    victory-points >= 3000
+)`;
+    makeExFilter("exFilter2", ex2Str);
+    const ex3Str = `
+"Rinak" in prebans;
+"Boss Arunka" in prebans;
+"Harsetti" in p1.picks;
+NOT("Harsetti" = p2.postban);
+victory-points in 2500...=3000;`;
+    makeExFilter("exFilter3", ex3Str);
+    const ex4Str = `
+season = season-16f;
+is-win = true;`;
+    makeExFilter("exFilter4", ex4Str);
+    const ex5Str = `
+p1.equipment("belian", {immunity, counter});
+p1.artifact("belian", {3f, elbris ritual sword});
+p2.cr("New Moon Luna" > 100);
+p2.server in {global, asia, Japan};`;
+    makeExFilter("exFilter5", ex5Str);
+    const textarea = _utils_ts__WEBPACK_IMPORTED_MODULE_6__.Safe.unwrapHtmlElt("codeArea");
+    // @ts-ignore
+    const editor = CodeMirror.fromTextArea(textarea, {
+        mode: "filterSyntax",
+        lineNumbers: true,
+        theme: "default",
+    });
+    // Intercept form submission
+    const filterForm = _utils_ts__WEBPACK_IMPORTED_MODULE_6__.Safe.unwrapHtmlElt("filterForm");
+    filterForm.addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent actual form submission to server
+        // Ensure value is synced back to textarea before submit ; not strictly necessary since processed client-side
+        // @ts-ignore
+        _utils_ts__WEBPACK_IMPORTED_MODULE_6__.Safe.unwrapHtmlElt("codeArea").value = editor.getValue();
+        console.log("Processing Filter Action");
+        const clickedButton = event.submitter;
+        const action = clickedButton?.value;
+        const syntaxStr = editor.getValue();
+        if (action === "check") {
+            console.log("Checking Str", syntaxStr);
+            await _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].validateFilterSyntax(syntaxStr);
+        }
+    });
+    // sync changes back to textarea if needed
+    editor.on("change", () => {
+        editor.save(); // Updates the hidden textarea for form submit
+    });
+    // Show the editor after it's initialized
+    textarea.classList.remove("codemirror-hidden");
+}
+async function addText() {
+    const rulesContainer = _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_5__["default"].FILTER_SYNTAX_PAGE.FILTER_SYNTAX_RULES_CONTAINER;
+    const lang = await _lang_manager_ts__WEBPACK_IMPORTED_MODULE_7__.LangManager.getLang();
+    const composeList = (0,_language_support_filter_syntax_lang_build_ts__WEBPACK_IMPORTED_MODULE_3__.makeComposeList)(lang);
+    const constructor = new _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__.HTMLConstructor(rulesContainer);
+    constructor.compose(composeList);
+}
+async function main() {
+    await addText();
+    _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].setVisibility(_page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_5__["default"].FILTER_SYNTAX_PAGE.ALL_CONTENT_CONTAINER, true);
+    initializeCodeBlocksAndAddListeners();
+    await _page_utilities_nav_bar_utils_js__WEBPACK_IMPORTED_MODULE_2__.NavBarUtils.initialize();
+}
+await main();
+
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } }, 1);
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/html-constructor/html-constructor.ts":
+/*!*********************************************************************!*\
+  !*** ./static/assets/js/pages/html-constructor/html-constructor.ts ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ComposeFns: () => (/* binding */ ComposeFns),
+/* harmony export */   ComposeOption: () => (/* binding */ ComposeOption),
+/* harmony export */   HTMLConstructor: () => (/* binding */ HTMLConstructor),
+/* harmony export */   TableConstructor: () => (/* binding */ TableConstructor)
+/* harmony export */ });
+/* harmony import */ var _utils_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.ts */ "./static/assets/js/utils.ts");
+
+let ID_COUNTER = 0;
+function generateID() {
+    ID_COUNTER += 1;
+    return `id-${ID_COUNTER}`;
+}
+const ComposeOption = {
+    NEST: "nest", // all subsequent compose elements will be children
+    ADJ: "adj", // all subsequent compose elements will be siblings
+};
+class HTMLConstructor {
+    htmlElt;
+    children;
+    childArr;
+    constructor(htmlElt) {
+        this.htmlElt = htmlElt;
+        this.children = {};
+        this.childArr = [];
+    }
+    static fromID(id) {
+        return new HTMLConstructor(_utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt(id));
+    }
+    static fromElt(elt) {
+        return new HTMLConstructor(elt);
+    }
+    get id() {
+        return this.htmlElt.id;
+    }
+    set id(id) {
+        this.htmlElt.id = id;
+    }
+    addClass(...classes) {
+        this.htmlElt.classList.add(...classes);
+    }
+    addStyle(style) {
+        this.htmlElt.setAttribute("style", style);
+    }
+    removeClass(...classes) {
+        this.htmlElt.classList.remove(...classes);
+    }
+    addAttributes(attributes) {
+        for (const [key, value] of Object.entries(attributes)) {
+            this.htmlElt.setAttribute(key, value);
+        }
+    }
+    appendChild(child) {
+        if (child instanceof HTMLConstructor) {
+            this.htmlElt.appendChild(child.htmlElt);
+            if (!child.id)
+                child.id = generateID();
+            this.children[child.id] = child;
+            this.childArr.push(child);
+            return child;
+        }
+        else if (child instanceof HTMLElement) {
+            let wrapped = new HTMLConstructor(child);
+            return this.appendChild(wrapped);
+        }
+        else {
+            throw new Error("Only instances of HTMLConstructor or HTMLElement can be passed to this function");
+        }
+    }
+    setInnerHtml(htmlStr) {
+        this.htmlElt.innerHTML = htmlStr;
+    }
+    appendInnerHTML(htmlStr) {
+        this.htmlElt.insertAdjacentHTML("beforeend", htmlStr);
+    }
+    constructChild(eltType, attributes = {}) {
+        if (!attributes.id)
+            attributes.id = generateID();
+        let child = document.createElement(eltType);
+        let constructor = new HTMLConstructor(child);
+        constructor.addAttributes(attributes);
+        this.appendChild(constructor);
+        return constructor;
+    }
+    addTextContent(text) {
+        this.htmlElt.textContent = text;
+    }
+    /**
+     * Constructs a tree of HTMLConstructors from an array of HTMLComposeElements.
+     *
+     * @param {HTMLComposeElement[]} elements - An array of HTMLComposeElements
+     * representing the structure and content of the HTML tree.
+     */
+    compose(elements) {
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            if (element.option === ComposeOption.NEST) { // all subsequent compose elements will be children
+                if (element.children) {
+                    element.children = [...element.children, ...elements.slice(i + 1)];
+                }
+                else {
+                    element.children = elements.slice(i + 1);
+                }
+                element.option = ComposeOption.ADJ;
+                this.compose([element]);
+                return;
+            }
+            ;
+            if (element.textContent instanceof Array) { // create adjacent copies of element using the different text
+                const subElements = [];
+                for (const text of element.textContent) {
+                    const subElt = Object.assign({}, element);
+                    subElt.textContent = text;
+                    subElements.push(subElt);
+                }
+                this.compose(subElements);
+                continue;
+            }
+            ;
+            let child = this.constructChild(element.tag, element.attributes);
+            if (element.classes)
+                child.addClass(...element.classes);
+            if (element.children)
+                child.compose(element.children);
+            if (element.textContent)
+                child.addTextContent(element.textContent);
+            if (element.style)
+                child.addStyle(element.style);
+            if (element.innerHtml)
+                child.setInnerHtml(element.innerHtml);
+        }
+        ;
+    }
+}
+class TableConstructor extends HTMLConstructor {
+    thead;
+    tbody;
+    constructor(htmlElt, headID, bodyID) {
+        super(htmlElt);
+        this.constructChild("thead", { id: headID });
+        this.constructChild("tbody", { id: bodyID });
+        this.thead = this.children[headID];
+        this.tbody = this.children[bodyID];
+    }
+    static createFromIDs(tableID, headID, bodyID) {
+        const table = document.createElement("table");
+        table.id = tableID;
+        return new TableConstructor(table, headID, bodyID);
+    }
+    addColumns(colNameArr) {
+        const thead = this.thead;
+        const tr = thead.constructChild("tr");
+        colNameArr.forEach((colName) => {
+            const attributes = { scope: "col" };
+            tr.constructChild("th", attributes).addTextContent(colName);
+        });
+    }
+}
+function cardNest({ content, classes } = {}) {
+    return [
+        {
+            tag: "div",
+            classes: ["col-sm-12"].concat(classes ?? []),
+            option: ComposeOption.NEST
+        },
+        {
+            tag: "div",
+            classes: ["card"],
+            children: content,
+            option: ComposeOption.NEST
+        },
+    ];
+}
+function cardBody({ composeList, classes, option }) {
+    return {
+        tag: "div",
+        classes: ["card-body", "pc-component"].concat(classes ?? []),
+        option: option,
+        children: composeList
+    };
+}
+function paragraph(text, classes) {
+    return {
+        tag: "p",
+        textContent: text,
+        classes: classes
+    };
+}
+function header(text, hNum = 1, classes) {
+    return {
+        tag: "h" + hNum,
+        textContent: text,
+        classes: classes
+    };
+}
+function hr() {
+    return {
+        tag: "hr"
+    };
+}
+function br() {
+    return {
+        tag: "br"
+    };
+}
+function listElement({ outertag, outerclasses, innertag, innerclasses, textList }) {
+    return {
+        tag: outertag ?? "ul",
+        classes: outerclasses ?? [],
+        children: [
+            {
+                tag: innertag ?? "li",
+                classes: innerclasses ?? [],
+                textContent: textList
+            }
+        ]
+    };
+}
+const ComposeFns = {
+    cardNest,
+    cardBody,
+    paragraph,
+    header,
+    hr,
+    br,
+    listElement,
+};
+
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/orchestration/inter-page-manager.ts":
+/*!********************************************************************!*\
+  !*** ./static/assets/js/pages/orchestration/inter-page-manager.ts ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../cache-manager.ts */ "./static/assets/js/cache-manager.ts");
+
+const ACTIONS = {
+    CLEAR_USER: "CLEAR_USER",
+    SHOW_NO_USER_MSG: "SHOW_NO_USER_MSG",
+    SHOW_DATA_ALREADY_CLEARED_MSG: "SHOW_DATA_ALREADY_CLEARED_MSG",
+    QUERY_USER: "QUERY_USER",
+};
+let InterPageManager = {
+    ACTIONS: ACTIONS,
+    getState: async function () {
+        return ((await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.INTER_PAGE_MANAGER)) ?? {
+            actions: [],
+            messages: [],
+        });
+    },
+    setState: async function (state) {
+        await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.INTER_PAGE_MANAGER, state);
+    },
+    pushActions: async function (actions) {
+        let state = await this.getState();
+        state.actions.push(...actions);
+        await this.setState(state);
+    },
+    pushMessages: async function (messages) {
+        let state = await this.getState();
+        state.messages.push(...messages);
+        await this.setState(state);
+    },
+    pushState: async function (state) {
+        let currentState = await this.getState();
+        currentState.actions.push(...state.actions);
+        currentState.messages.push(...state.messages);
+        await this.setState(currentState);
+    },
+    flushState: async function () {
+        const state = await this.getState();
+        await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].delete(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.INTER_PAGE_MANAGER);
+        return state;
+    },
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (InterPageManager);
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/orchestration/page-state-manager.js":
+/*!********************************************************************!*\
+  !*** ./static/assets/js/pages/orchestration/page-state-manager.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   HOME_PAGE_FNS: () => (/* binding */ HOME_PAGE_FNS),
+/* harmony export */   HOME_PAGE_STATES: () => (/* reexport safe */ _page_utilities_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES),
+/* harmony export */   PageStateManager: () => (/* binding */ PageStateManager),
+/* harmony export */   validateState: () => (/* binding */ validateState)
+/* harmony export */ });
+/* harmony import */ var _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../cache-manager.ts */ "./static/assets/js/cache-manager.ts");
+/* harmony import */ var _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../page-utilities/doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
+/* harmony import */ var _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../page-utilities/page-utils.js */ "./static/assets/js/pages/page-utilities/page-utils.js");
+/* harmony import */ var _page_utilities_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../page-utilities/page-state-references.js */ "./static/assets/js/pages/page-utilities/page-state-references.js");
+/* harmony import */ var _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../e7/user-manager.ts */ "./static/assets/js/e7/user-manager.ts");
+/* harmony import */ var _e7_references_ts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../e7/references.ts */ "./static/assets/js/e7/references.ts");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+
+var VALIDATION_SET = new Set(Object.values(_page_utilities_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES));
+function validateState(state) {
+  if (!VALIDATION_SET.has(state)) {
+    console.error("Invalid page state: ".concat(state));
+    return false;
+  }
+  return true;
+}
+function getContentBody(state) {
+  switch (state) {
+    case _page_utilities_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES.SELECT_DATA:
+      return _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.SELECT_DATA_BODY;
+    case _page_utilities_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES.SHOW_STATS:
+      return _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.SHOW_STATS_BODY;
+    case _page_utilities_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES.LOAD_DATA:
+      return _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.LOAD_DATA_BODY;
+    default:
+      console.error("Invalid page state: ".concat(state));
+  }
+}
+var PageStateManager = {
+  getState: function () {
+    var _getState = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+      var _yield$ClientCache$ge;
+      var _t, _t2, _t3;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HOME_PAGE_STATE);
+          case 1:
+            _t2 = _yield$ClientCache$ge = _context.v;
+            _t = _t2 !== null;
+            if (!_t) {
+              _context.n = 2;
+              break;
+            }
+            _t = _yield$ClientCache$ge !== void 0;
+          case 2:
+            if (!_t) {
+              _context.n = 3;
+              break;
+            }
+            _t3 = _yield$ClientCache$ge;
+            _context.n = 4;
+            break;
+          case 3:
+            _t3 = _page_utilities_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES.SELECT_DATA;
+          case 4:
+            return _context.a(2, _t3);
+        }
+      }, _callee);
+    }));
+    function getState() {
+      return _getState.apply(this, arguments);
+    }
+    return getState;
+  }(),
+  setState: function () {
+    var _setState = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(state) {
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            if (validateState(state)) {
+              _context2.n = 1;
+              break;
+            }
+            return _context2.a(2);
+          case 1:
+            _context2.n = 2;
+            return _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].cache(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HOME_PAGE_STATE, state);
+          case 2:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    function setState(_x) {
+      return _setState.apply(this, arguments);
+    }
+    return setState;
+  }(),
+  resetState: function () {
+    var _resetState = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            _context3.n = 1;
+            return _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.HOME_PAGE_STATE);
+          case 1:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    function resetState() {
+      return _resetState.apply(this, arguments);
+    }
+    return resetState;
+  }()
+};
+function homePageSetView(state) {
+  if (!validateState(state)) return;
+  for (var _i = 0, _Object$values = Object.values(_page_utilities_page_state_references_js__WEBPACK_IMPORTED_MODULE_3__.HOME_PAGE_STATES); _i < _Object$values.length; _i++) {
+    var otherState = _Object$values[_i];
+    if (state === otherState) continue;
+    var otherStateBody = getContentBody(otherState);
+    console.log("Hiding ".concat(otherStateBody.id));
+    _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].setVisibility(otherStateBody, false);
+  }
+  var contentBody = getContentBody(state);
+  console.log("Showing ".concat(contentBody.id));
+  _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].setVisibility(contentBody, true);
+}
+function homePageDrawUserInfo(user) {
+  if (user) {
+    _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.USER_NAME.innerText = user.name;
+    _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.USER_ID.innerText = user.id;
+    _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.USER_SERVER.innerText = _e7_references_ts__WEBPACK_IMPORTED_MODULE_5__.WORLD_CODE_TO_CLEAN_STR[user.world_code];
+  } else {
+    _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.USER_NAME.innerText = "(None)";
+    _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.USER_ID.innerText = "(None)";
+    _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_1__["default"].HOME_PAGE.USER_SERVER.innerText = "(None)";
+  }
+}
+function homePageSetUser(_x2) {
+  return _homePageSetUser.apply(this, arguments);
+}
+function _homePageSetUser() {
+  _homePageSetUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(user) {
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          _context4.n = 1;
+          return _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].clearUserData();
+        case 1:
+          // clear any existing data
+          homePageDrawUserInfo(user);
+          if (!user) {
+            _context4.n = 2;
+            break;
+          }
+          _context4.n = 2;
+          return _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].setUser(user);
+        case 2:
+          return _context4.a(2);
+      }
+    }, _callee4);
+  }));
+  return _homePageSetUser.apply(this, arguments);
+}
+function homePageClearUserData() {
+  return _homePageClearUserData.apply(this, arguments);
+}
+function _homePageClearUserData() {
+  _homePageClearUserData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+    return _regenerator().w(function (_context5) {
+      while (1) switch (_context5.n) {
+        case 0:
+          _context5.n = 1;
+          return homePageSetUser(null);
+        case 1:
+          return _context5.a(2);
+      }
+    }, _callee5);
+  }));
+  return _homePageClearUserData.apply(this, arguments);
+}
+var HOME_PAGE_FNS = {
+  homePageSetView: homePageSetView,
+  homePageSetUser: homePageSetUser,
+  homePageDrawUserInfo: homePageDrawUserInfo,
+  homePageClearUserData: homePageClearUserData
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/orchestration/text-controller.js":
+/*!*****************************************************************!*\
+  !*** ./static/assets/js/pages/orchestration/text-controller.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TextController: () => (/* binding */ TextController),
+/* harmony export */   TextPacket: () => (/* binding */ TextPacket),
+/* harmony export */   TextUtils: () => (/* binding */ TextUtils)
+/* harmony export */ });
+/* harmony import */ var _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../page-utilities/doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+
+var STYLES = {
+  RED: "text-danger",
+  GREEN: "text-safe"
+};
+var TextPacket = /*#__PURE__*/_createClass(function TextPacket(text, docElement, classList) {
+  _classCallCheck(this, TextPacket);
+  this.text = text;
+  this.docElement = docElement;
+  this.classList = classList;
+});
+function assertTextPacket(textPacket) {
+  if (!textPacket instanceof TextPacket) {
+    throw new Error("Only instances of TextPacket can be passed to this function");
+  }
+}
+var TextController = {
+  queue: [],
+  autoClearElements: [],
+  TextPacket: TextPacket,
+  STYLES: STYLES,
+  clearStyles: function clearStyles(docElement) {
+    for (var _i = 0, _Object$values = Object.values(STYLES); _i < _Object$values.length; _i++) {
+      var style = _Object$values[_i];
+      docElement.classList.remove(style);
+    }
+  },
+  write: function write(TextPacket) {
+    assertTextPacket(TextPacket);
+    TextPacket.docElement.textContent = TextPacket.text;
+    this.clearStyles(TextPacket.docElement);
+    TextPacket.classList.forEach(function (className) {
+      TextPacket.docElement.classList.add(className);
+    });
+  },
+  push: function push(TextPacket) {
+    assertTextPacket(TextPacket);
+    this.queue.push(TextPacket);
+  },
+  pushFromObj: function pushFromObj(_ref) {
+    var text = _ref.text,
+      docElement = _ref.docElement,
+      classList = _ref.classList;
+    this.push(new TextPacket(text, docElement, classList));
+  },
+  bindAutoClear: function bindAutoClear(elementList) {
+    // Only used to clear messages automatically when swiching page states
+    var _iterator = _createForOfIteratorHelper(elementList),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var element = _step.value;
+        this.autoClearElements.push(element);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  },
+  processQueue: function processQueue() {
+    var _this = this;
+    this.queue.forEach(function (TextPacket) {
+      _this.write(TextPacket);
+    });
+    this.queue = [];
+  },
+  clearMessages: function clearMessages() {
+    var _iterator2 = _createForOfIteratorHelper(this.autoClearElements),
+      _step2;
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var element = _step2.value;
+        element.textContent = "";
+        this.clearStyles(element);
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+  }
+};
+function queueSelectDataMsgGreen(msg) {
+  TextController.push(new TextPacket(msg, _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_0__["default"].HOME_PAGE.SELECT_DATA_MSG, [STYLES.GREEN]));
+}
+function queueSelectDataMsgRed(msg) {
+  TextController.push(new TextPacket(msg, _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_0__["default"].HOME_PAGE.SELECT_DATA_MSG, [STYLES.RED]));
+}
+function queueFilterMsgGreen(msg) {
+  TextController.push(new TextPacket(msg, _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_0__["default"].HOME_PAGE.FILTER_MSG, [STYLES.GREEN]));
+}
+function queueFilterMsgRed(msg) {
+  TextController.push(new TextPacket(msg, _page_utilities_doc_element_references_js__WEBPACK_IMPORTED_MODULE_0__["default"].HOME_PAGE.FILTER_MSG, [STYLES.RED]));
+}
+var TextUtils = {
+  queueSelectDataMsgGreen: queueSelectDataMsgGreen,
+  queueSelectDataMsgRed: queueSelectDataMsgRed,
+  queueFilterMsgGreen: queueFilterMsgGreen,
+  queueFilterMsgRed: queueFilterMsgRed
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/doc-element-references.js":
+/*!*************************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/doc-element-references.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.ts */ "./static/assets/js/utils.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+var HomePageElements = /*#__PURE__*/function () {
+  function HomePageElements() {
+    _classCallCheck(this, HomePageElements);
+  }
+  return _createClass(HomePageElements, [{
+    key: "SELECT_DATA_MSG",
+    get: function get() {
+      return this._SELECT_DATA_MSG || (this._SELECT_DATA_MSG = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("select-data-msg"));
+    }
+  }, {
+    key: "FILTER_MSG",
+    get: function get() {
+      return this._FILTER_MSG || (this._FILTER_MSG = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("filterMSG"));
+    }
+  }, {
+    key: "SELECT_DATA_BODY",
+    get: function get() {
+      return this._SELECT_DATA_BODY || (this._SELECT_DATA_BODY = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("select-data-body"));
+    }
+  }, {
+    key: "SHOW_STATS_BODY",
+    get: function get() {
+      return this._SHOW_STATS_BODY || (this._SHOW_STATS_BODY = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("show-stats-body"));
+    }
+  }, {
+    key: "LOAD_DATA_BODY",
+    get: function get() {
+      return this._LOAD_DATA_BODY || (this._LOAD_DATA_BODY = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("load-data-body"));
+    }
+  }, {
+    key: "CLEAR_DATA_BTN",
+    get: function get() {
+      return this._CLEAR_DATA_BTN || (this._CLEAR_DATA_BTN = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("clear-data-btn"));
+    }
+  }, {
+    key: "UPLOAD_FORM",
+    get: function get() {
+      return this._UPLOAD_FORM || (this._UPLOAD_FORM = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("uploadForm"));
+    }
+  }, {
+    key: "CSV_FILE",
+    get: function get() {
+      return this._CSV_FILE || (this._CSV_FILE = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("csvFile"));
+    }
+  }, {
+    key: "USER_QUERY_FORM_NAME",
+    get: function get() {
+      //needs to be kept in sync with id in forms.py of home folder in apps
+      return this._USER_QUERY_FORM_NAME || (this._USER_QUERY_FORM_NAME = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("user-query-form-name"));
+    }
+  }, {
+    key: "USER_QUERY_FORM_SERVER",
+    get: function get() {
+      //needs to be kept in sync with id in forms.py of home folder in apps
+      return this._USER_QUERY_FORM_SERVER || (this._USER_QUERY_FORM_SERVER = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("user-query-form-server"));
+    }
+  }, {
+    key: "AUTO_ZOOM_FLAG",
+    get: function get() {
+      return this._AUTO_ZOOM_FLAG || (this._AUTO_ZOOM_FLAG = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("auto-zoom-flag"));
+    }
+  }, {
+    key: "FOOTER_BODY",
+    get: function get() {
+      return this._FOOTER || (this._FOOTER = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("footer-body"));
+    }
+  }, {
+    key: "USER_NAME",
+    get: function get() {
+      return this._USER_NAME || (this._USER_NAME = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("user-name"));
+    }
+  }, {
+    key: "USER_ID",
+    get: function get() {
+      return this._USER_ID || (this._USER_ID = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("user-id"));
+    }
+  }, {
+    key: "USER_SERVER",
+    get: function get() {
+      return this._USER_SERVER || (this._USER_SERVER = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("user-server"));
+    }
+  }, {
+    key: "BATTLE_FILTER_TOGGLE",
+    get: function get() {
+      return this._BATTLE_FILTER_TOGGLER || (this._BATTLE_FILTER_TOGGLER = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("filter-battle-table"));
+    }
+  }, {
+    key: "ID_SEARCH_FLAG",
+    get: function get() {
+      return this._ID_SEARCH_FLAG || (this._ID_SEARCH_FLAG = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("id-search-flag"));
+    }
+  }, {
+    key: "ESCAPE_BTN",
+    get: function get() {
+      return this._ESCAPE_BTN || (this._ESCAPE_BTN = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("escape-btn"));
+    }
+  }, {
+    key: "SEASON_DETAILS_TBL",
+    get: function get() {
+      return this._SEASON_DETAILS_TBL || (this._SEASON_DETAILS_TBL = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("season-details-tbl"));
+    }
+  }, {
+    key: "PERFORMANCE_STATS_TBL",
+    get: function get() {
+      return this._PERFORMANCE_STATS_TBL || (this._PERFORMANCE_STATS_TBL = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("performance-stats-tbl"));
+    }
+  }, {
+    key: "FIRST_PICK_STATS_TBL",
+    get: function get() {
+      return this._FIRST_PICK_STATS_TBL || (this._FIRST_PICK_STATS_TBL = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("first-pick-stats-tbl"));
+    }
+  }, {
+    key: "PREBAN_STATS_TBL",
+    get: function get() {
+      return this._PREBAN_STATS_TBL || (this._PREBAN_STATS_TBL = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("preban-stats-tbl"));
+    }
+  }, {
+    key: "PLAYER_TBL",
+    get: function get() {
+      return this._PLAYER_TBL || (this._PLAYER_TBL = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("player-tbl"));
+    }
+  }, {
+    key: "OPPONENT_TBL",
+    get: function get() {
+      return this._OPPONENT_TBL || (this._OPPONENT_TBL = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("opponent-tbl"));
+    }
+  }, {
+    key: "BATTLES_TBL",
+    get: function get() {
+      return this._BATTLE_TBL || (this._BATTLE_TBL = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("battles-tbl"));
+    }
+  }, {
+    key: "RANK_PLOT",
+    get: function get() {
+      return this._RANK_PLOT || (this._RANK_PLOT = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("rank-plot"));
+    }
+  }, {
+    key: "MESSAGE_ELEMENTS_LIST",
+    get: function get() {
+      return [this.SELECT_DATA_MSG, this.FILTER_MSG];
+    }
+  }]);
+}();
+var NavBarElements = /*#__PURE__*/function () {
+  function NavBarElements() {
+    _classCallCheck(this, NavBarElements);
+  }
+  return _createClass(NavBarElements, [{
+    key: "SIDEBAR_HIDE_BTN",
+    get: function get() {
+      return this._SIDEBAR_HIDE_BTN || (this._SIDEBAR_HIDE_BTN = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("sidebar-hide"));
+    }
+  }, {
+    key: "CLEAR_DATA_BTN",
+    get: function get() {
+      return this._CLEAR_DATA_BTN || (this._CLEAR_DATA_BTN = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("clear-data-btn"));
+    }
+  }, {
+    key: "EXPORT_CSV_BTN",
+    get: function get() {
+      return this._EXPORT_CSV_BTN || (this._EXPORT_CSV_BTN = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("export-csv-btn"));
+    }
+  }, {
+    key: "OFFICIAL_SITE_BTN",
+    get: function get() {
+      return this._OFFICIAL_SITE_BTN || (this._OFFICIAL_SITE_BTN = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("official-site-btn"));
+    }
+  }, {
+    key: "USER_NAME",
+    get: function get() {
+      return this._USER_NAME || (this._USER_NAME = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("user-name"));
+    }
+  }, {
+    key: "USER_ID",
+    get: function get() {
+      return this._USER_ID || (this._USER_ID = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("user-id"));
+    }
+  }, {
+    key: "USER_SERVER",
+    get: function get() {
+      return this._USER_SERVER || (this._USER_SERVER = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("user-server"));
+    }
+  }, {
+    key: "SIDEBAR_CONTROL",
+    get: function get() {
+      return this._SIDEBAR_CONTROL || (this._SIDEBAR_CONTROL = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("sidebar-control"));
+    }
+  }]);
+}();
+var SEARCH_PAGE_ELEMENTS = /*#__PURE__*/function () {
+  function SEARCH_PAGE_ELEMENTS() {
+    _classCallCheck(this, SEARCH_PAGE_ELEMENTS);
+  }
+  return _createClass(SEARCH_PAGE_ELEMENTS, [{
+    key: "SEARCH_DOMAINS",
+    get: function get() {
+      return this._SEARCH_DOMAINS || (this._SEARCH_DOMAINS = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("search-domains"));
+    }
+  }, {
+    key: "SEARCH_SUBMIT_BTN",
+    get: function get() {
+      return this._SEARCH_SUBMIT_BTN || (this._SEARCH_SUBMIT_BTN = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("search-submit-btn"));
+    }
+  }, {
+    key: "SEARCH_FORM",
+    get: function get() {
+      return this._SEARCH_FORM || (this._SEARCH_FORM = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("searchForm"));
+    }
+  }, {
+    key: "SEARCH_TABLE_CONTAINER",
+    get: function get() {
+      return this._SEARCH_TABLE_CONTAINER || (this._SEARCH_TABLE_CONTAINER = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("search-table-container"));
+    }
+  }]);
+}();
+var FILTER_SYNTAX_PAGE_ELEMENTS = /*#__PURE__*/function () {
+  function FILTER_SYNTAX_PAGE_ELEMENTS() {
+    _classCallCheck(this, FILTER_SYNTAX_PAGE_ELEMENTS);
+  }
+  return _createClass(FILTER_SYNTAX_PAGE_ELEMENTS, [{
+    key: "FILTER_SYNTAX_RULES_CONTAINER",
+    get: function get() {
+      return this._FILTER_SYNTAX_RULES || (this._FILTER_SYNTAX_RULES = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("filter-syntax-rules-container"));
+    }
+  }, {
+    key: "ALL_CONTENT_CONTAINER",
+    get: function get() {
+      return this._ALL_CONTENT_CONTAINER || (this._ALL_CONTENT_CONTAINER = _utils_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt("all-content-container"));
+    }
+  }]);
+}();
+var DOC_ELEMENTS = {
+  HOME_PAGE: new HomePageElements(),
+  NAV_BAR: new NavBarElements(),
+  SEARCH_PAGE: new SEARCH_PAGE_ELEMENTS(),
+  FILTER_SYNTAX_PAGE: new FILTER_SYNTAX_PAGE_ELEMENTS()
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DOC_ELEMENTS);
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/nav-bar-utils.js":
+/*!****************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/nav-bar-utils.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NavBarUtils: () => (/* binding */ NavBarUtils)
+/* harmony export */ });
+/* harmony import */ var _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../orchestration/page-state-manager.js */ "./static/assets/js/pages/orchestration/page-state-manager.js");
+/* harmony import */ var _e7_references_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../e7/references.ts */ "./static/assets/js/e7/references.ts");
+/* harmony import */ var _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../e7/user-manager.ts */ "./static/assets/js/e7/user-manager.ts");
+/* harmony import */ var _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./doc-element-references.js */ "./static/assets/js/pages/page-utilities/doc-element-references.js");
+/* harmony import */ var _orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../orchestration/inter-page-manager.ts */ "./static/assets/js/pages/orchestration/inter-page-manager.ts");
+/* harmony import */ var _content_manager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../content-manager.js */ "./static/assets/js/content-manager.js");
+/* harmony import */ var _utils_ts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils.ts */ "./static/assets/js/utils.ts");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+
+
+
+function navToHome() {
+  window.location.href = URL_UTILS.HOME_PAGE_URL;
+}
+
+// used for pages outside of home page to handle nav bar (will always switch pages)
+function addNavListeners() {
+  document.querySelectorAll(".nav-link").forEach(function (link) {
+    link.addEventListener("click", /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(event) {
+        var navType, user;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              navType = this.dataset.nav;
+              console.log("Clicked nav item:", navType);
+              if (!Object.values(_orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES).includes(navType)) {
+                _context.n = 9;
+                break;
+              }
+              if (!(navType === _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA)) {
+                _context.n = 2;
+                break;
+              }
+              _context.n = 1;
+              return _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(_orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA);
+            case 1:
+              navToHome();
+              _context.n = 8;
+              break;
+            case 2:
+              if (!(navType === _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS)) {
+                _context.n = 8;
+                break;
+              }
+              _context.n = 3;
+              return _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_2__["default"].getUser();
+            case 3:
+              user = _context.v;
+              if (user) {
+                _context.n = 6;
+                break;
+              }
+              _context.n = 4;
+              return _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(_orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA);
+            case 4:
+              _context.n = 5;
+              return _orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].pushState({
+                messages: ["Active user not found; you must either query a valid user or upload battles to view hero stats."],
+                actions: [_orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].ACTIONS.SHOW_NO_USER_MSG]
+              });
+            case 5:
+              navToHome();
+              _context.n = 8;
+              break;
+            case 6:
+              _context.n = 7;
+              return _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(_orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SHOW_STATS);
+            case 7:
+              navToHome();
+            case 8:
+              _context.n = 10;
+              break;
+            case 9:
+              // Default behavior continues as normal
+              console.log("Navigating to: ".concat(this.href));
+            case 10:
+              return _context.a(2);
+          }
+        }, _callee, this);
+      }));
+      return function (_x) {
+        return _ref.apply(this, arguments);
+      };
+    }());
+  });
+}
+function addClearDataBtnListener() {
+  _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.CLEAR_DATA_BTN.addEventListener("click", /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(_event) {
+      var user;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            _context2.n = 1;
+            return _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_2__["default"].getUser();
+          case 1:
+            user = _context2.v;
+            if (!user) {
+              _context2.n = 4;
+              break;
+            }
+            _context2.n = 2;
+            return _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(_orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA);
+          case 2:
+            _context2.n = 3;
+            return _orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].pushActions([_orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].ACTIONS.CLEAR_USER]);
+          case 3:
+            _context2.n = 6;
+            break;
+          case 4:
+            _context2.n = 5;
+            return _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(_orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA);
+          case 5:
+            _context2.n = 6;
+            return _orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].pushActions([_orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].ACTIONS.SHOW_DATA_ALREADY_CLEARED_MSG]);
+          case 6:
+            navToHome();
+          case 7:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
+}
+function writeUserInfo(user) {
+  if (user) {
+    _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.USER_NAME.innerText = user.name;
+    _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.USER_ID.innerText = user.id;
+    _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.USER_SERVER.innerText = _e7_references_ts__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR[user.world_code];
+  } else {
+    _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.USER_NAME.innerText = "(None)";
+    _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.USER_ID.innerText = "(None)";
+    _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.USER_SERVER.innerText = "(None)";
+  }
+}
+function addExportCSVBtnListener() {
+  _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.EXPORT_CSV_BTN.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+    var user, timestamp, fileName, battles, battlesList, csvStr;
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
+        case 0:
+          _context3.n = 1;
+          return _content_manager_js__WEBPACK_IMPORTED_MODULE_5__.CM.UserManager.getUser();
+        case 1:
+          user = _context3.v;
+          if (user) {
+            _context3.n = 4;
+            break;
+          }
+          _context3.n = 2;
+          return _orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].pushState({
+            messages: ["User not found; cannot export data without an active user"],
+            actions: [_orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_4__["default"].ACTIONS.SHOW_NO_USER_MSG]
+          });
+        case 2:
+          _context3.n = 3;
+          return _orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.PageStateManager.setState(_orchestration_page_state_manager_js__WEBPACK_IMPORTED_MODULE_0__.HOME_PAGE_STATES.SELECT_DATA);
+        case 3:
+          navToHome();
+        case 4:
+          timestamp = (0,_utils_ts__WEBPACK_IMPORTED_MODULE_6__.currentTimestamp)().split("T")[0] || "";
+          fileName = "".concat(user.name, " (").concat(user.id, ") ").concat(timestamp, ".csv");
+          _context3.n = 5;
+          return _content_manager_js__WEBPACK_IMPORTED_MODULE_5__.CM.BattleManager.getBattles();
+        case 5:
+          battles = _context3.v;
+          battlesList = Object.values(battles);
+          csvStr = (0,_utils_ts__WEBPACK_IMPORTED_MODULE_6__.convertBattlesToCSV)(battlesList);
+          (0,_utils_ts__WEBPACK_IMPORTED_MODULE_6__.downloadCSV)(csvStr, fileName);
+        case 6:
+          return _context3.a(2);
+      }
+    }, _callee3);
+  })));
+}
+function generateGGLink(user, lang) {
+  var url = "".concat(_e7_references_ts__WEBPACK_IMPORTED_MODULE_1__.E7_STOVE_HOME_URL, "/").concat(lang, "/gg/battlerecord/").concat(user.world_code, "/").concat(user.id);
+  return url;
+}
+function addOfficialSiteBtnListener() {
+  _doc_element_references_js__WEBPACK_IMPORTED_MODULE_3__["default"].NAV_BAR.OFFICIAL_SITE_BTN.addEventListener("click", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+    var user, lang, url;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
+        case 0:
+          _context4.n = 1;
+          return _content_manager_js__WEBPACK_IMPORTED_MODULE_5__.CM.UserManager.getUser();
+        case 1:
+          user = _context4.v;
+          if (user) {
+            _context4.n = 2;
+            break;
+          }
+          (0,_utils_ts__WEBPACK_IMPORTED_MODULE_6__.openUrlInNewTab)(_e7_references_ts__WEBPACK_IMPORTED_MODULE_1__.E7_GG_HOME_URL);
+          _context4.n = 4;
+          break;
+        case 2:
+          _context4.n = 3;
+          return _content_manager_js__WEBPACK_IMPORTED_MODULE_5__.CM.LangManager.getLang();
+        case 3:
+          lang = _context4.v;
+          url = generateGGLink(user, lang);
+          (0,_utils_ts__WEBPACK_IMPORTED_MODULE_6__.openUrlInNewTab)(url);
+        case 4:
+          return _context4.a(2);
+      }
+    }, _callee4);
+  })));
+}
+function initialize() {
+  return _initialize.apply(this, arguments);
+}
+function _initialize() {
+  _initialize = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+    var user;
+    return _regenerator().w(function (_context5) {
+      while (1) switch (_context5.n) {
+        case 0:
+          _context5.n = 1;
+          return _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_2__["default"].getUser();
+        case 1:
+          user = _context5.v;
+          writeUserInfo(user);
+          addNavListeners();
+          addClearDataBtnListener();
+          addExportCSVBtnListener();
+          addOfficialSiteBtnListener();
+        case 2:
+          return _context5.a(2);
+      }
+    }, _callee5);
+  }));
+  return _initialize.apply(this, arguments);
+}
+var NavBarUtils = {
+  addNavListeners: addNavListeners,
+  addClearDataBtnListener: addClearDataBtnListener,
+  writeUserInfo: writeUserInfo,
+  initialize: initialize,
+  navToHome: navToHome,
+  addExportCSVBtnListener: addExportCSVBtnListener,
+  addOfficialSiteBtnListener: addOfficialSiteBtnListener
+};
+
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/page-state-references.js":
+/*!************************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/page-state-references.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   HOME_PAGE_STATES: () => (/* binding */ HOME_PAGE_STATES)
+/* harmony export */ });
+var HOME_PAGE_STATES = {
+  SELECT_DATA: "select-data",
+  SHOW_STATS: "show-stats",
+  LOAD_DATA: "load-data"
+};
+
+/***/ }),
+
+/***/ "./static/assets/js/pages/page-utilities/page-utils.js":
+/*!*************************************************************!*\
+  !*** ./static/assets/js/pages/page-utilities/page-utils.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _e7_hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../e7/hero-manager.ts */ "./static/assets/js/e7/hero-manager.ts");
+/* harmony import */ var _e7_filter_parsing_filter_parser_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../e7/filter-parsing/filter-parser.ts */ "./static/assets/js/e7/filter-parsing/filter-parser.ts");
+/* harmony import */ var _orchestration_text_controller_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../orchestration/text-controller.js */ "./static/assets/js/pages/orchestration/text-controller.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+var PageUtils = {
+  addStrParam: function addStrParam(URL, key, val) {
+    var encodedParam = encodeURIComponent(val);
+    URL = "".concat(URL, "?").concat(key, "=").concat(encodedParam);
+    return URL;
+  },
+  addStrParams: function addStrParams(URL, obj) {
+    for (var key in obj) {
+      URL = this.addStrParam(URL, key, obj[key]);
+    }
+    return URL;
+  },
+  validateFilterSyntax: function () {
+    var _validateFilterSyntax = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(str) {
+      var HM, filterMSG, parser, _t;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            _context.n = 1;
+            return _e7_hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroManager();
+          case 1:
+            HM = _context.v;
+            filterMSG = document.getElementById("filterMSG");
+            _context.p = 2;
+            _context.n = 3;
+            return _e7_filter_parsing_filter_parser_ts__WEBPACK_IMPORTED_MODULE_1__.FilterParser.fromFilterStr(str, HM);
+          case 3:
+            parser = _context.v;
+            console.log(parser.asString());
+            _orchestration_text_controller_js__WEBPACK_IMPORTED_MODULE_2__.TextController.write(new _orchestration_text_controller_js__WEBPACK_IMPORTED_MODULE_2__.TextPacket("Validation Passed", filterMSG, [_orchestration_text_controller_js__WEBPACK_IMPORTED_MODULE_2__.TextController.STYLES.GREEN]));
+            return _context.a(2, true);
+          case 4:
+            _context.p = 4;
+            _t = _context.v;
+            console.error(_t);
+            _orchestration_text_controller_js__WEBPACK_IMPORTED_MODULE_2__.TextController.write(new _orchestration_text_controller_js__WEBPACK_IMPORTED_MODULE_2__.TextPacket("Validation Failed: ".concat(_t.message), filterMSG, [_orchestration_text_controller_js__WEBPACK_IMPORTED_MODULE_2__.TextController.STYLES.RED]));
+            return _context.a(2, false);
+        }
+      }, _callee, null, [[2, 4]]);
+    }));
+    function validateFilterSyntax(_x) {
+      return _validateFilterSyntax.apply(this, arguments);
+    }
+    return validateFilterSyntax;
+  }(),
+  setScrollPercent: function setScrollPercent(percent) {
+    console.log("Scrolling to ".concat(percent, "%"));
+    var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    var targetScroll = percent / 100 * maxScroll;
+    // Temporarily disable CSS smooth scrolling
+    var html = document.documentElement;
+    var prevScrollBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";
+    window.scrollTo({
+      top: targetScroll
+    });
+
+    // Restore previous behavior
+    html.style.scrollBehavior = prevScrollBehavior;
+  },
+  getScrollPercent: function getScrollPercent() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var scrollHeight = document.documentElement.scrollHeight;
+    var clientHeight = window.innerHeight;
+    var maxScroll = scrollHeight - clientHeight;
+    if (maxScroll === 0) return 0; // avoid division by zero
+
+    return scrollTop / maxScroll * 100;
+  },
+  setVisibility: function setVisibility(element, visible) {
+    if (visible) {
+      element.classList.remove("d-none");
+    } else {
+      element.classList.add("d-none");
+    }
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PageUtils);
+
+/***/ }),
+
 /***/ "./static/assets/js/utils.ts":
 /*!***********************************!*\
   !*** ./static/assets/js/utils.ts ***!
@@ -6639,6 +8418,83 @@ function openUrlInNewTab(url) {
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/async module */
+/******/ 	(() => {
+/******/ 		var hasSymbol = typeof Symbol === "function";
+/******/ 		var webpackQueues = hasSymbol ? Symbol("webpack queues") : "__webpack_queues__";
+/******/ 		var webpackExports = hasSymbol ? Symbol("webpack exports") : "__webpack_exports__";
+/******/ 		var webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		
+/******/ 		
+/******/ 		var resolveQueue = (queue) => {
+/******/ 			if(queue && queue.d < 1) {
+/******/ 				queue.d = 1;
+/******/ 				queue.forEach((fn) => (fn.r--));
+/******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
+/******/ 			}
+/******/ 		}
+/******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
+/******/ 			if(dep !== null && typeof dep === "object") {
+/******/ 		
+/******/ 				if(dep[webpackQueues]) return dep;
+/******/ 				if(dep.then) {
+/******/ 					var queue = [];
+/******/ 					queue.d = 0;
+/******/ 					dep.then((r) => {
+/******/ 						obj[webpackExports] = r;
+/******/ 						resolveQueue(queue);
+/******/ 					}, (e) => {
+/******/ 						obj[webpackError] = e;
+/******/ 						resolveQueue(queue);
+/******/ 					});
+/******/ 					var obj = {};
+/******/ 		
+/******/ 					obj[webpackQueues] = (fn) => (fn(queue));
+/******/ 					return obj;
+/******/ 				}
+/******/ 			}
+/******/ 			var ret = {};
+/******/ 			ret[webpackQueues] = x => {};
+/******/ 			ret[webpackExports] = dep;
+/******/ 			return ret;
+/******/ 		}));
+/******/ 		__webpack_require__.a = (module, body, hasAwait) => {
+/******/ 			var queue;
+/******/ 			hasAwait && ((queue = []).d = -1);
+/******/ 			var depQueues = new Set();
+/******/ 			var exports = module.exports;
+/******/ 			var currentDeps;
+/******/ 			var outerResolve;
+/******/ 			var reject;
+/******/ 			var promise = new Promise((resolve, rej) => {
+/******/ 				reject = rej;
+/******/ 				outerResolve = resolve;
+/******/ 			});
+/******/ 			promise[webpackExports] = exports;
+/******/ 			promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
+/******/ 			module.exports = promise;
+/******/ 			var handle = (deps) => {
+/******/ 				currentDeps = wrapDeps(deps);
+/******/ 				var fn;
+/******/ 				var getResult = () => (currentDeps.map((d) => {
+/******/ 		
+/******/ 					if(d[webpackError]) throw d[webpackError];
+/******/ 					return d[webpackExports];
+/******/ 				}))
+/******/ 				var promise = new Promise((resolve) => {
+/******/ 					fn = () => (resolve(getResult));
+/******/ 					fn.r = 0;
+/******/ 					var fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
+/******/ 					currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
+/******/ 				});
+/******/ 				return fn.r ? promise : getResult();
+/******/ 			}
+/******/ 			var done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
+/******/ 			body(handle, done);
+/******/ 			queue && queue.d < 0 && (queue.d = 0);
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -6668,70 +8524,12 @@ function openUrlInNewTab(url) {
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
-(() => {
-/*!****************************************!*\
-  !*** ./static/assets/js/pages/test.js ***!
-  \****************************************/
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../apis/e7-API.js */ "./static/assets/js/apis/e7-API.js");
-/* harmony import */ var _apis_py_API_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/py-API.js */ "./static/assets/js/apis/py-API.js");
-/* harmony import */ var _content_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../content-manager.js */ "./static/assets/js/content-manager.js");
-/* harmony import */ var _e7_battle_transform_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../e7/battle-transform.js */ "./static/assets/js/e7/battle-transform.js");
-/* harmony import */ var _utils_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils.ts */ "./static/assets/js/utils.ts");
-/* harmony import */ var _e7_searcher_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../e7/searcher.js */ "./static/assets/js/e7/searcher.js");
-/* harmony import */ var _e7_artifact_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../e7/artifact-manager.js */ "./static/assets/js/e7/artifact-manager.js");
-/* harmony import */ var _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../e7/season-manager.js */ "./static/assets/js/e7/season-manager.js");
-/* harmony import */ var _e7_filter_parsing_filter_parser_ts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../e7/filter-parsing/filter-parser.ts */ "./static/assets/js/e7/filter-parsing/filter-parser.ts");
-function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-
-
-
-
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-  var seasons, HM, info;
-  return _regenerator().w(function (_context) {
-    while (1) switch (_context.n) {
-      case 0:
-        _context.n = 1;
-        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__.CM.ClientCache.clearData();
-      case 1:
-        _context.n = 2;
-        return _e7_season_manager_js__WEBPACK_IMPORTED_MODULE_7__["default"].getSeasonDetails();
-      case 2:
-        seasons = _context.v;
-        console.log("Got seasons:", seasons, _typeof(seasons), seasons.length);
-        _context.n = 3;
-        return _content_manager_js__WEBPACK_IMPORTED_MODULE_2__.CM.HeroManager.getHeroManager();
-      case 3:
-        HM = _context.v;
-        _context.n = 4;
-        return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_0__["default"].fetchInfo(119456895, "world_korea");
-      case 4:
-        info = _context.v;
-        console.log(info);
-        _context.n = 5;
-        return _apis_e7_API_js__WEBPACK_IMPORTED_MODULE_0__["default"].fetchInfo(195863691, "world_global");
-      case 5:
-        info = _context.v;
-        console.log(info);
-      case 6:
-        return _context.a(2);
-    }
-  }, _callee);
-})));
-})();
-
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module used 'module' so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__("./static/assets/js/pages/filter-syntax.ts");
+/******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=test.004eead6a4278e3aea7a.bundle.js.map
+//# sourceMappingURL=filter-syntax.4cb492b3679baffed4ea.bundle.js.map

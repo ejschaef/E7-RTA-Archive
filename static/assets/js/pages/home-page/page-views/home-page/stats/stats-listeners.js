@@ -1,6 +1,6 @@
 import SavedFilters from "../../../../../e7/saved-filters.js";
 import PageUtils from "../../../../page-utilities/page-utils.js";
-import { Tables } from "../../../../../populate_content.js";
+import { Tables } from "../../../../../populate-content.js";
 import { CONTEXT } from "../../../home-page-context.js";
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
@@ -118,7 +118,6 @@ function addPlotlyLineAndMarkWidthListener() {
 		const originalXRange = Object.values(stats.battles).length;
 
 		const sizes = getSizes(originalXRange);
-
 
 		if (e["xaxis.range[0]"] !== undefined) {
 			console.log("Refitting marker and line sizes");

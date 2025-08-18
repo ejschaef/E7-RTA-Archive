@@ -126,11 +126,11 @@ function formatBattleAsRow(raw, HM, artifacts) {
 	return battle;
 }
 
-function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
+function buildFormattedBattleMap(rawBattles, HM, artifacts) {
 	artifacts = artifacts ?? ArtifactManager.getArtifacts();
 	let entries = [];
 	for (const rawBattle of rawBattles) {
-		let battle = formatBattleAsRow(rawBattle, HeroManager, artifacts);
+		let battle = formatBattleAsRow(rawBattle, HM, artifacts);
 		entries.push([battle["Seq Num"], battle]);
 	}
 	return Object.fromEntries(entries);

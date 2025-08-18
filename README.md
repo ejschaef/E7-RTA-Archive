@@ -1,4 +1,4 @@
-# [E7-RTA-Archive](https://RTA-Archive.org)
+# [E7-RTA-Archive](https://E7-RTA-Archive.cc)
 
 Open-source **Flask** project utilizing **Datta Able Dashboard** as a base, an open-source `Bootstrap` design.
 The web app is designed to provide Epic 7 players the ability to maintain their RTA History past 100 battles,
@@ -10,8 +10,8 @@ The web app is not meant to be viewed in portrait mode. The site will work, but 
 ## Features
 
 - RTA history plot
-- Various RTA KPIs and tables
 - Export and upload options to maintain history or allow users to conduct custom analytics
+- Various RTA KPIs and tables
 - Filter syntax allowing users to calculate statistics for specific matches
 - Search feature allowing users to find player names
 

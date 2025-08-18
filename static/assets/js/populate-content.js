@@ -3,9 +3,7 @@ import {
 	ARRAY_COLUMNS,
 	HERO_STATS_COLUMN_MAP,
 } from "./e7/references.ts";
-import { generateRankPlot, getZoom } from "./e7/plots.ts";
-import ClientCache from "./cache-manager.ts";
-import UserManager from "./e7/user-manager.ts";
+import { currentTimestamp } from "./utils.ts";
 import { Safe } from "./utils.ts";
 import DOC_ELEMENTS from "./pages/page-utilities/doc-element-references.js";
 

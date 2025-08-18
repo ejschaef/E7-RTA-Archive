@@ -2649,11 +2649,6 @@ const Keys = {
     HOME_PAGE_STATE: "home-page-state",
     INTER_PAGE_MANAGER: "inter-page-manager",
 };
-const FlagsToKeys = {
-    "autoZoom": Keys.AUTO_ZOOM_FLAG,
-    "autoQuery": Keys.AUTO_QUERY_FLAG,
-    "idSearch": Keys.ID_SEARCH_FLAG
-};
 let ClientCache = {
     consts: {
         DB_NAME: 'E7ArenaStatsClientDB',
@@ -2704,7 +2699,7 @@ let ClientCache = {
         }
     },
     cache: async function (id, data) {
-        console.log(`Caching ${id} with data: ${data}`);
+        console.log(`Caching ${id}`);
         const db = await this.openDB();
         await db.put(this.consts.STORE_NAME, data, id);
         await this.setTimestamp(id, Date.now());
@@ -2722,7 +2717,7 @@ let ClientCache = {
         const db = await this.openDB();
         const key = `${id + this.MetaKeys.TIMESTAMP}`;
         const timestamp = await db.get(this.consts.META_STORE_NAME, key);
-        return timestamp ?? null;
+        return timestamp ?? 0;
     },
     setTimestamp: async function (id, timestamp) {
         const db = await this.openDB();
@@ -2759,7 +2754,7 @@ let ClientCache = {
         const timestamp = await this.getTimestamp(id);
         const currentTime = Date.now();
         if (!timestamp || (currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
-            console.log(`Cache timeout for ${id}`);
+            console.log(`Cache timeout for ${id}; timestamp: ${timestamp}; currentTime: ${currentTime}`);
             await this.delete(id);
             return false;
         }
@@ -3543,7 +3538,7 @@ function formatBattleAsRow(raw, HM, artifacts) {
   addPrimeFields(battle, HM);
   return battle;
 }
-function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
+function buildFormattedBattleMap(rawBattles, HM, artifacts) {
   artifacts = artifacts !== null && artifacts !== void 0 ? artifacts : _artifact_manager_js__WEBPACK_IMPORTED_MODULE_1__["default"].getArtifacts();
   var entries = [];
   var _iterator = _createForOfIteratorHelper(rawBattles),
@@ -3551,7 +3546,7 @@ function buildFormattedBattleMap(rawBattles, HeroManager, artifacts) {
   try {
     for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var rawBattle = _step.value;
-      var battle = formatBattleAsRow(rawBattle, HeroManager, artifacts);
+      var battle = formatBattleAsRow(rawBattle, HM, artifacts);
       entries.push([battle["Seq Num"], battle]);
     }
   } catch (err) {
@@ -4577,7 +4572,7 @@ class ArtifactFn extends HeroListFn {
         const heroArtifacts = this.targetField(battle);
         for (let i = 0; i < heroes.length; i++) {
             if (heroes[i] === this.heroName) {
-                return this.targetArtifacts.every((artifact) => heroArtifacts[i].includes(artifact));
+                return this.targetArtifacts.some((artifact) => heroArtifacts[i].includes(artifact));
             }
         }
         return false;
@@ -7607,4 +7602,4 @@ function openUrlInNewTab(url) {
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=default.20b8747af874f59e0cf4.bundle.js.map
+//# sourceMappingURL=default.d36f0253fda14087d6b2.bundle.js.map

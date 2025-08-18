@@ -77,7 +77,7 @@ async function redirectError(err, source, stateDispatcher) {
 	console.error(err);
 	await CM.UserManager.clearUserData();
 	NavBarUtils.writeUserInfo(null);
-	stateDispatcher(sourceState);
+	await stateDispatcher(sourceState);
 	return;
 }
 
@@ -105,7 +105,8 @@ async function runLogic(stateDispatcher) {
 		autoQuery = CONTEXT.popKey(CONTEXT.KEYS.AUTO_QUERY);
 	} catch (e) {
 		console.error("Could not load reference and context variables: ", e);
-		stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+		await stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+		return;
 	}
 
 	try {
@@ -129,7 +130,7 @@ async function runLogic(stateDispatcher) {
 
 		// if new user query or auto query from upload battles we query the users battles from the server and add to cache
 		if (autoQuery || SOURCE === CONTEXT.VALUES.SOURCE.QUERY) {
-			await handleBattleQuery(user, stateDispatcher, HM);
+			await handleBattleQuery(user, HM);
 		}
 
 		// retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
@@ -150,12 +151,13 @@ async function runLogic(stateDispatcher) {
 
 		await StatsView.populateContent(); // populates tables and plots in show stats view before showing
 		CONTEXT.STATS_PRE_RENDER_COMPLETED = true; // flag that the stats page doesn't need to run populate content itself
-		stateDispatcher(HOME_PAGE_STATES.SHOW_STATS);
 		console.log("REACHED END OF LOAD DATA LOGIC");
+		await stateDispatcher(HOME_PAGE_STATES.SHOW_STATS);
 		return;
 	} catch (err) {
 		try {
-			redirectError(err, SOURCE, stateDispatcher);
+			await redirectError(err, SOURCE, stateDispatcher);
+			return;
 		} catch (err) {
 			console.error(
 				`Something went wrong ; redirecting to select data ; error:`,
@@ -163,7 +165,8 @@ async function runLogic(stateDispatcher) {
 			);
 			await CM.UserManager.clearUserData();
 			NavBarUtils.writeUserInfo(null);
-			stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+			await stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+			return;
 		}
 	}
 }
