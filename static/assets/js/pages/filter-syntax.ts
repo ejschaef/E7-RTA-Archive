@@ -127,9 +127,9 @@ async function addText() {
 
 async function main() {
 	await addText();
-	PageUtils.setVisibility(DOC_ELEMENTS.FILTER_SYNTAX_PAGE.ALL_CONTENT_CONTAINER, true);
-	initializeCodeBlocksAndAddListeners();
 	await NavBarUtils.initialize();
+	PageUtils.setVisibility(DOC_ELEMENTS.BODY_FOOTER_CONTAINER, true);
+	initializeCodeBlocksAndAddListeners();
 }
 
 await main();

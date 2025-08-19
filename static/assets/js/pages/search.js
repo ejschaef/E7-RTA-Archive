@@ -95,7 +95,7 @@ async function main() {
 	initializeTable();
 	addSearchListener();
 	PageUtils.setVisibility(
-		DOC_ELEMENTS.SEARCH_PAGE.SEARCH_TABLE_CONTAINER,
+		DOC_ELEMENTS.BODY_FOOTER_CONTAINER,
 		true
 	);
 }

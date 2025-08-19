@@ -199,6 +199,11 @@ let DOC_ELEMENTS = {
 	NAV_BAR: new NavBarElements(),
 	SEARCH_PAGE: new SEARCH_PAGE_ELEMENTS(),
 	FILTER_SYNTAX_PAGE: new FILTER_SYNTAX_PAGE_ELEMENTS(),
+	get BODY_FOOTER_CONTAINER() {
+		return (this._BODY_FOOTER_CONTAINER ||= Safe.unwrapHtmlElt(
+			"body-footer-container"
+		));
+	}
 };
 
 export default DOC_ELEMENTS;

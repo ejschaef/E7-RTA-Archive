@@ -23,10 +23,12 @@
       {% include "includes/navigation-home-page.html" %}
     {% endblock navigation %}
 
+    <div class="body-footer-container" id="body-footer-container">
     {% block content %}{% endblock content %}
     {% block footer %}
       {% include "includes/footer-home-page.html" %}
     {% endblock footer %}
+    </div>
 
     {% include "includes/scripts.html" %}
     {% include "includes/post-scripts.html" %}

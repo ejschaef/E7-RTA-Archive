@@ -19904,6 +19904,7 @@ pre[class*=language-]>code {
 .pc-container {
   position: relative;
   top: 60px;
+  flex: 1;
   margin-left: 208px;
   margin-top: .25rem;
   min-height: 100%;

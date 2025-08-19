@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base-hidden.html" %}
 
 {% block title %}Search{% endblock title %}
 
@@ -35,7 +35,7 @@
                 <button type="submit" id="search-submit-btn" class="btn shadow px-sm-1 filter-pane-btn">Search</button>
               </form>
             </div>
-            <div class="row justify-content-center d-flex d-none" id="search-table-container">
+            <div class="row justify-content-center d-flex" id="search-table-container">
               <table id="search-table" class="display compact cell-border" style="width:100%">
                 <thead>
                   <tr>
