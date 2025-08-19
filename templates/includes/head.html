@@ -7,7 +7,15 @@
 <meta name="author" content="ejschaef">
 
 <!-- [app icon] icon -->
-<link rel="icon" href="{{ url_for('static', filename='assets/images/app-icon.svg') }}" type="image/x-icon"> <!-- [Font] Family -->
+<link rel="icon" href="{{ url_for('static', filename='assets/images/app-icon.svg') }}" type="image/svg+xml"> 
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/images/icons/app-icon-32px.png') }}" sizes="32x32">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/images/icons/app-icon-16px.png') }}" sizes="16x16">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/images/icons/app-icon-48px.png') }}" sizes="48x48">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/images/icons/app-icon-64px.png') }}" sizes="64x64">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/images/icons/app-icon-96px.png') }}" sizes="96x96">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/images/icons/app-icon-128px.png') }}" sizes="128x128">
+
+<!-- [Font] Family -->
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <!-- [Tabler Icons] https://tablericons.com -->
 <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/tabler-icons.min.css') }}" >

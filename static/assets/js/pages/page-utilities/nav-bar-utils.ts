@@ -17,7 +17,15 @@ import { ContentManager } from "../../content-manager.ts";
 
 
 function openUrlInNewTab(url: string) {
-	window.open(url, "_blank", "noopener,noreferrer");
+	const a = document.createElement("a");
+	a.classList.add("d-none");
+	a.href = url;
+	a.target = "_blank";
+	a.rel = "noopener noreferrer";
+	// Append to DOM to make sure it works in all browsers
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
 }
 
 function navToHome() {
