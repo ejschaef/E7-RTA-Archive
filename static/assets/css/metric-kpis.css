@@ -1,7 +1,7 @@
 :root {
     --kpi-border-color: #ffffff4d;
-    --padding-header: 3%;
-    --padding-body-top: 2%;
+    --padding-header: 1rem;
+    --padding-body-top: 1rem;
     --padding-body-side: 5%;
 }
 

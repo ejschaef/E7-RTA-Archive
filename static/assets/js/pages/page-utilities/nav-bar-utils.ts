@@ -77,7 +77,9 @@ function addBraceButtonListeners() {
 
 		// Remove sticky focus on mobile
 		btn.addEventListener('touchend', () => {
-			btn.blur();
+			setTimeout(() => {
+				btn.blur();
+			}, 0);
 		});
 	});
 }

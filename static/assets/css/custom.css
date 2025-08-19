@@ -459,8 +459,13 @@ button.brace-btn {
   user-select: none;
 }
 
-button.brace-btn:focus {
+button.brace-btn:focus:not(:focus-visible) {
   outline: none;
+  box-shadow: none; /* Explicitly remove hover shadow if it gets stuck */
+}
+
+button.brace-btn:focus-visible {
+  box-shadow: inset 0px 0px 1.3em #0cdfe3;
 }
 
 button.brace-btn::after {
@@ -521,9 +526,11 @@ button.brace-btn:active {
 
 
 .body-footer-container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;     /* full viewport height */
+  margin-left: 208px;
+  min-height: 90vh;     /* full viewport height */
 }
 
 

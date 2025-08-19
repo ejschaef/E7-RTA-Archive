@@ -1,0 +1,2025 @@
+/*!************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/fonts/material.css ***!
+  \************************************************************************************/
+/* fallback */
+@font-face {
+  font-family: 'Material Icons Two Tone';
+  font-style: normal;
+  font-weight: 400;
+  src: url(630bc06d1939d27db28a.woff2) format('woff2');
+}
+
+.material-icons-two-tone {
+  font-family: 'Material Icons Two Tone';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/*!***********************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/fonts/feather.css ***!
+  \***********************************************************************************/
+@font-face {
+  font-family: 'feather';
+  src: url(ba142c9a3d0f5747c347.eot?t=1525787366991); /* IE9*/
+  src: url(ba142c9a3d0f5747c347.eot?t=1525787366991#iefix) format('embedded-opentype'),
+    /* IE6-IE8 */ url(3fa166a56aa3839c5d12.woff?t=1525787366991) format('woff'),
+    /* chrome, firefox */ url(aaacbaee6c14b4207d39.ttf?t=1525787366991) format('truetype'),
+    /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/ url(68000ec2e5401dd81479.svg?t=1525787366991#feather) format('svg'); /* iOS 4.1- */
+}
+
+.feather {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'feather' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-alert-octagon:before {
+  content: '\e81b';
+}
+
+.icon-alert-circle:before {
+  content: '\e81c';
+}
+
+.icon-activity:before {
+  content: '\e81d';
+}
+
+.icon-alert-triangle:before {
+  content: '\e81e';
+}
+
+.icon-align-center:before {
+  content: '\e81f';
+}
+
+.icon-airplay:before {
+  content: '\e820';
+}
+
+.icon-align-justify:before {
+  content: '\e821';
+}
+
+.icon-align-left:before {
+  content: '\e822';
+}
+
+.icon-align-right:before {
+  content: '\e823';
+}
+
+.icon-arrow-down-left:before {
+  content: '\e824';
+}
+
+.icon-arrow-down-right:before {
+  content: '\e825';
+}
+
+.icon-anchor:before {
+  content: '\e826';
+}
+
+.icon-aperture:before {
+  content: '\e827';
+}
+
+.icon-arrow-left:before {
+  content: '\e828';
+}
+
+.icon-arrow-right:before {
+  content: '\e829';
+}
+
+.icon-arrow-down:before {
+  content: '\e82a';
+}
+
+.icon-arrow-up-left:before {
+  content: '\e82b';
+}
+
+.icon-arrow-up-right:before {
+  content: '\e82c';
+}
+
+.icon-arrow-up:before {
+  content: '\e82d';
+}
+
+.icon-award:before {
+  content: '\e82e';
+}
+
+.icon-bar-chart:before {
+  content: '\e82f';
+}
+
+.icon-at-sign:before {
+  content: '\e830';
+}
+
+.icon-bar-chart-2:before {
+  content: '\e831';
+}
+
+.icon-battery-charging:before {
+  content: '\e832';
+}
+
+.icon-bell-off:before {
+  content: '\e833';
+}
+
+.icon-battery:before {
+  content: '\e834';
+}
+
+.icon-bluetooth:before {
+  content: '\e835';
+}
+
+.icon-bell:before {
+  content: '\e836';
+}
+
+.icon-book:before {
+  content: '\e837';
+}
+
+.icon-briefcase:before {
+  content: '\e838';
+}
+
+.icon-camera-off:before {
+  content: '\e839';
+}
+
+.icon-calendar:before {
+  content: '\e83a';
+}
+
+.icon-bookmark:before {
+  content: '\e83b';
+}
+
+.icon-box:before {
+  content: '\e83c';
+}
+
+.icon-camera:before {
+  content: '\e83d';
+}
+
+.icon-check-circle:before {
+  content: '\e83e';
+}
+
+.icon-check:before {
+  content: '\e83f';
+}
+
+.icon-check-square:before {
+  content: '\e840';
+}
+
+.icon-cast:before {
+  content: '\e841';
+}
+
+.icon-chevron-down:before {
+  content: '\e842';
+}
+
+.icon-chevron-left:before {
+  content: '\e843';
+}
+
+.icon-chevron-right:before {
+  content: '\e844';
+}
+
+.icon-chevron-up:before {
+  content: '\e845';
+}
+
+.icon-chevrons-down:before {
+  content: '\e846';
+}
+
+.icon-chevrons-right:before {
+  content: '\e847';
+}
+
+.icon-chevrons-up:before {
+  content: '\e848';
+}
+
+.icon-chevrons-left:before {
+  content: '\e849';
+}
+
+.icon-circle:before {
+  content: '\e84a';
+}
+
+.icon-clipboard:before {
+  content: '\e84b';
+}
+
+.icon-chrome:before {
+  content: '\e84c';
+}
+
+.icon-clock:before {
+  content: '\e84d';
+}
+
+.icon-cloud-lightning:before {
+  content: '\e84e';
+}
+
+.icon-cloud-drizzle:before {
+  content: '\e84f';
+}
+
+.icon-cloud-rain:before {
+  content: '\e850';
+}
+
+.icon-cloud-off:before {
+  content: '\e851';
+}
+
+.icon-codepen:before {
+  content: '\e852';
+}
+
+.icon-cloud-snow:before {
+  content: '\e853';
+}
+
+.icon-compass:before {
+  content: '\e854';
+}
+
+.icon-copy:before {
+  content: '\e855';
+}
+
+.icon-corner-down-right:before {
+  content: '\e856';
+}
+
+.icon-corner-down-left:before {
+  content: '\e857';
+}
+
+.icon-corner-left-down:before {
+  content: '\e858';
+}
+
+.icon-corner-left-up:before {
+  content: '\e859';
+}
+
+.icon-corner-up-left:before {
+  content: '\e85a';
+}
+
+.icon-corner-up-right:before {
+  content: '\e85b';
+}
+
+.icon-corner-right-down:before {
+  content: '\e85c';
+}
+
+.icon-corner-right-up:before {
+  content: '\e85d';
+}
+
+.icon-cpu:before {
+  content: '\e85e';
+}
+
+.icon-credit-card:before {
+  content: '\e85f';
+}
+
+.icon-crosshair:before {
+  content: '\e860';
+}
+
+.icon-disc:before {
+  content: '\e861';
+}
+
+.icon-delete:before {
+  content: '\e862';
+}
+
+.icon-download-cloud:before {
+  content: '\e863';
+}
+
+.icon-download:before {
+  content: '\e864';
+}
+
+.icon-droplet:before {
+  content: '\e865';
+}
+
+.icon-edit-2:before {
+  content: '\e866';
+}
+
+.icon-edit:before {
+  content: '\e867';
+}
+
+.icon-edit-1:before {
+  content: '\e868';
+}
+
+.icon-external-link:before {
+  content: '\e869';
+}
+
+.icon-eye:before {
+  content: '\e86a';
+}
+
+.icon-feather:before {
+  content: '\e86b';
+}
+
+.icon-facebook:before {
+  content: '\e86c';
+}
+
+.icon-file-minus:before {
+  content: '\e86d';
+}
+
+.icon-eye-off:before {
+  content: '\e86e';
+}
+
+.icon-fast-forward:before {
+  content: '\e86f';
+}
+
+.icon-file-text:before {
+  content: '\e870';
+}
+
+.icon-film:before {
+  content: '\e871';
+}
+
+.icon-file:before {
+  content: '\e872';
+}
+
+.icon-file-plus:before {
+  content: '\e873';
+}
+
+.icon-folder:before {
+  content: '\e874';
+}
+
+.icon-filter:before {
+  content: '\e875';
+}
+
+.icon-flag:before {
+  content: '\e876';
+}
+
+.icon-globe:before {
+  content: '\e877';
+}
+
+.icon-grid:before {
+  content: '\e878';
+}
+
+.icon-heart:before {
+  content: '\e879';
+}
+
+.icon-home:before {
+  content: '\e87a';
+}
+
+.icon-github:before {
+  content: '\e87b';
+}
+
+.icon-image:before {
+  content: '\e87c';
+}
+
+.icon-inbox:before {
+  content: '\e87d';
+}
+
+.icon-layers:before {
+  content: '\e87e';
+}
+
+.icon-info:before {
+  content: '\e87f';
+}
+
+.icon-instagram:before {
+  content: '\e880';
+}
+
+.icon-layout:before {
+  content: '\e881';
+}
+
+.icon-link-2:before {
+  content: '\e882';
+}
+
+.icon-life-buoy:before {
+  content: '\e883';
+}
+
+.icon-link:before {
+  content: '\e884';
+}
+
+.icon-log-in:before {
+  content: '\e885';
+}
+
+.icon-list:before {
+  content: '\e886';
+}
+
+.icon-lock:before {
+  content: '\e887';
+}
+
+.icon-log-out:before {
+  content: '\e888';
+}
+
+.icon-loader:before {
+  content: '\e889';
+}
+
+.icon-mail:before {
+  content: '\e88a';
+}
+
+.icon-maximize-2:before {
+  content: '\e88b';
+}
+
+.icon-map:before {
+  content: '\e88c';
+}
+
+.icon-map-pin:before {
+  content: '\e88e';
+}
+
+.icon-menu:before {
+  content: '\e88f';
+}
+
+.icon-message-circle:before {
+  content: '\e890';
+}
+
+.icon-message-square:before {
+  content: '\e891';
+}
+
+.icon-minimize-2:before {
+  content: '\e892';
+}
+
+.icon-mic-off:before {
+  content: '\e893';
+}
+
+.icon-minus-circle:before {
+  content: '\e894';
+}
+
+.icon-mic:before {
+  content: '\e895';
+}
+
+.icon-minus-square:before {
+  content: '\e896';
+}
+
+.icon-minus:before {
+  content: '\e897';
+}
+
+.icon-moon:before {
+  content: '\e898';
+}
+
+.icon-monitor:before {
+  content: '\e899';
+}
+
+.icon-more-vertical:before {
+  content: '\e89a';
+}
+
+.icon-more-horizontal:before {
+  content: '\e89b';
+}
+
+.icon-move:before {
+  content: '\e89c';
+}
+
+.icon-music:before {
+  content: '\e89d';
+}
+
+.icon-navigation-2:before {
+  content: '\e89e';
+}
+
+.icon-navigation:before {
+  content: '\e89f';
+}
+
+.icon-octagon:before {
+  content: '\e8a0';
+}
+
+.icon-package:before {
+  content: '\e8a1';
+}
+
+.icon-pause-circle:before {
+  content: '\e8a2';
+}
+
+.icon-pause:before {
+  content: '\e8a3';
+}
+
+.icon-percent:before {
+  content: '\e8a4';
+}
+
+.icon-phone-call:before {
+  content: '\e8a5';
+}
+
+.icon-phone-forwarded:before {
+  content: '\e8a6';
+}
+
+.icon-phone-missed:before {
+  content: '\e8a7';
+}
+
+.icon-phone-off:before {
+  content: '\e8a8';
+}
+
+.icon-phone-incoming:before {
+  content: '\e8a9';
+}
+
+.icon-phone:before {
+  content: '\e8aa';
+}
+
+.icon-phone-outgoing:before {
+  content: '\e8ab';
+}
+
+.icon-pie-chart:before {
+  content: '\e8ac';
+}
+
+.icon-play-circle:before {
+  content: '\e8ad';
+}
+
+.icon-play:before {
+  content: '\e8ae';
+}
+
+.icon-plus-square:before {
+  content: '\e8af';
+}
+
+.icon-plus-circle:before {
+  content: '\e8b0';
+}
+
+.icon-plus:before {
+  content: '\e8b1';
+}
+
+.icon-pocket:before {
+  content: '\e8b2';
+}
+
+.icon-printer:before {
+  content: '\e8b3';
+}
+
+.icon-power:before {
+  content: '\e8b4';
+}
+
+.icon-radio:before {
+  content: '\e8b5';
+}
+
+.icon-repeat:before {
+  content: '\e8b6';
+}
+
+.icon-refresh-ccw:before {
+  content: '\e8b7';
+}
+
+.icon-rewind:before {
+  content: '\e8b8';
+}
+
+.icon-rotate-ccw:before {
+  content: '\e8b9';
+}
+
+.icon-refresh-cw:before {
+  content: '\e8ba';
+}
+
+.icon-rotate-cw:before {
+  content: '\e8bb';
+}
+
+.icon-save:before {
+  content: '\e8bc';
+}
+
+.icon-search:before {
+  content: '\e8bd';
+}
+
+.icon-server:before {
+  content: '\e8be';
+}
+
+.icon-scissors:before {
+  content: '\e8bf';
+}
+
+.icon-share-2:before {
+  content: '\e8c0';
+}
+
+.icon-share:before {
+  content: '\e8c1';
+}
+
+.icon-shield:before {
+  content: '\e8c2';
+}
+
+.icon-settings:before {
+  content: '\e8c3';
+}
+
+.icon-skip-back:before {
+  content: '\e8c4';
+}
+
+.icon-shuffle:before {
+  content: '\e8c5';
+}
+
+.icon-sidebar:before {
+  content: '\e8c6';
+}
+
+.icon-skip-forward:before {
+  content: '\e8c7';
+}
+
+.icon-slack:before {
+  content: '\e8c8';
+}
+
+.icon-slash:before {
+  content: '\e8c9';
+}
+
+.icon-smartphone:before {
+  content: '\e8ca';
+}
+
+.icon-square:before {
+  content: '\e8cb';
+}
+
+.icon-speaker:before {
+  content: '\e8cc';
+}
+
+.icon-star:before {
+  content: '\e8cd';
+}
+
+.icon-stop-circle:before {
+  content: '\e8ce';
+}
+
+.icon-sun:before {
+  content: '\e8cf';
+}
+
+.icon-sunrise:before {
+  content: '\e8d0';
+}
+
+.icon-tablet:before {
+  content: '\e8d1';
+}
+
+.icon-tag:before {
+  content: '\e8d2';
+}
+
+.icon-sunset:before {
+  content: '\e8d3';
+}
+
+.icon-target:before {
+  content: '\e8d4';
+}
+
+.icon-thermometer:before {
+  content: '\e8d5';
+}
+
+.icon-thumbs-up:before {
+  content: '\e8d6';
+}
+
+.icon-thumbs-down:before {
+  content: '\e8d7';
+}
+
+.icon-toggle-left:before {
+  content: '\e8d8';
+}
+
+.icon-toggle-right:before {
+  content: '\e8d9';
+}
+
+.icon-trash-2:before {
+  content: '\e8da';
+}
+
+.icon-trash:before {
+  content: '\e8db';
+}
+
+.icon-trending-up:before {
+  content: '\e8dc';
+}
+
+.icon-trending-down:before {
+  content: '\e8dd';
+}
+
+.icon-triangle:before {
+  content: '\e8de';
+}
+
+.icon-type:before {
+  content: '\e8df';
+}
+
+.icon-twitter:before {
+  content: '\e8e0';
+}
+
+.icon-upload:before {
+  content: '\e8e1';
+}
+
+.icon-umbrella:before {
+  content: '\e8e2';
+}
+
+.icon-upload-cloud:before {
+  content: '\e8e3';
+}
+
+.icon-unlock:before {
+  content: '\e8e4';
+}
+
+.icon-user-check:before {
+  content: '\e8e5';
+}
+
+.icon-user-minus:before {
+  content: '\e8e6';
+}
+
+.icon-user-plus:before {
+  content: '\e8e7';
+}
+
+.icon-user-x:before {
+  content: '\e8e8';
+}
+
+.icon-user:before {
+  content: '\e8e9';
+}
+
+.icon-users:before {
+  content: '\e8ea';
+}
+
+.icon-video-off:before {
+  content: '\e8eb';
+}
+
+.icon-video:before {
+  content: '\e8ec';
+}
+
+.icon-voicemail:before {
+  content: '\e8ed';
+}
+
+.icon-volume-x:before {
+  content: '\e8ee';
+}
+
+.icon-volume-2:before {
+  content: '\e8ef';
+}
+
+.icon-volume-1:before {
+  content: '\e8f0';
+}
+
+.icon-volume:before {
+  content: '\e8f1';
+}
+
+.icon-watch:before {
+  content: '\e8f2';
+}
+
+.icon-wifi:before {
+  content: '\e8f3';
+}
+
+.icon-x-square:before {
+  content: '\e8f4';
+}
+
+.icon-wind:before {
+  content: '\e8f5';
+}
+
+.icon-x:before {
+  content: '\e8f6';
+}
+
+.icon-x-circle:before {
+  content: '\e8f7';
+}
+
+.icon-zap:before {
+  content: '\e8f8';
+}
+
+.icon-zoom-in:before {
+  content: '\e8f9';
+}
+
+.icon-zoom-out:before {
+  content: '\e8fa';
+}
+
+.icon-command:before {
+  content: '\e8fb';
+}
+
+.icon-cloud:before {
+  content: '\e8fc';
+}
+
+.icon-hash:before {
+  content: '\e8fd';
+}
+
+.icon-headphones:before {
+  content: '\e8fe';
+}
+
+.icon-underline:before {
+  content: '\e8ff';
+}
+
+.icon-italic:before {
+  content: '\e900';
+}
+
+.icon-bold:before {
+  content: '\e901';
+}
+
+.icon-crop:before {
+  content: '\e902';
+}
+
+.icon-help-circle:before {
+  content: '\e903';
+}
+
+.icon-paperclip:before {
+  content: '\e904';
+}
+
+.icon-shopping-cart:before {
+  content: '\e905';
+}
+
+.icon-tv:before {
+  content: '\e906';
+}
+
+.icon-wifi-off:before {
+  content: '\e907';
+}
+
+.icon-minimize:before {
+  content: '\e88d';
+}
+
+.icon-maximize:before {
+  content: '\e908';
+}
+
+.icon-gitlab:before {
+  content: '\e909';
+}
+
+.icon-sliders:before {
+  content: '\e90a';
+}
+
+.icon-star-on:before {
+  content: '\e90b';
+}
+
+.icon-heart-on:before {
+  content: '\e90c';
+}
+
+.icon-archive:before {
+  content: '\e90d';
+}
+
+.icon-arrow-down-circle:before {
+  content: '\e90e';
+}
+
+.icon-arrow-up-circle:before {
+  content: '\e90f';
+}
+
+.icon-arrow-left-circle:before {
+  content: '\e910';
+}
+
+.icon-arrow-right-circle:before {
+  content: '\e911';
+}
+
+.icon-bar-chart-line-:before {
+  content: '\e912';
+}
+
+.icon-bar-chart-line:before {
+  content: '\e913';
+}
+
+.icon-book-open:before {
+  content: '\e914';
+}
+
+.icon-code:before {
+  content: '\e915';
+}
+
+.icon-database:before {
+  content: '\e916';
+}
+
+.icon-dollar-sign:before {
+  content: '\e917';
+}
+
+.icon-folder-plus:before {
+  content: '\e918';
+}
+
+.icon-gift:before {
+  content: '\e919';
+}
+
+.icon-folder-minus:before {
+  content: '\e91a';
+}
+
+.icon-git-commit:before {
+  content: '\e91b';
+}
+
+.icon-git-branch:before {
+  content: '\e91c';
+}
+
+.icon-git-pull-request:before {
+  content: '\e91d';
+}
+
+.icon-git-merge:before {
+  content: '\e91e';
+}
+
+.icon-linkedin:before {
+  content: '\e91f';
+}
+
+.icon-hard-drive:before {
+  content: '\e920';
+}
+
+.icon-more-vertical-:before {
+  content: '\e921';
+}
+
+.icon-more-horizontal-:before {
+  content: '\e922';
+}
+
+.icon-rss:before {
+  content: '\e923';
+}
+
+.icon-send:before {
+  content: '\e924';
+}
+
+.icon-shield-off:before {
+  content: '\e925';
+}
+
+.icon-shopping-bag:before {
+  content: '\e926';
+}
+
+.icon-terminal:before {
+  content: '\e927';
+}
+
+.icon-truck:before {
+  content: '\e928';
+}
+
+.icon-zap-off:before {
+  content: '\e929';
+}
+
+.icon-youtube:before {
+  content: '\e92a';
+}
+
+/*!********************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/css/custom.css ***!
+  \********************************************************************************/
+table.dataTable td {
+    font-size: 0.8em;
+}
+
+table.dataTable th {
+    font-size: .9em;
+}
+
+div.dt-container {
+    font-size: 0.7em;
+}
+
+/* .dataTables_scroll {
+    overflow:auto;
+    display:inline-block
+} */
+
+/* Apply to the DataTable container */
+table.dataTable {
+    background-color: #121212;
+    color: rgba(255, 255, 255, 0.87);
+    font-family: 'Open Sans';
+}
+
+/* Header */
+table.dataTable thead {
+    background-color: #1E1E1E;
+    color: rgba(255, 255, 255, 0.87);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Header cells */
+table.dataTable thead th {
+    border-color: rgba(255, 255, 255, 0.12);
+    font-weight: 500;
+    text-align: left !important;
+}
+
+/* Body rows */
+table.dataTable tbody tr {
+    background-color: #232323;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+table.dataTable tbody tr:hover {
+    background-color: #595959;
+}
+
+/* Body cells */
+table.dataTable tbody td {
+    color: rgba(255, 255, 255, 0.87);
+    white-space: normal !important;
+    word-wrap: break-word;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    text-align: left !important;
+    padding: 2px 6px !important
+}
+
+.btn {
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: #1e222d;
+    --bs-btn-border-color: #444444;
+    --bs-btn-hover-color: #0cdfe3;
+    --bs-btn-hover-bg: #14171e;
+    --bs-btn-hover-border-color: #0cdfe3;
+    --bs-btn-focus-shadow-rgb: 42, 182, 247;
+    --bs-btn-active-color: #0ca9ab;
+    --bs-btn-active-bg: #000000;
+    --bs-btn-active-border-color: #0cdfe3;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #ffffff;
+    --bs-btn-disabled-bg: #888888;
+    --bs-btn-disabled-border-color: #424242;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #e2e2e2;
+}
+
+input,
+textarea {
+    background-color: #f6f6f6;
+    /* Dark background */
+    color: #464646;
+    /* Light text color */
+    border: 1px solid #161616;
+    /* Border color */
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Background color when the input is valid (i.e., has some value) */
+input:valid,
+textarea:valid {
+    background-color: #f6f6f6;
+    color: #464646;
+    border-color: #212529;
+}
+
+input.filled, .form-control {
+    background-color: #f6f6f6 !important; /* light background */
+    color: #464646 !important;    
+    border-color: #212529 !important;  
+  }
+
+  .custom-input::placeholder {
+    color: #6e6e6e; /* your desired color */
+    opacity: 1;     /* remove default opacity if needed */
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #f6f6f6 inset !important;
+    -webkit-text-fill-color: #464646 !important;
+  }
+
+  .fixed-height-table-header {
+    height: 95px;       /* or any px, %, vh, etc. */
+    overflow: hidden;      /* optional: allows scrolling if content overflows */
+    padding: 5%;
+  }
+
+  .scrollable-300px {
+    overflow-y: auto;
+    max-height: 300px;
+  }
+
+  .scrollable-200px {
+    overflow-y: auto;
+    max-height: 200px;
+  }
+
+  .scrollable-35px {
+    overflow-y: auto;
+    max-height: 35px;
+  }
+
+  .scrollable-40px {
+    overflow-y: auto;
+    max-height: 40px;
+    min-height: 40px;
+    height: 40px;
+  }
+
+  .scrollable-50px {
+    overflow-y: auto;
+    max-height: 50px;
+  }
+
+  .scrollable-55px {
+    overflow-y: auto;
+    max-height: 55px;
+  }
+
+  .scrollable-60px {
+    overflow-y: auto;
+    max-height: 60px;
+  }
+
+  .scrollable {
+    overflow-y: auto;
+  }
+
+  table.scrollables {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+    position:relative;
+}
+table.scrollables thead {
+    /* head takes the height it requires, 
+    and it's not scaled when table is resized */
+    flex: 0 0 auto;
+    display: block;
+    overflow-y: scroll;
+    scrollbar-width: 16px;
+}
+table.scrollables tbody {
+    /* body takes all the remaining available space */
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: scroll;
+}
+
+table.scrollables thead {
+   white-space: nowrap;
+   scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  /* Reserve space manually — typical scrollbar width is ~16px */
+  padding-right: 16px; 
+  box-sizing: content-box;
+}
+
+table.scrollables tr {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+
+.scroll-hidden {
+  overflow: scroll; /* or auto if conditional */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  /* Reserve space manually — typical scrollbar width is ~16px */
+  padding-right: 16px; 
+  box-sizing: content-box;
+}
+
+.table.scrollables thead::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Edge */
+}
+
+table.dataTable.w-100 th, 
+table.dataTable.w-100 td {
+  min-width: 100px !important;
+}
+
+
+
+  table.col1-150 td:first-child,
+  table.col1-150 th:first-child {
+    width: 150px !important; /* or any width you want */
+  }
+
+  table.align-center-except-first th:not(:first-child),
+  table.align-center-except-first td:not(:first-child) {
+    text-align: center;
+  }
+
+  table.col2-30 td:nth-child(2),
+  table.col2-30 th:nth-child(2) {
+    width: 30% !important; /* or any width you want */
+  }
+
+  table.col1-justify-start th:nth-child(1),
+  table.col1-justify-start td:nth-child(1) {
+    text-align: left !important;
+    width: 10% !important;
+  }
+
+  table.align-center-except-second th:not(:nth-child(2)),
+  table.align-center-except-second td:not(:nth-child(2)) {
+    text-align: center;
+  }
+
+  table.body-200 tbody {
+    /* body takes all the remaining available space */
+    height: 200px;
+  }
+
+  .width-170 {
+    width: 170px;
+  }
+
+  .height-300 {
+    height: 300px;
+  }
+
+  .height-350 {
+    height: 350px;
+  }
+
+  .height-375 {
+    height: 350px;
+  }
+
+  .height-500 {
+    height: 500px;
+  }
+
+  .height-400 {
+    height: 400px;
+  }
+
+  .height-150 {
+    max-height: 150px;
+  }
+
+  .rel-height-80 {
+    height: 80%;
+  }
+
+  .rel-height-90 {
+    height: 90%;
+  }
+
+  .rel-height-100 {
+    height: 100%;
+  }
+
+  .rel-width-80 {
+    width: 80%;
+  }
+
+  .rel-width-70 {
+    width: 70%;
+  }
+
+  .rel-width-60 {
+    width: 60%;
+  }
+
+  .rel-width-40 {
+    width: 40%;
+  }
+
+  .rel-width-30 {
+    width: 30%;
+  }
+
+  .rel-width-20 {
+    width: 20%;
+  }
+
+  .rel-width-10 {
+    width: 20%;
+  }
+  
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.toggle-switch input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-switch-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ddd;
+  border-radius: 20px;
+  box-shadow: inset 0 0 0 2px #ccc;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.toggle-switch-handle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+
+.toggle-switch::before {
+  content: "";
+  position: absolute;
+  top: -25px;
+  right: -35px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #aaa;
+  text-shadow: 1px 1px #fff;
+  transition: color 0.3s ease-in-out;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-switch-handle {
+  transform: translateX(21px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 3px #0cdfe3;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-switch-background {
+  background-color: #0cdfe3;
+  box-shadow: inset 0 0 0 2px #0cdfe3;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-switch:before {
+  content: "On";
+  color: #0cdfe3;
+  right: -15px;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-switch-background .toggle-switch-handle {
+  transform: translateX(21px);
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center; 
+  gap: 0.5em;
+}
+
+.toggle-container-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.toggle-container h6, 
+.toggle-container-vertical h6 {
+  margin-bottom: 0;
+  margin: 0;             /* Remove default margin */
+  line-height: 1;        /* Tighter line spacing */
+  padding: 0;            /* Ensure no extra space */
+  display: flex;
+  align-items: center;   /* Vertically center text within its own box */
+}
+
+.min-height-15 {
+  min-height: 1.5em;
+}
+
+.no-transition * {
+  transition: none !important;
+  animation: none !important;
+}
+
+.space-sep li {
+  margin-bottom: 1.5em;
+}
+
+.filter-pane-btn {
+  font-size: 12px !important;
+}
+
+
+button.brace-btn {
+  position: relative;
+  height: 2rem;
+  border: 2px ridge #0cdfe3;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  transition: 0.5s;
+  border-radius: 0.3em;
+  font-size: 0.6rem;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+
+  /* Mobile-friendly */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+button.brace-btn:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none; /* Explicitly remove hover shadow if it gets stuck */
+}
+
+button.brace-btn:focus-visible {
+  box-shadow: inset 0px 0px 1.3em #0cdfe3;
+}
+
+button.brace-btn::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: #000000;
+  transition: 0.3s;
+  transform-origin: center;
+}
+
+button.brace-btn::before {
+  content: "";
+  transform-origin: center;
+  position: absolute;
+  top: 80%;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: #000000;
+  transition: 0.3s;
+}
+
+button.brace-btn:hover::before, button.brace-btn:hover::after {
+  transform: scale(0)
+}
+
+button.brace-btn:hover {
+  box-shadow: inset 0px 0px 1.3em #0cdfe3;
+}
+
+button.brace-btn:active {
+  transition: all 0.1s;
+  color: #0cdfe3;
+  background-color: #000000; /* optional */
+  box-shadow: inset 0 0 10px #000000;
+}
+
+.flex-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.user-info {
+  color: #0cdfe3;
+  margin: 0;
+  padding: 0;
+}
+
+.text-xxs {
+  font-size: 0.6rem;
+}
+
+
+.body-footer-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-left: 208px;
+  min-height: 90vh;     /* full viewport height */
+}
+
+
+
+/*!*************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/css/metric-kpis.css ***!
+  \*************************************************************************************/
+:root {
+    --kpi-border-color: #ffffff4d;
+    --padding-header: 1rem;
+    --padding-body-top: 1rem;
+    --padding-body-side: 5%;
+}
+
+.clean-table {
+    border-collapse: collapse;
+    color: #e2e2e2; /* font color */
+    font-family: "Open Sans", sans-serif;
+    margin-bottom: 10px;
+    width:100%;
+  }
+  
+  .clean-table th,
+  .clean-table td {
+    padding: 6px 6px;
+    background-color: #2a2a2a00;
+    color: #f1f1f1; /* font color */
+    font-family: "Open Sans", sans-serif;
+  }
+
+  .clean-table th {
+    font-size: 0.9em;
+  }
+
+  .clean-table td {
+    font-size: 0.7em;
+  }
+
+  /* Add bottom border to all rows except the last one */
+  .interior-border-tbl tbody tr:not(:last-child) td {
+    border-bottom-color: var(--kpi-border-color) !important; /* adjust color to fit your theme */
+    border-bottom-width: 1px !important;
+  }
+
+  .razz-kpi {
+    --bs-bg-opacity: 1;
+    background-color: #a33867 !important;
+  }
+
+
+  .aqua-kpi {
+    --bs-bg-opacity: 1;
+    background-color: #4e7d7e!important;
+  }
+
+  .kpi-header {
+    padding: var(--padding-header) !important;
+    border-bottom: 1px solid var(--kpi-border-color) !important;
+  }
+
+  .kpi-body {
+    padding-left: var(--padding-body-side) !important;
+    padding-top: var(--padding-body-top) !important;
+    padding-right: var(--padding-body-side) !important;
+    padding-bottom: var(--padding-body-top) !important;
+  }
+
+  .tight-fit {
+    padding: 1% !important;
+  }
+
+  .small-text {
+    font-size: 0.8em;
+  }
+
+  .small-text-05 {
+    font-size: 0.5em;
+  }
+
+  .min-width-450 {
+    min-width: 450px;
+  }
+
+  .min-height-500 {
+    min-height: 500px;
+  }
+
+  .thin-header {
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+  }
+
+  .mb-24px {
+    margin-bottom: 24px !important;
+  }
+
+/*!***************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/css/table-styling.css ***!
+  \***************************************************************************************/
+table.dataTable th.nowrap, 
+table.dataTable td.nowrap {
+  white-space: nowrap !important;
+}
+
+/* Optional: prevent layout issues on that table only */
+#BattlesTable.dataTable {
+  table-layout: auto !important;
+  width: auto !important;
+}
+
+table.filter-syntax-table td {
+  padding-bottom: 4px;
+  padding-top: 4px;
+  border-bottom: 1px solid #ffffff4d;
+  border-top: 1px solid #ffffff4d;
+}
+
+table.filter-syntax-table tbody tr:first-child td {
+  border-top: none !important;
+}
+
+/* Remove bottom border on the last row */
+table.filter-syntax-table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+.text-over50 {
+  color : mediumspringgreen !important;
+}
+
+.text-below50 {
+  color : red !important;
+}
+/*!***************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/css/filter-syntax.css ***!
+  \***************************************************************************************/
+
+
+.CodeMirror pre {
+    text-align: left !important;
+    color: #7b3eff;
+  }
+
+  .CodeMirror-cursor {
+    border-left: 0.5px solid #cbcbcb;  /* Bright green */
+  }
+
+  .CodeMirror-gutters {
+    background-color: #2a2a2a;  /* Darker than background */              /* Line number color */
+    border-right: 1px solid #888888;
+  }
+
+  /* Change overall editor background */
+  .CodeMirror {
+    background-color: #2c2c2c;  
+    color: #844df9;             /* Default text color */
+  }
+
+  .CodeMirror-linenumber {
+    color: #844df9
+  }
+
+  .codemirror-hidden {
+    visibility: hidden;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Change selection color (the background when selecting text) */
+    .CodeMirror-selected {
+        background-color: rgba(105, 135, 191, 0.3) !important; /* custom color */
+    }
+
+    .cm-default { color: #9b6dff !important; }
+    .cm-keyword { color: #ff2e89 !important; }
+    .cm-string  { color: #40d766 !important; }
+    .cm-set    {color: #4dbaec !important}
+    .cm-date  { color: #d7d440 !important; }
+    .cm-bool { color: #40d7c0 !important; }
+    .cm-declared-data { color: #40d7c0 !important; }
+    .cm-comment { color: #6272a4; font-style: italic; }
+    .cm-number  { color: #d7d440 !important; }
+    .cm-field  { color: #ff6334 !important; }
+    .cm-datafield  { color: #ffa25b !important; }
+    .cm-def     { color: #dfeaec; }
+    .cm-operator { color: #b300ff !important; font-style: italic;}
+    .cm-operator-normal { color: #b300ff !important; } /*Only used to show color in tables without needing italics*/
+    .cm-bracket { color: #d8da7e !important; }  /* if you want neutral parentheses */
+    .cm-range { color: #409dd7 !important; }
+
+#exFilter1-wrapper .CodeMirror {
+    max-height: 120px;             
+  }
+
+#exFilter2-wrapper .CodeMirror {
+    max-height: 200px;             
+  }
+
+#exFilter3-wrapper .CodeMirror {
+    max-height: 120px;             
+  }
+
+#exFilter4-wrapper .CodeMirror {
+    max-height: 100px;             
+  }
+
+#exFilter5-wrapper .CodeMirror {
+    max-height: 100px;             
+  }
+/*!***********************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/css/nav-tiles.css ***!
+  \***********************************************************************************/
+.nav-grid { 
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: 1fr;
+  border-top: 0px solid #878787ef;
+  border-radius: 0px; /* rounded corners */
+  overflow: hidden;
+  width: 100%;
+  height: 65px;
+}
+
+.nav-link {
+  color: white;
+  display: flex;
+  align-items: center;      /* horizontally center children */
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  height: 100%;
+  
+}
+
+
+.nav-link:hover {
+  box-shadow: inset 0 2px 0 #0cdfe3;
+  background-color: #0cdfe31e;
+  color: #0cdfe3 !important;
+}
+
+.nav-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* horizontally center children */
+  justify-content: flex-start;
+  font-size: 0.9rem;
+  padding-top: 0.2rem;
+  min-width: 75px;
+  max-width: 130px;
+  width: 100%;
+}
+
+
+.nav-icon {
+  display: flex;            /* flex container to center icon */
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  height: 30%;
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.nav-icon i {
+  width: 32px;              /* feather icon size */
+  height: 32px;
+}
+
+.nav-label {
+  font-size: 0.7rem;
+  text-align: center;
+}
+/*!********************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/css/loader.css ***!
+  \********************************************************************************/
+.loader {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.loader:before , .loader:after{
+  content: '';
+  border-radius: 50%;
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3) inset;
+}
+.loader:after {
+  box-shadow: 0 2px 0 #0df8fd inset;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  0% {  transform: rotate(0)}
+  100% { transform: rotate(360deg)}
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #121212; /* Material Dark background */
+  color: #0df8fd; /* Material text on dark */
+  z-index: 9999; /* Stay on top */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-family: "Open Sans", sans-serif;
+}
+
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #0df8fd; /* Material text on dark */
+  gap: 1rem; /* space between h2 and loader */
+}
+
+.loader-overlay h2 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 200;
+  font-family: "Open Sans", sans-serif;
+  color: #4f9293; /* Direct style in case inherited one is overwritten */
+}
+
+#escape-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+
+/*!*************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./static/assets/css/bundled-css.css ***!
+  \*************************************************************************************/
+
+
+/*# sourceMappingURL=bundled-css.038b299787cd210346c9.css.map*/
