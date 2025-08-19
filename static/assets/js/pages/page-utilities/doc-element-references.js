@@ -75,10 +75,6 @@ class HomePageElements {
 		return (this._ID_SEARCH_FLAG ||= Safe.unwrapHtmlElt("id-search-flag"));
 	}
 
-	get ESCAPE_BTN() {
-		return (this._ESCAPE_BTN ||= Safe.unwrapHtmlElt("escape-btn"));
-	}
-
 	get SEASON_DETAILS_TBL() {
 		return (this._SEASON_DETAILS_TBL ||=
 			Safe.unwrapHtmlElt("season-details-tbl"));

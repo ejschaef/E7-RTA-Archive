@@ -89,6 +89,8 @@ async function main() {
 		let state = await PageStateManager.getState();
 		if (state === HOME_PAGE_STATES.LOAD_DATA) {
 			state = HOME_PAGE_STATES.SELECT_DATA; // don't trap user in load data page if something goes wrong
+			await UserManager.clearUserData();
+			NavBarUtils.writeUserInfo(null);
 			await PageStateManager.setState(state);
 		}
 		CONTEXT.HOME_PAGE_STATE = state;
