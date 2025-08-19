@@ -1,4 +1,4 @@
-import { Safe } from "../../utils.ts";
+import { Safe } from "../../html-safe.ts";
 
 let ID_COUNTER = 0;
 

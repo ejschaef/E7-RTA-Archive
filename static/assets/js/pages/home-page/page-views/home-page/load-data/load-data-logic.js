@@ -4,17 +4,19 @@ import {
 	HOME_PAGE_STATES,
 } from "../../../../orchestration/page-state-manager.js";
 import { FilterParser } from "../../../../../e7/filter-parsing/filter-parser.ts";
-import { CM } from "../../../../../content-manager.js";
+import { ContentManager } from "../../../../../content-manager.ts";
 import CSVParse from "../../../../../csv-parse.js";
 import { StatsView } from "../stats/stats-logic.js";
 import { CLEAN_STR_TO_WORLD_CODE } from "../../../../../e7/references.ts";
 import { TextUtils } from "../../../../orchestration/text-controller.js";
-import { NavBarUtils } from "../../../../page-utilities/nav-bar-utils.js";
+import { NavBarUtils } from "../../../../page-utilities/nav-bar-utils.ts";
 import { addLoadDataListeners } from "./load-data-listeners.js";
 import PYAPI from "../../../../../apis/py-API.js";
 
 async function processUpload() {
-	const selectedFile = await CM.ClientCache.get(CM.ClientCache.Keys.RAW_UPLOAD);
+	const selectedFile = await ContentManager.ClientCache.get(
+		ContentManager.ClientCache.Keys.RAW_UPLOAD
+	);
 
 	console.log("Retrieved Upload: ", selectedFile);
 
@@ -22,7 +24,7 @@ async function processUpload() {
 
 	const playerID = battleArr[0]["P1 ID"];
 	const playerWorldCode = CLEAN_STR_TO_WORLD_CODE[battleArr[0]["P1 Server"]];
-	const user = await CM.UserManager.findUser({
+	const user = await ContentManager.UserManager.findUser({
 		id: playerID,
 		world_code: playerWorldCode,
 	});
@@ -37,12 +39,13 @@ async function processUpload() {
 	return { user, battleArr };
 }
 
-async function handleBattleQuery(user, HM) {
+async function handleBattleQuery(user, HeroDicts) {
 	console.log(
 		"querying and caching user battles for user: ",
 		JSON.stringify(user)
 	);
-	let artifacts = await CM.ArtifactManager.getArtifacts();
+	let artifacts =
+		await ContentManager.ArtifactManager.getArtifactCodeToNameMap();
 	let response = await PYAPI.rsFetchBattleData(user);
 	console.log("Got response", response);
 	if (!response.ok) {
@@ -51,7 +54,11 @@ async function handleBattleQuery(user, HM) {
 	} else {
 		const data = await response.json();
 		const rawBattles = data.battles;
-		await CM.BattleManager.cacheQuery(rawBattles, HM, artifacts);
+		await ContentManager.BattleManager.cacheQuery(
+			rawBattles,
+			HeroDicts,
+			artifacts
+		);
 		console.log("Cached queried battles");
 	}
 }
@@ -75,7 +82,7 @@ async function redirectError(err, source, stateDispatcher) {
 		TextUtils.queueSelectDataMsgRed(`Failed to load data: ${err.message}`);
 	}
 	console.error(err);
-	await CM.UserManager.clearUserData();
+	await ContentManager.UserManager.clearUserData();
 	NavBarUtils.writeUserInfo(null);
 	await stateDispatcher(sourceState);
 	return;
@@ -83,7 +90,7 @@ async function redirectError(err, source, stateDispatcher) {
 
 async function try_find_user(userObj) {
 	console.log("Finding User using:", userObj);
-	const user = await CM.UserManager.findUser(userObj);
+	const user = await ContentManager.UserManager.findUser(userObj);
 	console.log("Got data:", JSON.stringify(user));
 	if (user !== null) {
 		return user;
@@ -92,15 +99,15 @@ async function try_find_user(userObj) {
 }
 
 async function replaceUser(user) {
-	await CM.UserManager.clearUserData();
-	await CM.UserManager.setUser(user);
+	await ContentManager.UserManager.clearUserData();
+	await ContentManager.UserManager.setUser(user);
 	NavBarUtils.writeUserInfo(user);
 }
 
 async function runLogic(stateDispatcher) {
-	let [HM, SOURCE, autoQuery] = [null, null, null];
+	let [HeroDicts, SOURCE, autoQuery] = [null, null, null];
 	try {
-		HM = await CM.HeroManager.getHeroManager();
+		HeroDicts = await ContentManager.HeroManager.getHeroDicts();
 		SOURCE = CONTEXT.popKey(CONTEXT.KEYS.SOURCE);
 		autoQuery = CONTEXT.popKey(CONTEXT.KEYS.AUTO_QUERY);
 	} catch (e) {
@@ -115,7 +122,10 @@ async function runLogic(stateDispatcher) {
 			let result = await processUpload();
 			user = result.user;
 			await replaceUser(user);
-			await CM.BattleManager.cacheUpload(result.battleArr, HM);
+			await ContentManager.BattleManager.cacheUpload(
+				result.battleArr,
+				HeroDicts
+			);
 		} else if (SOURCE === CONTEXT.VALUES.SOURCE.QUERY) {
 			const userObj = CONTEXT.popKey(CONTEXT.KEYS.TRY_SET_USER);
 			if (userObj === null)
@@ -125,29 +135,33 @@ async function runLogic(stateDispatcher) {
 		}
 
 		if (user === null) {
-			user = await CM.UserManager.getUser();
+			user = await ContentManager.UserManager.getUser();
 		}
 
 		// if new user query or auto query from upload battles we query the users battles from the server and add to cache
 		if (autoQuery || SOURCE === CONTEXT.VALUES.SOURCE.QUERY) {
-			await handleBattleQuery(user, HM);
+			await handleBattleQuery(user, HeroDicts);
 		}
 
 		// retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
 		console.log("Getting Battles From Cache");
-		const battles = await CM.BattleManager.getBattles();
+		const battles = await ContentManager.BattleManager.getBattles();
 
 		console.log("BATTLES DURING LOAD");
 		console.log(battles);
 
 		console.log("Getting Filters From Cache");
-		const filters = await FilterParser.getFiltersFromCache(HM);
+		const filters = await FilterParser.getFiltersFromCache(HeroDicts);
 
 		console.log(`Received Filters: ${JSON.stringify(filters)}`);
-		const stats = await CM.BattleManager.getStats(battles, filters, HM);
-		
+		const stats = await ContentManager.BattleManager.getStats(
+			battles,
+			filters,
+			HeroDicts
+		);
+
 		console.log("Got Stats: ", stats);
-		await CM.ClientCache.setStats(stats);
+		await ContentManager.ClientCache.setStats(stats);
 
 		await StatsView.populateContent(); // populates tables and plots in show stats view before showing
 		CONTEXT.STATS_PRE_RENDER_COMPLETED = true; // flag that the stats page doesn't need to run populate content itself
@@ -163,7 +177,7 @@ async function runLogic(stateDispatcher) {
 				`Something went wrong ; redirecting to select data ; error:`,
 				err
 			);
-			await CM.UserManager.clearUserData();
+			await ContentManager.UserManager.clearUserData();
 			NavBarUtils.writeUserInfo(null);
 			await stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
 			return;

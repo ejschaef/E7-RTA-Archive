@@ -1,4 +1,4 @@
-import { toTitleCase } from "../utils";
+import { toTitleCase } from "../str-functions";
 
 export const LANGUAGES = {
 	CODES: {
@@ -39,7 +39,7 @@ export const WORLD_CODES: Set<string> = new Set([
 	"world_eu",
 ]);
 
-export const WORLD_CODE_ENUM: Record<string, string> = {
+export const WORLD_CODE_ENUM = {
 	GLOBAL: "world_global",
 	KOR: "world_kor",
 	JPN: "world_jpn",

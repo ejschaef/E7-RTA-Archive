@@ -6,24 +6,11 @@ import {
 } from "../orchestration/text-controller.js";
 
 let PageUtils = {
-	addStrParam: function (URL, key, val) {
-		const encodedParam = encodeURIComponent(val);
-		URL = `${URL}?${key}=${encodedParam}`;
-		return URL;
-	},
-
-	addStrParams: function (URL, obj) {
-		for (let key in obj) {
-			URL = this.addStrParam(URL, key, obj[key]);
-		}
-		return URL;
-	},
-
 	validateFilterSyntax: async function (str) {
-		const HM = await HeroManager.getHeroManager();
+		const HeroDicts = await HeroManager.getHeroDicts();
 		let filterMSG = document.getElementById("filterMSG");
 		try {
-			let parser = await FilterParser.fromFilterStr(str, HM);
+			let parser = await FilterParser.fromFilterStr(str, HeroDicts);
 			console.log(parser.asString());
 			TextController.write(
 				new TextPacket("Validation Passed", filterMSG, [

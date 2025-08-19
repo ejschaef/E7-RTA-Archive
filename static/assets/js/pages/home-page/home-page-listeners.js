@@ -2,14 +2,14 @@ import {
 	PageStateManager,
 	HOME_PAGE_STATES,
 } from "../orchestration/page-state-manager.js";
-import { NavBarUtils } from "../page-utilities/nav-bar-utils.js";
+import { NavBarUtils } from "../page-utilities/nav-bar-utils.ts";
 import { TextUtils } from "../orchestration/text-controller.js";
 import { CONTEXT } from "./home-page-context.js";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 import UserManager from "../../e7/user-manager.ts";
 import { stateDispatcher, resizeRankPlot } from "./home-page-dispatch.js";
-import { CM } from "../../content-manager.js";
-import { convertBattlesToCSV, downloadCSV } from "../../utils.ts";
+import { ContentManager } from "../../content-manager.ts";
+import { convertBattlesToCSV, downloadCSV } from "../../str-functions.ts";
 
 function addNavListener() {
 	document.querySelectorAll(".nav-link").forEach((link) => {

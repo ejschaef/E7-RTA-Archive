@@ -95,7 +95,7 @@ let BattleManager = {
 	},
 
 	//Takes queried battles, clean format and extend in cache
-	cacheQuery: async function (battleList, HM, artifacts) {
+	cacheQuery: async function (battleList, HeroDicts, artifacts) {
 		if (!battleList) {
 			console.log("No query battles provided to cacheQuery");
 			return [];
@@ -104,7 +104,11 @@ let BattleManager = {
 			`Caching queried battles: ${battleList.length} battles; modified [BATTLES];`,
 			battleList
 		);
-		const cleanBattleMap = buildFormattedBattleMap(battleList, HM, artifacts);
+		const cleanBattleMap = buildFormattedBattleMap(
+			battleList,
+			HeroDicts,
+			artifacts
+		);
 
 		const battles = await this.extendBattles(cleanBattleMap);
 		console.log("Cached queried battles in cache; modified [BATTLES];");
@@ -112,12 +116,15 @@ let BattleManager = {
 	},
 
 	//Takes uploaded battles and sets as battles in cache, should be called before attempting to get battles if upload exists
-	cacheUpload: async function (rawParsedBattleList, HM) {
+	cacheUpload: async function (rawParsedBattleList, HeroDicts) {
 		if (!rawParsedBattleList) {
 			console.error("No uploaded battles provided to cacheUpload");
 			return {};
 		}
-		const cleanBattles = parsedCSVToFormattedBattleMap(rawParsedBattleList, HM);
+		const cleanBattles = parsedCSVToFormattedBattleMap(
+			rawParsedBattleList,
+			HeroDicts
+		);
 		await ClientCache.cache(ClientCache.Keys.UPLOADED_BATTLES, cleanBattles);
 		let battles = await this.extendBattles(cleanBattles);
 		console.log(
@@ -126,7 +133,7 @@ let BattleManager = {
 		return battles;
 	},
 
-	getStats: async function (battles, filters, HM) {
+	getStats: async function (battles, filters, HeroDicts) {
 		console.log("Getting stats");
 		const numFilters = filters.length;
 
@@ -140,20 +147,23 @@ let BattleManager = {
 		console.log("Getting preban stats");
 		const prebanStats = await StatsBuilder.getPrebanStats(
 			filteredBattlesList,
-			HM
+			HeroDicts
 		);
 		console.log("Getting first pick stats");
 		const firstPickStats = await StatsBuilder.getFirstPickStats(
 			filteredBattlesList,
-			HM
+			HeroDicts
 		);
 		console.log("Getting general stats");
 		const generalStats = await StatsBuilder.getGeneralStats(
 			filteredBattlesList,
-			HM
+			HeroDicts
 		);
 		console.log("Getting hero stats");
-		const heroStats = await StatsBuilder.getHeroStats(filteredBattlesList, HM);
+		const heroStats = await StatsBuilder.getHeroStats(
+			filteredBattlesList,
+			HeroDicts
+		);
 		console.log("Getting server stats");
 		const performanceStats = await StatsBuilder.getPerformanceStats(
 			filteredBattlesList

@@ -2,7 +2,7 @@ import {
 	PageStateManager,
 	HOME_PAGE_STATES,
 } from "../orchestration/page-state-manager.js";
-import { NavBarUtils } from "../page-utilities/nav-bar-utils.js";
+import { NavBarUtils } from "../page-utilities/nav-bar-utils.ts";
 import { TextController, TextUtils } from "../orchestration/text-controller.js";
 import { CONTEXT } from "./home-page-context.js";
 import PageUtils from "../page-utilities/page-utils.js";
@@ -40,10 +40,9 @@ async function handleAction(action, messages) {
 			break;
 
 		case IPM.ACTIONS.SHOW_NO_USER_MSG:
-			const message = messages.pop() || "Cannot perform action; no active user found."
-			TextUtils.queueSelectDataMsgRed(
-				message
-			);
+			const message =
+				messages.pop() || "Cannot perform action; no active user found.";
+			TextUtils.queueSelectDataMsgRed(message);
 			break;
 
 		case IPM.ACTIONS.QUERY_USER:

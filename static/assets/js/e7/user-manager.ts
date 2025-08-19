@@ -1,10 +1,9 @@
 import {
-	WORLD_CODES,
 	WORLD_CODE_TO_CLEAN_STR,
 	WORLD_CODE_ENUM,
 } from "./references.ts";
 import ClientCache from "../cache-manager.ts";
-import E7API from "../apis/e7-API.js";
+import E7API from "../apis/e7-API.ts";
 import PYAPI from "../apis/py-API.js";
 
 const userMapCacheKeyMap = {
@@ -46,18 +45,23 @@ function createUser(userJSON: UserJSON, world_code: string): User {
 	};
 }
 
-async function getUserMapFromE7Server(world_code: string) {
+export type UserMap = {
+	[key: string]: User;
+};
+
+async function getUserMapFromE7Server(world_code: string): Promise<UserMap | null> {
 	console.log(`Getting user map for world code from E7 server: ${world_code}`);
 	const rawUserJSON = await E7API.fetchUserJSON(world_code);
-	if (!rawUserJSON) {
+	if (!rawUserJSON || (typeof rawUserJSON === "object" && !("users" in rawUserJSON))) {
 		console.log(
 			`Could not get user map from E7 server for world code: ${world_code}`
 		);
 		return null;
 	}
 	console.log(`Got user map from E7 server for world code: ${world_code}`);
+	const rawUserMap = rawUserJSON as { users: UserJSON[] };
 	return Object.fromEntries(
-		rawUserJSON.users.map((user: UserJSON) => [
+		rawUserMap.users.map((user: UserJSON) => [
 			user.nick_no,
 			createUser(user, world_code),
 		])
@@ -72,7 +76,7 @@ async function getUserMapFromE7Server(world_code: string) {
  * @param {string} world_code - The world code to get the user map for.
  * @returns {Promise<Object.<string, User>>} - The user map for the given world code.
  */
-async function getUserMap(world_code: string) {
+async function getUserMap(world_code: string): Promise<UserMap | null> {
 	console.log(`Getting user map for world code: ${world_code}`);
 	const cachedUserMap = await ClientCache.get(userMapCacheKeyMap[world_code]);
 	if (cachedUserMap !== null) {
@@ -97,8 +101,8 @@ function findUser(userData: string | number, users: User[], dataExtractFn: (user
 
 async function findUserClientSide(user: UserSearchData, userWorldCode: string): Promise<{ user: User | null; ok: boolean }> {
 	const userMap = await getUserMap(userWorldCode);
-	const users: User[] = Object.values(userMap);
-	if (!users || users.length === 0) {
+	const users: User[] = userMap ? Object.values(userMap) : [];
+	if (users.length === 0) {
 		console.log(
 			`User map had no users, falling back to flask server for world code: ${cleanStr(
 				userWorldCode
@@ -141,7 +145,7 @@ let UserManager = {
 			);
 		}
 		let identifier = searchUser.id
-			? `ID: ${searchUser.id}`
+			? `Numeric ID: ${searchUser.id}`
 			: `Name: '${searchUser.name}'`;
 		let result = null;
 

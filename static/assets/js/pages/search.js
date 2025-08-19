@@ -1,7 +1,7 @@
-import { Searcher } from "../e7/searcher.js";
+import { Searcher } from "../e7/searcher.ts";
 import DataTableUtils from "../data-table-utils.js";
 import PageUtils from "./page-utilities/page-utils.js";
-import { NavBarUtils } from "./page-utilities/nav-bar-utils.js";
+import { NavBarUtils } from "./page-utilities/nav-bar-utils.ts";
 import DOC_ELEMENTS from "./page-utilities/doc-element-references.js";
 import UserManager from "../e7/user-manager.ts";
 import IPM from "./orchestration/inter-page-manager.ts";
@@ -53,7 +53,7 @@ function initializeTable() {
 		],
 		buttons: {},
 		pageLength: 50,
-		scrollY: "300px",
+		scrollY: "200px",
 		deferRender: true,
 		scroller: true,
 		scrollCollapse: false,
@@ -83,6 +83,7 @@ function addSearchListener() {
 		let searchTerm = data.get("searchTerm");
 		let domain = data.get("searchDomain");
 		let results = await searcher.search(domain, searchTerm);
+		console.log("Search results:", results);
 		let tableData = results.map(parseTableData);
 		tableData = tableData.slice(0, MAX_SEARCH_RESULTS);
 		DataTableUtils.replaceData(SEARCH_TABLE_ID, tableData);

@@ -1,4 +1,4 @@
-import { Safe } from "../../utils.ts";
+import { Safe } from "../../html-safe.ts";
 class HomePageElements {
 	get SELECT_DATA_MSG() {
 		return (this._SELECT_DATA_MSG ||= Safe.unwrapHtmlElt("select-data-msg"));

@@ -1,7 +1,7 @@
 import UserManager from "../../../../../e7/user-manager.ts";
 import ClientCache from "../../../../../cache-manager.ts";
 import { Tables, CardContent } from "../../../../../populate-content.js";
-import { CM } from "../../../../../content-manager.js";
+import { ContentManager } from "../../../../../content-manager.ts";
 import { RegExps } from "../../../../../e7/regex.ts";
 import {
 	addPlotlyLineAndMarkWidthListener,
@@ -10,7 +10,7 @@ import {
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
 import { CONTEXT } from "../../../home-page-context.js";
-import { Safe } from "../../../../../utils.ts";
+import { Safe } from "../../../../../html-safe.ts";
 import {
 	getZoom,
 	generateRankPlot,
@@ -82,11 +82,11 @@ async function populateContent() {
 
 	try {
 		console.log("Getting Season Details");
-		const seasonDetails = await CM.SeasonManager.getSeasonDetails();
+		const seasonDetails = await ContentManager.SeasonManager.getSeasonDetails();
 		console.log("Got season details:", seasonDetails, typeof seasonDetails);
 
 		console.log("Getting Stats");
-		const stats = await CM.ClientCache.getStats();
+		const stats = await ContentManager.ClientCache.getStats();
 
 		//console.log("GOT STATS: ", JSON.stringify(stats));
 
@@ -145,7 +145,7 @@ async function addCodeMirror() {
 
 	editor.setSize(null, 185);
 
-	const appliedFilter = await CM.ClientCache.getFilterStr();
+	const appliedFilter = await ContentManager.ClientCache.getFilterStr();
 
 	if (appliedFilter) {
 		editor.setValue(appliedFilter);
@@ -177,9 +177,11 @@ async function postFirstRenderLogic() {
 
 async function runLogic(stateDispatcher) {
 	const autoZoomCheckbox = DOC_ELEMENTS.HOME_PAGE.AUTO_ZOOM_FLAG;
-	const checked = await CM.ClientCache.get(CM.ClientCache.Keys.AUTO_ZOOM_FLAG);
+	const checked = await ContentManager.ClientCache.get(
+		ContentManager.ClientCache.Keys.AUTO_ZOOM_FLAG
+	);
 	autoZoomCheckbox.checked = checked;
-	const stats = await CM.ClientCache.getStats();
+	const stats = await ContentManager.ClientCache.getStats();
 
 	const filterBattleTableCheckbox = DOC_ELEMENTS.HOME_PAGE.BATTLE_FILTER_TOGGLE;
 	if (filterBattleTableCheckbox.checked) {

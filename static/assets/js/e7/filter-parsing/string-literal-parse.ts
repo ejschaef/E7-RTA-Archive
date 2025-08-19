@@ -11,7 +11,7 @@ export abstract class StringLiteralParser {
 
 class HeroParser extends StringLiteralParser {
     parse(str: string, REFS: FilterReferences): string | null {
-        return HeroManager.getHeroByName(str, REFS.HM)?.name ?? null;
+        return HeroManager.getHeroByName(str, REFS.HeroDicts)?.name ?? null;
     }
     parserType = "Hero";
 }
@@ -49,24 +49,24 @@ class SeasonCodeParser extends StringLiteralParser {
     parse(str: string, REFS: FilterReferences): string | null {
         console.log(`Parsing season code: ${str}`);
         let seasonNum: string;
-        if ( str === "current-season" ) {
+        if (str === "current-season") {
             return REFS.SEASON_DETAILS[0].Code;
-        } else if ( str === "last-season") {
+        } else if (str === "last-season") {
             return REFS.SEASON_DETAILS[1].Code;
         }
         else if (RegExps.SEASON_LITERAL_RE.test(str)) {
             console.log(`Parsing season literal: ${str}`);
             seasonNum = str.split("-").at(-1)!;
-        } 
+        }
         else if (RegExps.SEASON_CODE_LITERAL_RE.test(str)) {
             console.log(`Parsing season code literal: ${str}`);
             seasonNum = str.split("_ss").at(-1)!;
-        } 
+        }
         else {
             return null
         }
         console.log(`Season num: ${seasonNum}`);
-        const seasonNums = REFS.SEASON_DETAILS.map((season: {Code: string; }) => season.Code.split("_").at(-1)!);
+        const seasonNums = REFS.SEASON_DETAILS.map((season: { Code: string; }) => season.Code.split("_").at(-1)!);
         console.log(`Season nums: ${seasonNums}`);
         return REFS.SEASON_DETAILS.find((season: { Code: string; }) => season.Code.split("_ss").at(-1) === seasonNum)?.Code;
     }
@@ -77,7 +77,7 @@ export function parseStringLiteral(str: string, REFS: FilterReferences, parsers:
     for (const parser of parsers) {
         const parsed = parser.parse(str, REFS);
         console.log(`Parsed string literal: ${str} with ${parser.parserType} as ${parsed}`);
-        if (parsed) 
+        if (parsed)
             return parsed;
     }
     return null;

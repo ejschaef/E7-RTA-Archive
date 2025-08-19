@@ -67,20 +67,20 @@ class FilterParser {
         this.rawString = "";
         this.preParsedString = "";
         this.references = {
-            HM: null,
+            HeroDicts: null,
             ARTIFACT_LOWERCASE_STRINGS_MAP: {},
             SEASON_DETAILS: [],
         };
     }
 
-    async addReferences(HM: any | null = null) {
-        HM = HM || (await HeroManager.getHeroManager());
-        if (HM === null) throw new Error("Hero Manager could not be retrieved to parse filters.");
+    async addReferences(HeroDicts: any | null = null) {
+        HeroDicts = HeroDicts || (await HeroManager.getHeroDicts());
+        if (HeroDicts === null) throw new Error("Hero Manager could not be retrieved to parse filters.");
         const seasonDetails = await SeasonManager.getSeasonDetails();
         if (seasonDetails === null) throw new Error("Season Details could not be retrieved to parse filters.");
         const ARTIFACT_LOWERCASE_STRINGS_MAP = await ArtifactManager.getArtifactLowercaseNameMap();
         this.references = {
-            HM: HM,
+            HeroDicts: HeroDicts,
             ARTIFACT_LOWERCASE_STRINGS_MAP: ARTIFACT_LOWERCASE_STRINGS_MAP,
             SEASON_DETAILS: seasonDetails,
         };
@@ -95,17 +95,17 @@ class FilterParser {
         return `[\n${this._filters.map((f) => f.asString(prefix)).join(";\n")};\n]`;
     }
 
-    static async getFiltersFromCache(HM: any | null = null): Promise<Filters> {
+    static async getFiltersFromCache(HeroDicts: any | null = null): Promise<Filters> {
         const filterStr = await ClientCache.get(ClientCache.Keys.FILTER_STR);
         if (filterStr === null) return [];
-        let parser = await this.fromFilterStr(filterStr, HM);
+        let parser = await this.fromFilterStr(filterStr, HeroDicts);
         return parser.getFilters();
     }
 
-    static async fromFilterStr(filterStr: string, HM: any | null = null) {
+    static async fromFilterStr(filterStr: string, HeroDicts: any | null = null) {
         const parser = new FilterParser();
         parser.rawString = filterStr;
-        await parser.addReferences(HM);
+        await parser.addReferences(HeroDicts);
         parser.preParsedString = preParse(filterStr);
         parser._filters = parser.parse(parser.preParsedString);
         return parser;

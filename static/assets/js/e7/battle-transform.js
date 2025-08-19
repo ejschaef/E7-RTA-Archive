@@ -1,5 +1,5 @@
 import HeroManager from "./hero-manager.ts";
-import ArtifactManager from "./artifact-manager.js";
+import ArtifactManager from "./artifact-manager.ts";
 import {
 	EQUIPMENT_SET_MAP,
 	COLUMNS_MAP,
@@ -9,13 +9,13 @@ import {
 	INT_COLUMNS,
 	TITLE_CASE_COLUMNS,
 } from "./references.ts";
-import { toTitleCase } from "../utils.ts";
+import { toTitleCase } from "../str-functions.ts";
 
 // takes in cleaned battle row (including from uploaded file or in formatBattleAsRow)
 // and adds fields representing sets heroes as prime products
-function addPrimeFields(battle, HM) {
+function addPrimeFields(battle, HeroDicts) {
 	const getChampPrime = (name) =>
-		HeroManager.getHeroByName(name, HM)?.prime ?? HM.Fodder.prime;
+		HeroManager.getHeroByName(name, HeroDicts)?.prime ?? HeroDicts.Fodder.prime;
 	const product = (acc, prime) => acc * prime;
 
 	battle[COLUMNS_MAP.P1_PICKS_PRIMES] =
@@ -44,11 +44,11 @@ const P1 = "p1";
 const P2 = "p2";
 
 // takes raw battle from array returned by rust battle array call to flask-server; formats into row to populate table
-function formatBattleAsRow(raw, HM, artifacts) {
+function formatBattleAsRow(raw, HeroDicts, artifacts) {
 	// Make functions used to convert the identifier strings in the E7 data into human readable names
 
 	const getChampName = (code) =>
-		HeroManager.getHeroByCode(code, HM)?.name ?? HM.Fodder.name;
+		HeroManager.getHeroByCode(code, HeroDicts)?.name ?? HeroDicts.Fodder.name;
 
 	const getArtifactName = (code) =>
 		ArtifactManager.convertCodeToName(code, artifacts) || "None";
@@ -122,22 +122,22 @@ function formatBattleAsRow(raw, HM, artifacts) {
 	};
 
 	// finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
-	addPrimeFields(battle, HM);
+	addPrimeFields(battle, HeroDicts);
 	return battle;
 }
 
-function buildFormattedBattleMap(rawBattles, HM, artifacts) {
-	artifacts = artifacts ?? ArtifactManager.getArtifacts();
+function buildFormattedBattleMap(rawBattles, HeroDicts, artifacts) {
+	artifacts = artifacts ?? ArtifactManager.getArtifactCodeToNameMap();
 	let entries = [];
 	for (const rawBattle of rawBattles) {
-		let battle = formatBattleAsRow(rawBattle, HM, artifacts);
+		let battle = formatBattleAsRow(rawBattle, HeroDicts, artifacts);
 		entries.push([battle["Seq Num"], battle]);
 	}
 	return Object.fromEntries(entries);
 }
 
 // takes output of CSV parse and parses the list rows and ensures types are correct
-function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {
+function parsedCSVToFormattedBattleMap(rawRowsArr, HeroDicts) {
 	const rows = rawRowsArr.map((row) => {
 		for (const col of ARRAY_COLUMNS) {
 			row[col] = JSON.parse(row[col]);
@@ -151,12 +151,10 @@ function parsedCSVToFormattedBattleMap(rawRowsArr, HM) {
 		for (const col of TITLE_CASE_COLUMNS) {
 			row[col] = toTitleCase(row[col]);
 		}
-		addPrimeFields(row, HM);
+		addPrimeFields(row, HeroDicts);
 		return row;
 	});
 	return Object.fromEntries(rows.map((row) => [row["Seq Num"], row]));
 }
-
-
 
 export { buildFormattedBattleMap, parsedCSVToFormattedBattleMap };

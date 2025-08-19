@@ -1,4 +1,4 @@
-import { strArrToCountMap } from "../../utils";
+import { strArrToCountMap } from "../../str-functions";
 import { BattleType, COLUMNS_MAP } from "../references";
 import { BaseElement, BaseElements } from "./base-elements";
 import { Operator, CompareOperator, parseOperator, COMPARISON_OPERATORS, InOperator } from "./operators";
@@ -27,10 +27,10 @@ const FN_TYPES = {
 } as const;
 
 const CR_FN_TYPES = {
-    GEQ : "GEQ",
-    LEQ : "LEQ",
-    LT : "LT",
-    GT : "GT",
+    GEQ: "GEQ",
+    LEQ: "LEQ",
+    LT: "LT",
+    GT: "GT",
 } as const;
 
 
@@ -42,7 +42,7 @@ abstract class Fn {
     constructor(...args: any[]) {
 
     }
-}  
+}
 
 abstract class StandardFilter extends Fn {
     abstract call(b: BattleType): boolean;
@@ -161,7 +161,7 @@ class CRFn extends HeroListFn {
             );
         }
         const operator = parseOperator(args[1]);
-        if (!(operator instanceof CompareOperator) ) {
+        if (!(operator instanceof CompareOperator)) {
             throw new Futils.TypeException(
                 `Invalid CR function call ; second argument must be a valid comparison operator ; got: '${args[1]}' from str: ${str}`);
         }
@@ -235,7 +235,7 @@ class EquipmentFn extends HeroListFn {
     call(battle: BattleType): boolean {
         const heroes = this.getHeroes(battle);
         const heroEq: Array<string[]> = this.targetField(battle)
-        for (let i=0; i < heroes.length; i++) {
+        for (let i = 0; i < heroes.length; i++) {
             if (heroes[i] === this.heroName) {
                 const counts = strArrToCountMap(heroEq[i]);
                 return validateEquipmentCounts(this.targetEquipCounts, counts);
@@ -275,7 +275,7 @@ class ArtifactFn extends HeroListFn {
     call(battle: BattleType): boolean {
         const heroes = this.getHeroes(battle);
         const heroArtifacts: Array<string[]> = this.targetField(battle);
-        for (let i=0; i < heroes.length; i++) {
+        for (let i = 0; i < heroes.length; i++) {
             if (heroes[i] === this.heroName) {
                 return this.targetArtifacts.some((artifact) => heroArtifacts[i].includes(artifact));
             }

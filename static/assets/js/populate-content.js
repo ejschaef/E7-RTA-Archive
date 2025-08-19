@@ -3,8 +3,7 @@ import {
 	ARRAY_COLUMNS,
 	HERO_STATS_COLUMN_MAP,
 } from "./e7/references.ts";
-import { currentTimestamp } from "./utils.ts";
-import { Safe } from "./utils.ts";
+import { Safe } from "./html-safe.ts";
 import DOC_ELEMENTS from "./pages/page-utilities/doc-element-references.js";
 
 function destroyDataTable(tableid) {
@@ -240,11 +239,12 @@ let Tables = {
 		tbody.innerHTML = ""; // Clear existing rows
 
 		let fileName;
-		const timestamp = currentTimestamp().split("T")[0] || "";
+		const timestamp = new Date().toISOString().split("T")[0] || "";
 		if (user) {
 			fileName = `${user.name} (${user.id}) ${timestamp}`;
 		} else {
-			fileName = data.length === 0 ? "Empty" : `UID(${data[0]["P1 ID"]}) ${timestamp}`;
+			fileName =
+				data.length === 0 ? "Empty" : `UID(${data[0]["P1 ID"]}) ${timestamp}`;
 		}
 
 		var table = $(`#${tableid}`).DataTable({

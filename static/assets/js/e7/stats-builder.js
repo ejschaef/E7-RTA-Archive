@@ -111,7 +111,7 @@ function getPrimes(battleList, isP1 = true) {
 	return primeSet;
 }
 
-function getHeroStats(battleList, HM) {
+function getHeroStats(battleList, HeroDicts) {
 	if (battleList.length === 0) {
 		return { playerHeroStats: [], enemyHeroStats: [] };
 	}
@@ -125,7 +125,7 @@ function getHeroStats(battleList, HM) {
 	const enemyHeroStats = [];
 
 	for (const prime of playerPrimes) {
-		const hero = HeroManager.getHeroByPrime(prime, HM);
+		const hero = HeroManager.getHeroByPrime(prime, HeroDicts);
 		const playerSubset = battleList.filter(
 			(b) => b[COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] % prime === 0
 		);
@@ -134,7 +134,7 @@ function getHeroStats(battleList, HM) {
 		}
 	}
 	for (const prime of enemyPrimes) {
-		const hero = HeroManager.getHeroByPrime(prime, HM);
+		const hero = HeroManager.getHeroByPrime(prime, HeroDicts);
 		const enemySubset = battleList.filter(
 			(b) => b[COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] % prime === 0
 		);
@@ -153,7 +153,7 @@ function getHeroStats(battleList, HM) {
 	};
 }
 
-function getFirstPickStats(battleList, HM) {
+function getFirstPickStats(battleList, HeroDicts) {
 	battleList = getFirstPickSubset(Object.values(battleList));
 
 	if (battleList.length === 0) {
@@ -172,7 +172,7 @@ function getFirstPickStats(battleList, HM) {
 	}
 
 	const result = Object.entries(grouped).map(([prime, stats]) => {
-		const name = HeroManager.getHeroByPrime(prime, HM).name;
+		const name = HeroManager.getHeroByPrime(prime, HeroDicts).name;
 		return {
 			hero: name,
 			wins: stats.wins,
@@ -187,10 +187,10 @@ function getFirstPickStats(battleList, HM) {
 	return result;
 }
 
-function getPrebanStats(battleList, HM) {
-	//console.log(`Got HM: ${HM}`);
+function getPrebanStats(battleList, HeroDicts) {
+	//console.log(`Got HeroDicts: ${HeroDicts}`);
 
-	const emptyPrime = HeroManager.getHeroByName("Empty", HM).prime;
+	const emptyPrime = HeroManager.getHeroByName("Empty", HeroDicts).prime;
 
 	if (battleList.length === 0) {
 		return [];
@@ -235,7 +235,7 @@ function getPrebanStats(battleList, HM) {
 		const plusMinus = 2 * wins - appearances;
 
 		output.push({
-			preban: HM.prime_pair_lookup[preban],
+			preban: HeroDicts.prime_pair_lookup[preban],
 			wins: wins,
 			appearances: appearances,
 			appearance_rate: toPercent(appearanceRate),
@@ -260,7 +260,7 @@ function secondsToTimeStr(inputSeconds) {
 	return timeStr;
 }
 
-function getGeneralStats(battleList, HM) {
+function getGeneralStats(battleList, HeroDicts) {
 	battleList.sort(
 		(b1, b2) => new Date(b1["Date/Time"]) - new Date(b2["Date/Time"])
 	);
