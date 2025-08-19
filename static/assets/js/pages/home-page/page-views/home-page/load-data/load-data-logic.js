@@ -82,8 +82,7 @@ async function redirectError(err, source, stateDispatcher) {
 		TextUtils.queueSelectDataMsgRed(`Failed to load data: ${err.message}`);
 	}
 	console.error(err);
-	await ContentManager.UserManager.clearUserData();
-	NavBarUtils.writeUserInfo(null);
+	await NavBarUtils.eraseUserFromPage();
 	await stateDispatcher(sourceState);
 	return;
 }
@@ -101,7 +100,8 @@ async function try_find_user(userObj) {
 async function replaceUser(user) {
 	await ContentManager.UserManager.clearUserData();
 	await ContentManager.UserManager.setUser(user);
-	NavBarUtils.writeUserInfo(user);
+	const lang = await ContentManager.LangManager.getLang();
+	NavBarUtils.writeUserInfo(user, lang);
 }
 
 async function runLogic(stateDispatcher) {
@@ -177,8 +177,7 @@ async function runLogic(stateDispatcher) {
 				`Something went wrong ; redirecting to select data ; error:`,
 				err
 			);
-			await ContentManager.UserManager.clearUserData();
-			NavBarUtils.writeUserInfo(null);
+			await NavBarUtils.eraseUserFromPage();
 			await stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
 			return;
 		}

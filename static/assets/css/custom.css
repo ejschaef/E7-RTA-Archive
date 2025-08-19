@@ -453,6 +453,14 @@ button.brace-btn {
   font-weight: bold;
   cursor: pointer;
   white-space: nowrap;
+
+  /* Mobile-friendly */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+button.brace-btn:focus {
+  outline: none;
 }
 
 button.brace-btn::after {

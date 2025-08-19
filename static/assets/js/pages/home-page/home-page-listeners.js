@@ -51,8 +51,7 @@ function addClearDataBtnListener() {
 		async function (_event) {
 			const user = await UserManager.getUser();
 			if (user) {
-				await UserManager.clearUserData();
-				NavBarUtils.writeUserInfo(null);
+				await NavBarUtils.eraseUserFromPage();
 				TextUtils.queueSelectDataMsgGreen(
 					`Cleared data of user ${user.name} (${user.id})`
 				);

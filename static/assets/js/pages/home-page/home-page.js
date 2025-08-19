@@ -15,6 +15,7 @@ import { SelectDataView } from "./page-views/home-page/select-data/select-data-l
 import { StatsView } from "./page-views/home-page/stats/stats-logic.js";
 import { LoadDataView } from "./page-views/home-page/load-data/load-data-logic.js";
 import { buildTables } from "./home-page-build-tables.js";
+import { LangManager } from "../../lang-manager.ts";
 
 /**
  * Handles actions sent from other pages to this page.
@@ -26,8 +27,7 @@ async function handleAction(action, messages) {
 	switch (action) {
 		case IPM.ACTIONS.CLEAR_USER:
 			const user = await UserManager.getUser();
-			await UserManager.clearUserData();
-			NavBarUtils.writeUserInfo(null);
+			await NavBarUtils.eraseUserFromPage();
 			TextUtils.queueSelectDataMsgGreen(
 				`Cleared data of user ${user.name} (${user.id})`
 			);
@@ -76,9 +76,10 @@ async function initializeHomePage() {
 	}
 	const user = await UserManager.getUser();
 	console.log("GOT USER", user);
-	NavBarUtils.writeUserInfo(user);
+	const lang = await LangManager.getLang();
+	NavBarUtils.writeUserInfo(user, lang);
 	NavBarUtils.addExportCSVBtnListener();
-	NavBarUtils.addOfficialSiteBtnListener();
+	NavBarUtils.addBraceButtonListeners();
 	TextController.bindAutoClear(DOC_ELEMENTS.HOME_PAGE.MESSAGE_ELEMENTS_LIST);
 }
 
@@ -89,8 +90,7 @@ async function main() {
 		let state = await PageStateManager.getState();
 		if (state === HOME_PAGE_STATES.LOAD_DATA) {
 			state = HOME_PAGE_STATES.SELECT_DATA; // don't trap user in load data page if something goes wrong
-			await UserManager.clearUserData();
-			NavBarUtils.writeUserInfo(null);
+			await NavBarUtils.eraseUserFromPage();
 			await PageStateManager.setState(state);
 		}
 		CONTEXT.HOME_PAGE_STATE = state;

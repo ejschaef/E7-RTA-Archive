@@ -14,19 +14,7 @@ import UserManager, { User } from "../../e7/user-manager.ts";
 import DOC_ELEMENTS from "./doc-element-references.js";
 import IPM from "../orchestration/inter-page-manager.ts";
 import { ContentManager } from "../../content-manager.ts";
-
-
-function openUrlInNewTab(url: string) {
-	const a = document.createElement("a");
-	a.classList.add("d-none");
-	a.href = url;
-	a.target = "_blank";
-	a.rel = "noopener noreferrer";
-	// Append to DOM to make sure it works in all browsers
-	document.body.appendChild(a);
-	a.click();
-	document.body.removeChild(a);
-}
+import { LangManager } from "../../lang-manager.ts";
 
 function navToHome() {
 	// @ts-ignore
@@ -83,16 +71,33 @@ function addClearDataBtnListener() {
 	);
 }
 
-function writeUserInfo(user: User | null) {
+function addBraceButtonListeners() {
+	const braceButtons = document.querySelectorAll<HTMLButtonElement>('button.brace-btn');
+	braceButtons.forEach((btn) => {
+
+		// Remove sticky focus on mobile
+		btn.addEventListener('touchend', () => {
+			btn.blur();
+		});
+	});
+}
+
+function writeUserInfo(user: User | null, lang: LanguageCode = "en") {
 	if (user) {
 		DOC_ELEMENTS.NAV_BAR.USER_NAME.innerText = user.name;
 		DOC_ELEMENTS.NAV_BAR.USER_ID.innerText = user.id;
 		DOC_ELEMENTS.NAV_BAR.USER_SERVER.innerText =
 			WORLD_CODE_TO_CLEAN_STR[user.world_code];
+		DOC_ELEMENTS.NAV_BAR.OFFICIAL_SITE_BTN.onclick = () => {
+			window.open(generateGGLink(user, lang), "_blank", "noopener,noreferrer");
+		};
 	} else {
 		DOC_ELEMENTS.NAV_BAR.USER_NAME.innerText = "(None)";
 		DOC_ELEMENTS.NAV_BAR.USER_ID.innerText = "(None)";
 		DOC_ELEMENTS.NAV_BAR.USER_SERVER.innerText = "(None)";
+		DOC_ELEMENTS.NAV_BAR.OFFICIAL_SITE_BTN.onclick = () => {
+			window.open(E7_GG_HOME_URL, "_blank", "noopener,noreferrer");
+		};
 	}
 }
 
@@ -153,25 +158,20 @@ function addExportCSVBtnListener() {
 	);
 }
 
+async function eraseUserFromPage() {
+	await UserManager.clearUserData();
+	writeUserInfo(null);
+}
+
+async function setUserOnPage(user: User) {
+	await UserManager.setUser(user);
+	const lang = await LangManager.getLang();
+	writeUserInfo(user, lang);
+}
+
 function generateGGLink(user: User, lang: LanguageCode) {
 	const url = `${E7_STOVE_HOME_URL}/${lang}/gg/battlerecord/${user.world_code}/${user.id}`;
 	return url;
-}
-
-function addOfficialSiteBtnListener() {
-	DOC_ELEMENTS.NAV_BAR.OFFICIAL_SITE_BTN.addEventListener(
-		"click",
-		async function () {
-			const user = await ContentManager.UserManager.getUser();
-			if (!user) {
-				openUrlInNewTab(E7_GG_HOME_URL);
-			} else {
-				const lang = await ContentManager.LangManager.getLang();
-				const url = generateGGLink(user, lang);
-				openUrlInNewTab(url);
-			}
-		}
-	);
 }
 
 async function initialize() {
@@ -180,7 +180,7 @@ async function initialize() {
 	addNavListeners();
 	addClearDataBtnListener();
 	addExportCSVBtnListener();
-	addOfficialSiteBtnListener();
+	addBraceButtonListeners();
 }
 
 let NavBarUtils = {
@@ -190,7 +190,9 @@ let NavBarUtils = {
 	initialize: initialize,
 	navToHome: navToHome,
 	addExportCSVBtnListener: addExportCSVBtnListener,
-	addOfficialSiteBtnListener: addOfficialSiteBtnListener,
+	addBraceButtonListeners: addBraceButtonListeners,
+	eraseUserFromPage: eraseUserFromPage,
+	setUserOnPage: setUserOnPage,
 };
 
 export { NavBarUtils };
