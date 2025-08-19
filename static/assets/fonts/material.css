@@ -3,7 +3,7 @@
   font-family: 'Material Icons Two Tone';
   font-style: normal;
   font-weight: 400;
-  src: url(material/material.woff2) format('woff2');
+  src: url('./material/material.woff2') format('woff2');
 }
 
 .material-icons-two-tone {

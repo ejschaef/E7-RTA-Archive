@@ -2,13 +2,14 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 const MODES = {
   PRODUCTION: 'production',
   DEVELOPMENT: 'development',
 }
 
-const MODE = MODES.DEVELOPMENT;
+const MODE = MODES.PRODUCTION;
 
 module.exports = {
   plugins: [
@@ -37,20 +38,23 @@ module.exports = {
   mode: MODE,
   optimization: {
     minimize: MODE === 'production',
-    minimizer: [new TerserPlugin({
-      terserOptions: {
-        compress: {
-          pure_funcs: [ // keep console.error
-            'console.log',
-            'console.info',
-            'console.debug',
-            'console.warn'
-          ],
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            pure_funcs: [ // keep console.error
+              'console.log',
+              'console.info',
+              'console.debug',
+              'console.warn'
+            ],
+          },
         },
-      },
-    })],
+      }),
+      new CssMinimizerPlugin(),
+    ],
   },
-  devtool: 'source-map',
+  devtool: MODE === MODES.DEVELOPMENT ? 'source-map' : false,
   module: {
     rules: [
       {

@@ -1,3 +1,5 @@
+@import '../fonts/material.css';
+@import '../fonts/feather.css';
 @import './custom.css';
 @import './metric-kpis.css';
 @import './table-styling.css';

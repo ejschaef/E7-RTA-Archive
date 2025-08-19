@@ -26,6 +26,7 @@
     "@types/papaparse": "^5.3.16",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
     "mini-css-extract-plugin": "^2.9.3",
     "ts-loader": "^9.5.2",
     "typescript": "^5.9.2",

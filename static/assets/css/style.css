@@ -7,7 +7,7 @@ Support: https://Codedthemes.authordesk.app
 File: style.css
 =========================================================================
 =================================================================================== */
-@import url("../fonts/phosphor/duotone/style.css");
+@import "../fonts/phosphor/duotone/style.css";
 
 :root {
   --bs-body-bg: #fff;
@@ -19905,7 +19905,8 @@ pre[class*=language-]>code {
   position: relative;
   top: 60px;
   margin-left: 208px;
-  min-height: calc(100vh - 135px);
+  margin-top: .25rem;
+  min-height: 100%;
 }
 
 .pc-container .pc-content {
