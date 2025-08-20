@@ -557,4 +557,9 @@ button.brace-btn.touch-hover {
   min-height: 100dvh;     /* full viewport height */
 }
 
+.unstyled-button {
+  all: unset;
+  cursor: pointer;
+}
+
 
