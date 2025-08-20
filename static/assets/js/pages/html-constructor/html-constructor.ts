@@ -7,6 +7,20 @@ function generateID() {
 	return `id-${ID_COUNTER}`;
 }
 
+let _SCROLLBAR_WIDTH: number | null = null;
+
+function getScrollbarWidth(): number {
+  if (_SCROLLBAR_WIDTH) return _SCROLLBAR_WIDTH;
+  const outer = document.createElement("div");
+  outer.style.visibility = "hidden";
+  outer.style.overflow = "scroll";
+  document.body.appendChild(outer);
+  const scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+  outer.remove();
+  _SCROLLBAR_WIDTH = scrollbarWidth;
+  return scrollbarWidth;
+}
+
 export const ComposeOption ={
 	NEST: "nest", // all subsequent compose elements will be children
 	ADJ: "adj", // all subsequent compose elements will be siblings
@@ -277,4 +291,4 @@ const ComposeFns = {
 
 
 
-export { TableConstructor, HTMLConstructor, ComposeFns };
+export { TableConstructor, HTMLConstructor, ComposeFns, getScrollbarWidth };

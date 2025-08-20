@@ -72,14 +72,18 @@ function addClearDataBtnListener() {
 }
 
 function addBraceButtonListeners() {
-	const braceButtons = document.querySelectorAll<HTMLButtonElement>('button.brace-btn');
+	const braceButtons = [
+		DOC_ELEMENTS.NAV_BAR.CLEAR_DATA_BTN,
+		DOC_ELEMENTS.NAV_BAR.EXPORT_CSV_BTN,
+		DOC_ELEMENTS.NAV_BAR.OFFICIAL_SITE_BTN
+	]
+	console.log("Adding brace button listeners");
 	braceButtons.forEach((btn) => {
-
-		// Remove sticky focus on mobile
-		btn.addEventListener('touchend', () => {
-			setTimeout(() => {
-				btn.blur();
-			}, 0);
+		// Simulate hover on mobile
+		btn.addEventListener("touchstart", () => {
+			btn.classList.add("touch-hover");
+			// Auto-expire hover
+			setTimeout(() => btn.classList.remove("touch-hover"), 150);
 		});
 	});
 }

@@ -178,6 +178,7 @@ input.filled, .form-control {
     width: 100%;
     position:relative;
 }
+
 table.scrollables thead {
     /* head takes the height it requires, 
     and it's not scaled when table is resized */
@@ -336,6 +337,14 @@ table.dataTable.w-100 td {
   display: inline-block;
   width: 40px;
   height: 20px;
+
+  min-width: 40px;
+  max-width: 40px;
+  min-height: 20px;
+  max-height: 20px;
+
+  flex: 0 0 auto;
+
   cursor: pointer;
 }
 
@@ -456,6 +465,8 @@ button.brace-btn {
 
   /* Mobile-friendly */
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   user-select: none;
 }
 
@@ -492,19 +503,32 @@ button.brace-btn::before {
   transition: 0.3s;
 }
 
-button.brace-btn:hover::before, button.brace-btn:hover::after {
-  transform: scale(0)
-}
-
-button.brace-btn:hover {
-  box-shadow: inset 0px 0px 1.3em #0cdfe3;
-}
 
 button.brace-btn:active {
   transition: all 0.1s;
   color: #0cdfe3;
   background-color: #000000; /* optional */
   box-shadow: inset 0 0 10px #000000;
+}
+
+/* Mobile simulated hover */
+button.brace-btn.touch-hover::before,
+button.brace-btn.touch-hover::after {
+  transform: scale(0);
+}
+
+button.brace-btn.touch-hover {
+  box-shadow: inset 0px 0px 1.3em #0cdfe3;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button.brace-btn:hover::before, button.brace-btn:hover::after {
+    transform: scale(0)
+  }
+
+  button.brace-btn:hover {
+    box-shadow: inset 0px 0px 1.3em #0cdfe3;
+  }
 }
 
 .flex-vertical {
@@ -530,7 +554,7 @@ button.brace-btn:active {
   display: flex;
   flex-direction: column;
   margin-left: 208px;
-  min-height: 90vh;     /* full viewport height */
+  min-height: 100dvh;     /* full viewport height */
 }
 
 

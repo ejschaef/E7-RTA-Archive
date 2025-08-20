@@ -17,6 +17,7 @@ import {
 	PLOT_REFS,
 	getSizes,
 } from "../../../../../e7/plots.ts";
+import { getScrollbarWidth } from "../../../../html-constructor/html-constructor.ts";
 
 async function populatePlot(stats) {
 	const container = Safe.unwrapHtmlElt("rank-plot-container");
@@ -202,7 +203,27 @@ async function runLogic(stateDispatcher) {
 	DOC_ELEMENTS.HOME_PAGE.USER_QUERY_FORM_NAME.value = "";
 }
 
+function addScrollTableOffsets () {
+	const tables = [
+		DOC_ELEMENTS.HOME_PAGE.FIRST_PICK_STATS_TBL,
+		DOC_ELEMENTS.HOME_PAGE.PREBAN_STATS_TBL,
+		DOC_ELEMENTS.HOME_PAGE.SEASON_DETAILS_TBL
+	];
+	const scrollWidth = getScrollbarWidth();
+	for (let tbl of tables) {
+		const thead = tbl.querySelector("thead");
+		if (!thead) {
+			continue;
+		}
+		thead.style.setProperty(
+		"padding-right",
+		`${scrollWidth}px`
+		);
+	}
+}
+
 async function initialize(stateDispatcher) {
+	addScrollTableOffsets();
 	const editor = await addCodeMirror();
 	await addStatsListeners(editor, stateDispatcher);
 }
