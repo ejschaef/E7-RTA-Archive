@@ -136,13 +136,13 @@ function addPlotlyLineAndMarkWidthListener() {
 				PLOT_REFS.lineMaxWidth
 			);
 
-			Plotly.restyle(plotDiv.id, {
+			Plotly.restyle(plotDiv, {
 				"marker.size": [newMarkerSize],
 				"line.width": [newLineWidth],
 			});
 		} else {
 			console.log("Resetting marker and line sizes");
-			Plotly.restyle(plotDiv.id, {
+			Plotly.restyle(plotDiv, {
 				"marker.size": [sizes.markerSize],
 				"line.width": [sizes.lineWidth],
 			});

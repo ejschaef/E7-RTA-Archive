@@ -62,8 +62,8 @@ async function populatePlot(stats) {
 		};
 
 		const markerConfig = {
-			"marker.size": newMarkerSize,
-			"line.width": newLineWidth,
+			"marker.size": [newMarkerSize],
+			"line.width": [newLineWidth],
 		};
 		CONTEXT.IGNORE_RELAYOUT = true;
 		Plotly.restyle(plotDiv, markerConfig);

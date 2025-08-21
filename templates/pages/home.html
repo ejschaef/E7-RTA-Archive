@@ -146,8 +146,7 @@
                             </div>
                             <form method="post" id="filterForm" class="card-body">
                                 {{ filter_form.hidden_tag() }}
-                                <textarea id="codeArea" name="code"
-                                    class="codemirror-hidden">{{ code or '' }}</textarea>
+                                <textarea id="codeArea" name="code" class="codemirror-hidden"></textarea>
                                 <div class="d-flex justify-content-center gap-3 mt-4">
                                     <button type="submit" name="check-syntax" value="check"
                                         class="btn shadow px-sm-1 filter-pane-btn">Check Syntax</button>

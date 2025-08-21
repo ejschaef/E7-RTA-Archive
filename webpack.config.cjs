@@ -20,7 +20,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
     }),
-
   ],
   entry: {
     "home-page"     : './static/assets/js/pages/home-page/home-page.js',

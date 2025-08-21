@@ -10,7 +10,7 @@ from   flask_session import Session
 from sys import exit
 
 from apps.config import config_dict
-from apps.logging import log_utils
+from apps.log_management import log_utils
 from apps import create_app, db
 import logging
 import apps.manifest as manifest

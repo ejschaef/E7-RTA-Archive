@@ -6,20 +6,25 @@ import json
 from apps.config import *
 
 from celery import Celery
-from celery.utils.log import get_task_logger
 from celery.schedules import crontab
 from celery.signals import worker_ready
 
 from apps.content_manager import ContentManager
 import apps.references.cached_var_keys as KEYS
 from apps.redis_manager import GLOBAL_DB
+from apps.log_management.log_utils import setup_celery_logging
+import logging
 
 import uuid
 import time
 
 GLOBAL_CLIENT = GLOBAL_DB.get_client()
 
-logger = get_task_logger(__name__)
+setup_celery_logging()
+
+CELERY_LOGGER_NAME = "e7-rta-celery-logger"
+
+logger = logging.getLogger(CELERY_LOGGER_NAME)
 
 celery_app = Celery(Config.CELERY_HOSTMACHINE, 
                     backend=Config.CELERY_RESULT_BACKEND, 
@@ -28,9 +33,9 @@ celery_app = Celery(Config.CELERY_HOSTMACHINE,
                     )
 
 celery_app.conf.beat_schedule = {
-    'run_celery_beat_test_every_minute': {
+    'run_celery_beat_test': {
         'task': 'celery_beat_test',
-        'schedule': crontab(minute='*/45'),  # Runs every 45 minutes
+        'schedule': crontab(hour='*/4'),  # Runs every 4 hours
         'args': (json.dumps({'test': 'data'}),)
     },
     'load_reference_content' : {
@@ -77,6 +82,7 @@ def run_start_up_tasks(sender, **kwargs):
 def celery_beat_test( self, task_input ):
     task_json = {'info': 'Beat is running'}
     print("/n-----------------BEAT IS RUNNING-------------------/n")
+    logger.info(str(task_json))
     return task_json
 
 @celery_app.task(name="load_reference_content", bind=True)
@@ -86,4 +92,5 @@ def load_reference_content( self):
     serialized_data = (ContentManager().encode())
     GLOBAL_CLIENT.set(key, serialized_data)
     print("E7 reference content Updated")
+    logger.info("E7 reference content Updated")
     return None

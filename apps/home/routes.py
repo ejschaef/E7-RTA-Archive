@@ -3,10 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-import os, json, pprint, uuid, base64
 import wtforms
-import jsonpickle
-
 from apps.home import blueprint
 from flask import render_template, request, redirect, url_for, session, jsonify
 from flask_login import login_required
@@ -23,7 +20,7 @@ from apps.e7_utils.user_manager import fetch_user_info
 from e7_rs_tools import get_battle_array
 import traceback
 
-from apps.logging import log_utils
+from apps.log_management import log_utils
 
 
 LOGGER = log_utils.get_logger()
@@ -58,11 +55,6 @@ def test():
 def search():
     form = SearchForm()
     return render_template('pages/search.html', segment='search', search_form=form)
-
-@blueprint.route('/test_upload')
-def test_upload():
-    form = FileUploadForm()
-    return render_template('pages/upload_battle_data_js_test.html', form=form, segment='test_upload')
 
 @blueprint.route('/typography')
 def typography():
@@ -327,18 +319,6 @@ def error_117():
 def handle_file_too_large(e):
     session["FILE_SIZE_ERROR"] = True
     return redirect(request.referrer or url_for('home_blueprint.home'))
-
-
-# Celery (to be refactored)
-@blueprint.route('/tasks-test')
-def tasks_test():
-    
-    input_dict = { "data1": "04", "data2": "99" }
-    input_json = json.dumps(input_dict)
-
-    task = celery_test.delay( input_json )
-
-    return f"TASK_ID: {task.id}, output: { task.get() }"
 
 
 # Custom template filter
