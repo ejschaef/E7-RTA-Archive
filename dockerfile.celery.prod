@@ -27,9 +27,11 @@ WORKDIR /code
 COPY pyproject.celery.toml /code/pyproject.toml
 RUN pip install --upgrade pip && pip install .
 
+# Create logs directory
+RUN mkdir -p /code/logs
+
 # Copy project files
 COPY ./apps /code/apps
-COPY ./logs /code/logs
 
 # Let celery user own files
 RUN chown -R e7_user:e7_user /code

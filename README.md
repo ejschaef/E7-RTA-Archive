@@ -30,7 +30,7 @@ The web app is not meant to be viewed in portrait mode. The site will work, but 
 - server proxy                : nginx
 - JS/CSS bundling             : webpack
 - front end framework         : vanilla JS
-- Domain hosting              : cloudflare
+- domain hosting              : cloudflare
 - instance hosting            : lightsail
 
 ## Client-Server Design
