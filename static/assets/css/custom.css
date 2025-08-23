@@ -562,4 +562,8 @@ button.brace-btn.touch-hover {
   cursor: pointer;
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 

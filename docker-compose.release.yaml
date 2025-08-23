@@ -12,7 +12,7 @@ services:
       - SALT_STRING=${SALT_STRING:-default_salt}
       - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
     volumes:
-      - /logs:/logs
+      - /logs:/code/logs
     expose:
       - "8000"
     depends_on:
@@ -25,7 +25,7 @@ services:
       - SALT_STRING=${SALT_STRING:-default_salt}
       - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
     volumes:
-      - /logs:/logs
+      - /logs:/code/logs
     command: celery -A apps.tasks worker --loglevel=info --concurrency=1
     depends_on:
       - redis
@@ -37,7 +37,7 @@ services:
       - SALT_STRING=${SALT_STRING:-default_salt}
       - SERVICES_KEY=${SERVICES_KEY:-default_services_key}
     volumes:
-      - /logs:/logs
+      - /logs:/code/logs
     command: celery -A apps.tasks beat --loglevel=info
     depends_on:
       - celery-worker
