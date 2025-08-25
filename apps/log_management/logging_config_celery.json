@@ -1,0 +1,41 @@
+{
+    "version" : 1,
+    "disable_existing_loggers": false,
+    "filters": {
+        "request_info_filter" : {
+            "()": "apps.log_management.log_request_info_filter.RequestInfoFilter"
+        }
+    },
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+        },
+        "json" : {
+            "()": "apps.log_management.json_log_formatter.JsonLogFormatter",
+            "fmt_keys": {
+                "level"      : "levelname",
+                "timestamp"  : "timestamp",
+                "msg"        : "message",
+                "fnName"     : "funcName",
+                "line"       : "lineno"
+            }
+        }
+    },
+    "handlers": {
+        "celery": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "json",
+            "filename": "logs/e7_rta_celery.jsonl",
+            "maxBytes": 1000000,
+            "backupCount": 1
+        }
+    },
+    "loggers": {
+        "e7-rta-celery-logger": {
+            "handlers": ["celery"],
+            "level": "DEBUG"
+        }
+    }
+}
+

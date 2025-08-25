@@ -8,9 +8,7 @@ from apps.home import blueprint
 from flask import render_template, request, redirect, url_for, session, jsonify
 from flask_login import login_required
 from flask_login import login_required, current_user
-from apps import db, config
-from apps.models import *
-from apps.tasks import *
+from apps import db
 from apps.authentication.models import Users
 from flask_wtf import FlaskForm
 from werkzeug.exceptions import RequestEntityTooLarge

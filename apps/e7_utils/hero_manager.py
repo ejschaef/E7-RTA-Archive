@@ -14,6 +14,9 @@ HERO_JSON_URL = "https://static.smilegatemegaport.com/gameRecord/epic7/epic7_her
 
 PRIMES = list(sympy.primerange(1, 1000000))
 
+EMPTY_NAME = "~Empty"
+FODDER_NAME = "~Fodder"
+
 
 def get_hero_data(lang: str="en") -> dict[str, list | dict[str, list]]:
     """
@@ -35,8 +38,8 @@ def get_int_to_hero_dict(lang="en", json=None) -> dict[int, str]:
         heroes = get_hero_data(lang=lang)
     int_to_hero = {int(hero['code'][1:]) : hero['name'] for hero in heroes}
     int_to_hero[777777] = "other"
-    int_to_hero[7777770] = "Empty"
-    int_to_hero[7777771] = "Fodder"
+    int_to_hero[7777770] = EMPTY_NAME
+    int_to_hero[7777771] = FODDER_NAME
     return int_to_hero
 
 class Hero:
@@ -144,9 +147,9 @@ class HeroManager:
             return self.str_id_dict[string_id]
         except KeyError:
             if "m" in string_id:
-                return self.get_from_name("Fodder")
+                return self.get_from_name(FODDER_NAME)
             elif string_id == "":
-                return self.get_from_name("Empty")
+                return self.get_from_name(EMPTY_NAME)
             else:
                 raise RuntimeError(f"Unrecognized string_id passed to HeroManager: {string_id}")
         

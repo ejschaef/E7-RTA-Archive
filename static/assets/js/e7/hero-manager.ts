@@ -3,8 +3,8 @@ import { LanguageCode, LANGUAGES, PRIMES } from "./references.ts";
 import PYAPI from "../apis/py-API.js";
 import E7API from "../apis/e7-API.ts";
 
-const FODDER_NAME = "Fodder";
-const EMPTY_NAME = "Empty";
+const FODDER_NAME = "~Fodder";
+const EMPTY_NAME = "~Empty";
 
 export type Hero = {
 	attribute_cd: string;
@@ -212,6 +212,9 @@ let HeroManager = {
 		}
 		return HeroDicts.prime_pair_lookup[product];
 	},
+
+	EMPTY_NAME: EMPTY_NAME,
+	FODDER_NAME: FODDER_NAME,
 };
 
 export default HeroManager;

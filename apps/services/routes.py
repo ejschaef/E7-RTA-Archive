@@ -1,7 +1,5 @@
 from apps.services import blueprint
 from flask import request, jsonify
-from apps.models import *
-from apps.tasks import *
 import apps.log_management.log_utils as log_utils
 import os
 import hmac

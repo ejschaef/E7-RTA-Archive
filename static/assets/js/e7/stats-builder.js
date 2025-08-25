@@ -190,7 +190,7 @@ function getFirstPickStats(battleList, HeroDicts) {
 function getPrebanStats(battleList, HeroDicts) {
 	//console.log(`Got HeroDicts: ${HeroDicts}`);
 
-	const emptyPrime = HeroManager.getHeroByName("Empty", HeroDicts).prime;
+	const emptyPrime = HeroManager.getHeroByName(HeroManager.EMPTY_NAME, HeroDicts).prime;
 
 	if (battleList.length === 0) {
 		return [];

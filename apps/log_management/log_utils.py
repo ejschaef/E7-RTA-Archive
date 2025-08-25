@@ -71,7 +71,7 @@ def get_celery_logger():
     return logging.getLogger(CELERY_LOGGER_NAME)
 
 def setup_celery_logging():
-    with open('apps/log_management/logging_config.json') as f:
+    with open('apps/log_management/logging_config_celery.json') as f:
         data = json.load(f)
     logging.config.dictConfig(data)
 
