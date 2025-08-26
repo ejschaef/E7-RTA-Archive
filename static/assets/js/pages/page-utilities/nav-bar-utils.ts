@@ -156,7 +156,7 @@ function addExportCSVBtnListener() {
 			}
 			const timestamp = new Date().toISOString().split("T")[0] || "";
 			const fileName = `${user.name} (${user.id}) ${timestamp}.csv`;
-			const battles: BattleType[] = await ContentManager.BattleManager.getBattles();
+			let battles: BattleType[] = await ContentManager.BattleManager.getBattles();
 			const battlesList = Object.values(battles);
 			const csvStr = convertBattlesToCSV(battlesList);
 			downloadCSV(csvStr, fileName);

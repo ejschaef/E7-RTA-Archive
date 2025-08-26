@@ -172,7 +172,7 @@ let HeroManager = {
 		console.log("Removed hero manager from cache");
 	},
 
-	getHeroByName: function (name: string, HeroDicts: HeroDicts): Hero | null {
+	getHeroByName: function (name: string | undefined, HeroDicts: HeroDicts): Hero | null {
 		if (!HeroDicts) {
 			throw new Error(
 				"HeroManager instance must be passed to lookup functions"
@@ -193,7 +193,7 @@ let HeroManager = {
 		return HeroDicts.prime_lookup[prime];
 	},
 
-	getHeroByCode: function (code: string, HeroDicts: HeroDicts): Hero | null {
+	getHeroByCode: function (code: string | undefined, HeroDicts: HeroDicts): Hero | null {
 		if (!HeroDicts) {
 			throw new Error(
 				"HeroManager instance must be passed to lookup functions"

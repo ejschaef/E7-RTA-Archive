@@ -5,6 +5,7 @@ import {
 	parsedCSVToFormattedBattleMap,
 } from "./battle-transform.js";
 import { StandardFilter, GlobalFilter } from "./filter-parsing/functions.ts";
+import { COLUMNS_MAP } from "./references.ts";
 
 let BattleManager = {
 	loaded_servers: new Set(),
@@ -88,7 +89,7 @@ let BattleManager = {
 		let oldDict = (await ClientCache.get(ClientCache.Keys.BATTLES)) ?? {};
 
 		// new battles automatically overwrite old ones if they share same seq_num
-		const newDict = { ...oldDict, ...cleanBattleMap };
+		const newDict = { ...oldDict, ...this.sortBattlesObj(cleanBattleMap) };
 		await ClientCache.cache(ClientCache.Keys.BATTLES, newDict);
 		console.log("Extended user data in cache");
 		return newDict;
@@ -182,6 +183,35 @@ let BattleManager = {
 			numFilters: numFilters,
 			areFiltersApplied: areFiltersApplied,
 		};
+	},
+
+
+	sortBattlesList: function (battlesList, asc = true) {
+		const cmpCol = COLUMNS_MAP.DATE_TIME;
+		if (asc) {
+			return battlesList.sort((a, b) => {
+				return new Date(a[cmpCol]) - new Date(b[cmpCol]);
+			});
+		} else {
+			return battlesList.sort((a, b) => {
+				return new Date(b[cmpCol]) - new Date(a[cmpCol]);
+			});
+		}
+	},
+
+	sortBattlesObj: function (battlesObj, asc = true) {
+		const cmpCol = COLUMNS_MAP.DATE_TIME;
+		if (asc) {
+			let sorted = Object.values(battlesObj).sort((a, b) => {
+				return new Date(a[cmpCol]) - new Date(b[cmpCol]);
+			});
+			return Object.fromEntries(sorted.map((b) => [b[COLUMNS_MAP.SEQ_NUM], b]));
+		} else {
+			let sorted = Object.values(battlesObj).sort((a, b) => {
+				return new Date(b[cmpCol]) - new Date(a[cmpCol]);
+			});
+			return Object.fromEntries(sorted.map((b) => [b[COLUMNS_MAP.SEQ_NUM], b]));
+		}
 	},
 };
 

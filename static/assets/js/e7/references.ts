@@ -150,6 +150,7 @@ export type ColumnKey = keyof typeof COLUMNS_MAP;
 export type ColumnHeader = typeof COLUMNS_MAP[ColumnKey];
 
 export const CSVHeaders: ColumnHeader[] = Object.values(COLUMNS_MAP).filter(h => !h.toLowerCase().includes("prime"));
+
 export type BattleType = {
 	[COLUMNS_MAP.SEASON]: string;
 	[COLUMNS_MAP.SEASON_CODE]: string;
@@ -183,16 +184,34 @@ export type BattleType = {
 	[COLUMNS_MAP.P1_MVP]: string;
 	[COLUMNS_MAP.P2_MVP]: string;
 	[COLUMNS_MAP.P1_PICKS_PRIMES]: number[];
-	[COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT]: number[];
+	[COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT]: number;
 	[COLUMNS_MAP.P2_PICKS_PRIMES]: number[];
-	[COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT]: number[];
+	[COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT]: number;
 	[COLUMNS_MAP.P1_PREBANS_PRIMES]: number[];
-	[COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT]: number[];
+	[COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT]: number;
 	[COLUMNS_MAP.P2_PREBANS_PRIMES]: number[];
-	[COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT]: number[];
+	[COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT]: number;
 };
 
-export const ARRAY_COLUMNS: string[] = [
+export type BattleTypeNoPrimes = Omit<
+  BattleType,
+  | typeof COLUMNS_MAP.P1_PICKS_PRIMES
+  | typeof COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT
+  | typeof COLUMNS_MAP.P2_PICKS_PRIMES
+  | typeof COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT
+  | typeof COLUMNS_MAP.P1_PREBANS_PRIMES
+  | typeof COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT
+  | typeof COLUMNS_MAP.P2_PREBANS_PRIMES
+  | typeof COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT
+>;
+
+export type BattleTypeNoPrimesColums = keyof BattleTypeNoPrimes;
+
+export type RawUploadBattle = {
+  [K in keyof BattleTypeNoPrimes]: string;
+};
+
+export const ARRAY_COLUMNS = [
 	COLUMNS_MAP.P1_EQUIPMENT,
 	COLUMNS_MAP.P2_EQUIPMENT,
 	COLUMNS_MAP.P1_ARTIFACTS,
@@ -202,25 +221,25 @@ export const ARRAY_COLUMNS: string[] = [
 	COLUMNS_MAP.P2_PREBANS,
 	COLUMNS_MAP.P1_PICKS,
 	COLUMNS_MAP.P2_PICKS,
-];
+] as const;
 
-export const BOOLS_COLS: string[] = [
+export const BOOLS_COLS = [
 	COLUMNS_MAP.FIRST_PICK,
 	COLUMNS_MAP.FIRST_TURN,
 	COLUMNS_MAP.WIN,
-];
+] as const;
 
-export const INT_COLUMNS: string[] = [
+export const INT_COLUMNS = [
 	COLUMNS_MAP.SECONDS,
 	COLUMNS_MAP.TURNS,
 	COLUMNS_MAP.P1_POINTS,
 	COLUMNS_MAP.POINT_GAIN,
-];
+] as const;
 
-export const TITLE_CASE_COLUMNS: string[] = [
+export const TITLE_CASE_COLUMNS = [
 	COLUMNS_MAP.P1_LEAGUE,
 	COLUMNS_MAP.P2_LEAGUE,
-];
+] as const;
 
 export const HERO_STATS_COLUMN_MAP: Record<string, string> = {
 	HERO_NAME: "Hero Name",

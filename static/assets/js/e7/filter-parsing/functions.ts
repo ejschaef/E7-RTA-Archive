@@ -1,7 +1,7 @@
 import { strArrToCountMap } from "../../str-functions";
 import { BattleType, COLUMNS_MAP } from "../references";
 import { BaseElement, BaseElements } from "./base-elements";
-import { Operator, CompareOperator, parseOperator, COMPARISON_OPERATORS, InOperator } from "./operators";
+import { Operator, CompareOperator, parseOperator, InOperator } from "./operators";
 import { PRINT_PREFIX } from "./filter-parse-references";
 import { FilterReferences } from "./filter-parse-references";
 import Futils from "./filter-utils";
@@ -26,22 +26,11 @@ const FN_TYPES = {
     BASE_FILTER: "BASE_FILTER",
 } as const;
 
-const CR_FN_TYPES = {
-    GEQ: "GEQ",
-    LEQ: "LEQ",
-    LT: "LT",
-    GT: "GT",
-} as const;
-
 
 abstract class Fn {
     abstract fnName: typeof FUNCTION_STRS[keyof typeof FUNCTION_STRS] | null;
     abstract fnType: typeof FN_TYPES[keyof typeof FN_TYPES];
-    abstract asString(prefix: string): string;
-
-    constructor(...args: any[]) {
-
-    }
+    abstract asString(prefix?: string): string;
 }
 
 abstract class StandardFilter extends Fn {

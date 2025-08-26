@@ -1,4 +1,4 @@
-import HeroManager from "./hero-manager.ts";
+import HeroManager, { HeroDicts } from "./hero-manager.ts";
 import ArtifactManager from "./artifact-manager.ts";
 import {
 	EQUIPMENT_SET_MAP,
@@ -7,17 +7,18 @@ import {
 	ARRAY_COLUMNS,
 	BOOLS_COLS,
 	INT_COLUMNS,
-	TITLE_CASE_COLUMNS,
+	TITLE_CASE_COLUMNS
 } from "./references.ts";
 import { toTitleCase } from "../str-functions.ts";
+import type { BattleType, BattleTypeNoPrimes, BattleTypeNoPrimesColums, RawUploadBattle } from "./references.ts";
 
 // takes in cleaned battle row (including from uploaded file or in formatBattleAsRow)
 // and adds fields representing sets heroes as prime products
-function addPrimeFields(battle, HeroDicts) {
-	const getChampPrime = (name) =>
+function addPrimeFields(battle: BattleType, HeroDicts: HeroDicts) {
+	const getChampPrime = (name: string) =>
 		HeroManager.getHeroByName(name, HeroDicts)?.prime ?? HeroDicts.Fodder.prime;
 	
-	const product = (acc, prime) => acc * prime;
+	const product = (acc: number, prime: number) => acc * prime;
 
 	battle[COLUMNS_MAP.P1_PICKS_PRIMES] =
 		battle[COLUMNS_MAP.P1_PICKS].map(getChampPrime);
@@ -51,17 +52,49 @@ function addPrimeFields(battle, HeroDicts) {
 const P1 = "p1";
 const P2 = "p2";
 
+export type RawBattle = {
+  date_time: string;
+  season_name: string;
+  season_code: string;
+  seq_num: string;
+  win: number;           // u8 -> number
+  first_pick: number;    // u8 -> number
+  turns: number;         // i16 -> number
+  seconds: number;       // i16 -> number
+  p1_id: number;         // i32 -> number
+  p2_id: number;         // i32 -> number
+  p1_server: string;
+  p2_server: string;
+  p1_league: string;
+  p2_league: string;
+  p1_prebans: string[];
+  p2_prebans: string[];
+  p1_picks: string[];
+  p2_picks: string[];
+  p1_mvp?: string;       // Option<String> -> optional
+  p2_mvp?: string;
+  p1_postban?: string;
+  p2_postban?: string;
+  p1_equipment: string[][];
+  p2_equipment: string[][];
+  cr_bar: [string, number][];  // Vec<(String, i8)>
+  p1_artifacts: string[];
+  p2_artifacts: string[];
+  p1_point_delta: number; // i16 -> number
+  p1_win_score: number;   // i16 -> number
+}
+
 // takes raw battle from array returned by rust battle array call to flask-server; formats into row to populate table
-function formatBattleAsRow(raw, HeroDicts, artifacts) {
+function formatBattleAsRow(raw: RawBattle, HeroDicts: HeroDicts, artifacts: Record<string, string>) {
 	// Make functions used to convert the identifier strings in the E7 data into human readable names
 
-	const getChampName = (code) =>
+	const getChampName = (code: string | undefined) =>
 		HeroManager.getHeroByCode(code, HeroDicts)?.name ?? HeroDicts.Fodder.name;
 
-	const getArtifactName = (code) =>
+	const getArtifactName = (code: string) =>
 		ArtifactManager.convertCodeToName(code, artifacts) || "None";
 
-	const checkBanned = (player, index) => {
+	const checkBanned = (player: string, index: number) => {
 		// used to check if artifact is null because banned or because not equipped
 		if (player === P1) {
 			return raw.p2_postban === raw.p1_picks[index];
@@ -69,19 +102,20 @@ function formatBattleAsRow(raw, HeroDicts, artifacts) {
 			return raw.p1_postban === raw.p2_picks[index];
 		}
 	};
-	const formatArtifacts = (player, artiArr) =>
+	const formatArtifacts = (player: string, artiArr: string[]) =>
 		artiArr.map((code, index) =>
 			code ? getArtifactName(code) : checkBanned(player, index) ? "n/a" : "None"
 		);
-	const formatCRBar = (crBar) =>
-		crBar.map((entry) =>
+	function formatCRBar(crBar: ([string, number] | null)[]): [string, number][] {
+		return crBar.map((entry) =>
 			entry && entry.length == 2
 				? [getChampName(entry[0]), entry[1]]
 				: ["n/a", 0]
 		);
+	}
 
 	// Fall back to the code if the equipment set is not defined in references
-	const formatEquipment = (equipArr) =>
+	const formatEquipment = (equipArr: string[][]) =>
 		equipArr.map((heroEquipList) =>
 			heroEquipList.map((equip) => EQUIPMENT_SET_MAP[equip] || equip)
 		);
@@ -91,7 +125,7 @@ function formatBattleAsRow(raw, HeroDicts, artifacts) {
 		? raw.p1_picks.includes(firstTurnHero[0])
 		: false;
 
-	const battle = {
+	const battle: BattleTypeNoPrimes = {
 		[COLUMNS_MAP.SEASON]: raw.season_name || "None",
 		[COLUMNS_MAP.SEASON_CODE]: raw.season_code || "None",
 		[COLUMNS_MAP.DATE_TIME]: raw.date_time,
@@ -130,11 +164,11 @@ function formatBattleAsRow(raw, HeroDicts, artifacts) {
 	};
 
 	// finally take the array hero array fields and compute the prime products after converting; will be used to compute statistics more easily
-	addPrimeFields(battle, HeroDicts);
+	addPrimeFields(battle as BattleType, HeroDicts);
 	return battle;
 }
 
-function buildFormattedBattleMap(rawBattles, HeroDicts, artifacts) {
+function buildFormattedBattleMap(rawBattles: RawBattle[], HeroDicts: HeroDicts, artifacts: Record<string, string>) {
 	artifacts = artifacts ?? ArtifactManager.getArtifactCodeToNameMap();
 	let entries = [];
 	for (const rawBattle of rawBattles) {
@@ -144,25 +178,38 @@ function buildFormattedBattleMap(rawBattles, HeroDicts, artifacts) {
 	return Object.fromEntries(entries);
 }
 
+
+function castColumn(column: BattleTypeNoPrimesColums, data: RawUploadBattle) {
+	if (column in ARRAY_COLUMNS){
+		return JSON.parse(data[column]);
+	} else if (column in BOOLS_COLS) {
+		return data[column].toLowerCase() === "true";
+	} else if (column in INT_COLUMNS) {
+		Number(data[column].replace("'", ""));
+	} else if (column in TITLE_CASE_COLUMNS) {
+		return toTitleCase(data[column]);
+	} else {
+		return data[column];
+	}
+}
+
+function castRawUploadBattle(raw: RawUploadBattle): BattleTypeNoPrimes {
+	return Object.fromEntries(
+		Object.keys(raw).map((column) => [
+			column,
+			castColumn(column as BattleTypeNoPrimesColums, raw),
+		])
+	) as BattleTypeNoPrimes;
+}
+
 // takes output of CSV parse and parses the list rows and ensures types are correct
-function parsedCSVToFormattedBattleMap(rawRowsArr, HeroDicts) {
+function parsedCSVToFormattedBattleMap(rawRowsArr: RawUploadBattle[], HeroDicts: HeroDicts) {
 	const rows = rawRowsArr.map((row) => {
-		for (const col of ARRAY_COLUMNS) {
-			row[col] = JSON.parse(row[col]);
-		}
-		for (const col of BOOLS_COLS) {
-			row[col] = row[col].toLowerCase() === "true";
-		}
-		for (const col of INT_COLUMNS) {
-			row[col] = Number(row[col].replace("'", ""));
-		}
-		for (const col of TITLE_CASE_COLUMNS) {
-			row[col] = toTitleCase(row[col]);
-		}
-		addPrimeFields(row, HeroDicts);
+		const formattedRow = castRawUploadBattle(row);
+		addPrimeFields(formattedRow as BattleType, HeroDicts);
 		return row;
 	});
-	return Object.fromEntries(rows.map((row) => [row["Seq Num"], row]));
+	return Object.fromEntries(rows.map((row) => [row[COLUMNS_MAP.SEQ_NUM], row]));
 }
 
 export { buildFormattedBattleMap, parsedCSVToFormattedBattleMap };

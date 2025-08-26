@@ -9,10 +9,10 @@ const MODES = {
   DEVELOPMENT: 'development',
 }
 
-const MODE = MODES.PRODUCTION;
+const MODE = MODES.DEVELOPMENT;
 
 module.exports = {
-  plugins: [
+plugins: [
     new WebpackManifestPlugin({
       fileName: 'manifest.json',
       publicPath: 'dist/',  // adjust if needed

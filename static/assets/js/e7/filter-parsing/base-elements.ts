@@ -94,7 +94,7 @@ class StringLiteral extends Literal<string> {
         if (!parsedString) {
             const parsersStr = parsers.map((parser) => parser.parserType).join(", ");
             throw new Futils.ValidationError(
-                `Invalid string literal: '${str}' ; clould not be parsed as a valid instance of any of the following: [${parsersStr}]`
+                `Invalid string literal: '${str}' ; could not be parsed as a valid instance of any of the following: [${parsersStr}]`
             );
         }
         return parsedString;
@@ -258,15 +258,17 @@ class SetLiteral extends Literal<Set<SetEltTypes>> {
         const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
         const parsedSet = new Set<SetEltTypes>();
         for (const arg of args) {
+            let parsedElt: StringLiteral | IntLiteral | DateLiteral | null = null;
             for (const parser of SET_ELT_PARSERS) {
-                const parsedElt = parser(arg);
+                parsedElt = parser(arg);
                 if (parsedElt) {
                     console.log(`Parsed literal: ${arg} and got ${parsedElt}`);
                     parsedSet.add(parsedElt.data);
-                    continue;
+                    break;
                 }
             }
-            const parsedElt = SET_STRING_PARSER(arg, REFS, parsers);
+            if (parsedElt) continue;
+            parsedElt = SET_STRING_PARSER(arg, REFS, parsers);
             if (parsedElt) {
                 console.log(`Parsed string literal: ${arg} and got ${parsedElt}`);
                 parsedSet.add(parsedElt.data);
