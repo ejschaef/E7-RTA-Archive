@@ -29,7 +29,7 @@ class FileUploadForm(FlaskForm):
                          id='upload_data',
                          validators=[
                                      FileRequired(),
-                                     FileAllowed(["csv"], "Only CSV Files Allowed")
+                                     FileAllowed(["json"], "Only JSON Files Allowed")
                                      ]
         )
 

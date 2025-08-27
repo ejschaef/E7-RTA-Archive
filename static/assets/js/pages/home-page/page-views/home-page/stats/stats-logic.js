@@ -19,6 +19,15 @@ import {
 } from "../../../../../e7/plots.ts";
 import { getScrollbarWidth } from "../../../../html-constructor/html-constructor.ts";
 
+
+const filtersAreRelevant = (stats) => {
+	return (
+		stats.areFiltersApplied &&
+		stats.battlesList.length >
+		Object.values(stats.filteredBattlesObj).length
+	);
+};
+
 async function populatePlot(stats) {
 	const container = Safe.unwrapHtmlElt("rank-plot-container");
 	const user = await UserManager.getUser();
@@ -32,8 +41,7 @@ async function populatePlot(stats) {
 	);
 
 	addPlotlyLineAndMarkWidthListener(plotDiv);
-
-	if (autoZoom && stats.areFiltersApplied) {
+	if (autoZoom && filtersAreRelevant(stats)) {
 		// compute the needed zoom level
 		const zoom = getZoom(stats.battles, stats.filteredBattlesObj);
 		console.log("Zooming to:", zoom);

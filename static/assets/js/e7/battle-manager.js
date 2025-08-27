@@ -3,7 +3,7 @@ import StatsBuilder from "./stats-builder.js";
 import {
 	buildFormattedBattleMap,
 	parsedCSVToFormattedBattleMap,
-} from "./battle-transform.js";
+} from "./battle-transform.ts";
 import { StandardFilter, GlobalFilter } from "./filter-parsing/functions.ts";
 import { COLUMNS_MAP } from "./references.ts";
 
@@ -184,7 +184,6 @@ let BattleManager = {
 			areFiltersApplied: areFiltersApplied,
 		};
 	},
-
 
 	sortBattlesList: function (battlesList, asc = true) {
 		const cmpCol = COLUMNS_MAP.DATE_TIME;

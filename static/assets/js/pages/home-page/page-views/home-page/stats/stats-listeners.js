@@ -40,6 +40,16 @@ function addAutoZoomListener() {
 	});
 }
 
+function addLatestBattlesBtnListener(stateDispatcher) {
+	const latestBattlesBtn = DOC_ELEMENTS.HOME_PAGE.LATEST_BATTLES_BTN;
+	latestBattlesBtn.addEventListener("click", async () => {
+		console.log("Clicking Latest Battles Button");
+		CONTEXT.AUTO_QUERY = true;
+		CONTEXT.SOURCE = CONTEXT.VALUES.SOURCE.STATS;
+		await stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
+	});
+}
+
 function addPremadeFilterButtonListener(editor) {
 	// Logic for adding premade filters to filter pane
 	document
@@ -155,6 +165,7 @@ function addStatsListeners(editor, stateDispatcher) {
 	addBattleTableFilterToggleListener();
 	addPremadeFilterButtonListener(editor);
 	addFilterButtonListeners(editor, stateDispatcher);
+	addLatestBattlesBtnListener(stateDispatcher);
 }
 
 export { addStatsListeners, addPlotlyLineAndMarkWidthListener };

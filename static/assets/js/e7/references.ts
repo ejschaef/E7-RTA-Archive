@@ -150,6 +150,7 @@ export type ColumnKey = keyof typeof COLUMNS_MAP;
 export type ColumnHeader = typeof COLUMNS_MAP[ColumnKey];
 
 export const CSVHeaders: ColumnHeader[] = Object.values(COLUMNS_MAP).filter(h => !h.toLowerCase().includes("prime"));
+export const ExportColumns: ColumnHeader[] = Object.values(COLUMNS_MAP).filter(h => !h.toLowerCase().includes("prime"));
 
 export type BattleType = {
 	[COLUMNS_MAP.SEASON]: string;

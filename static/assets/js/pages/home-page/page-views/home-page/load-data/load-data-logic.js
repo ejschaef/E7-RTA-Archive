@@ -1,16 +1,15 @@
 import { CONTEXT } from "../../../home-page-context.js";
-import {
-	HOME_PAGE_STATES,
-} from "../../../../orchestration/page-state-manager.js";
+import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import { FilterParser } from "../../../../../e7/filter-parsing/filter-parser.ts";
 import { ContentManager } from "../../../../../content-manager.ts";
-import CSVParse from "../../../../../csv-parse.js";
+import CSVParse from "../../../../../csv-parse.ts";
 import { StatsView } from "../stats/stats-logic.js";
 import { CLEAN_STR_TO_WORLD_CODE } from "../../../../../e7/references.ts";
 import { TextUtils } from "../../../../orchestration/text-controller.js";
 import { NavBarUtils } from "../../../../page-utilities/nav-bar-utils.ts";
 import { addLoadDataListeners } from "./load-data-listeners.js";
 import PYAPI from "../../../../../apis/py-API.js";
+import { ExportImportFns } from "../../../../../export-import-data-tools.ts";
 
 async function processUpload() {
 	const selectedFile = await ContentManager.ClientCache.get(
@@ -19,14 +18,12 @@ async function processUpload() {
 
 	console.log("Retrieved Upload: ", selectedFile);
 
-	const battleArr = await CSVParse.parseUpload(selectedFile);
+	const uploadedData = await ExportImportFns.parseJSON(selectedFile);
+	const battleArr = ExportImportFns.restructureParsedUploadBattles(uploadedData.battles);
+	const uploadedUser = uploadedData.user;
 
-	const playerID = battleArr[0]["P1 ID"];
-	const playerWorldCode = CLEAN_STR_TO_WORLD_CODE[battleArr[0]["P1 Server"]];
-	const user = await ContentManager.UserManager.findUser({
-		id: playerID,
-		world_code: playerWorldCode,
-	});
+	const user = await ContentManager.UserManager.findUser(uploadedUser);
+
 	if (!user) {
 		console.log(
 			"Failed to find user with ID during upload verification:",

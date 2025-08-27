@@ -49,7 +49,7 @@
                             <div class="px-2 mt-0 mb-3">
                                 <form id="uploadForm">
                                     {{ upload_form.hidden_tag() }}
-                                    <h6 class="text-center f-w-500 mb-3">Upload CSV</h6>
+                                    <h6 class="text-center f-w-500 mb-3">Upload JSON</h6>
                                     <div class="form-group mb-3">
                                         {{ upload_form.file(class="form-control", id="csvFile") }}
                                     </div>
@@ -95,7 +95,11 @@
     <div class="pc-content">
         <!-- [ Main Content ] start -->
         <div class="row">
-
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" id="latest-battles-btn" class="btn btn-primary shadow px-sm-2 filter-pane-btn">
+                    Query Latest Battles
+                </button>
+            </div>
             <!-- [ season details table ] start -->
             <div class="col-md-6">
                 <div class="card height-400">
@@ -127,18 +131,18 @@
                                         id="filter-select" data-bs-toggle="dropdown" aria-expanded="false">
                                         Premade Filters
                                     </button>
-                                    <ul class="dropdown-menu scrollable-300px f-12" aria-labelledby="filter-select"
+                                    <ul class="dropdown-menu scrollable-300px f-12 filter-dropdown" aria-labelledby="filter-select"
                                         id="premade-filters">
-                                        <li><button type="button" class="dropdown-item">Current Season</button></li>
-                                        <li><button type="button" class="dropdown-item">Last Season</button></li>
-                                        <li><button type="button" class="dropdown-item">First Pick</button></li>
-                                        <li><button type="button" class="dropdown-item">Second Pick</button></li>
-                                        <li><button type="button" class="dropdown-item">Wins</button></li>
-                                        <li><button type="button" class="dropdown-item">Losses</button></li>
-                                        <li><button type="button" class="dropdown-item">Champion+ Opponent</button></li>
-                                        <li><button type="button" class="dropdown-item">Warlord+ Opponent</button></li>
-                                        <li><button type="button" class="dropdown-item">Emperor+ Opponent</button></li>
-                                        <li><button type="button" class="dropdown-item">Legend Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Current Season</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Last Season</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">First Pick</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Second Pick</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Wins</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Losses</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Champion+ Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Warlord+ Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Emperor+ Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Legend Opponent</button></li>
                                     </ul>
                                 </div>
                                 <span class="d-block me-3 rel-width-60 scrollable-40px f-10"

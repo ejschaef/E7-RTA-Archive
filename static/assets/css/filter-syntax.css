@@ -73,3 +73,16 @@
 #exFilter5-wrapper .CodeMirror {
     max-height: 100px;             
   }
+
+  .filter-dropdown {
+    background-color: #1e1e1e !important;
+  }
+
+  .filter-dropdown-item {
+    color: #ffffff !important;
+  }
+
+  .filter-dropdown-item:hover,
+  .filter-dropdown-item:focus {
+    color: #0cdfe3 !important;
+  }

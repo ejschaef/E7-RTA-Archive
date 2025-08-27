@@ -45,7 +45,7 @@ def fetch_user_info(uid: str, world_code: str, lang: str = "en") -> dict | None:
     }
  
     try:
-        resp = requests.post(url, data=payload, timeout=10)
+        resp = requests.post(url, data=payload, timeout=5)
         resp.raise_for_status()
         return resp.json()
     except requests.RequestException as e:

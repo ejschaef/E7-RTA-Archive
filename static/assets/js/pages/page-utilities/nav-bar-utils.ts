@@ -15,6 +15,7 @@ import DOC_ELEMENTS from "./doc-element-references.js";
 import IPM from "../orchestration/inter-page-manager.ts";
 import { ContentManager } from "../../content-manager.ts";
 import { LangManager } from "../../lang-manager.ts";
+import { ExportImportFns } from "../../export-import-data-tools.ts";
 
 function navToHome() {
 	// @ts-ignore
@@ -71,10 +72,15 @@ function addClearDataBtnListener() {
 	);
 }
 
+/**
+ * Simulates hover on mobile devices for "brace" buttons (buttons with a dashed
+ * border). When a button is touched, it adds a class to simulate a hover effect.
+ * The class is automatically removed after 150ms.
+ */
 function addBraceButtonListeners() {
 	const braceButtons = [
 		DOC_ELEMENTS.NAV_BAR.CLEAR_DATA_BTN,
-		DOC_ELEMENTS.NAV_BAR.EXPORT_CSV_BTN,
+		DOC_ELEMENTS.NAV_BAR.EXPORT_DATA_BTN,
 		DOC_ELEMENTS.NAV_BAR.OFFICIAL_SITE_BTN
 	]
 	console.log("Adding brace button listeners");
@@ -138,8 +144,8 @@ export function downloadCSV(csv: string, filename: string) {
 	document.body.removeChild(downloadLink);
 }
 
-function addExportCSVBtnListener() {
-	DOC_ELEMENTS.NAV_BAR.EXPORT_CSV_BTN.addEventListener(
+function addExportDataBtnListener() {
+	DOC_ELEMENTS.NAV_BAR.EXPORT_DATA_BTN.addEventListener(
 		"click",
 		async function () {
 			const user = await ContentManager.UserManager.getUser();
@@ -154,12 +160,7 @@ function addExportCSVBtnListener() {
 				navToHome();
 				return;
 			}
-			const timestamp = new Date().toISOString().split("T")[0] || "";
-			const fileName = `${user.name} (${user.id}) ${timestamp}.csv`;
-			let battles: BattleType[] = await ContentManager.BattleManager.getBattles();
-			const battlesList = Object.values(battles);
-			const csvStr = convertBattlesToCSV(battlesList);
-			downloadCSV(csvStr, fileName);
+			await ExportImportFns.triggerDownload();
 		}
 	);
 }
@@ -185,7 +186,7 @@ async function initialize() {
 	writeUserInfo(user);
 	addNavListeners();
 	addClearDataBtnListener();
-	addExportCSVBtnListener();
+	addExportDataBtnListener();
 	addBraceButtonListeners();
 }
 
@@ -195,7 +196,7 @@ let NavBarUtils = {
 	writeUserInfo: writeUserInfo,
 	initialize: initialize,
 	navToHome: navToHome,
-	addExportCSVBtnListener: addExportCSVBtnListener,
+	addExportDataBtnListener: addExportDataBtnListener,
 	addBraceButtonListeners: addBraceButtonListeners,
 	eraseUserFromPage: eraseUserFromPage,
 	setUserOnPage: setUserOnPage,

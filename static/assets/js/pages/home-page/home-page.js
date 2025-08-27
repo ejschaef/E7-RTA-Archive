@@ -78,7 +78,7 @@ async function initializeHomePage() {
 	console.log("GOT USER", user);
 	const lang = await LangManager.getLang();
 	NavBarUtils.writeUserInfo(user, lang);
-	NavBarUtils.addExportCSVBtnListener();
+	NavBarUtils.addExportDataBtnListener();
 	NavBarUtils.addBraceButtonListeners();
 	TextController.bindAutoClear(DOC_ELEMENTS.HOME_PAGE.MESSAGE_ELEMENTS_LIST);
 }

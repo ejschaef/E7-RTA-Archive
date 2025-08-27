@@ -193,7 +193,6 @@ let ClientCache = {
   setStats: async function(stats: any): Promise<void> {
     await this.cache(Keys.STATS, stats);
   },
-
 };
 
 export default ClientCache; 

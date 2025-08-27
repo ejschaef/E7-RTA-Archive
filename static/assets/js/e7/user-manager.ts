@@ -22,6 +22,25 @@ export type User = {
 	world_code: string;
 }
 
+export function validateUserFormat(user: any): user is User {
+	if (!user) {
+		throw new Error("Invalid user; user is null or undefined");
+	} if (!("id" in user) || typeof user.id !== "number") {
+		throw new Error("Invalid user; user.id does not exist or is not a number");
+	} if (!("name" in user) || typeof user.name !== "string") {
+		throw new Error("Invalid user; user.name does not exist or is not a string");
+	} if (!("code" in user) || typeof user.code !== "string") {
+		throw new Error("Invalid user; user.code does not exist or is not a string");
+	} if (!("rank" in user) || typeof user.rank !== "number") {
+		throw new Error("Invalid user; user.rank does not exist or is not a number");
+	} if (!("world_code" in user) || typeof user.world_code !== "string") {
+		throw new Error("Invalid user; user.world_code does not exist or is not a string");
+	} if (!(user.world_code in WORLD_CODE_TO_CLEAN_STR)) {
+		throw new Error("Invalid user; user.world_code is not a valid world code");
+	}
+	return true;
+}
+
 type UserJSON = {
 	nick_no: number;
 	nick_nm: string;
@@ -37,10 +56,10 @@ type UserSearchData = {
 
 function createUser(userJSON: UserJSON, world_code: string): User {
 	return {
-		id: userJSON.nick_no,
+		id: Number(userJSON.nick_no),
 		name: userJSON.nick_nm,
 		code: userJSON.code,
-		rank: userJSON.rank,
+		rank: Number(userJSON.rank),
 		world_code: world_code,
 	};
 }

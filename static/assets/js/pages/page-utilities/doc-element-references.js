@@ -19,8 +19,8 @@ class HomePageElements {
 		return (this._LOAD_DATA_BODY ||= Safe.unwrapHtmlElt("load-data-body"));
 	}
 
-	get CLEAR_DATA_BTN() {
-		return (this._CLEAR_DATA_BTN ||= Safe.unwrapHtmlElt("clear-data-btn"));
+	get LATEST_BATTLES_BTN() {
+		return (this._LATEST_BATTLES_BTN ||= Safe.unwrapHtmlElt("latest-battles-btn"));
 	}
 
 	get UPLOAD_FORM() {
@@ -124,8 +124,8 @@ class NavBarElements {
 		return (this._CLEAR_DATA_BTN ||= Safe.unwrapHtmlElt("clear-data-btn"));
 	}
 
-	get EXPORT_CSV_BTN() {
-		return (this._EXPORT_CSV_BTN ||= Safe.unwrapHtmlElt("export-csv-btn"));
+	get EXPORT_DATA_BTN() {
+		return (this._EXPORT_CSV_BTN ||= Safe.unwrapHtmlElt("export-data-btn"));
 	}
 
 	get OFFICIAL_SITE_BTN() {

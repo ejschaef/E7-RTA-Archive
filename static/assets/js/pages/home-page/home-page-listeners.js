@@ -8,8 +8,7 @@ import { CONTEXT } from "./home-page-context.js";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
 import UserManager from "../../e7/user-manager.ts";
 import { stateDispatcher, resizeRankPlot } from "./home-page-dispatch.js";
-import { ContentManager } from "../../content-manager.ts";
-import { convertBattlesToCSV, downloadCSV } from "../../str-functions.ts";
+
 
 function addNavListener() {
 	document.querySelectorAll(".nav-link").forEach((link) => {
@@ -46,7 +45,7 @@ function addNavListener() {
 }
 
 function addClearDataBtnListener() {
-	DOC_ELEMENTS.HOME_PAGE.CLEAR_DATA_BTN.addEventListener(
+	DOC_ELEMENTS.NAV_BAR.CLEAR_DATA_BTN.addEventListener(
 		"click",
 		async function (_event) {
 			const user = await UserManager.getUser();
