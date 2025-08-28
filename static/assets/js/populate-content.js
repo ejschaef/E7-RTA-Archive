@@ -4,7 +4,7 @@ import {
 	HERO_STATS_COLUMN_MAP,
 } from "./e7/references.ts";
 import { Safe } from "./html-safe.ts";
-import DOC_ELEMENTS from "./pages/page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "./pages/page-utilities/doc-element-references.ts";
 
 function destroyDataTable(tableid) {
 	const tableSelector = $(`#${tableid}`);

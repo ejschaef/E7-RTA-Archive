@@ -3,7 +3,7 @@ import PageUtils from "../../../../page-utilities/page-utils.js";
 import { Tables } from "../../../../../populate-content.js";
 import { CONTEXT } from "../../../home-page-context.js";
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
-import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.ts";
 import { ContentManager } from "../../../../../content-manager.ts";
 import ClientCache from "../../../../../cache-manager.ts";
 import { getSizes, PLOT_REFS } from "../../../../../e7/plots.ts";

@@ -11,7 +11,7 @@ import {
 	WORLD_CODE_TO_CLEAN_STR,
 } from "../../e7/references.ts";
 import UserManager, { User } from "../../e7/user-manager.ts";
-import DOC_ELEMENTS from "./doc-element-references.js";
+import DOC_ELEMENTS from "./doc-element-references.ts";
 import IPM from "../orchestration/inter-page-manager.ts";
 import { ContentManager } from "../../content-manager.ts";
 import { LangManager } from "../../lang-manager.ts";
@@ -97,7 +97,7 @@ function addBraceButtonListeners() {
 function writeUserInfo(user: User | null, lang: LanguageCode = "en") {
 	if (user) {
 		DOC_ELEMENTS.NAV_BAR.USER_NAME.innerText = user.name;
-		DOC_ELEMENTS.NAV_BAR.USER_ID.innerText = user.id;
+		DOC_ELEMENTS.NAV_BAR.USER_ID.innerText = `${user.id}`;
 		DOC_ELEMENTS.NAV_BAR.USER_SERVER.innerText =
 			WORLD_CODE_TO_CLEAN_STR[user.world_code];
 		DOC_ELEMENTS.NAV_BAR.OFFICIAL_SITE_BTN.onclick = () => {

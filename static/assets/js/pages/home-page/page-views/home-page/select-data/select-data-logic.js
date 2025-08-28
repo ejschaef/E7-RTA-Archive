@@ -1,5 +1,5 @@
 import ClientCache from "../../../../../cache-manager.ts";
-import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.ts";
 import { addSelectDataListeners } from "./select-data-listeners.js";
 
 async function runLogic() {

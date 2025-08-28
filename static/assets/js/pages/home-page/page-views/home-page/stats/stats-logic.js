@@ -8,7 +8,7 @@ import {
 	addStatsListeners,
 } from "./stats-listeners.js";
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
-import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.ts";
 import { CONTEXT } from "../../../home-page-context.js";
 import { Safe } from "../../../../../html-safe.ts";
 import {
@@ -19,12 +19,10 @@ import {
 } from "../../../../../e7/plots.ts";
 import { getScrollbarWidth } from "../../../../html-constructor/html-constructor.ts";
 
-
 const filtersAreRelevant = (stats) => {
 	return (
 		stats.areFiltersApplied &&
-		stats.battlesList.length >
-		Object.values(stats.filteredBattlesObj).length
+		stats.battlesList.length > Object.values(stats.filteredBattlesObj).length
 	);
 };
 
@@ -211,11 +209,11 @@ async function runLogic(stateDispatcher) {
 	DOC_ELEMENTS.HOME_PAGE.USER_QUERY_FORM_NAME.value = "";
 }
 
-function addScrollTableOffsets () {
+function addScrollTableOffsets() {
 	const tables = [
 		DOC_ELEMENTS.HOME_PAGE.FIRST_PICK_STATS_TBL,
 		DOC_ELEMENTS.HOME_PAGE.PREBAN_STATS_TBL,
-		DOC_ELEMENTS.HOME_PAGE.SEASON_DETAILS_TBL
+		DOC_ELEMENTS.HOME_PAGE.SEASON_DETAILS_TBL,
 	];
 	const scrollWidth = getScrollbarWidth();
 	for (let tbl of tables) {
@@ -223,10 +221,7 @@ function addScrollTableOffsets () {
 		if (!thead) {
 			continue;
 		}
-		thead.style.setProperty(
-		"padding-right",
-		`${scrollWidth}px`
-		);
+		thead.style.setProperty("padding-right", `${scrollWidth}px`);
 	}
 }
 

@@ -1,5 +1,5 @@
 import ClientCache from "../../cache-manager.ts";
-import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.ts";
 import PageUtils from "../page-utilities/page-utils.js";
 import { HOME_PAGE_STATES } from "../page-utilities/page-state-references.js";
 import UserManager from "../../e7/user-manager.ts";

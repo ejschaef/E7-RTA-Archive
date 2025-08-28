@@ -6,7 +6,7 @@ import { NavBarUtils } from "../page-utilities/nav-bar-utils.ts";
 import { TextController, TextUtils } from "../orchestration/text-controller.js";
 import { CONTEXT } from "./home-page-context.js";
 import PageUtils from "../page-utilities/page-utils.js";
-import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.ts";
 import IPM from "../orchestration/inter-page-manager.ts";
 import UserManager from "../../e7/user-manager.ts";
 import { stateDispatcher } from "./home-page-dispatch.js";

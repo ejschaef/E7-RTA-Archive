@@ -1,5 +1,5 @@
 import { TableConstructor } from "../html-constructor/html-constructor.ts";
-import DOC_ELEMENTS from "../page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "../page-utilities/doc-element-references.ts";
 import { COLUMNS_MAP } from "../../e7/references.ts";
 
 const HERO_TBL_COLS = [

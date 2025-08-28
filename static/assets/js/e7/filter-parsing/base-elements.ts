@@ -255,7 +255,8 @@ class SetLiteral extends Literal<Set<SetEltTypes>> {
     }
 
     processString(str: string, REFS: FilterReferences, parsers: StringLiteralParser[]): Set<SetEltTypes> {
-        const args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
+        let args = Futils.tokenizeWithNestedEnclosures(str, ",", 1, true);
+        args = args.filter((arg) => arg !== "");
         const parsedSet = new Set<SetEltTypes>();
         for (const arg of args) {
             let parsedElt: StringLiteral | IntLiteral | DateLiteral | null = null;

@@ -1,11 +1,31 @@
 import { BattleType } from "../e7/references";
 import { BATTLES } from "./test-required-objects";
 import { COLUMNS_MAP } from "../e7/references";
+import { SEQ_NUM_RESULTS } from "./filter-test-results";
 
 const hundredthDateTime = BATTLES.slice(-100)[0][COLUMNS_MAP.DATE_TIME];
 const tenthDateTime = BATTLES.slice(-10)[0][COLUMNS_MAP.DATE_TIME];
 
 console.log("Last-N DateTimes:", hundredthDateTime, tenthDateTime);
+
+
+function getSeqNumArray(battles: BattleType[]): number[] {
+	return battles.map((b) => Number(b[COLUMNS_MAP.SEQ_NUM]));
+}
+
+function arraysEqual<T>(a: T[], b: T[]): boolean {
+	a.sort();
+	b.sort();
+	if (a === b) return true;
+	if (a.length !== b.length) return false;
+	for (let i = 0; i < a.length; ++i) {
+		if (a[i] !== b[i]) {
+			console.log(`Failed at index ${i}: a: ${a[i]}, b: ${b[i]}`);
+			return false;
+		};
+	}
+	return true;
+}
 
 
 export type FilterTestPacket = {
@@ -194,43 +214,43 @@ const FilterTestDefinitions: { [key: string]: FilterTestPacket } = {
 	commasInOr: {
 		name: "commasInOr",
 		filterStr: `OR(p2.server = "Global", p2.server = "Asia");`,
-		validationFn: () => false,
+		validationFn: (battles: BattleType[]) => arraysEqual(getSeqNumArray(battles), SEQ_NUM_RESULTS.commasInOr),
 	},
 	setWithStrings: {
 		name: "setWithStrings",
 		filterStr: `p1.pick3 in {Zio, "Amid", "Lionheart Cermia"};`,
-		validationFn: () => false,
+		validationFn: (battles: BattleType[]) => arraysEqual(getSeqNumArray(battles), SEQ_NUM_RESULTS.setWithStrings),
 	},
 	parenthesesNot: {
 		name: "parenthesesNot",
 		filterStr: `NOT(is-first-turn = true);`,
-		validationFn: () => false,
+		validationFn: (battles: BattleType[]) => arraysEqual(getSeqNumArray(battles), SEQ_NUM_RESULTS.parenthesesNot),
 	},
 
 	nestedParentheses: {
 		name: "nestedParentheses",
 		filterStr: `AND(is-win = true, OR(p2.server = "Global", p2.server = "Korea"));`,
-		validationFn: () => false,
+		validationFn: (battles: BattleType[]) => arraysEqual(getSeqNumArray(battles), SEQ_NUM_RESULTS.nestedParentheses),
 	},
 	braceHeroSet: {
 		name: "braceHeroSet",
-		filterStr: `p1.pick1 in {"Arbiter Vildred", "Apocalypse Ravi"};`,
-		validationFn: () => false,
+		filterStr: `p1.pick1 in {"Abyssal Yufine", "New Moon luna"};`,
+		validationFn: (battles: BattleType[]) => arraysEqual(getSeqNumArray(battles), SEQ_NUM_RESULTS.braceHeroSet),
 	},
 	braceVictoryPoints: {
 		name: "braceVictoryPoints",
-		filterStr: `victory-points in {2400, 2500, 2600};`,
-		validationFn: () => false,
+		filterStr: `victory-points in {1646, 1668};`,
+		validationFn: (battles: BattleType[]) => arraysEqual(getSeqNumArray(battles), SEQ_NUM_RESULTS.braceVictoryPoints),
 	},
 	braceDateSet: {
 		name: "braceDateSet",
 		filterStr: `date in {2025-01-01, 2025-01-05, 2025-01-07};`,
-		validationFn: () => false,
+		validationFn: (battles: BattleType[]) => getSeqNumArray(battles).length === 0,
 	},
 	trailingSetComma: {
 		name: "trailingSetComma",
 		filterStr: `p1.pick1 in { "Lone Wolf Peira", "Boss Arunka", };`,
-		validationFn: () => false,
+		validationFn: (battles: BattleType[]) => arraysEqual(getSeqNumArray(battles), SEQ_NUM_RESULTS.trailingSetComma),
 	},
 };
 

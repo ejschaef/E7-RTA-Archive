@@ -1,5 +1,16 @@
 import { RangeData } from "./base-elements";
 
+
+function collectionToString(collection: Collection<any>) {
+    if (collection instanceof Set) {
+        return Array.from(collection).join(", ");
+    } else if (collection instanceof RangeData) {
+        return `[${collection.start}, ${collection.end})`;
+    } else {
+        return collection.join(", ");
+    }
+}
+
 const COMPARISON_OPERATORS: Record<string, (a: any, b: any) => boolean> = {
     ">": (a, b) => a > b,
     "<": (a, b) => a < b,
@@ -21,7 +32,7 @@ abstract class Operator {
     abstract call(a: any, b: any): boolean
 }
 
-type Collection = Set<any> | any[] | RangeData<any>;
+type Collection<T> = Set<T> | T[] | RangeData<T>;
 
 class InOperator extends Operator {
     type = OPERATOR_TYPES.IN;
@@ -34,8 +45,9 @@ class InOperator extends Operator {
         this.opStr = this.negate ? "!in" : "in";
     }
 
-    call(a: any, b: Collection): boolean {
+    call<T>(a: T, b: Collection<T>): boolean {
         const contains = Array.isArray(b) ? b.includes(a) : b.has(a);
+        // console.log(`IN OPER: Left: ${a}, Op: ${this.opStr}, Right: ${collectionToString(b)}; Result: ${contains}`);
         return this.negate ? !contains : contains
     }
 }

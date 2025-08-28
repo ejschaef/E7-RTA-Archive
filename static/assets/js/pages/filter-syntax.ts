@@ -3,7 +3,7 @@ import PageUtils from "./page-utilities/page-utils.js";
 import { NavBarUtils } from "./page-utilities/nav-bar-utils.ts";
 import { makeComposeList } from "../language-support/filter-syntax-lang-build.ts";
 import { HTMLConstructor } from "./html-constructor/html-constructor.ts";
-import DOC_ELEMENTS from "./page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "./page-utilities/doc-element-references.ts";
 import { Safe } from "../html-safe.ts";
 import { LangManager } from "../lang-manager.ts";
 

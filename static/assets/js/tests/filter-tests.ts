@@ -77,6 +77,14 @@ const PARSE_TESTS: ParseTest[] = Object.values(FilterTestDefinitions).map((filte
 const BEHAVIOR_TESTS = [
     genFilterBehaviorTest(FilterTestDefinitions.last100),
     genFilterBehaviorTest(FilterTestDefinitions.last10),
+    genFilterBehaviorTest(FilterTestDefinitions.nestedParentheses),
+    genFilterBehaviorTest(FilterTestDefinitions.braceHeroSet),
+    genFilterBehaviorTest(FilterTestDefinitions.braceDateSet),
+    genFilterBehaviorTest(FilterTestDefinitions.braceVictoryPoints),
+    genFilterBehaviorTest(FilterTestDefinitions.trailingSetComma),
+    genFilterBehaviorTest(FilterTestDefinitions.commasInOr),
+    genFilterBehaviorTest(FilterTestDefinitions.parenthesesNot),
+    genFilterBehaviorTest(FilterTestDefinitions.setWithStrings),
 ]
 
 const SUPPRESS_LOGS = true;

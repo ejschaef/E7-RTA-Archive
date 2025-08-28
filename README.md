@@ -1,9 +1,11 @@
 # [E7-RTA-Archive](https://E7-RTA-Archive.cc)
 
-Open-source **Flask** project utilizing **Datta Able Dashboard** as a base, an open-source `Bootstrap` design.
+Open-source **Flask** project utilizing **Datta Able Dashboard**, an open-source `Bootstrap` design, as a base.
 The web app is designed to provide Epic 7 players the ability to maintain their RTA History past 100 battles,
 view additional stats that the official website doesn't provide, and easily filter to a specific subset of battles.
-<br/>
+<br/><br/>
+All data is sourced from: [Epic 7 GG](https://epic7.onstove.com/gg)
+<br/><br/>
 The web app is not meant to be viewed in portrait mode. The site will work, but the html components may not be properly sized or easily accessible.
 <br/>
 
@@ -13,7 +15,7 @@ The web app is not meant to be viewed in portrait mode. The site will work, but 
 - Export and upload options to maintain history or allow users to conduct custom analytics
 - Various RTA KPIs and tables
 - Filter syntax allowing users to calculate statistics for specific matches
-- Search feature allowing users to find player names
+- Search feature allowing users to determine proper names of game elements
 
 
 ## Tech Stack
@@ -32,6 +34,7 @@ The web app is not meant to be viewed in portrait mode. The site will work, but 
 - front end framework         : vanilla JS
 - domain hosting              : cloudflare
 - instance hosting            : lightsail
+- Rust/Python interop         : PyO3/Maturin
 
 ## Client-Server Design
 

@@ -31,11 +31,10 @@ const Overview = {
   objectTypesList: {
     [EN]: [
       "Fields: keywords corresponding to data from each of the battles, such as if the battle is a win, the victory points the player ended the battle at, the first hero the player picked, etc.",
-      "Declared Data: data values the user defines to filter the data on. They include integers, dates, strings, sets, booleans, and ranges. There are also some keywords like 'current-season' that allow the user to conveniently utilize declared data based on predefined logic (in this case, the keyword would translate to a range of dates capturing the current season).",
-      "Operators: the operations that allow the comparison of Fields to Declared Data and are the core of the filters (includes operations like >, <, =, set membership, etc.).",
-      "Functions: higher level operators that may allow the combination of filters in a logical manner or correspond to complex predefined filters.",
+      "Declared Data: data values the user defines to filter the data on. They include integers, dates, strings, sets, booleans, and ranges. There are also some keywords like 'current-season' that allow the user to conveniently utilize declared data based on predefined logic.",
+      "Operators: the operations that allow the comparison of Fields and Declared Data. They are the core of filters (includes operations like >, <, =, set membership, etc.).",
+      "Functions: higher level operations that may allow the combination of filters in a logical manner or correspond to complex predefined filters.",
       "Pure Syntax Elements: characters like brackets, quotes, commas, and semicolons that define how the filters are broken up and parsed.",
-      "Some operations require specific data types; if this is the case, an error will be thrown specifying the necessary data type.",
     ],
   },
   highLevelRulesTitle: {
@@ -47,11 +46,12 @@ const Overview = {
       "All filters must be separated by a semicolon ( ; ) if multiple are applied.",
       "The terminating semicolon ( ; ) for the last filter (including if only one filter) is optional.",
       "Every filter must either be a function call or a base filter of the form: X operator Y",
-      "Functions and sets will have their constituent arguments separated by commas ( , ) not semicolons ( ; )",
+      "Functions and sets have their constituent arguments separated by commas ( , ) not semicolons ( ; )",
       "Clause functions like And(...), OR(...), etc. can take nested clause functions as arguments but must ultimately terminate as base filters.",
       "Certain functions, like last-N(), are global filters that must take into account all battles when filtering (last-N captures only the N most recent battles). Since these filters are affected by other filters, to regulate the logic, all global filters will be hoisted to the top and executed in the order they were written.",
       "Apart from global filter hoisting, all filters will execute in the order they are written.",
       "Some filters or sets of filters are valid but will never return true. For instance, comparing different data types or using two filters which together specify a hero must be picked by both the player and the opponent. These filters will pass validation, and the resulting stats will be empty.",
+      "Some operations require specific data types; if this is the case, an error will be thrown specifying the necessary data type.",
     ],
   },
 } as const;

@@ -1,6 +1,6 @@
 import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import { CONTEXT } from "../../../home-page-context.js";
-import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.ts";
 import {
 	TextController,
 	TextPacket,

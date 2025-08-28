@@ -6,7 +6,7 @@ It also has functions to parse uploaded JSON files back into the original format
 */
 
 import { ContentManager } from "./content-manager";
-import { BattleType, COLUMNS_MAP, RawUploadBattle, WORLD_CODE_LOWERCASE_TO_CLEAN_STR, WORLD_CODE_TO_CLEAN_STR } from "./e7/references";
+import { BattleType, COLUMNS_MAP, RawUploadBattle, WORLD_CODE_TO_CLEAN_STR } from "./e7/references";
 import { User } from "./e7/user-manager";
 import { ExportColumns } from "./e7/references";
 import { validateUserFormat } from "./e7/user-manager";
@@ -77,7 +77,7 @@ function validateUploadedBattles(data: unknown): data is ExportedBattles {
 
 
 function downloadExportJSON(filename: string, data: ExportData) {
-  const jsonStr = JSON.stringify(data, null, 2);
+  const jsonStr = JSON.stringify(data);
   const blob = new Blob([jsonStr], { type: "application/json" });
   const url = URL.createObjectURL(blob);
 

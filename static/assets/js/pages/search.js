@@ -1,8 +1,8 @@
 import { Searcher } from "../e7/searcher.ts";
-import DataTableUtils from "../data-table-utils.js";
+import DataTableUtils from "../data-table-utils.ts";
 import PageUtils from "./page-utilities/page-utils.js";
 import { NavBarUtils } from "./page-utilities/nav-bar-utils.ts";
-import DOC_ELEMENTS from "./page-utilities/doc-element-references.js";
+import DOC_ELEMENTS from "./page-utilities/doc-element-references.ts";
 import UserManager from "../e7/user-manager.ts";
 import IPM from "./orchestration/inter-page-manager.ts";
 
@@ -94,10 +94,7 @@ async function main() {
 	await NavBarUtils.initialize();
 	initializeTable();
 	addSearchListener();
-	PageUtils.setVisibility(
-		DOC_ELEMENTS.BODY_FOOTER_CONTAINER,
-		true
-	);
+	PageUtils.setVisibility(DOC_ELEMENTS.BODY_FOOTER_CONTAINER, true);
 }
 
 await main();

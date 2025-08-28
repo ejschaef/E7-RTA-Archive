@@ -14,7 +14,7 @@
     "strict": true,
     "allowImportingTsExtensions": true,
     "lib": [ "esnext", "dom" ],
-    "types": [ "node" ],
+    "types": [ "node", "jquery", "datatables.net" ],
   },
   "include": [
     "./static/assets/js/**/*"
