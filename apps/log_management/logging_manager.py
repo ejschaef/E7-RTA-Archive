@@ -169,7 +169,7 @@ def process_input(inp: str, log_manager: LogManager):
     elif command == COMMANDS.EXIT.value:
         return True
     else:
-        fn_name = f"handle_{command}"
+        fn_name = f"handle_{command.replace(' ', '_')}"
         if not fn_name in globals():
             print("Command not implemented")
         else:  
@@ -184,7 +184,7 @@ def handle_view_logs(log_manager: LogManager):
         for log in logs:
             print(PREFIX*2 + str(log))
 
-def handle_view_msgs(log_manager: LogManager):
+def handle_view_log_msgs(log_manager: LogManager):
     print("Logs:")
     for file, logs in log_manager.get_logs().items():
         small_bar()

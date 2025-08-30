@@ -1,0 +1,107 @@
+{% extends "layouts/base-hidden.html" %}
+
+{% block title %}Filter Syntax{% endblock title %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pc-container" data-bs-theme="dark" id="all-content-container">
+  <div class="pc-content" data-bs-theme="dark">
+    <!-- [ breadcrumb ] start -->
+
+    <!-- [ breadcrumb ] end -->
+
+    <!-- [ Main Content ] start -->
+    <div class="row justify-content-center">
+
+      <div class="d-flex justify-content-start mb-2 d-none", id="info-return-container">
+        <button type="button" id="info-return-btn" class="link-button">
+          Return to Information Index
+        </button>
+      </div>
+
+      <!-- [ Information Content Links ] start -->
+      <div id="information-content-links-container" class="justify-content-center">
+        <div id="general-links">
+          <h5>General</h5>
+          <ul id="general-links-list" , class="links-list">
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="overview-link">Overview</button>
+            </li>
+        </div>
+
+        <div id="syntax-links">
+          <h5>Filter Syntax</h5>
+          <ul id="syntax-links-list" , class="links-list">
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="filter-rules-link">Filter Rules</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="fields-link">Fields</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="declared-data-link">Declared
+                Data</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="operators-link">Operators</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="functions-link">Functions</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="structural-syntax-link">Structural
+                Syntax</button>
+            </li>
+        </div>
+
+        <div id="examples-links">
+          <h5>Filter Examples and Testing</h5>
+          <ul id="examples-links-list" , class="links-list">
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="exFilter1-link">Example Filter 1</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="exFilter2-link">Example Filter 2</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="exFilter3-link">Example Filter 3</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="exFilter4-link">Example Filter 4</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="exFilter5-link">Example Filter 5</button>
+            </li>
+            <li class="list-group-item">
+              <button type="button" class="link-button" name="link-button" id="test-syntax-link">Test Syntax</button>
+            </li>
+        </div>
+      </div>
+      <!-- [ Information Content Links ] end -->
+
+      <!-- [ Overview ] start -->
+      <div id="overview-container" class="d-flex justify-content-center">
+      </div>
+      <!-- [ Overview ] end -->
+
+      <!-- [ Filter Syntax Rules ] start -->
+      <div id="filter-syntax-rules-container" class="d-flex justify-content-center">
+      </div>
+      <!-- [ Filter Syntax Rules ] end -->
+
+      <!-- [ Filter Syntax Examples and Test ] start -->
+      <div id="filter-syntax-examples-and-test-container" class="d-flex justify-content-center">
+      </div>
+      <!-- [ Filter Syntax Examples and Test ] end -->
+
+    </div>
+    <!-- [ Main Content ] end -->
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script type="module" src="{{ get_manifest(filename='information.js') }}"></script>
+{% endblock extra_js %}

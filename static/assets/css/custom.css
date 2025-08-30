@@ -566,4 +566,18 @@ button.brace-btn.touch-hover {
   overflow: hidden;
 }
 
+.link-button {
+  background: none;
+  border: none;
+  color: #0cdfe3; 
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+.link-button:hover {
+  color: #ddfeff;
+  text-decoration: none;
+}
 

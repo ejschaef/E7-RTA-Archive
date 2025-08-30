@@ -23,6 +23,7 @@ function getScrollbarWidth(): number {
 
 export const ComposeOption ={
 	NEST: "nest", // all subsequent compose elements will be children
+	END_NEST: "end-nest", // exits the current nest if any otherwise ignore
 	ADJ: "adj", // all subsequent compose elements will be siblings
 } as const;
 
@@ -37,6 +38,13 @@ export type HTMLComposeElement = {
 	classes?: string[];
 	innerHtml?: string;
 	option?: ComposeOption;
+}
+
+const END_NEST_TAG = "~end-nest~";
+
+export const END_NEST: HTMLComposeElement = {
+	tag: END_NEST_TAG,
+	option: ComposeOption.END_NEST
 }
 
 class HTMLConstructor {
@@ -132,15 +140,25 @@ class HTMLConstructor {
 		for (let i = 0 ; i < elements.length; i++) {
 			const element = elements[i];
 			if (element.option === ComposeOption.NEST) {  // all subsequent compose elements will be children
+				const nestedChildren = [];
+				for (let j = i + 1; j < elements.length; j++) {
+					const nestedChild = elements[j];
+					if (nestedChild.option === ComposeOption.END_NEST) {
+						break;
+					}
+					nestedChildren.push(nestedChild);
+				}
 				if (element.children) {
-					element.children = [...element.children, ...elements.slice(i + 1)];
+					element.children = [...element.children, ...nestedChildren];
 				} else {
-					element.children = elements.slice(i + 1);
+					element.children = nestedChildren;
 				}
 				element.option = ComposeOption.ADJ;
 				this.compose([element]);
-				return;
+				i += nestedChildren.length;
+				continue;
 			};
+			if (element.tag === END_NEST_TAG) continue;
 			if (element.textContent instanceof Array) { // create adjacent copies of element using the different text
 				const subElements = [];
 				for (const text of element.textContent) {

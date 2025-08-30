@@ -18713,7 +18713,7 @@ pre[class*=language-]>code {
   }
 
   .pc-sidebar~.pc-header {
-    transition: left 0.2s ease;
+    transition: left 0.2s ease, width 0.2s ease;
   }
 
   .pc-sidebar~.pc-footer,
@@ -18729,6 +18729,7 @@ pre[class*=language-]>code {
 
   .pc-sidebar.pc-sidebar-hide~.pc-header {
     left: 0;
+    width: 100vw;
   }
 
   .pc-sidebar.pc-sidebar-hide~.pc-footer,
@@ -19263,12 +19264,15 @@ pre[class*=language-]>code {
   box-shadow: var(--pc-header-shadow);
   -webkit-backdrop-filter: blur(7px);
   backdrop-filter: blur(7px);
+  scrollbar-gutter: stable both-edges;
   position: fixed;
   left: 208px;
   right: 0;
   top: 0;
+  width: calc(100vw - 208px);
   z-index: 1025;
   display: flex;
+  transition: all 0.2s ease;
 }
 
 .pc-header ul {
@@ -19757,7 +19761,8 @@ pre[class*=language-]>code {
   .pc-header {
     top: 0;
     left: 0;
-    transition: all 0.15s ease-in-out;
+    width: 100vw;
+    transition: all 0.2s ease-in-out;
   }
 
   .pc-header .m-header {

@@ -236,11 +236,51 @@ class FILTER_SYNTAX_PAGE_ELEMENTS {
 	}
 }
 
+class INFO_PAGE_ELEMENTS {
+	IDS = {
+		OVERVIEW_CONTAINER : "overview-container",
+		OVERVIEW_CARD : "overview-card",
+		RETURN_BTN : "info-return-btn",
+		RETURN_CONTAINER : "info-return-container",
+		FILTER_SYNTAX_CONTAINER : "filter-syntax-rules-container",
+		FILTER_EXAMPLES_AND_TEST_CONTAINER : "filter-syntax-examples-and-test-container",
+		INFORMATION_CONTENT_LINKS_CONTAINER : "information-content-links-container",
+		ALL_CONTENT_CONTAINER : "all-content-container",
+		FILTER_OVERVIEW : "filter-rules-card",
+		FIELD_SYNTAX : "fields-card",
+		FUNCTION_SYNTAX : "functions-card",
+		OPERATOR_SYNTAX : "operators-card",
+		DATA_SYNTAX : "declared-data-card",
+		STRUCTURAL_SYNTAX : "structural-syntax-card",
+		EX_FILTER_1 : "exFilter1",
+		EX_FILTER_2 : "exFilter2",
+		EX_FILTER_3 : "exFilter3",
+		EX_FILTER_4 : "exFilter4",
+		EX_FILTER_5 : "exFilter5",
+		TEST_FILTER_FORM : "test-filter-form",
+		TEST_FILTER_MESSAGE : "filterMSG",
+		TEST_SYNTAX_CARD : "test-syntax-card",
+		CHECK_SYNTAX_BTN : "check-syntax-btn",
+	} as const;
+
+
+	private _CACHE: Partial<Record<typeof this.IDS[keyof typeof this.IDS], HTMLElement>> = {};
+
+	constructor () {
+		this._CACHE = {};
+	}
+
+	getFromId(id: typeof this.IDS[keyof typeof this.IDS]): HTMLElement {
+		return this._CACHE[id] ||= Safe.unwrapHtmlElt(id);
+	}
+}
+
 class DocElements {
 	HOME_PAGE: HomePageElements;
 	NAV_BAR: NavBarElements;
 	SEARCH_PAGE: SEARCH_PAGE_ELEMENTS;
 	FILTER_SYNTAX_PAGE: FILTER_SYNTAX_PAGE_ELEMENTS;
+	INFO_PAGE: INFO_PAGE_ELEMENTS;
 
 	private _BODY_FOOTER_CONTAINER: HTMLElement | null = null;
 
@@ -249,6 +289,7 @@ class DocElements {
 		this.NAV_BAR = new NavBarElements();
 		this.SEARCH_PAGE = new SEARCH_PAGE_ELEMENTS();
 		this.FILTER_SYNTAX_PAGE = new FILTER_SYNTAX_PAGE_ELEMENTS();
+		this.INFO_PAGE = new INFO_PAGE_ELEMENTS();
 	}
 
 	get BODY_FOOTER_CONTAINER(): HTMLElement {

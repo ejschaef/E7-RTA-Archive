@@ -38,44 +38,6 @@ function constructJSON(user: User, battlesList: BattleType[], filterStr?: string
     return exportData;
 }
 
-function validateUploadedBattles(data: unknown): data is ExportedBattles {
-    if (!data || typeof data !== "object") {
-        return false;
-    }
-
-    if (!("headers" in data) || !Array.isArray(data.headers)) {
-        throw new Error("Invalid upload: missing headers field");
-    }
-
-    if (data.headers.length !== ExportColumns.length) {
-        throw new Error(`Invalid upload: expected ${ExportColumns.length} headers, got ${data.headers.length}`);
-    }
-
-    for (let i = 0; i < ExportColumns.length; i++) {
-        if (ExportColumns[i] !== data.headers[i]) {
-            throw new Error(`Invalid upload: headers do not match at index ${i}; expected ${ExportColumns[i]}, got ${data.headers[i]}`);
-        }
-    }
-
-    if (!("rows" in data) || !Array.isArray(data.rows)) {
-        throw new Error("Invalid upload: missing rows field or rows is not an array");
-    }
-
-    if (data.rows.length === 0) {
-        throw new Error("Invalid upload: uploaded data has no battles");
-    }
-
-    for (let i = 0; i < data.rows.length; i++) {
-        const row = data.rows[i];
-        if (row.length !== ExportColumns.length) {
-            throw new Error(`Invalid upload: expected ${ExportColumns.length} columns per row, got ${row.length} at index ${i}`);
-        }
-    }
-
-    return true;
-}
-
-
 function downloadExportJSON(filename: string, data: ExportData) {
   const jsonStr = JSON.stringify(data);
   const blob = new Blob([jsonStr], { type: "application/json" });
@@ -123,6 +85,44 @@ function validateUploadedFile(file: File, extension: string = ".json", maxMB: nu
     }
 }
 
+
+function validateUploadedBattles(data: unknown): data is ExportedBattles {
+    if (!data || typeof data !== "object") {
+        return false;
+    }
+
+    if (!("headers" in data) || !Array.isArray(data.headers)) {
+        throw new Error("Invalid upload: missing headers field");
+    }
+
+    if (data.headers.length !== ExportColumns.length) {
+        throw new Error(`Invalid upload: expected ${ExportColumns.length} headers, got ${data.headers.length}`);
+    }
+
+    for (let i = 0; i < ExportColumns.length; i++) {
+        if (ExportColumns[i] !== data.headers[i]) {
+            throw new Error(`Invalid upload: headers do not match at index ${i}; expected ${ExportColumns[i]}, got ${data.headers[i]}`);
+        }
+    }
+
+    if (!("rows" in data) || !Array.isArray(data.rows)) {
+        throw new Error("Invalid upload: missing rows field or rows is not an array");
+    }
+
+    if (data.rows.length === 0) {
+        throw new Error("Invalid upload: uploaded data has no battles");
+    }
+
+    for (let i = 0; i < data.rows.length; i++) {
+        const row = data.rows[i];
+        if (row.length !== ExportColumns.length) {
+            throw new Error(`Invalid upload: expected ${ExportColumns.length} columns per row, got ${row.length} at index ${i}`);
+        }
+    }
+
+    return true;
+}
+
 function validateFileContent(data: unknown): data is ExportData {
     if (!data || typeof data !== "object") {
         throw new Error("Invalid upload: data is null, undefined, or not an object");
@@ -140,8 +140,8 @@ function validateFileContent(data: unknown): data is ExportData {
 
 
 async function parseJSON(file: File): Promise<ExportData> {
-    const jsonStr = await file.text();
     validateUploadedFile(file);
+    const jsonStr = await file.text();
     const data = JSON.parse(jsonStr) as ExportData;
     console.log("Parsed JSON:", data);
     validateFileContent(data);

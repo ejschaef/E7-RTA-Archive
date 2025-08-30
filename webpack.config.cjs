@@ -9,7 +9,7 @@ const MODES = {
   DEVELOPMENT: 'development',
 }
 
-const MODE = MODES.PRODUCTION;
+const MODE = MODES.DEVELOPMENT;
 
 module.exports = {
 plugins: [
@@ -23,11 +23,11 @@ plugins: [
   ],
   entry: {
     "home-page"     : './static/assets/js/pages/home-page/home-page.js',
-    "filter-syntax" : './static/assets/js/pages/filter-syntax.ts',
     "test"          : './static/assets/js/pages/test.js',
     "search"        : './static/assets/js/pages/search.js',
-    "bundled-css"   : './static/assets/css/bundled-css.css',
+    "information"   : './static/assets/js/pages/information.ts',
     "default"       : './static/assets/js/pages/default.ts',
+    "bundled-css"   : './static/assets/css/bundled-css.css',
   },
   output: {
     filename: '[name].[contenthash].bundle.js',    // Output bundled files with hash

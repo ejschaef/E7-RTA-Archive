@@ -12,7 +12,7 @@ import { CONTEXT } from "./home-page-context.js";
 import PageUtils from "../page-utilities/page-utils.js";
 
 export function resizeRankPlot() {
-	console.log("Resizing rank plot");
+	if (!CONTEXT.STATS_PRE_RENDER_COMPLETED) return;
 	CONTEXT.IGNORE_RELAYOUT = true;
 	setTimeout(() => {
 		Plotly.Plots.resize(document.getElementById("rank-plot"));

@@ -27,10 +27,6 @@ LOGGER = log_utils.get_logger()
 # Simple Routes
 ########################################################################################################
 
-@blueprint.route('/overview')
-def overview():
-    return render_template('pages/overview.html', segment='overview')
-
 @blueprint.route('/icon_feather')
 def icon_feather():
     return render_template('pages/icon-feather.html', segment='icon_feather')
@@ -53,6 +49,13 @@ def test():
 def search():
     form = SearchForm()
     return render_template('pages/search.html', segment='search', search_form=form)
+
+@blueprint.route('/information', methods=['GET'])
+def information():
+    context = {'segment' : 'filter_syntax', 
+    }
+
+    return render_template('pages/information.html', **context)
 
 @blueprint.route('/typography')
 def typography():
@@ -150,28 +153,6 @@ def get_user_data() -> tuple[str, int]:
     except Exception as e:
         traceback.print_exc()
         return jsonify({ 'error' : str(e), 'success' : False }), 500 #Http status code Internal Server Error
-
-
-########################################################################################################
-# START FUNCTIONAL PAGE NAV SECTION
-########################################################################################################
-
-@blueprint.route('/loading_user_data')
-def loading_user_data():
-    return render_template("loading/loading_user_data.html")
-
-@blueprint.route('/filter_syntax', methods=['GET'])
-def filter_syntax():
-    form = CodeForm()
-    code = request.form.get('code')
-
-    context = {'segment' : 'filter_syntax', 
-               'form' : form,
-               'code' : code,
-    }
-
-    return render_template('pages/filter-syntax.html', **context)
-
     
 ########################################################################################################
 # START HERO STATS SECTION

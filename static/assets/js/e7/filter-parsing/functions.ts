@@ -340,7 +340,7 @@ class BaseFilter extends StandardFilter {
         const tokens = Futils.tokenizeWithNestedEnclosures(str, " ", 0, true);
         if (tokens.length !== 3) {
             throw new Futils.SyntaxException(
-                `Invalid base filter; filters must have 3 tokens and be of the form: ['X', operator, 'Y']; got: [${tokens}] tokens from str: ${str}`
+                `Invalid base filter; filters must have 3 tokens and be of the form: ['X', operator, 'Y']; got tokens: [${tokens}] from str: ${str}`
             )
         }
         let [leftStr, opStr, rightStr] = tokens;
