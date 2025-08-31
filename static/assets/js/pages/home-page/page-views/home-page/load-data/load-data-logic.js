@@ -140,9 +140,13 @@ async function runLogic(stateDispatcher) {
 		// retrieve the battles from the cache (both uploaded and queried if applicable) and then apply any filters, then compute stats and plots
 		console.log("Getting Battles From Cache");
 		const battles = await ContentManager.BattleManager.getBattles();
+		const battlesList = Object.values(battles);
 
 		console.log("BATTLES DURING LOAD");
 		console.log(battles);
+
+		console.log("Checking if Reacquire of Seasons Details Needed");
+		await ContentManager.SeasonManager.reaquireIfNeeded(battlesList);
 
 		console.log("Getting Filters From Cache");
 		const filters = await FilterParser.getFiltersFromCache(HeroDicts);

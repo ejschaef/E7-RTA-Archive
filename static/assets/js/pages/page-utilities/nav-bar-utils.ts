@@ -38,11 +38,10 @@ function addNavListeners() {
 					// Stats will not show if there is no active user ; will redirect to select data view with error
 					if (!user) {
 						await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
-						await IPM.pushState({
-							messages: [
+						await IPM.pushAction({
+							message: 
 								"Active user not found; you must either query a valid user or upload battles to view hero stats.",
-							],
-							actions: [IPM.ACTIONS.SHOW_NO_USER_MSG],
+							action: IPM.ACTIONS.SHOW_NO_USER_MSG
 						});
 						navToHome();
 					} else {
@@ -62,10 +61,10 @@ function addClearDataBtnListener() {
 			const user = await UserManager.getUser();
 			if (user) {
 				await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
-				await IPM.pushActions([IPM.ACTIONS.CLEAR_USER]);
+				await IPM.pushAction({ action: IPM.ACTIONS.CLEAR_USER });
 			} else {
 				await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
-				await IPM.pushActions([IPM.ACTIONS.SHOW_DATA_ALREADY_CLEARED_MSG]);
+				await IPM.pushAction({ action: IPM.ACTIONS.SHOW_DATA_ALREADY_CLEARED_MSG });
 			}
 			navToHome();
 		}
@@ -150,11 +149,9 @@ function addExportDataBtnListener() {
 		async function () {
 			const user = await ContentManager.UserManager.getUser();
 			if (!user) {
-				await IPM.pushState({
-					messages: [
-						"User not found; cannot export data without an active user",
-					],
-					actions: [IPM.ACTIONS.SHOW_NO_USER_MSG],
+				await IPM.pushAction({
+					message: "User not found; cannot export data without an active user",
+					action: IPM.ACTIONS.SHOW_NO_USER_MSG,
 				});
 				await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
 				navToHome();

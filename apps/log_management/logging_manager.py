@@ -148,6 +148,8 @@ class COMMANDS(str, Enum):
     VIEW_MSGS = "view log msgs"
     IP_STATS = "view ip stats"
     QUERIED_USERS = "view queried users"
+    DELETE_LOGS = "delete logs"
+    REFRESH = "refresh"
     EXIT = "exit"
 
 
@@ -177,7 +179,7 @@ def process_input(inp: str, log_manager: LogManager):
 
 def handle_view_logs(log_manager: LogManager):
     print("Logs:")
-    for file, logs in log_manager.get_logs().items():
+    for file, logs in log_manager.logs.items():
         small_bar()
         print(PREFIX + file)
         small_bar()
@@ -186,7 +188,7 @@ def handle_view_logs(log_manager: LogManager):
 
 def handle_view_log_msgs(log_manager: LogManager):
     print("Logs:")
-    for file, logs in log_manager.get_logs().items():
+    for file, logs in log_manager.logs.items():
         small_bar()
         print(PREFIX + file)
         small_bar()
@@ -194,7 +196,7 @@ def handle_view_log_msgs(log_manager: LogManager):
             log = f"Log: {log.get('msg', 'No Message Found')}"
             print(PREFIX*2 + str(log))
 
-def handle_ip_stats(log_manager: LogManager):
+def handle_view_ip_stats(log_manager: LogManager):
     print("IP Stats:")
     small_bar()
     newline()
@@ -208,17 +210,31 @@ def handle_ip_stats(log_manager: LogManager):
         for ip, count in stats_map.items():
             print(PREFIX*2 + f"IP: {ip[:20]} made {count} total API calls")
         small_bar()
+        
+def handle_refresh(log_manager: LogManager):
+    log_manager.get_logs()
+    log_manager.compute_stats()
+    print("Logs refreshed.")
 
-def handle_queried_users(log_manager: LogManager):
+def handle_view_queried_users(log_manager: LogManager):
     print("Queried User Stats:")
     small_bar()
     stats = log_manager.stats["Queried Users Stats"]
     newline()
     for (uid, server), n_queries in stats.items():
         print(PREFIX + f"<UID: {uid}, Server: {server}> was queried {n_queries} times")
+       
+def handle_delete_logs(log_manager: LogManager):
+    confirmation = input("Confirm Deletion Y/N: ")
+    if confirmation.lower() == "y":
+        log_manager.delete_logs()
+    else:
+        print("Skipping deletion.")
             
 
 def run_log_repl(log_manager: LogManager):
+    log_manager.get_logs()
+    log_manager.compute_stats()
     greet()
     bar()
     done = False
@@ -230,8 +246,6 @@ def run_log_repl(log_manager: LogManager):
         
 if __name__ == "__main__":
     log_manager = LogManager()
-    logs = log_manager.get_logs()
-    log_manager.compute_stats()
     run_log_repl(log_manager)
     
 

@@ -1,12 +1,6 @@
 import { BattleType } from "../e7/references";
-import { BATTLES } from "./test-required-objects";
 import { COLUMNS_MAP } from "../e7/references";
-import { SEQ_NUM_RESULTS } from "./filter-test-results";
-
-const hundredthDateTime = BATTLES.slice(-100)[0][COLUMNS_MAP.DATE_TIME];
-const tenthDateTime = BATTLES.slice(-10)[0][COLUMNS_MAP.DATE_TIME];
-
-console.log("Last-N DateTimes:", hundredthDateTime, tenthDateTime);
+import { SEQ_NUM_RESULTS, DT_RESULTS } from "./filter-test-results";
 
 
 function getSeqNumArray(battles: BattleType[]): number[] {
@@ -197,12 +191,12 @@ const FilterTestDefinitions: { [key: string]: FilterTestPacket } = {
 	last100: {
 		name: "last100",
 		filterStr: "last-N(100);",
-		validationFn: (battles) => battles.length === 100 && battles[0][COLUMNS_MAP.DATE_TIME] === hundredthDateTime,
+		validationFn: (battles) => battles.length === 100 && battles[0][COLUMNS_MAP.DATE_TIME] === DT_RESULTS.last100,
 	},
 	last10: {
 		name: "last10",
 		filterStr: "last-N(10);",
-		validationFn: (battles) => battles.length === 10 && battles[0][COLUMNS_MAP.DATE_TIME] === tenthDateTime,
+		validationFn: (battles) => battles.length === 10 && battles[0][COLUMNS_MAP.DATE_TIME] === DT_RESULTS.last10,
 	},
 
 	// Pure Syntax Examples

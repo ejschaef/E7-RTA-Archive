@@ -5,12 +5,18 @@ const ACTIONS = {
 	SHOW_NO_USER_MSG: "SHOW_NO_USER_MSG",
 	SHOW_DATA_ALREADY_CLEARED_MSG: "SHOW_DATA_ALREADY_CLEARED_MSG",
 	QUERY_USER: "QUERY_USER",
-};
+	REFRESH_REFERENCES: "REFRESH_REFERENCES",
+} as const;
+
+
+type Action = {
+	action: typeof ACTIONS[keyof typeof ACTIONS],
+	message?: string
+}
 
 
 type InterPageManagerState = {
-	actions: string[];
-	messages: string[];
+	actions: Action[];
 };
 
 let InterPageManager = {
@@ -29,23 +35,20 @@ let InterPageManager = {
 		await ClientCache.cache(ClientCache.Keys.INTER_PAGE_MANAGER, state);
 	},
 
-	pushActions: async function (actions: string[]): Promise<void> {
+	pushActions: async function (actions: Action[]): Promise<void> {
 		let state = await this.getState();
 		state.actions.push(...actions);
 		await this.setState(state);
 	},
 
-	pushMessages: async function (messages: string[]): Promise<void> {
+	pushAction: async function (action: Action): Promise<void> {
 		let state = await this.getState();
-		state.messages.push(...messages);
+		state.actions.push(action);
 		await this.setState(state);
 	},
 
-	pushState: async function (state: InterPageManagerState) {
-		let currentState = await this.getState();
-		currentState.actions.push(...state.actions);
-		currentState.messages.push(...state.messages);
-		await this.setState(currentState);
+	makeAction: function (action: typeof ACTIONS[keyof typeof ACTIONS], message?: string): Action {
+		return { action: action, message: message };
 	},
 
 	flushState: async function (): Promise<InterPageManagerState> {

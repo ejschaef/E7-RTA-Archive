@@ -24,6 +24,8 @@ USER_MANAGER_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'user_manager.pick
 SEASON_DETAILS_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'season_details.pickle')
 ARTIFACT_JSON_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'artifact_json.pickle')
 
+REFRESH_CADENCE = timedelta(hours=18)
+
 def try_load(obj_name, fetch_fn, pickle_path):
      # load from pickle if backup is recent
     if os.path.exists(pickle_path):
@@ -31,7 +33,7 @@ def try_load(obj_name, fetch_fn, pickle_path):
         modified_datetime = datetime.fromtimestamp(modified_time)
         age = datetime.now() - modified_datetime
 
-        if age < timedelta(days=1):
+        if age < REFRESH_CADENCE:
             print(f"{obj_name} Loading From Recent Pickle Backup (Last updated: {modified_datetime})")
             return load_pickle(pickle_path)
 

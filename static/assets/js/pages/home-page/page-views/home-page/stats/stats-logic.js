@@ -179,6 +179,7 @@ async function postFirstRenderLogic() {
 		console.error("Editor not found in CONTEXT");
 		return;
 	}
+	console.log("Refreshing editor");
 	editor.refresh();
 }
 

@@ -19,11 +19,13 @@ import { LangManager } from "../../lang-manager.ts";
 
 /**
  * Handles actions sent from other pages to this page.
- * @param {string} action - one of the actions defined in IPM.ACTIONS
+ * @param {Action} action - one of the actions defined in IPM.ACTIONS
  * @returns {Promise<boolean>} - true if the action caused a state dispatch to occur (we will skip the state dispatcher later if this is true)
  */
-async function handleAction(action, messages) {
+async function handleAction(actionObj) {
 	let dispatchedToState = false;
+	const action = actionObj.action;
+	let message = actionObj.message;
 	switch (action) {
 		case IPM.ACTIONS.CLEAR_USER:
 			const user = await UserManager.getUser();
@@ -40,14 +42,20 @@ async function handleAction(action, messages) {
 			break;
 
 		case IPM.ACTIONS.SHOW_NO_USER_MSG:
-			const message =
-				messages.pop() || "Cannot perform action; no active user found.";
+			message =
+				actionObj.message || "Cannot perform action; no active user found.";
 			TextUtils.queueSelectDataMsgRed(message);
 			break;
 
 		case IPM.ACTIONS.QUERY_USER:
 			CONTEXT.AUTO_QUERY = true;
 			stateDispatcher(HOME_PAGE_STATES.LOAD_DATA);
+			dispatchedToState = true;
+			break;
+
+		case IPM.ACTIONS.REFRESH_REFERENCES:
+			stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+			TextUtils.queueSelectDataMsgGreen("Refreshed Lookup Data");
 			dispatchedToState = true;
 			break;
 
@@ -61,8 +69,8 @@ async function handleAction(action, messages) {
 async function processIPMState() {
 	const ipmState = await IPM.flushState();
 	let dispatchedToState = false;
-	for (const action of ipmState.actions) {
-		dispatchedToState = await handleAction(action, ipmState.messages);
+	for (const actionObj of ipmState.actions) {
+		dispatchedToState = await handleAction(actionObj);
 	}
 	return dispatchedToState;
 }
@@ -85,7 +93,6 @@ async function initializeHomePage() {
 
 async function main() {
 	document.addEventListener("DOMContentLoaded", async () => {
-		console.log("Initialized CONTEXT", CONTEXT);
 		initializeHomePage();
 		let state = await PageStateManager.getState();
 		if (state === HOME_PAGE_STATES.LOAD_DATA) {
@@ -98,7 +105,6 @@ async function main() {
 		if (!dispatchedToState) {
 			await stateDispatcher(state);
 		}
-		PageUtils.setVisibility(DOC_ELEMENTS.HOME_PAGE.FOOTER_BODY, true);
 	});
 }
 

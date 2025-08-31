@@ -184,13 +184,13 @@ let HeroManager = {
 		return HeroDicts.name_lookup[normalizedName] ?? null;
 	},
 
-	getHeroByPrime: function (prime: number, HeroDicts: HeroDicts): Hero | null {
+	getHeroByPrime: function (prime: number | string, HeroDicts: HeroDicts): Hero | null {
 		if (!HeroDicts) {
 			throw new Error(
 				"HeroManager instance must be passed to lookup functions"
 			);
 		}
-		return HeroDicts.prime_lookup[prime];
+		return HeroDicts.prime_lookup[prime as number] ?? null;
 	},
 
 	getHeroByCode: function (code: string | undefined, HeroDicts: HeroDicts): Hero | null {

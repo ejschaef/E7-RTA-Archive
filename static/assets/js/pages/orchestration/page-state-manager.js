@@ -57,6 +57,7 @@ function homePageSetView(state) {
 	const contentBody = getContentBody(state);
 	console.log(`Showing ${contentBody.id}`);
 	PageUtils.setVisibility(contentBody, true);
+	PageUtils.setVisibility(DOC_ELEMENTS.BODY_FOOTER_CONTAINER, true);
 }
 
 function homePageDrawUserInfo(user) {

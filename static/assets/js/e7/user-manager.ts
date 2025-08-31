@@ -198,7 +198,9 @@ let UserManager = {
 	},
 
 	getUser: async function (): Promise<User | null> {
-		return await ClientCache.get(ClientCache.Keys.USER);
+		const user = await ClientCache.get(ClientCache.Keys.USER);
+		await ClientCache.setTimestampNow(ClientCache.Keys.USER);
+		return user;
 	},
 
 	clearUserData: async function (): Promise<void> {

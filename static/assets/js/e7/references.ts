@@ -87,7 +87,7 @@ export const EQUIPMENT_SET_MAP: Record<string, string> = {
 	set_scar: "Injury",
 };
 
-export const ONE_DAY: number = 1000 * 60 * 60 * 24;
+export const ONE_DAY_MILLISECONDS: number = 1000 * 60 * 60 * 24; // milliseconds
 
 export const LEAGUE_MAP: Record<string, number> = {
 	bronze: 0,
@@ -137,13 +137,9 @@ export const COLUMNS_MAP = {
 	P1_MVP: "P1 MVP",
 	P2_MVP: "P2 MVP",
 	P1_PICKS_PRIMES: "P1 Picks Primes",
-	P1_PICKS_PRIME_PRODUCT: "P1 Picks Prime Product",
 	P2_PICKS_PRIMES: "P2 Picks Primes",
-	P2_PICKS_PRIME_PRODUCT: "P2 Picks Prime Product",
 	P1_PREBANS_PRIMES: "P1 Prebans Primes",
-	P1_PREBANS_PRIME_PRODUCT: "P1 Prebans Prime Product",
 	P2_PREBANS_PRIMES: "P2 Prebans Primes",
-	P2_PREBANS_PRIME_PRODUCT: "P2 Prebans Prime Product",
 } as const;
 
 export type ColumnKey = keyof typeof COLUMNS_MAP;
@@ -185,31 +181,26 @@ export type BattleType = {
 	[COLUMNS_MAP.P1_MVP]: string;
 	[COLUMNS_MAP.P2_MVP]: string;
 	[COLUMNS_MAP.P1_PICKS_PRIMES]: number[];
-	[COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT]: number;
 	[COLUMNS_MAP.P2_PICKS_PRIMES]: number[];
-	[COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT]: number;
 	[COLUMNS_MAP.P1_PREBANS_PRIMES]: number[];
-	[COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT]: number;
 	[COLUMNS_MAP.P2_PREBANS_PRIMES]: number[];
-	[COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT]: number;
 };
 
 export type BattleTypeNoPrimes = Omit<
-  BattleType,
-  | typeof COLUMNS_MAP.P1_PICKS_PRIMES
-  | typeof COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT
-  | typeof COLUMNS_MAP.P2_PICKS_PRIMES
-  | typeof COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT
-  | typeof COLUMNS_MAP.P1_PREBANS_PRIMES
-  | typeof COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT
-  | typeof COLUMNS_MAP.P2_PREBANS_PRIMES
-  | typeof COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT
+	BattleType,
+	| typeof COLUMNS_MAP.P1_PICKS_PRIMES
+	| typeof COLUMNS_MAP.P2_PICKS_PRIMES
+	| typeof COLUMNS_MAP.P1_PREBANS_PRIMES
+	| typeof COLUMNS_MAP.P2_PREBANS_PRIMES
 >;
 
 export type BattleTypeNoPrimesColums = keyof BattleTypeNoPrimes;
+export type BattlesObj = { [key: number]: BattleType };
+export type BattlesObjNoPrimes = { [key: number]: BattleTypeNoPrimes };
+
 
 export type RawUploadBattle = {
-  [K in keyof BattleTypeNoPrimes]: string;
+	[K in keyof BattleTypeNoPrimes]: string;
 };
 
 export const ARRAY_COLUMNS = [
@@ -242,7 +233,7 @@ export const TITLE_CASE_COLUMNS = [
 	COLUMNS_MAP.P2_LEAGUE,
 ] as const;
 
-export const HERO_STATS_COLUMN_MAP: Record<string, string> = {
+export const HERO_STATS_COLUMN_MAP = {
 	HERO_NAME: "Hero Name",
 	BATTLES: "Battles",
 	PICK_RATE: "Pick Rate",
@@ -256,7 +247,7 @@ export const HERO_STATS_COLUMN_MAP: Record<string, string> = {
 	AVG_CR: "Avg CR",
 	FIRST_TURNS: "First Turns",
 	FIRST_TURN_RATE: "First Turn Rate",
-};
+} as const;
 
 export const E7_STOVE_HOME_URL: string = "https://epic7.onstove.com"
 export const E7_GG_HOME_URL: string = E7_STOVE_HOME_URL + "/gg"

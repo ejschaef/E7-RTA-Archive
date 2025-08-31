@@ -16,6 +16,10 @@ const SCROLL_PERCENTS = {
 	[HOME_PAGE_STATES.SELECT_DATA]: 0,
 	[HOME_PAGE_STATES.SHOW_STATS]: 0,
 	[HOME_PAGE_STATES.LOAD_DATA]: 0,
+
+	toString: function () {
+		return JSON.stringify(this, null, 2);
+	},
 };
 
 const CONTEXT_KEYS = {
@@ -30,58 +34,71 @@ const CONTEXT_KEYS = {
 	TRY_SET_USER: "TRY_SET_USER",
 	IGNORE_RELAYOUT: "IGNORE_RELAYOUT",
 };
+function getContext() {
+	const CONTEXT = {
+		KEYS: CONTEXT_KEYS,
+		VALUES: CONTEXT_VALUES,
 
-const CONTEXT = {
-	KEYS: CONTEXT_KEYS,
-	VALUES: CONTEXT_VALUES,
+		SOURCE: null,
+		AUTO_QUERY: null,
+		AUTO_ZOOM: false,
+		STATS_POST_RENDER_COMPLETED: false,
+		STATS_PRE_RENDER_COMPLETED: false,
+		HOME_PAGE_STATE: null,
+		SCROLL_PERCENTS: { ...SCROLL_PERCENTS},
+		CODE_MIRROR_EDITOR: null,
+		TRY_SET_USER: null,
+		IGNORE_RELAYOUT: false,
 
-	SOURCE: null,
-	AUTO_QUERY: null,
-	AUTO_ZOOM: false,
-	STATS_POST_RENDER_COMPLETED: false,
-	STATS_PRE_RENDER_COMPLETED: false,
-	HOME_PAGE_STATE: null,
-	SCROLL_PERCENTS: SCROLL_PERCENTS,
-	CODE_MIRROR_EDITOR: null,
-	TRY_SET_USER: null,
-	IGNORE_RELAYOUT: false,
+		popKey: function (key) {
+			const value = this[key];
+			this[key] = this._getDefault(key);
+			return value;
+		},
 
-	popKey: function (key) {
-		const value = this[key];
-		this[key] = this._getDefault(key);
-		return value;
-	},
+		readKey: function (key) {
+			return this[key];
+		},
 
-	readKey: function (key) {
-		return this[key];
-	},
+		_getDefault(key) {
+			switch (key) {
+				case CONTEXT_KEYS.AUTO_ZOOM:
+					return false;
+				case CONTEXT_KEYS.SOURCE:
+					return null;
+				case CONTEXT_KEYS.AUTO_QUERY:
+					return null;
+				case CONTEXT_KEYS.STATS_POST_RENDER_COMPLETED:
+					return false;
+				case CONTEXT_KEYS.STATS_PRE_RENDER_COMPLETED:
+					return false;
+				case CONTEXT_KEYS.HOME_PAGE_STATE:
+					return null;
+				case CONTEXT_KEYS.SCROLL_PERCENTS:
+					return SCROLL_PERCENTS;
+				case CONTEXT_KEYS.CODE_MIRROR_EDITOR:
+					throw new Error(`No default value for key: ${key} ; do not use popKey or _getDefault for this key`);
+				case CONTEXT_KEYS.TRY_SET_USER:
+					return null;
+				case CONTEXT_KEYS.IGNORE_RELAYOUT:
+					return false;
+				default:
+					return null;
+			}
+		},
 
-	_getDefault(key) {
-		switch (key) {
-			case CONTEXT_KEYS.AUTO_ZOOM:
-				return false;
-			case CONTEXT_KEYS.SOURCE:
-				return null;
-			case CONTEXT_KEYS.AUTO_QUERY:
-				return null;
-			case CONTEXT_KEYS.STATS_POST_RENDER_COMPLETED:
-				return false;
-			case CONTEXT_KEYS.STATS_PRE_RENDER_COMPLETED:
-				return false;
-			case CONTEXT_KEYS.HOME_PAGE_STATE:
-				return null;
-			case CONTEXT_KEYS.SCROLL_PERCENTS:
-				return SCROLL_PERCENTS;
-			case CONTEXT_KEYS.CODE_MIRROR_EDITOR:
-				throw new Error(`No default value for key: ${key} ; do not use popKey or _getDefault for this key`);
-			case CONTEXT_KEYS.TRY_SET_USER:
-				return null;
-			case CONTEXT_KEYS.IGNORE_RELAYOUT:
-				return false;
-			default:
-				return null;
+		toString() {
+			let str = "CONTEXT:\n";
+			for (const key in CONTEXT_KEYS) {
+				str += `\t${key}: ${this[key]}\n`;
+			}
+			return str;
 		}
-	},
-};
+	};
+	console.log("INITIALIZED CONTEXT: ", CONTEXT.toString());
+	return CONTEXT;
+}
+
+const CONTEXT = getContext();
 
 export { CONTEXT };

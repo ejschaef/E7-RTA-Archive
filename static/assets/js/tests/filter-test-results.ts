@@ -51,3 +51,8 @@ export const SEQ_NUM_RESULTS = {
        69217857, 69218257],
 
 }
+
+export const DT_RESULTS = {
+   last100 : "2025-06-26 03:36:29.0",
+   last10 : "2025-07-31 21:29:41.0"
+}

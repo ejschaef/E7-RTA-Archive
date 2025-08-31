@@ -4,21 +4,15 @@ import {
 	EQUIPMENT_SET_MAP,
 	COLUMNS_MAP,
 	WORLD_CODE_TO_CLEAN_STR,
-	ARRAY_COLUMNS,
-	BOOLS_COLS,
-	INT_COLUMNS,
-	TITLE_CASE_COLUMNS
 } from "./references.ts";
 import { toTitleCase } from "../str-functions.ts";
-import type { BattleType, BattleTypeNoPrimes, BattleTypeNoPrimesColums, RawUploadBattle } from "./references.ts";
+import type { BattlesObj, BattleType, BattleTypeNoPrimes, RawUploadBattle } from "./references.ts";
 
 // takes in cleaned battle row (including from uploaded file or in formatBattleAsRow)
 // and adds fields representing sets heroes as prime products
 function addPrimeFields(battle: BattleType, HeroDicts: HeroDicts) {
 	const getChampPrime = (name: string) =>
 		HeroManager.getHeroByName(name, HeroDicts)?.prime ?? HeroDicts.Fodder.prime;
-	
-	const product = (acc: number, prime: number) => acc * prime;
 
 	battle[COLUMNS_MAP.P1_PICKS_PRIMES] =
 		battle[COLUMNS_MAP.P1_PICKS].map(getChampPrime);
@@ -26,27 +20,11 @@ function addPrimeFields(battle: BattleType, HeroDicts: HeroDicts) {
 	battle[COLUMNS_MAP.P2_PICKS_PRIMES] =
 		battle[COLUMNS_MAP.P2_PICKS].map(getChampPrime);
 
-	battle[COLUMNS_MAP.P1_PICKS_PRIME_PRODUCT] = battle[
-		COLUMNS_MAP.P1_PICKS_PRIMES
-	].reduce(product, 1);
-
-	battle[COLUMNS_MAP.P2_PICKS_PRIME_PRODUCT] = battle[
-		COLUMNS_MAP.P2_PICKS_PRIMES
-	].reduce(product, 1);
-
 	battle[COLUMNS_MAP.P1_PREBANS_PRIMES] =
 		battle[COLUMNS_MAP.P1_PREBANS].map(getChampPrime);
 
 	battle[COLUMNS_MAP.P2_PREBANS_PRIMES] =
 		battle[COLUMNS_MAP.P2_PREBANS].map(getChampPrime);
-
-	battle[COLUMNS_MAP.P1_PREBANS_PRIME_PRODUCT] = battle[
-		COLUMNS_MAP.P1_PREBANS_PRIMES
-	].reduce(product, 1);
-
-	battle[COLUMNS_MAP.P2_PREBANS_PRIME_PRODUCT] = battle[
-		COLUMNS_MAP.P2_PREBANS_PRIMES
-	].reduce(product, 1);
 }
 
 const P1 = "p1";
@@ -188,14 +166,14 @@ function castRawUploadBattle(raw: RawUploadBattle): BattleTypeNoPrimes {
 }
 
 // takes output of CSV parse and parses the list rows and ensures types are correct
-function parsedCSVToFormattedBattleMap(rawRowsArr: RawUploadBattle[], HeroDicts: HeroDicts) {
+function parsedCSVToFormattedBattleMap(rawRowsArr: RawUploadBattle[], HeroDicts: HeroDicts): BattlesObj {
 	const rows = rawRowsArr.map((row) => {
 		const formattedRow = castRawUploadBattle(row);
 		console.log("Formatted Row: ", formattedRow);
 		addPrimeFields(formattedRow as BattleType, HeroDicts);
 		return formattedRow;
 	});
-	return Object.fromEntries(rows.map((row) => [row[COLUMNS_MAP.SEQ_NUM], row]));
+	return Object.fromEntries(rows.map((row) => [row[COLUMNS_MAP.SEQ_NUM], row])) as BattlesObj;
 }
 
 export { buildFormattedBattleMap, parsedCSVToFormattedBattleMap };

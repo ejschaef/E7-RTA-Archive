@@ -1,4 +1,4 @@
-{% extends "layouts/base-home.html" %}
+{% extends "layouts/base-hidden.html" %}
 
 {% block title %}Home{% endblock title %}
 
@@ -22,12 +22,10 @@
                                     <h6 class="text-center f-w-500 mb-2">Query E7 Server</h6>
                                     {{ query_form.hidden_tag() }}
                                     <div class="form-group mb-3">
-                                        {{ query_form.username(placeholder="E7 Username / ID", class="form-control
-                                        custom-input")
-                                        }}
+                                        {{ query_form.username(class="form-control custom-input") }}
                                     </div>
                                     <div class="form-group mb-3">
-                                        {{ query_form.server(placeholder="Server", class="form-control ") }}
+                                        {{ query_form.server(placeholder="Server", class="form-control") }}
                                     </div>
                                     <div class="d-flex justify-content-start text-center gap-4 mt-1">
                                         <button type="submit" name="user_query"
@@ -151,7 +149,7 @@
                             <form method="post" id="filterForm" class="card-body">
                                 {{ filter_form.hidden_tag() }}
                                 <textarea id="codeArea" name="code" class="codemirror-hidden"></textarea>
-                                <div class="d-flex justify-content-center gap-3 mt-4">
+                                <div class="d-flex justify-content-center gap-3 mt-3 mb-1">
                                     <button type="submit" name="check-syntax" value="check"
                                         class="btn shadow px-sm-1 filter-pane-btn">Check Syntax</button>
                                     <button type="submit" name="apply-filter" value="apply"

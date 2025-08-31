@@ -54,7 +54,7 @@ async function preDispatchLogic() {
 
 // switches among view states for the home page
 async function stateDispatcher(state) {
-	console.log(`Switching to state: ${state}, with CONTEXT: `, CONTEXT);
+	console.log(`Switching to state: ${state}, with CONTEXT: `, CONTEXT.toString());
 	if (!validateState(state)) return;
 	preDispatchLogic();
 	await PageStateManager.setState(state);

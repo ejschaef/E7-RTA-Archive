@@ -13,7 +13,11 @@ from wtforms.validators import DataRequired
 class UserQueryForm(FlaskForm):
     username = StringField('Username',
                          id='user-query-form-name',
-                         validators=[DataRequired()])
+                         validators=[DataRequired()],
+                         render_kw={
+                            "placeholder": "E7 Username / ID",
+                            "autocomplete": "on"
+                        })
     server = SelectField('Server',
                              id='user-query-form-server',
                              choices=[('world_global', "Global"),

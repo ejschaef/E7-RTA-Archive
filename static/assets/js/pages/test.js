@@ -2,7 +2,6 @@ import { ContentManager } from "../content-manager.ts";
 import { runTests } from "../tests/run-tests.ts";
 import { NavBarUtils } from "./page-utilities/nav-bar-utils.ts";
 
-
 // Must upload test data before running tests
 
 async function main() {

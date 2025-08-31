@@ -35,7 +35,7 @@ async function handleClick(rowData) {
 	}
 	await UserManager.clearUserData();
 	await UserManager.setUser(user);
-	IPM.pushActions([IPM.ACTIONS.QUERY_USER]);
+	IPM.pushAction({ action: IPM.ACTIONS.QUERY_USER });
 	NavBarUtils.navToHome();
 }
 

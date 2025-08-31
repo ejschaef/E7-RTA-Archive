@@ -82,10 +82,6 @@ class HomePageElements {
 		return this._AUTO_ZOOM_FLAG ||= Safe.unwrapHtmlElt("auto-zoom-flag");
 	}
 
-	get FOOTER_BODY() {
-		return this._FOOTER ||= Safe.unwrapHtmlElt("footer-body");
-	}
-
 	get USER_NAME() {
 		return this._USER_NAME ||= Safe.unwrapHtmlElt("user-name");
 	}
@@ -191,6 +187,13 @@ class NavBarElements {
 		return (this._SIDEBAR_CONTROL ||= Safe.unwrapHtmlElt("sidebar-control"));
 	}
 
+	private _REFRESH_REFERENCES_BTN: HTMLElement | null = null;
+	get REFRESH_REFERENCES_BTN() {
+		return (this._REFRESH_REFERENCES_BTN ||= Safe.unwrapHtmlElt(
+			"refresh-references-btn"
+		));
+	}
+
 
 }
 
@@ -283,6 +286,7 @@ class DocElements {
 	INFO_PAGE: INFO_PAGE_ELEMENTS;
 
 	private _BODY_FOOTER_CONTAINER: HTMLElement | null = null;
+	private _FOOTER_WRAPPER: HTMLElement | null = null;
 
 	constructor() {
 		this.HOME_PAGE = new HomePageElements();
@@ -296,6 +300,12 @@ class DocElements {
 		return (this._BODY_FOOTER_CONTAINER ??=
 			Safe.unwrapHtmlElt("body-footer-container"));
 	}
+
+	get FOOTER_WRAPPER(): HTMLElement {
+		return (this._FOOTER_WRAPPER ||= Safe.unwrapHtmlElt("footer-wrapper"));
+	}
+
+
 }
 
 const DOC_ELEMENTS = new DocElements();

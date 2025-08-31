@@ -100,8 +100,8 @@ impl BattleStatsBundle {
 
         let first_pick = if entry.my_deck.is_first_pick() {1} else {0};
         let (point_delta, win_score) = ScoreInfoStatsBundle::get(entry.myscore_info);
-        let (p1_picks, _, _, p1_equipment, p1_artifacts) = TeamStatsBundle::get(entry.teamBettleInfo);
-        let (p2_picks, _, _, p2_equipment, p2_artifacts) = TeamStatsBundle::get(entry.teamBettleInfoenemy);
+        let (p1_picks, p1_equipment, p1_artifacts) = TeamStatsBundle::get(entry.teamBettleInfo);
+        let (p2_picks, p2_equipment, p2_artifacts) = TeamStatsBundle::get(entry.teamBettleInfoenemy);
         let cr_bar = get_cr_bar(entry.energyGauge);
         let (p1_mvp, p2_postban, p1_prebans) = DeckStatsBundle::get(entry.my_deck);
         let (p2_mvp, p1_postban, p2_prebans) = DeckStatsBundle::get(entry.enemy_deck);
@@ -270,33 +270,23 @@ struct TeamStatsBundle {}
 
 impl TeamStatsBundle {
 
-    pub fn get(team: Team) -> (Vec<String>, Option<String>, Option<String>, Vec<Vec<String>>, Vec<String>) {
-        let mut mvp = None;
-        let mut heroes = Vec::new();
-        let mut post_banned = None;
-        let mut equipment = Vec::new();
-        let mut artifacts = Vec::new();
+    pub fn get(team: Team) -> (Vec<String>, Vec<Vec<String>>, Vec<String>) {
+        let mut heroes = Vec::with_capacity(5);
+        let mut equipment = Vec::with_capacity(5);
+        let mut artifacts= Vec::with_capacity(5);
 
-        for hero in team.my_team {
-            if hero.mvp == 1 {
-                mvp = Some(hero.hero_code.clone());
-            }
-            heroes.push(hero.hero_code.clone());
-            post_banned = Some(hero.hero_code);
+        for hero in team.my_team.into_iter() {
+            heroes.push(hero.hero_code);
             equipment.push(hero.equip);
             artifacts.push(hero.artifact);
         }
 
         return (
             heroes,
-            mvp,
-            post_banned,
             equipment,
             artifacts
         )
     }
-
-
 }
 
 #[derive(Debug, Deserialize, Serialize)]

@@ -27,21 +27,39 @@ const SERVER_USER_LISTS_KEYS = {
   KOR_USERS: "kor-users",
 }
 
-const Keys = {
-  ...USER_DATA_KEYS,
+const REFERENCE_DATA_KEYS = {
   ...SERVER_USER_LISTS_KEYS,
-  LANG : "lang",
+  ARTIFACTS: "artifacts", // map of artifact codes to names
+  ARTIFACTS_LOWERCASE_NAMES_MAP: "artifacts-lowercase-names-map", // map of artifact lowercase names to original names
+  ARTIFACT_OBJECT_LIST: "artifact-object-list", // list of artifact objects with id and name fields
   HERO_MANAGER: "hero-manager",
   SEASON_DETAILS: "season-details",
+}
+
+const Keys = {
+  ...USER_DATA_KEYS,
+  ...REFERENCE_DATA_KEYS,
+  LANG : "lang",
   AUTO_ZOOM_FLAG: "auto-zoom",
   AUTO_QUERY_FLAG: "auto-query",
   ID_SEARCH_FLAG: "id-search",
-  ARTIFACTS: "artifacts", // map of artifact codes to names
-  ARTIFACTS_LOWERCASE_NAMES_MAP: "artifacts-lowercase-names-map", // map of artifact lowercase names to original names
+  ARTIFACTS: "artifacts", 
+  ARTIFACTS_LOWERCASE_NAMES_MAP: "artifacts-lowercase-names-map", 
   ARTIFACT_OBJECT_LIST: "artifact-object-list",
   HOME_PAGE_STATE: "home-page-state",
   INTER_PAGE_MANAGER: "inter-page-manager",
-};
+} as const;
+
+type Key = typeof Keys[keyof typeof Keys];
+
+const DEFAULT_TIMEOUT = 1000 * 60 * 60 * 24 * 2; // 2 days
+const REFERENCE_DATA_TIMEOUT = 1000 * 60 * 60 * 24; // 1 day
+
+function getCacheTimeout(key: Key): number {
+  return (key in REFERENCE_DATA_KEYS)
+    ? REFERENCE_DATA_TIMEOUT
+    : DEFAULT_TIMEOUT;
+}
 
 let ClientCache = {
   consts: {
@@ -79,16 +97,16 @@ let ClientCache = {
     });
   },
 
-  get: async function(id: string) {
+  get: async function(key: string) {
     const db = await this.openDB();
-    const result = await db.get(this.consts.STORE_NAME, id);
-    if (result !== null) {
-      console.log(`Found ${id} in cache`);
+    const result = await db.get(this.consts.STORE_NAME, key);
+    if (result) {
+      console.log(`Found ${key} in cache`);
     } else {
-      console.log(`${id} not found in cache; returning null`);
+      console.log(`${key} not found in cache; returning null`);
       return null;
     }
-    const useCache = await this.checkCacheTimeout(id);
+    const useCache = await this.checkCacheTimeout(key);
     if (useCache){
       return result;
     } else {
@@ -96,17 +114,17 @@ let ClientCache = {
     }
   },
 
-  cache: async function(id: string, data: any) {
-    console.log(`Caching ${id}`);
+  cache: async function(key: Key, data: any) {
+    console.log(`Caching ${key}`);
     const db = await this.openDB();
-    await db.put(this.consts.STORE_NAME, data, id);
-    await this.setTimestamp(id, Date.now());
+    await db.put(this.consts.STORE_NAME, data, key);
+    await this.setTimestamp(key, Date.now());
   },
 
-  delete: async function(id: string) {
+  delete: async function(key: Key) {
     const db = await this.openDB();
-    await db.delete(this.consts.STORE_NAME, id);
-    await this.deleteTimestamp(id);
+    await db.delete(this.consts.STORE_NAME, key);
+    await this.deleteTimestamp(key);
   },
 
   deleteDB: async function() {
@@ -114,24 +132,28 @@ let ClientCache = {
     console.log('Database deleted');
   },
 
-  getTimestamp: async function(id: string): Promise<number> {
+  getTimestamp: async function(key: Key): Promise<number> {
     const db = await this.openDB();
-    const key = `${id+this.MetaKeys.TIMESTAMP}`;
-    const timestamp = await db.get(this.consts.META_STORE_NAME, key);
+    const metakey = `${key+this.MetaKeys.TIMESTAMP}`;
+    const timestamp = await db.get(this.consts.META_STORE_NAME, metakey);
     return timestamp ?? 0;
   },
 
-  setTimestamp: async function(id: string, timestamp: number): Promise<void> {
+  setTimestamp: async function(key: Key, timestamp: number): Promise<void> {
     const db = await this.openDB();
-    const key = `${id+this.MetaKeys.TIMESTAMP}`;
-    await db.put(this.consts.META_STORE_NAME, timestamp, key);
-    await db.get(this.consts.META_STORE_NAME, key);
+    const metakey = `${key+this.MetaKeys.TIMESTAMP}`;
+    await db.put(this.consts.META_STORE_NAME, timestamp, metakey);
   },
 
-  deleteTimestamp: async function(id: string): Promise<void> {
+  setTimestampNow: async function(key: Key): Promise<void> {
+    await this.setTimestamp(key, Date.now());
+  },
+
+  deleteTimestamp: async function(key: Key): Promise<void> {
     const db = await this.openDB();
-    const key = `${id+this.MetaKeys.TIMESTAMP}`;
-    await db.delete(this.consts.META_STORE_NAME, key);
+    const metakey = `${key+this.MetaKeys.TIMESTAMP}`;
+    await db.delete(this.consts.META_STORE_NAME, metakey);
+    console.log(`Deleted ${key} from cache`);
   },
 
   clearData: async function(): Promise<void> {
@@ -159,35 +181,41 @@ let ClientCache = {
     console.log("Season data cleared from data cache");
   },
 
-  checkCacheTimeout: async function(id: string): Promise<boolean> {
-    const timestamp = await this.getTimestamp(id);
+  clearReferenceData: async function(): Promise<void> {
+    const toDelete = Object.values(REFERENCE_DATA_KEYS);
+    await Promise.all(toDelete.map(key => this.delete(key)));
+    console.log("Reference data cleared from data cache");
+  },
+
+  checkCacheTimeout: async function(key: Key): Promise<boolean> {
+    const timestamp = await this.getTimestamp(key);
     const currentTime = Date.now();
-    if (!timestamp || (currentTime - timestamp > ClientCache.consts.CACHE_TIMEOUT)) {
-      console.log(`Cache timeout for ${id}; timestamp: ${timestamp}; currentTime: ${currentTime}`);
-      await this.delete(id);
+    if (!timestamp || (currentTime - timestamp > getCacheTimeout(key))) {
+      console.log(`Cache timeout for ${key}; timestamp: ${timestamp}; currentTime: ${currentTime}`);
+      await this.delete(key);
       return false;
     }
     return true;
   },
 
   getFilterStr: async function(): Promise<string | null> {
-    return await this.get(ClientCache.Keys.FILTER_STR);
+    return await this.get(Keys.FILTER_STR);
   },
 
   setFilterStr: async function(filterStr: string): Promise<void> {
-    await this.cache(ClientCache.Keys.FILTER_STR, filterStr);
+    await this.cache(Keys.FILTER_STR, filterStr);
   },
 
   getLang: async function(): Promise<LanguageCode> {
-    return await this.get(ClientCache.Keys.LANG) ?? LANGUAGES.CODES.EN;
+    return await this.get(Keys.LANG) ?? LANGUAGES.CODES.EN;
   },
 
   setLang: async function(lang: LanguageCode): Promise<void> {
-    await this.cache(ClientCache.Keys.LANG, lang);
+    await this.cache(Keys.LANG, lang);
   },
 
   getStats: async function(): Promise<any | null> {
-    return await this.get(ClientCache.Keys.STATS);
+    return await this.get(Keys.STATS);
   },
 
   setStats: async function(stats: any): Promise<void> {
