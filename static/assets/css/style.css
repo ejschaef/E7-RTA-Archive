@@ -18729,7 +18729,8 @@ pre[class*=language-]>code {
 
   .pc-sidebar.pc-sidebar-hide~.pc-header {
     left: 0;
-    width: 100vw;
+    width: 100vw;   /* fallback */
+    width: 100dvw; 
   }
 
   .pc-sidebar.pc-sidebar-hide~.pc-footer,
@@ -19270,6 +19271,7 @@ pre[class*=language-]>code {
   right: 0;
   top: 0;
   width: calc(100vw - 208px);
+  width: calc(100dvw - 208px);
   z-index: 1025;
   display: flex;
   transition: all 0.2s ease;
@@ -19761,7 +19763,8 @@ pre[class*=language-]>code {
   .pc-header {
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100vw;   /* fallback */
+    width: 100dvw; 
     transition: all 0.2s ease-in-out;
   }
 
