@@ -120,7 +120,8 @@ abstract class HeroListFn extends StandardFilter {
     }
 
     asString(prefix: string = ""): string {
-        return `${prefix}${this.fnName}(${this.argFmtString})`;
+        const playerStr = this.isPlayer1 ? "p1." : "p2.";
+        return `${prefix}${playerStr}${this.fnName}(${this.argFmtString})`;
     }
 }
 
@@ -129,7 +130,7 @@ class CRFn extends HeroListFn {
     fnType = FN_TYPES.HERO_LIST_FN;
     heroName: string;
     crThreshold: number = 0;
-    operator: CompareOperator;
+    operator: CompareOperator<number>;
     targetField: (battle: BattleType) => any;
     isPlayer1: boolean = false;
     argFmtString: string;
@@ -163,15 +164,18 @@ class CRFn extends HeroListFn {
     }
 
     call(battle: BattleType): boolean {
+        // console.log("Calling CR function on battle: ", battle);
         const heroes = this.getHeroes(battle);
         const crBar = this.targetField(battle);
-        const heroCr = crBar.find((entry: [string, number]) => entry[0] === this.heroName);
+        const heroCr: [string, number] = crBar.find((entry: [string, number]) => entry[0] === this.heroName);
+        // console.log("Called CR function; Got: ", heroes, crBar, heroCr, "Filtering using operator: ", this.operator);
         if (!heroCr) {
             return false;
         } else if (!heroes.includes(this.heroName)) {
             return false;
         }
-        return this.operator.call(heroCr, this.crThreshold);
+        // console.log("Returning value: ", this.operator.call(heroCr[1], this.crThreshold));
+        return this.operator.call(heroCr[1], this.crThreshold);
     }
 }
 
@@ -280,7 +284,7 @@ abstract class GlobalFilter extends Fn {
     abstract call(battles: BattleType[]): BattleType[]
 
     asString(prefix: string = ""): string {
-        return `${prefix}${this.fnName}(${this.argFmtString})`;
+        return`${prefix}${this.fnName}(${this.argFmtString})`;
     }
 }
 

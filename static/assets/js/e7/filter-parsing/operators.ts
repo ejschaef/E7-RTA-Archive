@@ -5,7 +5,7 @@ function collectionToString(collection: Collection<any>) {
     if (collection instanceof Set) {
         return Array.from(collection).join(", ");
     } else if (collection instanceof RangeData) {
-        return `[${collection.start}, ${collection.end})`;
+        return `Range[ start: ${collection.start}, end: ${collection.end}, incl: ${collection.endInclusive} ]`;
     } else {
         return collection.join(", ");
     }
@@ -32,7 +32,7 @@ abstract class Operator {
     abstract call(a: any, b: any): boolean
 }
 
-type Collection<T> = Set<T> | T[] | RangeData<T>;
+type Collection<T> = Set<T> | T[] | RangeData;
 
 class InOperator extends Operator {
     type = OPERATOR_TYPES.IN;
@@ -52,10 +52,10 @@ class InOperator extends Operator {
     }
 }
 
-class CompareOperator extends Operator {
+class CompareOperator<T> extends Operator {
     type = OPERATOR_TYPES.COMPARE
     opStr: string
-    compareFn: (a: any, b: any) => boolean
+    compareFn: (a: T, b: T) => boolean
 
     constructor(opStr: string) {
         super();
@@ -66,7 +66,8 @@ class CompareOperator extends Operator {
         }
     }
 
-    call(a: any, b: any): boolean {
+    call(a: T, b: T): boolean {
+        // console.log(`COMPARE OPER: Left: ${a}, Op: ${this.opStr}, Right: ${b}`);
         return this.compareFn(a, b);
     }
 }

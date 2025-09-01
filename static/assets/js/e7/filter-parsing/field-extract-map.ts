@@ -1,10 +1,11 @@
 import { BattleType, COLUMNS_MAP } from "../references";
+import Futils from "./filter-utils";
 
 // FNS that take in a clean format battle and return the appropriate data
 export const FIELD_EXTRACT_FN_MAP: { [key: string]: (battle: BattleType) => any } = {
     "date": (battle) =>
         battle[COLUMNS_MAP.DATE_TIME]
-            ? new Date(`${(battle[COLUMNS_MAP.DATE_TIME] as string).slice(0, 10)}T00:00:00`)
+            ? Futils.castStringToUTCDate(battle[COLUMNS_MAP.DATE_TIME].split(" ")[0]).getTime()
             : "N/A",
     "season": (battle) => battle[COLUMNS_MAP.SEASON_CODE],
     "is-first-pick": (battle) => battle[COLUMNS_MAP.FIRST_PICK] ? true : false,

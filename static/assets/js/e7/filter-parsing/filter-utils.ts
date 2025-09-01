@@ -140,6 +140,10 @@ function getCharCounts(str: string): Record<string, number> {
 	return counts;
 }
 
+function castStringToUTCDate(dateStr: string): Date {
+	return new Date(`${dateStr}T00:00:00Z`);
+}
+
 function parseDate(dateStr: string): Date {
 	if (!RegExps.DATE_LITERAL_RE.test(dateStr)) {
 		throw new SyntaxException(
@@ -147,8 +151,7 @@ function parseDate(dateStr: string): Date {
 		);
 	}
 
-	const isoDateStr = dateStr.split(" ")[0];
-	const date = new Date(`${isoDateStr}T00:00:00`);
+	const date = castStringToUTCDate(dateStr);
 
 	// Check if valid date
 	if (isNaN(date.getTime())) {
@@ -161,12 +164,12 @@ function parseDate(dateStr: string): Date {
 	const dateString = date.toISOString().split("T")[0];
 	const [year, month, day] = dateString.split("-").map(Number);
 	if (
-		date.getFullYear() !== year ||
-		date.getMonth() + 1 !== month ||
-		date.getDate() !== day
+		date.getUTCFullYear() !== year ||
+		date.getUTCMonth() + 1 !== month ||
+		date.getUTCDate() !== day
 	) {
 		throw new SyntaxException(
-			`Invalid date; parsed date: ${date.toISOString()} does not match passed in string: ${isoDateStr}`
+			`Invalid date; parsed date: ${date.toISOString()} does not match passed in string: ${dateStr}`
 		);
 	}
 
@@ -198,6 +201,7 @@ let Futils = {
 	parseDate: parseDate,
 	tryConvert: tryConvert,
 	trimSurroundingQuotes: trimSurroundingQuotes,
+	castStringToUTCDate,
 };
 
 export default Futils;

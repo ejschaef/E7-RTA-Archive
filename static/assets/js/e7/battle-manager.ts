@@ -6,7 +6,7 @@ import {
 	RawBattle,
 } from "./battle-transform.ts";
 import { StandardFilter, GlobalFilter } from "./filter-parsing/functions.ts";
-import { BattleType, BattlesObj, BattlesObjNoPrimes, COLUMNS_MAP, RawUploadBattle } from "./references.ts";
+import { BattleType, BattlesObj, COLUMNS_MAP, RawUploadBattle } from "./references.ts";
 import { Filters } from "./filter-parsing/filter-parser.ts";
 import { HeroDicts } from "./hero-manager.ts";
 
@@ -25,8 +25,10 @@ export async function applyFilters(battleList: BattleType[], filters: Filters) {
     for (let filter of localFilterList) {
         console.log(`Applying local filter: ${filter.asString()}`);
         battleList = battleList.filter((b) => {
-            // console.log(`Filtering battle: ${b["Seq Num"]}; ${filter.call(b) ? "included" : "excluded"}`);
-            return filter.call(b);
+			// console.log(`Filtering battle:`, b);
+			const result = filter.call(b);
+            // console.log(`Result: ${result ? "included" : "excluded"}`);
+            return result;
         });
     }
     return battleList;

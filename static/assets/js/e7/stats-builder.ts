@@ -3,7 +3,7 @@ import {
 	WORLD_CODE_TO_CLEAN_STR,
 	COLUMNS_MAP,
 	HERO_STATS_COLUMN_MAP,
-	LEAGUE_TO_CLEAN_STR,
+	LEAGUE_MAP,
 } from "./references.ts";
 import type { BattleType } from "./references.ts";
 
@@ -347,7 +347,7 @@ function getPerformanceStats(battlesList: BattleType[]) {
 	};
 	const totalBattles = battlesList.length;
 	const servers = Object.values(WORLD_CODE_TO_CLEAN_STR);
-	const leagues = Object.values(LEAGUE_TO_CLEAN_STR);
+	const leagues = Object.values(LEAGUE_MAP);
 
 	type FilterListEntry = readonly [string, (b: BattleType) => boolean];
 

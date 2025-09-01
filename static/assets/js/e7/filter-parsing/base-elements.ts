@@ -136,41 +136,42 @@ class BoolLiteral extends Literal<boolean> {
     }
 }
 
-class DateLiteral extends Literal<Date> {
+class DateLiteral extends Literal<number> {
     type = BaseEltTypes.DATE;
     fmtString: string;
-    data: Date;
+    data: number;
     constructor(str: string) {
         super(str);
         this.data = this.processString(str);
         this.fmtString = str;
     }
     processString(str: string) {
-        return Futils.parseDate(str);
+        return Futils.parseDate(str).getTime();
     }
 }
 
-type RangeEltTypes = Date | number;
-
-class RangeData<T> {
-    start: T;
-    end: T;
+class RangeData {
+    start: number;
+    end: number;
     endInclusive: boolean;
 
-    constructor(start: T, end: T, endInclusive: boolean) {
+    constructor(start: number, end: number, endInclusive: boolean) {
         this.start = start;
         this.end = end;
         this.endInclusive = endInclusive;
     }
 
     has(value: any): boolean {
-        if (typeof value !== typeof this.start) return false;
-        if (value < this.start) return false;
-        if (value > this.end) return false;
-        return value === this.end ? this.endInclusive : true;
+        if (typeof value === "number" && typeof this.start === "number" && typeof this.end === "number") {
+            // number case
+            if (value < this.start) return false;
+            if (value > this.end) return false;
+            return value === this.end ? this.endInclusive : true;
+        }
+        return false;
     }
 
-    includes(value: T): boolean {
+    includes(value: any): boolean {
         return this.has(value);
     }
 }
@@ -195,7 +196,7 @@ function tryParseRange(
     end: string,
     endInclusive: boolean,
     parser: EltParser,
-): RangeData<RangeEltTypes> | null {
+): RangeData | null {
     let parsedStart = parser(start);
     let parsedEnd = parser(end);
     if (parsedStart === null || parsedEnd === null)
@@ -203,17 +204,17 @@ function tryParseRange(
     return new RangeData(parsedStart.data, parsedEnd.data, endInclusive);
 }
 
-class RangeLiteral extends Literal<RangeData<RangeEltTypes>> {
+class RangeLiteral extends Literal<RangeData> {
     type = BaseEltTypes.RANGE;
     fmtString: string;
-    data: RangeData<RangeEltTypes>;
+    data: RangeData;
     constructor(str: string, REFS: FilterReferences) {
         super(str);
         this.fmtString = str;
         this.data = this.processString(str, REFS);
     }
 
-    processString(str: string, REFS: FilterReferences): RangeData<RangeEltTypes> {
+    processString(str: string, REFS: FilterReferences): RangeData {
         const split = str.split("...");
         const start = split[0];
         let endInclusive = split[1].charAt(0) === "=";
@@ -222,6 +223,7 @@ class RangeLiteral extends Literal<RangeData<RangeEltTypes>> {
         for (const parser of RANGE_ELT_PARSERS) {
             const parsedRangeData = tryParseRange(start, end, endInclusive, parser);
             if (parsedRangeData !== null) {
+                console.log("Parsed Range literal:", parsedRangeData);
                 return parsedRangeData;
             }
         }

@@ -89,20 +89,20 @@ export const EQUIPMENT_SET_MAP: Record<string, string> = {
 
 export const ONE_DAY_MILLISECONDS: number = 1000 * 60 * 60 * 24; // milliseconds
 
-export const LEAGUE_MAP: Record<string, number> = {
-	bronze: 0,
-	silver: 1,
-	gold: 2,
-	master: 3,
-	challenger: 4,
-	champion: 5,
-	warlord: 6,
-	emperor: 7,
-	legend: 8,
-};
+export const LEAGUE_MAP = {
+	bronze: "Bronze",
+	silver: "Silver",
+	gold: "Gold",
+	master: "Master",
+	challenger: "Challenger",
+	champion: "Champion",
+	warlord: "Warlord",
+	emperor: "Emperor",
+	legend: "Legend",
+} as const;
 
-export const LEAGUE_TO_CLEAN_STR =
-	Object.fromEntries(Object.keys(LEAGUE_MAP).sort((a, b) => LEAGUE_MAP[a] - LEAGUE_MAP[b]).map((k) => [k, toTitleCase(k)]));
+export type LeagueKey = keyof typeof LEAGUE_MAP;
+export type League = typeof LEAGUE_MAP[LeagueKey];
 
 export const COLUMNS_MAP = {
 	SEASON: "Season",

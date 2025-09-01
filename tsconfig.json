@@ -1,28 +1,26 @@
 {
-  "compilerOptions": {
-    "outDir": "./static/dist",
-    "rootDir": "./static/assets/js",
-    "allowJs": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "target": "ESNext",
-    "isolatedModules": true,
-    "noEmit": true,
-    "strict": true,
-    "allowImportingTsExtensions": true,
-    "lib": [ "esnext", "dom" ],
-    "types": [ "node", "jquery", "datatables.net" ],
-  },
-  "include": [
-    "./static/assets/js/**/*"
-  ], 
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*",
-    "./static/dist",
-    "./static/dist/**/*"
-  ]
+	"compilerOptions": {
+		"outDir": "./static/dist",
+		"rootDir": "./static/assets/js",
+		"allowJs": true,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"target": "ESNext",
+		"isolatedModules": true,
+		"noEmit": true,
+		"strict": true,
+		"allowImportingTsExtensions": true,
+		"lib": ["esnext", "dom"],
+		"types": ["node", "jquery", "datatables.net"]
+	},
+	"include": ["./static/assets/js/**/*", "static/assets/js/tests/stats-tests.ts"],
+	"exclude": [
+		"node_modules",
+		"**/node_modules/*",
+		"./static/dist",
+		"./static/dist/**/*"
+	]
 }

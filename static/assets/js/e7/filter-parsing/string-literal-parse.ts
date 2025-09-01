@@ -1,6 +1,6 @@
 import { FilterReferences } from "./filter-parse-references";
 import HeroManager from "../hero-manager";
-import { LEAGUE_TO_CLEAN_STR, WORLD_CODE_LOWERCASE_TO_CLEAN_STR } from "../references";
+import { League, LEAGUE_MAP, LeagueKey, WORLD_CODE_LOWERCASE_TO_CLEAN_STR } from "../references";
 import { EQUIPMENT_LOWERCASE_STRINGS_MAP } from "./filter-parse-references";
 import { RegExps } from "../regex";
 
@@ -17,9 +17,9 @@ class HeroParser extends StringLiteralParser {
 }
 
 class LeagueParser extends StringLiteralParser {
-    parse(str: string): string | null {
-        console.log(`Parsing str: ${str} using map:`, LEAGUE_TO_CLEAN_STR);
-        return LEAGUE_TO_CLEAN_STR[str];
+    parse(str: LeagueKey): League | null {
+        console.log(`Parsing str: ${str} using map:`, LEAGUE_MAP);
+        return LEAGUE_MAP[str];
     }
     parserType = "League";
 }
