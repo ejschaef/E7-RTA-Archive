@@ -12,26 +12,26 @@ import { HeroDicts } from "./hero-manager.ts";
 
 
 export async function applyFilters(battleList: BattleType[], filters: Filters) {
-    const localFilterList = filters.filter((f) => f instanceof StandardFilter);
-    const globalFilterList = filters.filter((f) => f instanceof GlobalFilter);
+	const localFilterList = filters.filter((f) => f instanceof StandardFilter);
+	const globalFilterList = filters.filter((f) => f instanceof GlobalFilter);
 
-    // apply global filters (filters that require context of all battles); these are always applied before local filters in order of appearance
-    for (let filter of globalFilterList) {
-        console.log(`Applying global filter: ${filter.asString()}`);
-        battleList = filter.call(battleList);
-    }
+	// apply global filters (filters that require context of all battles); these are always applied before local filters in order of appearance
+	for (let filter of globalFilterList) {
+		console.log(`Applying global filter: ${filter.asString()}`);
+		battleList = filter.call(battleList);
+	}
 
-    // apply local filters (filters that can be resolved on each battle without context of other battles)
-    for (let filter of localFilterList) {
-        console.log(`Applying local filter: ${filter.asString()}`);
-        battleList = battleList.filter((b) => {
+	// apply local filters (filters that can be resolved on each battle without context of other battles)
+	for (let filter of localFilterList) {
+		console.log(`Applying local filter: ${filter.asString()}`);
+		battleList = battleList.filter((b) => {
 			// console.log(`Filtering battle:`, b);
 			const result = filter.call(b);
-            // console.log(`Result: ${result ? "included" : "excluded"}`);
-            return result;
-        });
-    }
-    return battleList;
+			// console.log(`Result: ${result ? "included" : "excluded"}`);
+			return result;
+		});
+	}
+	return battleList;
 }
 
 
@@ -42,7 +42,7 @@ let BattleManager = {
 	getBattles: async function (): Promise<BattlesObj | null> {
 		console.log("Getting battles");
 		const battles = (await ClientCache.get(ClientCache.Keys.BATTLES)) ?? null;
-		ClientCache.setTimestampNow(ClientCache.Keys.BATTLES);
+		ClientCache.setTimeoutDataNow(ClientCache.Keys.BATTLES);
 		return battles;
 	},
 
@@ -79,8 +79,7 @@ let BattleManager = {
 		);
 		await ClientCache.cache(ClientCache.Keys.FILTERED_BATTLES, battles);
 		console.log(
-			`Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <${
-				filters.length
+			`Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <${filters.length
 			}> filters`
 		);
 		return battles;

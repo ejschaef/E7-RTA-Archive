@@ -741,10 +741,14 @@ const Keys = {
 };
 const DEFAULT_TIMEOUT = 1000 * 60 * 60 * 24 * 2; // 2 days
 const REFERENCE_DATA_TIMEOUT = 1000 * 60 * 60 * 24; // 1 day
+const REFERENCE_DATA_KEY_LIST = Object.values(REFERENCE_DATA_KEYS);
 function getCacheTimeout(key) {
-    return (key in REFERENCE_DATA_KEYS)
+    return (REFERENCE_DATA_KEY_LIST.includes(key))
         ? REFERENCE_DATA_TIMEOUT
         : DEFAULT_TIMEOUT;
+}
+function makeTimeoutData(key) {
+    return [Date.now(), getCacheTimeout(key)];
 }
 let ClientCache = {
     consts: {
@@ -799,7 +803,7 @@ let ClientCache = {
         console.log(`Caching ${key}`);
         const db = await this.openDB();
         await db.put(this.consts.STORE_NAME, data, key);
-        await this.setTimestamp(key, Date.now());
+        await this.setTimeoutData(key, makeTimeoutData(key));
     },
     delete: async function (key) {
         const db = await this.openDB();
@@ -810,19 +814,20 @@ let ClientCache = {
         await indexedDB.deleteDatabase(this.consts.DB_NAME);
         console.log('Database deleted');
     },
-    getTimestamp: async function (key) {
+    getTimeoutData: async function (key) {
         const db = await this.openDB();
         const metakey = `${key + this.MetaKeys.TIMESTAMP}`;
         const timestamp = await db.get(this.consts.META_STORE_NAME, metakey);
         return timestamp ?? 0;
     },
-    setTimestamp: async function (key, timestamp) {
+    setTimeoutData: async function (key, timestamp) {
         const db = await this.openDB();
         const metakey = `${key + this.MetaKeys.TIMESTAMP}`;
         await db.put(this.consts.META_STORE_NAME, timestamp, metakey);
     },
-    setTimestampNow: async function (key) {
-        await this.setTimestamp(key, Date.now());
+    setTimeoutDataNow: async function (key) {
+        const timeoutData = makeTimeoutData(key);
+        await this.setTimeoutData(key, timeoutData);
     },
     deleteTimestamp: async function (key) {
         const db = await this.openDB();
@@ -856,13 +861,14 @@ let ClientCache = {
         console.log("Reference data cleared from data cache");
     },
     checkCacheTimeout: async function (key) {
-        const timestamp = await this.getTimestamp(key);
+        const timeoutData = await this.getTimeoutData(key);
         const currentTime = Date.now();
-        if (!timestamp || (currentTime - timestamp > getCacheTimeout(key))) {
-            console.log(`Cache timeout for ${key}; timestamp: ${timestamp}; currentTime: ${currentTime}`);
+        if (!timeoutData || (currentTime - timeoutData[0] > timeoutData[1])) {
+            console.log(`Cache timeout for ${key}; Timeout Record: ${timeoutData}; currentTime: ${currentTime}`);
             await this.delete(key);
             return false;
         }
+        console.log(`Cache ok for ${key}; Timeout Record: ${timeoutData}; currentTime: ${currentTime}; timeout: ${getCacheTimeout(key)}; diff: ${currentTime - timeoutData[0]}`);
         return true;
     },
     getFilterStr: async function () {
@@ -885,6 +891,68 @@ let ClientCache = {
     },
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ClientCache);
+
+
+/***/ }),
+
+/***/ "./static/assets/js/console-logging.ts":
+/*!*********************************************!*\
+  !*** ./static/assets/js/console-logging.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CONSOLE_LOGGER: () => (/* binding */ CONSOLE_LOGGER),
+/* harmony export */   LOG_CATEGORIES: () => (/* binding */ LOG_CATEGORIES)
+/* harmony export */ });
+const LOG_CATEGORIES = {
+    TEST: "~TEST~",
+    CACHE: "~CACHE~",
+    FILTER_PARSING: "~FLT~",
+    PAGE_LOGIC: "~PAGE~",
+    APIS: "~API~",
+    CODE_MIRROR: "~CM~"
+};
+const SUPPRESS_CATEGORIES = [
+    LOG_CATEGORIES.TEST,
+    LOG_CATEGORIES.CODE_MIRROR
+];
+class Logger {
+    originalLog = console.log;
+    suppressCategories = SUPPRESS_CATEGORIES;
+    boundCategory = null;
+    captures = {};
+    captureKey = null;
+    log(...args) {
+        if (this.captureKey !== null) {
+            this.captures[this.captureKey].push(args);
+            return;
+        }
+        if (this.boundCategory && this.suppressCategories.includes(this.boundCategory))
+            return;
+        this.originalLog(...args);
+    }
+    initialize() {
+        console.log = (...args) => this.log(...args);
+    }
+    bindCategory(category) {
+        this.boundCategory = category;
+    }
+    unbindCategory() {
+        this.boundCategory = null;
+    }
+    bindCapture(key) {
+        this.captures[key] = [];
+        this.captureKey = key;
+    }
+    unbindCapture() {
+        this.captureKey = null;
+    }
+}
+const CONSOLE_LOGGER = new Logger();
+CONSOLE_LOGGER.initialize();
+
 
 
 /***/ }),
@@ -1063,7 +1131,7 @@ let BattleManager = {
     getBattles: async function () {
         console.log("Getting battles");
         const battles = (await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES)) ?? null;
-        _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].setTimestampNow(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+        _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].setTimeoutDataNow(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
         return battles;
     },
     // Removes all user battle data from cache, should be called when user is switched out
@@ -2438,7 +2506,7 @@ class InOperator extends Operator {
     }
     call(a, b) {
         const contains = Array.isArray(b) ? b.includes(a) : b.has(a);
-        console.log(`IN OPER: Left: ${a}, Op: ${this.opStr}, Right: ${collectionToString(b)}; Result: ${contains}`);
+        // console.log(`IN OPER: Left: ${a}, Op: ${this.opStr}, Right: ${collectionToString(b)}; Result: ${contains}`);
         return this.negate ? !contains : contains;
     }
 }
@@ -3629,6 +3697,342 @@ let StatsBuilder = {
 
 /***/ }),
 
+/***/ "./static/assets/js/e7/stats-builder.ts":
+/*!**********************************************!*\
+  !*** ./static/assets/js/e7/stats-builder.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.ts */ "./static/assets/js/e7/hero-manager.ts");
+/* harmony import */ var _references_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./references.ts */ "./static/assets/js/e7/references.ts");
+
+
+const getWins = (battleList) => battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN]);
+const getFirstPickSubset = (battleList) => battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK]);
+const getSecondPickSubset = (battleList) => battleList.filter((b) => !b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK]);
+const isIncomplete = (b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS] === 0;
+const NA = "N/A";
+function toPercent(value) {
+    return (value * 100).toFixed(2) + "%";
+}
+function divideToPercentString(a, b) {
+    if (a === 0)
+        return NA;
+    return b !== 0 ? toPercent(a / b) : toPercent(0);
+}
+function divideToString(a, b) {
+    if (b === 0)
+        return NA;
+    return (a / b).toFixed(2);
+}
+function getCR(battle, heroName) {
+    const entry = battle[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.CR_BAR].find((entry) => entry[0] === heroName);
+    return entry ? entry[1] : null;
+}
+function computeGenericStats(subset, totalBattles) {
+    const wins = getWins(subset).length;
+    const subsetLength = subset.length;
+    const firstTurns = subset.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN]).length;
+    const firstTurnRate = divideToPercentString(firstTurns, subset.length);
+    const pointGain = subset.reduce((acc, b) => acc + (b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN] || 0), 0);
+    return {
+        wins,
+        subsetLength,
+        frequency: divideToPercentString(subset.length, totalBattles),
+        winRate: divideToPercentString(getWins(subset).length, subset.length),
+        plusMinus: 2 * wins - subsetLength,
+        pointGain: subset.reduce((acc, b) => acc + (b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN] || 0), 0),
+        avgPPG: divideToString(pointGain, subsetLength),
+        firstTurns,
+        firstTurnRate,
+    };
+}
+;
+function queryStats(battleList, totalBattles, heroName) {
+    const genericStats = computeGenericStats(battleList, totalBattles);
+    const postBanned = battleList.reduce((acc, b) => acc +
+        +(b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN] === heroName ||
+            b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN] === heroName), 0);
+    const successes = battleList.reduce((acc, b) => acc +
+        +(b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN] ||
+            b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN] === heroName ||
+            b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN] === heroName), 0);
+    let gamesConsidered = 0;
+    let crTotal = 0;
+    let firstTurns = 0;
+    for (const battle of battleList) {
+        const cr = getCR(battle, heroName);
+        if (cr !== null && cr !== 0) {
+            gamesConsidered += 1;
+            crTotal += cr;
+            if (cr === 100) {
+                firstTurns += 1;
+            }
+        }
+    }
+    const avgCR = divideToPercentString(crTotal / 100, gamesConsidered);
+    return {
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME]: heroName,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.BATTLES]: genericStats.subsetLength,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PICK_RATE]: genericStats.frequency,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WINS]: genericStats.wins,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WIN_RATE]: genericStats.winRate,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBANS]: postBanned,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBAN_RATE]: divideToPercentString(postBanned, genericStats.subsetLength),
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.SUCCESS_RATE]: divideToPercentString(successes, genericStats.subsetLength),
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PLUS_MINUS]: genericStats.plusMinus,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POINT_GAIN]: genericStats.pointGain,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.AVG_CR]: avgCR,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURNS]: firstTurns,
+        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE]: divideToPercentString(firstTurns, gamesConsidered),
+    };
+}
+function getPrimes(battleList, isP1 = true) {
+    const primeSet = new Set();
+    for (const battle of Object.values(battleList)) {
+        const picks = isP1
+            ? battle[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES]
+            : battle[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIMES];
+        picks.forEach((element) => {
+            primeSet.add(element);
+        });
+    }
+    return primeSet;
+}
+function getHeroStats(battleList, HeroDicts) {
+    if (battleList.length === 0) {
+        return { playerHeroStats: [], enemyHeroStats: [] };
+    }
+    const totalBattles = battleList.length;
+    const playerPrimes = getPrimes(battleList, true);
+    const enemyPrimes = getPrimes(battleList, false);
+    const playerHeroStats = [];
+    const enemyHeroStats = [];
+    for (const prime of playerPrimes) {
+        const hero = _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HeroDicts);
+        if (!hero)
+            continue;
+        const playerSubset = battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES].includes(prime));
+        if (playerSubset.length > 0) {
+            playerHeroStats.push(queryStats(playerSubset, totalBattles, hero.name));
+        }
+    }
+    for (const prime of enemyPrimes) {
+        const hero = _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HeroDicts);
+        if (!hero)
+            continue;
+        const enemySubset = battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIMES].includes(prime));
+        if (enemySubset.length > 0) {
+            enemyHeroStats.push(queryStats(enemySubset, totalBattles, hero.name));
+        }
+    }
+    const nameCol = _references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME;
+    return {
+        playerHeroStats: playerHeroStats.sort((b1, b2) => b1[nameCol].localeCompare(b2[nameCol])),
+        enemyHeroStats: enemyHeroStats.sort((b1, b2) => b1[nameCol].localeCompare(b2[nameCol])),
+    };
+}
+function getFirstPickStats(battleList, HeroDicts) {
+    battleList = getFirstPickSubset(Object.values(battleList));
+    if (battleList.length === 0) {
+        return [];
+    }
+    const totalBattles = battleList.length;
+    const grouped = {};
+    for (const b of battleList) {
+        if (b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES].length === 0)
+            continue; // skip any battle where player didn't get to pick a first unit
+        const hero = b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES][0];
+        if (!(hero in grouped))
+            grouped[hero] = { wins: 0, appearances: 0 };
+        grouped[hero].wins += +b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN];
+        grouped[hero].appearances += 1;
+    }
+    const result = Object.entries(grouped).map(([prime, stats]) => {
+        const name = _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HeroDicts)?.name ?? _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].EMPTY_NAME;
+        return {
+            hero: name,
+            wins: stats.wins,
+            appearances: stats.appearances,
+            win_rate: toPercent(stats.wins / stats.appearances),
+            appearance_rate: toPercent(stats.appearances / totalBattles),
+            "+/-": 2 * stats.wins - stats.appearances,
+        };
+    });
+    result.sort((a, b) => b.appearances - a.appearances);
+    return result;
+}
+function getPrebanStats(battleList, HeroDicts) {
+    //console.log(`Got HeroDicts: ${HeroDicts}`);
+    if (battleList.length === 0) {
+        return [];
+    }
+    const prebanSet = new Set();
+    for (const b of battleList) {
+        const prebans = b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES];
+        prebanSet.add(prebans[0]);
+        prebanSet.add(prebans[1]);
+        prebanSet.add(prebans[0] * prebans[1]);
+    }
+    const totalBattles = battleList.length;
+    const output = [];
+    for (const preban of prebanSet) {
+        const filtered = battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES].includes(preban));
+        const genericStats = computeGenericStats(filtered, totalBattles);
+        output.push({
+            preban: HeroDicts.prime_pair_lookup[preban],
+            wins: genericStats.wins,
+            appearances: genericStats.subsetLength,
+            appearance_rate: genericStats.frequency,
+            win_rate: genericStats.winRate,
+            "+/-": genericStats.plusMinus,
+        });
+    }
+    output.sort((a, b) => b.appearances - a.appearances);
+    return output;
+}
+function secondsToTimeStr(inputSeconds) {
+    let timeStr;
+    const mins = Math.floor(inputSeconds / 60);
+    const secs = (inputSeconds % 60).toFixed(1);
+    if (mins === 0) {
+        timeStr = `${secs} secs`;
+    }
+    else {
+        timeStr = `${mins} : ${secs}s`;
+    }
+    return timeStr;
+}
+function getGeneralStats(battleList) {
+    battleList.sort((b1, b2) => new Date(b1["Date/Time"]).getTime() - new Date(b2["Date/Time"]).getTime());
+    const totalBattles = battleList.length;
+    const totalGain = battleList.reduce((acc, b) => acc + (b["Point Gain"] || 0), 0);
+    const avgPPG = divideToString(totalGain, totalBattles);
+    const totalTurns = battleList.reduce((acc, b) => acc + b["Turns"], 0);
+    const avgTurns = divideToString(totalTurns, totalBattles);
+    const maxTurns = battleList.length > 0 ? Math.max(...battleList.map((b) => b["Turns"])) : 0;
+    const totalSeconds = battleList.reduce((acc, b) => acc + b["Seconds"], 0);
+    const avgSeconds = totalBattles > 0 ? totalSeconds / totalBattles : 0;
+    const maxSeconds = battleList.length > 0
+        ? Math.max(...battleList.map((b) => b["Seconds"]))
+        : 0;
+    let avgTimeStr = secondsToTimeStr(avgSeconds);
+    let maxTimeStr = secondsToTimeStr(maxSeconds);
+    const totalFirstTurnGames = battleList.reduce((acc, b) => acc + +b["First Turn"], 0);
+    // create subsets for first pick and second pick battles
+    const fpBattles = getFirstPickSubset(battleList);
+    const spBattles = getSecondPickSubset(battleList);
+    const fpStats = computeGenericStats(fpBattles, totalBattles);
+    const spStats = computeGenericStats(spBattles, totalBattles);
+    // calculate total win rate
+    const winRate = divideToPercentString(fpStats.wins + spStats.wins, totalBattles);
+    // iterate through battles and calculate longest win/loss streaks
+    let [maxWinStreak, maxLossStreak, winStreak, lossStreak] = [0, 0, 0, 0];
+    for (let b of battleList) {
+        if (b.Win) {
+            winStreak += 1;
+            maxWinStreak = Math.max(maxWinStreak, winStreak);
+            lossStreak = 0;
+        }
+        else {
+            winStreak = 0;
+            lossStreak += 1;
+            maxLossStreak = Math.max(maxLossStreak, lossStreak);
+        }
+    }
+    return {
+        first_pick_count: fpStats.subsetLength,
+        second_pick_count: spStats.subsetLength,
+        first_pick_rate: fpStats.frequency,
+        second_pick_rate: spStats.frequency,
+        first_pick_winrate: fpStats.winRate,
+        second_pick_winrate: spStats.winRate,
+        total_winrate: winRate,
+        total_battles: totalBattles,
+        total_wins: fpStats.wins + spStats.wins,
+        max_win_streak: maxWinStreak,
+        max_loss_streak: maxLossStreak,
+        avg_ppg: avgPPG,
+        avg_turns: avgTurns,
+        avg_time: avgTimeStr,
+        max_turns: maxTurns,
+        max_time: maxTimeStr,
+        first_turn_games: totalFirstTurnGames,
+        first_turn_rate: totalBattles
+            ? toPercent(totalFirstTurnGames / totalBattles)
+            : NA,
+    };
+}
+function getPerformanceStats(battlesList) {
+    const perfStatsContainer = {
+        servers: [],
+        leagues: [],
+    };
+    const totalBattles = battlesList.length;
+    const servers = Object.values(_references_ts__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR);
+    const leagues = Object.values(_references_ts__WEBPACK_IMPORTED_MODULE_1__.LEAGUE_MAP);
+    const subsetFilters = [
+        ...servers.map((server) => [
+            `Server: ${server}`,
+            (b) => b["P2 Server"] === server,
+        ]),
+        ...leagues.map((league) => [
+            `League: ${league}`,
+            (b) => b["P2 League"] === league,
+        ]),
+    ];
+    for (const [label, subsetFilter] of subsetFilters) {
+        const subset = battlesList.filter(subsetFilter);
+        const count = subset.length;
+        if (count === 0)
+            continue;
+        const subsetStats = computeGenericStats(subset, totalBattles);
+        const firstPickGames = subset.filter((b) => b["First Pick"]);
+        const fpWins = firstPickGames.reduce((acc, b) => acc + +b.Win, 0);
+        const secondPickGames = subset.filter((b) => !b["First Pick"]);
+        const spWins = secondPickGames.reduce((acc, b) => acc + +b.Win, 0);
+        const targetList = label.toLowerCase().includes("server")
+            ? perfStatsContainer.servers
+            : perfStatsContainer.leagues;
+        targetList.push({
+            label,
+            count,
+            wins: subsetStats.wins,
+            win_rate: subsetStats.winRate,
+            frequency: subsetStats.frequency,
+            "+/-": subsetStats.plusMinus,
+            fp_games: firstPickGames.length,
+            sp_games: secondPickGames.length,
+            fp_wr: firstPickGames.length > 0
+                ? toPercent(fpWins / firstPickGames.length)
+                : "N/A",
+            sp_wr: secondPickGames.length > 0
+                ? toPercent(spWins / secondPickGames.length)
+                : "N/A",
+        });
+    }
+    return [
+        ...perfStatsContainer.servers,
+        ...perfStatsContainer.leagues.slice(-4), // only show highest 4 leagues the player has played against
+    ];
+}
+let StatsBuilder = {
+    getHeroStats,
+    getFirstPickStats,
+    getPrebanStats,
+    getPerformanceStats,
+    getGeneralStats,
+    computeGenericStats,
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StatsBuilder);
+
+
+/***/ }),
+
 /***/ "./static/assets/js/e7/user-manager.ts":
 /*!*********************************************!*\
   !*** ./static/assets/js/e7/user-manager.ts ***!
@@ -3791,7 +4195,7 @@ let UserManager = {
     },
     getUser: async function () {
         const user = await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].get(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
-        await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].setTimestampNow(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
+        await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].setTimeoutDataNow(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
         return user;
     },
     clearUserData: async function () {
@@ -4015,1210 +4419,6 @@ const LangManager = {
 };
 
 
-
-/***/ }),
-
-/***/ "./static/assets/js/language-support/information-lang-blocks.ts":
-/*!**********************************************************************!*\
-  !*** ./static/assets/js/language-support/information-lang-blocks.ts ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ELEMENT_IDS: () => (/* binding */ ELEMENT_IDS),
-/* harmony export */   FILTER_EXAMPLES_AND_TEST_BLOCK: () => (/* binding */ FILTER_EXAMPLES_AND_TEST_BLOCK),
-/* harmony export */   LangBlocks: () => (/* binding */ LangBlocks),
-/* harmony export */   WELCOME_BLOCK: () => (/* binding */ WELCOME_BLOCK)
-/* harmony export */ });
-/* harmony import */ var _e7_references__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/references */ "./static/assets/js/e7/references.ts");
-/* harmony import */ var _pages_page_utilities_doc_element_references__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../pages/page-utilities/doc-element-references */ "./static/assets/js/pages/page-utilities/doc-element-references.ts");
-
-
-const ELEMENT_IDS = _pages_page_utilities_doc_element_references__WEBPACK_IMPORTED_MODULE_1__["default"].INFO_PAGE.IDS;
-const EN = _e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.EN;
-const FilterOverview = {
-    generalOverviewTitle: {
-        [EN]: "General Overview",
-    },
-    generalOverviewDescription: {
-        [EN]: "This page details the rules for writing filters within the Hero Stats page. Examples will be shown below along with space to practice writing and validating filters.",
-    },
-    filterUsageTitle: {
-        [EN]: "Filter Usage",
-    },
-    filterUsageDescription: {
-        [EN]: `Filters are primarily used to adjust which battles the user wants to 
-    include when calculating stats like win rate and pick rate. They can also be used to 
-    automatically adjust the chart to the filtered subset if desired. Almost all columns 
-    listed in the full table of battles at the bottom of the stats page can filtered on using 
-    the custom syntax. The rest of this page will detail the exact syntax and rules for writing filters.`,
-    },
-    objectTypesTitle: {
-        [EN]: "Object Types",
-    },
-    objectTypesDescription: {
-        [EN]: "There are 5 main syntactic objects:",
-    },
-    objectTypesList: {
-        [EN]: [
-            "Fields: keywords corresponding to data from each of the battles, such as if the battle is a win, the victory points the player ended the battle at, the first hero the player picked, etc.",
-            "Declared Data: data values the user defines to filter the data on. They include integers, dates, strings, sets, booleans, and ranges. There are also some keywords like 'current-season' that allow the user to conveniently utilize declared data based on predefined logic.",
-            "Operators: the operations that allow the comparison of Fields and Declared Data. They are the core of filters (includes operations like >, <, =, set membership, etc.).",
-            "Functions: higher level operations that may allow the combination of filters in a logical manner or correspond to complex predefined filters.",
-            "Pure Syntax Elements: characters like brackets, quotes, commas, and semicolons that define how the filters are broken up and parsed.",
-        ],
-    },
-    highLevelRulesTitle: {
-        [EN]: "High Level Rules",
-    },
-    highLevelRulesList: {
-        [EN]: [
-            "Filter syntax is entirely case insensitive. It will be converted to lowercase in the backend.",
-            "All filters must be separated by a semicolon ( ; ) if multiple are applied.",
-            "The terminating semicolon ( ; ) for the last filter (including if only one filter) is optional.",
-            "Every filter must either be a function call or a base filter of the form: X operator Y",
-            "Functions and sets have their constituent arguments separated by commas ( , ) not semicolons ( ; )",
-            "Clause functions like And(...), OR(...), etc. can take nested clause functions as arguments but must ultimately terminate as base filters.",
-            "Certain functions, like last-N(), are global filters that must take into account all battles when filtering (last-N captures only the N most recent battles). Since these filters are affected by other filters, to regulate the logic, all global filters will be hoisted to the top and executed in the order they were written.",
-            "Apart from global filter hoisting, all filters will execute in the order they are written.",
-            "Some filters or sets of filters are valid but will never return true. For instance, comparing different data types or using two filters which together specify a hero must be picked by both the player and the opponent. These filters will pass validation, and the resulting stats will be empty.",
-            "Some operations require specific data types; if this is the case, an error will be thrown specifying the necessary data type.",
-        ],
-    },
-};
-const Fields = {
-    title: {
-        [EN]: "Fields",
-    },
-    attributesTitle: {
-        [EN]: "Attributes",
-    },
-    attributesDescription: {
-        [EN]: `Attributes are types of fields that are accessed by using the syntax
-          p1.'attribute here' or p2.'attribute here' ; for example, 'p1.pick1' is used to access the
-          first picked hero by player 1 in the battle.`,
-    },
-    date: {
-        [EN]: "the date the battle occurred",
-    },
-    season: {
-        [EN]: "the season the battle occured (resolves to the internal season code, not the name or number)",
-    },
-    isWin: {
-        [EN]: "boolean indicator flagging if the player won",
-    },
-    isFirstPick: {
-        [EN]: "boolean indicator flagging if the player got first pick",
-    },
-    isFirstTurn: {
-        [EN]: "boolean indicator flagging if the player got the first turn",
-    },
-    firstTurnHero: {
-        [EN]: "string of the hero that got the first turn (regardless of player)",
-    },
-    victoryPoints: {
-        [EN]: "integer indicating the victory points the player ended the battle at",
-    },
-    prebans: {
-        [EN]: "set of all the prebanned heroes",
-    },
-    postbans: {
-        [EN]: "set of the two postbanned heroes",
-    },
-    turns: {
-        [EN]: "the number of turns the battle lasted (0 for incomplete battles)",
-    },
-    seconds: {
-        [EN]: "the number of seconds the battle lasted",
-    },
-    pointGain: {
-        [EN]: "a signed integer indicating how many victory points the player gained",
-    },
-    pickN: {
-        [EN]: "accesses pick n for the corresponding player. Replace [n] with numbers 1 - 5 to access the corresponding pick.",
-    },
-    picks: {
-        [EN]: "accesses a set of all 5 picks for the specified player",
-    },
-    league: {
-        [EN]: "a string value that gives the league the specified player ended the battle in (i.e. emperor, warlord, etc.)",
-    },
-    prebansAttribute: {
-        [EN]: "accesses the set of the 2 heroes prebanned by the specified player",
-    },
-    postban: {
-        [EN]: "accesses the hero postbanned by the specified player",
-    },
-    server: {
-        [EN]: "the server of the specified player",
-    },
-    id: {
-        [EN]: "the numerical id of the specified player",
-    },
-    mvp: {
-        [EN]: "accesses the mvp hero for the specified player",
-    },
-};
-const DeclaredData = {
-    title: {
-        [EN]: "Declared Data",
-    },
-    Integer: {
-        [EN]: `Any valid non-negative integer (declare like '2787' without the quotes)`,
-    },
-    Date: {
-        [EN]: `Date value using YYYY-MM-DD format exclusively (declare like '2025-01-07' without the quotes). Date must be valid.`,
-    },
-    String: {
-        [EN]: `Text based data declared within either double or single quotes (example: "lone wolf peira"). The quotes are necessary when declared outside of a set. When the string contains a quote, you must use the opposite quote type to wrap the string. Season keywords like "current-season" will be converted to string types automatically. They will take the form of their season code (ie 'pvp_rta_ss[season number here]' like 'pvp_rta_ss17' or 'pvp_rta_ss17f'). Therefore, season codes are valid string literals.`,
-    },
-    Boolean: {
-        [EN]: `Corresponds to true or false values; declare using 'true' or 'false' without the quotes`,
-    },
-    Set: {
-        [EN]: `Used to group multiple individual pieces of data together; 
-    declare using the format { x, y, z, ... }. A trailing comma after the last element is optional. 
-    Sets can only contain string, integer, and date literals. They can be of heterogeneous types. 
-    Strings within sets do not need to be quoted unless they contain a quote. Since season keywords like "current-season" 
-    will be converted to string types automatically, they can be used in sets.`,
-    },
-    Range: {
-        [EN]: `Used to define a continuous range of either integers or dates.
-     Can be used in cases where a set can be used. 
-     Declare using the syntax: 'X...Y' or 'X...=Y', where the '=' indicates if Y 
-     should be included in the set. X and Y must either both be integers or 
-     both be dates (example: 2025-05-01...2025-06-01 yields a set of all dates in May 2025)`,
-    },
-    Season: {
-        [EN]: `Used to easily filter battles to particular seasons or preseasons.
-     Can be declared by writing "season-n" without quotes, where n is the number of the desired season.
-      Season numbers and dates can be seen in the season details table at the top of the stats page.
-       The keywords "current-season" and "last-season" can alternatively be used to access the respective season based on the current active season.
-        A season number appended with "f" will access the preseason immediately following the season if one exists.`,
-    },
-};
-const Operators = {
-    title: {
-        [EN]: "Operators",
-    },
-    equal: {
-        [EN]: `Checks if left side is equal to right side.`,
-    },
-    notEqual: {
-        [EN]: `Checks if left side is not equal to right side.`,
-    },
-    gt: {
-        [EN]: `Checks if left side is greater than right side.`,
-    },
-    gte: {
-        [EN]: `Checks if left side is greater than or equal to right side.`,
-    },
-    lt: {
-        [EN]: `Checks if left side is less than right side.`,
-    },
-    lte: {
-        [EN]: `Checks if left side is less than or equal to right side.`,
-    },
-    in: {
-        [EN]: `Checks if the left side of the operator is contained within the right side. The right side of the operator must be a Range, Set, or Field that corresponds to a set (i.e. p1.picks, p2.prebans, etc.).`,
-    },
-    notIn: {
-        [EN]: `Checks if the left side of the operator is not contained within the right side. The right side of the operator must be a Range, Set, or Field that corresponds to a set (i.e. p1.picks, p2.prebans, etc.).`,
-    },
-};
-const Functions = {
-    title: {
-        [EN]: "Functions",
-    },
-    // Clause Functions
-    clauseFunctionsTitle: {
-        [EN]: "Clause Functions",
-    },
-    clauseFunctionsDescription: {
-        [EN]: `Clause functions generally take 1 or more filters as arguments and create logic gates to combine the
-    result. Clause functions can take other clause functions as arguments, but the syntax tree must eventually
-    terminate as base filters. Global Filter Functions cannot be used within Clause Functions.`,
-    },
-    AND: {
-        [EN]: `Creates an AND gate for the filter arguments, returning true if all arguments return true. An empty AND function will always return true. Call using the syntax 'AND( arg1, arg2, ...)'`,
-    },
-    OR: {
-        [EN]: `Creates an OR gate for the filter arguments, returning true if any argument returns true. An empty OR function will always return false. Call using the syntax 'OR( arg1, arg2, ...)'`,
-    },
-    XOR: {
-        [EN]: `Creates an XOR gate for the filter arguments, returning a boolean value based on a cascading XOR. XOR requires at least 2 arguments to pass validation. Call using the syntax 'XOR( arg1, arg2, ...)'`,
-    },
-    NOT: {
-        [EN]: `The NOT function takes exactly one argument which must be a filter (not an individual Field or Data Declaration) and inverts the boolean result. Call using the syntax 'NOT(arg)'.`,
-    },
-    // Direct Functions
-    directFunctionsTitle: {
-        [EN]: "Direct Functions",
-    },
-    directFunctionsDescription: {
-        [EN]: `Direct functions are compound filters that perform a specific operation which would be otherwise
-    impossible to express using the standard filter syntax. They include functions for filtering
-    based on equipment, artifacts, and CR.`,
-    },
-    EQUIPMENT: {
-        [EN]: `Creates a filter that checks if the specified hero has the specified equipment. Call using the syntax '[p1/p2].equipment(hero, equip str or set)' where [p1/p2] is replaced with either 'p1' or 'p2' to specify the player to check. Hero must be a string literal of any valid hero name, and the second argument must either be a string literal of a valid equipment set name or a set of equipment sets. When a set is passed, the filter will return true if the hero has all of the sets equipped (it will always be false if more than 2 unique sets are passed). You can pass a set like {torrent, torrent, torrent} to filter for 2 piece sets equipped multiple times. As long as the passed equipment is equipped by the specified hero, the function will return true even if the hero has an additional set equipped. Also note that a post-banned hero will not have any equipment. Example function call: p1.equipment("Arbiter Vildred", {Torrent, Torrent, Immunity})`,
-    },
-    ARTIFACT: {
-        [EN]: `Creates a filter that checks if the specified hero has the specified artifact equipped. It is called symmetrically to the equipment function. The only difference is that if a set of artifacts is passed, unlike the equipment filter, the artifact filter will return true if the hero has any of the artifacts equipped, whereas the equipment filter requires all of the equipment sets to be equipped. Also note that a post-banned hero will not have any artifact. Example function call: p1.artifact("Arbiter Vildred", "Alexa's Basket")`,
-    },
-    CR: {
-        [EN]: `Creates a filter that compares the starting CR of the specified hero to the integer passed using the specified operator. Only comparison operators can be used (includes > , >=, <, <=, =, !=). Call using simplified syntax without commas like 'p1.cr("Zio" = 100)' or comma separated syntax like 'p2.cr("Amid", > , 95)'. Use either 'p1.' or 'p2.' to specify the player to check. This filter will return false if the hero specified was post banned. Note that this function implicitly includes the filter "hero in [p1 or p2].picks", therefore, negating this filter with a NOT clause will not simply return games where the hero had less than the specific CR; it will also include games where the specified player did not pick the hero. Therefore, to negate the function, use the complimentary operator instead.`,
-    },
-    globalFiltersTitle: {
-        [EN]: `Global Filter Functions`,
-    },
-    globalFiltersDescription: {
-        [EN]: `Global filter functions are context aware, meaning that they cannot be applied to one battle in a
-                vacuum.
-                They require knowledge of the other battles to determine resulting truth value for the battle being
-                processed.
-                As such, they are affected by other filters in the chain. Therefore, to standardize behavior, all global
-                filter functions are hoisted to the top of the filter chain and executed in order.`,
-    },
-    // Global Filter Functions
-    lastN: {
-        [EN]: `Filters for the most recent N battles. Requires an Integer as an argument. Call using the syntax 'last-N(Integer)'`,
-    },
-};
-const Syntax = {
-    title: {
-        [EN]: "Syntax Elements",
-    },
-    semiColon: {
-        [EN]: `Must use semicolons to separate filters when multiple are used. Do not use semicolons in functions.`,
-    },
-    comma: {
-        [EN]: `Commas are used to separate arguments to functions or sets.`,
-    },
-    parentheses: {
-        [EN]: `Parentheses are used to bound the arguments to function calls.`,
-    },
-    braces: {
-        [EN]: `Braces are used to bound the arguments to a set declaration.`,
-    },
-};
-const FILTER_EXAMPLES_AND_TEST_BLOCK = {
-    EX1_TITLE: {
-        [EN]: "Filter Example 1",
-    },
-    EX1_DESCRIPTION: {
-        [EN]: `This filter takes only battles in the current season and filters for first pick
-              games where the player selected either ML Peira or New Moon Luna as their first pick and
-              harsetti was prebanned.`,
-    },
-    EX2_TITLE: {
-        [EN]: "Filter Example 2",
-    },
-    EX2_DESCRIPTION: {
-        [EN]: `This filter first selects the most recent 500 battles, then filters
-              those for second pick games that occurred between April 2025 and June 2025
-              in which either the opponent is in Warlord, Emeperor, or Legend and picked Zio on 3, or games
-              in which the player ended with at or above 3000 victory points. <br><br>
-
-              *Note that it does not matter when the last-n filter is placed;
-              it will always execute before local filters, since it is a global filter.
-              Therefore, the result will likely have much less than 500 battles. <br><br>
-
-              **Also note that the indentation is purely for readability. Multiple spaces or returns will be ignored
-              during parsing.`,
-    },
-    EX3_TITLE: {
-        [EN]: "Filter Example 3",
-    },
-    EX3_DESCRIPTION: {
-        [EN]: `This filter selects only games in which ML Arunka and Rinak are prebanned,
-              Harsetti was picked by the player and was not postbanned, and the player ended
-              with victory points between 2500 and 3000 inclusively.`,
-    },
-    EX4_TITLE: {
-        [EN]: "Filter Example 4",
-    },
-    EX4_DESCRIPTION: {
-        [EN]: `This filter selects only games which occurred
-              in the pre-season following season 16 that the player won`,
-    },
-    EX5_TITLE: {
-        [EN]: "Filter Example 5",
-    },
-    EX5_DESCRIPTION: {
-        [EN]: `This filter selects only games where the player selected belian, and
-              Belian was equipped with both Counter and Immunity sets, and Belian was either
-              equipped with 3f or Elbris Ritual Sword. Furthermore, it filters only for battles
-              in which the opponent selected New Moon Luna, and New Moon Luna took the first turn, and
-              the opponent was either from the Global, Japan, or Asia servers.`,
-    },
-    TEST_TITLE: {
-        [EN]: "Filter Test",
-    },
-    TEST_DESCRIPTION: {
-        [EN]: `Write filter syntax below to test. Use the 'Check Syntax' button to verify the filter
-              is properly formed.`,
-    }
-};
-const WELCOME_BLOCK = {
-    TITLE: {
-        [EN]: "Welcome to E7 RTA Archive",
-    },
-    DESCRIPTION_PART1: {
-        [EN]: `This tool primarily enables E7 players to maintain their RTA history beyond 100 battles.`,
-    },
-    DESCRIPTION_PART2: {
-        [EN]: `Users can query their most recent 100 battles just like the E7 website, then download the data and upload in the future to maintain a continuous history.`,
-    },
-    DESCRIPTION_PART3: {
-        [EN]: `All uploads are handled exclusively by the client. No data from the upload is sent to the server.`,
-    },
-    DESCRIPTION_PART4: {
-        [EN]: `Some statistics are also available to help users better understand their performance.`,
-    },
-    DESCRIPTION_PART5: {
-        [EN]: `A customizable filter syntax is available, allowing users to control what data is used in the analysis.`,
-    },
-    DESCRIPTION_PART6: {
-        [EN]: `To utilize filters and query statistics, identifiers must be input correctly. A search page is available to find the correct names for things like artifacts and heroes.`,
-    },
-    DESCRIPTION_PART7: {
-        [EN]: `Navigate to content pages using the above nav bar or the side panel.`,
-    },
-    DESCRIPTION_PART8: {
-        [EN]: `English is currently the only supported language.`,
-    },
-};
-const LangBlocks = {
-    Welcome: WELCOME_BLOCK,
-    FilterExamplesAndTest: FILTER_EXAMPLES_AND_TEST_BLOCK,
-    FilterOverview: FilterOverview,
-    Functions: Functions,
-    DeclaredData: DeclaredData,
-    Fields: Fields,
-    Operators: Operators,
-    Syntax: Syntax,
-    WELCOME_BLOCK: WELCOME_BLOCK
-};
-
-
-/***/ }),
-
-/***/ "./static/assets/js/language-support/lang-builder.ts":
-/*!***********************************************************!*\
-  !*** ./static/assets/js/language-support/lang-builder.ts ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   TextRetrieveFns: () => (/* binding */ TextRetrieveFns),
-/* harmony export */   getText: () => (/* binding */ getText)
-/* harmony export */ });
-/* harmony import */ var _e7_references__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/references */ "./static/assets/js/e7/references.ts");
-
-function getText(lang, block) {
-    return block[lang] ?? block[_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.EN];
-}
-const TextRetrieveFns = {
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.EN]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.EN, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.DE]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.DE, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.KO]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.KO, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.PT]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.PT, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.TH]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.TH, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ZH_TW]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ZH_TW, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.JA]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.JA, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.FR]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.FR, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ZH_CN]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ZH_CN, block); },
-    [_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ES]: function (block) { return getText(_e7_references__WEBPACK_IMPORTED_MODULE_0__.LANGUAGES.CODES.ES, block); },
-};
-
-
-/***/ }),
-
-/***/ "./static/assets/js/pages/html-constructor/html-constructor.ts":
-/*!*********************************************************************!*\
-  !*** ./static/assets/js/pages/html-constructor/html-constructor.ts ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ComposeFns: () => (/* binding */ ComposeFns),
-/* harmony export */   ComposeOption: () => (/* binding */ ComposeOption),
-/* harmony export */   END_NEST: () => (/* binding */ END_NEST),
-/* harmony export */   HTMLConstructor: () => (/* binding */ HTMLConstructor),
-/* harmony export */   TableConstructor: () => (/* binding */ TableConstructor),
-/* harmony export */   getScrollbarWidth: () => (/* binding */ getScrollbarWidth)
-/* harmony export */ });
-/* harmony import */ var _html_safe_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../html-safe.ts */ "./static/assets/js/html-safe.ts");
-
-let ID_COUNTER = 0;
-function generateID() {
-    ID_COUNTER += 1;
-    return `id-${ID_COUNTER}`;
-}
-let _SCROLLBAR_WIDTH = null;
-function getScrollbarWidth() {
-    if (_SCROLLBAR_WIDTH)
-        return _SCROLLBAR_WIDTH;
-    const outer = document.createElement("div");
-    outer.style.visibility = "hidden";
-    outer.style.overflow = "scroll";
-    document.body.appendChild(outer);
-    const scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-    outer.remove();
-    _SCROLLBAR_WIDTH = scrollbarWidth;
-    return scrollbarWidth;
-}
-const ComposeOption = {
-    NEST: "nest", // all subsequent compose elements will be children
-    END_NEST: "end-nest", // exits the current nest if any otherwise ignore
-    ADJ: "adj", // all subsequent compose elements will be siblings
-};
-const END_NEST_TAG = "~end-nest~";
-const END_NEST = {
-    tag: END_NEST_TAG,
-    option: ComposeOption.END_NEST
-};
-class HTMLConstructor {
-    htmlElt;
-    children;
-    childArr;
-    constructor(htmlElt) {
-        this.htmlElt = htmlElt;
-        this.children = {};
-        this.childArr = [];
-    }
-    static fromID(id) {
-        return new HTMLConstructor(_html_safe_ts__WEBPACK_IMPORTED_MODULE_0__.Safe.unwrapHtmlElt(id));
-    }
-    static fromElt(elt) {
-        return new HTMLConstructor(elt);
-    }
-    get id() {
-        return this.htmlElt.id;
-    }
-    set id(id) {
-        this.htmlElt.id = id;
-    }
-    addClass(...classes) {
-        this.htmlElt.classList.add(...classes);
-    }
-    addStyle(style) {
-        this.htmlElt.setAttribute("style", style);
-    }
-    removeClass(...classes) {
-        this.htmlElt.classList.remove(...classes);
-    }
-    addAttributes(attributes) {
-        for (const [key, value] of Object.entries(attributes)) {
-            this.htmlElt.setAttribute(key, value);
-        }
-    }
-    appendChild(child) {
-        if (child instanceof HTMLConstructor) {
-            this.htmlElt.appendChild(child.htmlElt);
-            if (!child.id)
-                child.id = generateID();
-            this.children[child.id] = child;
-            this.childArr.push(child);
-            return child;
-        }
-        else if (child instanceof HTMLElement) {
-            let wrapped = new HTMLConstructor(child);
-            return this.appendChild(wrapped);
-        }
-        else {
-            throw new Error("Only instances of HTMLConstructor or HTMLElement can be passed to this function");
-        }
-    }
-    setInnerHtml(htmlStr) {
-        this.htmlElt.innerHTML = htmlStr;
-    }
-    appendInnerHTML(htmlStr) {
-        this.htmlElt.insertAdjacentHTML("beforeend", htmlStr);
-    }
-    constructChild(eltType, attributes = {}) {
-        if (!attributes.id)
-            attributes.id = generateID();
-        let child = document.createElement(eltType);
-        let constructor = new HTMLConstructor(child);
-        constructor.addAttributes(attributes);
-        this.appendChild(constructor);
-        return constructor;
-    }
-    addTextContent(text) {
-        this.htmlElt.textContent = text;
-    }
-    /**
-     * Constructs a tree of HTMLConstructors from an array of HTMLComposeElements.
-     *
-     * @param {HTMLComposeElement[]} elements - An array of HTMLComposeElements
-     * representing the structure and content of the HTML tree.
-     */
-    compose(elements) {
-        for (let i = 0; i < elements.length; i++) {
-            const element = elements[i];
-            if (element.option === ComposeOption.NEST) { // all subsequent compose elements will be children
-                const nestedChildren = [];
-                for (let j = i + 1; j < elements.length; j++) {
-                    const nestedChild = elements[j];
-                    if (nestedChild.option === ComposeOption.END_NEST) {
-                        break;
-                    }
-                    nestedChildren.push(nestedChild);
-                }
-                if (element.children) {
-                    element.children = [...element.children, ...nestedChildren];
-                }
-                else {
-                    element.children = nestedChildren;
-                }
-                element.option = ComposeOption.ADJ;
-                this.compose([element]);
-                i += nestedChildren.length;
-                continue;
-            }
-            ;
-            if (element.tag === END_NEST_TAG)
-                continue;
-            if (element.textContent instanceof Array) { // create adjacent copies of element using the different text
-                const subElements = [];
-                for (const text of element.textContent) {
-                    const subElt = Object.assign({}, element);
-                    subElt.textContent = text;
-                    subElements.push(subElt);
-                }
-                this.compose(subElements);
-                continue;
-            }
-            ;
-            let child = this.constructChild(element.tag, element.attributes);
-            if (element.classes)
-                child.addClass(...element.classes);
-            if (element.children)
-                child.compose(element.children);
-            if (element.textContent)
-                child.addTextContent(element.textContent);
-            if (element.style)
-                child.addStyle(element.style);
-            if (element.innerHtml)
-                child.setInnerHtml(element.innerHtml);
-        }
-        ;
-    }
-}
-class TableConstructor extends HTMLConstructor {
-    thead;
-    tbody;
-    constructor(htmlElt, headID, bodyID) {
-        super(htmlElt);
-        this.constructChild("thead", { id: headID });
-        this.constructChild("tbody", { id: bodyID });
-        this.thead = this.children[headID];
-        this.tbody = this.children[bodyID];
-    }
-    static createFromIDs(tableID, headID, bodyID) {
-        const table = document.createElement("table");
-        table.id = tableID;
-        return new TableConstructor(table, headID, bodyID);
-    }
-    addColumns(colNameArr) {
-        const thead = this.thead;
-        const tr = thead.constructChild("tr");
-        colNameArr.forEach((colName) => {
-            const attributes = { scope: "col" };
-            tr.constructChild("th", attributes).addTextContent(colName);
-        });
-    }
-}
-function cardNest({ content, classes } = {}) {
-    return [
-        {
-            tag: "div",
-            classes: ["col-sm-12"].concat(classes ?? []),
-            option: ComposeOption.NEST
-        },
-        {
-            tag: "div",
-            classes: ["card"],
-            children: content,
-            option: ComposeOption.NEST
-        },
-    ];
-}
-function cardBody({ composeList, classes, option }) {
-    return {
-        tag: "div",
-        classes: ["card-body", "pc-component"].concat(classes ?? []),
-        option: option,
-        children: composeList
-    };
-}
-function paragraph(text, classes) {
-    return {
-        tag: "p",
-        textContent: text,
-        classes: classes
-    };
-}
-function header(text, hNum = 1, classes) {
-    return {
-        tag: "h" + hNum,
-        textContent: text,
-        classes: classes
-    };
-}
-function hr() {
-    return {
-        tag: "hr"
-    };
-}
-function br() {
-    return {
-        tag: "br"
-    };
-}
-function listElement({ outertag, outerclasses, innertag, innerclasses, textList }) {
-    return {
-        tag: outertag ?? "ul",
-        classes: outerclasses ?? [],
-        children: [
-            {
-                tag: innertag ?? "li",
-                classes: innerclasses ?? [],
-                textContent: textList
-            }
-        ]
-    };
-}
-const ComposeFns = {
-    cardNest,
-    cardBody,
-    paragraph,
-    header,
-    hr,
-    br,
-    listElement,
-};
-
-
-
-/***/ }),
-
-/***/ "./static/assets/js/pages/information.ts":
-/*!***********************************************!*\
-  !*** ./static/assets/js/pages/information.ts ***!
-  \***********************************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   makeExampleFilterCardHTMLStr: () => (/* binding */ makeExampleFilterCardHTMLStr)
-/* harmony export */ });
-/* harmony import */ var _e7_regex_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/regex.ts */ "./static/assets/js/e7/regex.ts");
-/* harmony import */ var _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./page-utilities/page-utils.js */ "./static/assets/js/pages/page-utilities/page-utils.js");
-/* harmony import */ var _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-utilities/nav-bar-utils.ts */ "./static/assets/js/pages/page-utilities/nav-bar-utils.ts");
-/* harmony import */ var _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../language-support/information-lang-blocks.ts */ "./static/assets/js/language-support/information-lang-blocks.ts");
-/* harmony import */ var _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./html-constructor/html-constructor.ts */ "./static/assets/js/pages/html-constructor/html-constructor.ts");
-/* harmony import */ var _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./page-utilities/doc-element-references.ts */ "./static/assets/js/pages/page-utilities/doc-element-references.ts");
-/* harmony import */ var _html_safe_ts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../html-safe.ts */ "./static/assets/js/html-safe.ts");
-/* harmony import */ var _lang_manager_ts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lang-manager.ts */ "./static/assets/js/lang-manager.ts");
-/* harmony import */ var _language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../language-support/lang-builder.ts */ "./static/assets/js/language-support/lang-builder.ts");
-
-
-
-
-
-
-
-
-
-const EDITORS = [];
-let CURRENT_CARD = null;
-const ELEMENT_IDS = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS;
-function makeExampleFilterCardHTMLStr(title, description, exFilterTextAreaID) {
-    return `
-    <div class="col-sm-12 d-none", id="${exFilterTextAreaID}-card">
-      <div class="card">
-        <div class="card-header">
-          <h5>${title}</h5>
-          <p class="text-sm">${description}</p>
-        </div>
-        <div class="card-body pc-component text-sm" id="${exFilterTextAreaID}-wrapper">
-          <textarea name="code" class="codemirror-hidden" id="${exFilterTextAreaID}"></textarea>
-        </div>
-      </div>
-    </div>
-  `; // height of codeMirror area is set by style applied to wrapper id in CSS file
-}
-function makeTestFilterHTMLStr(title, description) {
-    return `
-    <div class="col-sm-12 d-none" id="${ELEMENT_IDS.TEST_SYNTAX_CARD}">
-      <div class="card">
-        <div class="card-header text-center kpi-header tight-fit">
-          <h3>${title}</h3>
-          <h6 class="small-text">${description}</h6>
-        </div>
-        <div class="card-body text-center kpi-body tight-fit">
-          <div class="row justify-content-center px-4">
-            <span class="d-block mb-1 rel-width-80 scrollable-60px" id="${ELEMENT_IDS.TEST_FILTER_MESSAGE}">&nbsp;</span>
-              <textarea id="codeArea" name="code" class="codemirror-hidden"></textarea>
-              <div class="d-flex justify-content-center gap-3 mt-4">
-                <button type="button" id="${ELEMENT_IDS.CHECK_SYNTAX_BTN}" name="check-syntax" value="check" class="btn shadow px-sm-1">Check
-                  Syntax</button>
-              </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-function makeOverviewHTMLStr(languageCode) {
-    const WELCOME_BLOCK = _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__.LangBlocks.WELCOME_BLOCK;
-    return `
-		<div class="col-md-9 mb-3 d-none", id="${_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.OVERVIEW_CARD}">
-			<div class="card">
-				<div class="card-header text-center">
-					<h3>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.TITLE)}</h3>
-				</div>
-				<div class="card-body text-start py-3 px-5">
-					<ul>
-						<li>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.DESCRIPTION_PART1)}</li>
-						<li>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.DESCRIPTION_PART2)}</li>
-						<li>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.DESCRIPTION_PART3)}</li>
-						<li>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.DESCRIPTION_PART4)}</li>
-						<li>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.DESCRIPTION_PART5)}</li>
-						<li>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.DESCRIPTION_PART6)}</li>
-						<li>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.DESCRIPTION_PART7)}</li>
-						<li>${(0,_language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.getText)(languageCode, WELCOME_BLOCK.DESCRIPTION_PART8)}</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-  `;
-}
-function makeExampleAndTestHTMLStr(lang) {
-    let exampleFilterStr = "";
-    const getText = _language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.TextRetrieveFns[lang];
-    const LANG_BLOCK = _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__.LangBlocks.FilterExamplesAndTest;
-    exampleFilterStr += makeExampleFilterCardHTMLStr(getText(LANG_BLOCK.EX1_TITLE), getText(LANG_BLOCK.EX1_DESCRIPTION), _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.EX_FILTER_1);
-    exampleFilterStr += makeExampleFilterCardHTMLStr(getText(LANG_BLOCK.EX2_TITLE), getText(LANG_BLOCK.EX2_DESCRIPTION), _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.EX_FILTER_2);
-    exampleFilterStr += makeExampleFilterCardHTMLStr(getText(LANG_BLOCK.EX3_TITLE), getText(LANG_BLOCK.EX3_DESCRIPTION), _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.EX_FILTER_3);
-    exampleFilterStr += makeExampleFilterCardHTMLStr(getText(LANG_BLOCK.EX4_TITLE), getText(LANG_BLOCK.EX4_DESCRIPTION), _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.EX_FILTER_4);
-    exampleFilterStr += makeExampleFilterCardHTMLStr(getText(LANG_BLOCK.EX5_TITLE), getText(LANG_BLOCK.EX5_DESCRIPTION), _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.EX_FILTER_5);
-    exampleFilterStr += makeTestFilterHTMLStr(getText(LANG_BLOCK.TEST_TITLE), getText(LANG_BLOCK.TEST_DESCRIPTION));
-    return exampleFilterStr;
-}
-function injectInCard(composeList, cardArgs) {
-    const composeElt = {
-        tag: "div",
-        classes: ["col-sm-12", "d-none"],
-        children: [
-            {
-                tag: "div",
-                classes: ["card"],
-                children: composeList
-            },
-        ],
-        attributes: cardArgs?.attributes
-    };
-    return composeElt;
-}
-function paragraph(text, classes) {
-    return {
-        tag: "p",
-        textContent: text,
-        classes: classes
-    };
-}
-function header(text, hNum = 1, classes) {
-    return {
-        tag: "h" + hNum,
-        textContent: text,
-        classes: classes
-    };
-}
-function cardHeader(title, hNum = 1, subheader) {
-    const header = {
-        tag: "div",
-        classes: ["card-header"],
-        children: [
-            {
-                tag: "h" + hNum,
-                textContent: title
-            }
-        ]
-    };
-    if (subheader)
-        header.children?.push(paragraph(subheader));
-    return header;
-}
-function cardBody({ composeList, classes, option }) {
-    return {
-        tag: "div",
-        classes: ["card-body", "pc-component"].concat(classes ?? []),
-        option: option,
-        children: composeList
-    };
-}
-function hr() {
-    return {
-        tag: "hr"
-    };
-}
-function listElement({ outertag, outerclasses, innertag, innerclasses, textList }) {
-    return {
-        tag: outertag ?? "ul",
-        classes: outerclasses ?? [],
-        children: [
-            {
-                tag: innertag ?? "li",
-                classes: innerclasses ?? [],
-                textContent: textList
-            }
-        ]
-    };
-}
-function filterSyntaxTable(composeList) {
-    return {
-        tag: "table",
-        style: "width: 100%;",
-        classes: ["table", "filter-syntax-table"],
-        children: [
-            {
-                tag: "tbody",
-                children: composeList
-            }
-        ]
-    };
-}
-function syntaxRulesTableRow({ leftText, rightText, leftClasses, rightClasses }) {
-    return {
-        tag: "tr",
-        children: [
-            {
-                tag: "td",
-                style: "white-space: nowrap;",
-                classes: leftClasses ?? [],
-                textContent: leftText
-            },
-            {
-                tag: "td",
-                classes: ["cm-def"],
-                innerHtml: "&rarr;"
-            },
-            {
-                tag: "td",
-                classes: rightClasses ?? [],
-                textContent: rightText
-            }
-        ]
-    };
-}
-function SyntaxRulesTableRows({ entries, leftClasses, rightClasses }) {
-    return entries.map(([leftText, rightText]) => syntaxRulesTableRow({ leftText, rightText, leftClasses, rightClasses }));
-}
-function makeComposeList(lang) {
-    const text = _language_support_lang_builder_ts__WEBPACK_IMPORTED_MODULE_8__.TextRetrieveFns[lang];
-    const FilterOverview = _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__.LangBlocks.FilterOverview;
-    let filterOverviewBody = [
-        cardHeader(text(FilterOverview.generalOverviewTitle), 3, text(FilterOverview.generalOverviewDescription)),
-        cardBody({ option: _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__.ComposeOption.NEST }),
-        header(text(FilterOverview.filterUsageTitle), 4),
-        paragraph(text(FilterOverview.filterUsageDescription)),
-        hr(),
-        header(text(FilterOverview.objectTypesTitle), 4),
-        paragraph(text(FilterOverview.objectTypesDescription)),
-        listElement({
-            outertag: "ol",
-            outerclasses: ["text-sm"],
-            textList: text(FilterOverview.objectTypesList)
-        }),
-        hr(),
-        header(text(FilterOverview.highLevelRulesTitle), 4),
-        listElement({
-            outertag: "ol",
-            outerclasses: ["text-sm"],
-            textList: text(FilterOverview.highLevelRulesList)
-        }),
-    ];
-    const filterOverviewCard = injectInCard(filterOverviewBody, { attributes: { id: ELEMENT_IDS.FILTER_OVERVIEW } });
-    const Fields = _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__.LangBlocks.Fields;
-    let fieldBody = [
-        cardHeader(text(Fields.title), 5),
-        cardBody({ classes: ["text-sm"], option: _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__.ComposeOption.NEST }),
-        filterSyntaxTable(SyntaxRulesTableRows({
-            entries: [
-                ["date", text(Fields.date)],
-                ["season", text(Fields.season)],
-                ["is-win", text(Fields.isWin)],
-                ["is-first-pick", text(Fields.isFirstPick)],
-                ["is-first-turn", text(Fields.isFirstTurn)],
-                ["first-turn-hero", text(Fields.firstTurnHero)],
-                ["victory-points", text(Fields.victoryPoints)],
-                ["prebans", text(Fields.prebans)],
-                ["postbans", text(Fields.postbans)],
-                ["turns", text(Fields.turns)],
-                ["seconds", text(Fields.seconds)],
-                ["point-gain", text(Fields.pointGain)],
-            ],
-            leftClasses: ["cm-datafield"],
-            rightClasses: ["cm-default"]
-        })),
-        paragraph(text(Fields.attributesTitle)),
-        paragraph(text(Fields.attributesDescription), ["text-sm"]),
-        filterSyntaxTable(SyntaxRulesTableRows({
-            entries: [
-                ["pick[n]", text(Fields.pickN)],
-                ["picks", text(Fields.picks)],
-                ["league", text(Fields.league)],
-                ["prebans", text(Fields.prebansAttribute)],
-                ["postban", text(Fields.postban)],
-                ["server", text(Fields.server)],
-                ["id", text(Fields.id)],
-                ["mvp", text(Fields.mvp)],
-            ],
-            leftClasses: ["cm-datafield"],
-            rightClasses: ["cm-default"]
-        }))
-    ];
-    const fieldCard = injectInCard(fieldBody, { attributes: { id: ELEMENT_IDS.FIELD_SYNTAX } });
-    const DeclaredData = _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__.LangBlocks.DeclaredData;
-    const declaredDataBody = [
-        cardHeader(text(DeclaredData.title), 5),
-        cardBody({ classes: ["text-sm"], option: _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__.ComposeOption.NEST }),
-        filterSyntaxTable(SyntaxRulesTableRows({
-            entries: [
-                ["Integer", text(DeclaredData.Integer)],
-                ["Date", text(DeclaredData.Date)],
-                ["String", text(DeclaredData.String)],
-                ["Boolean", text(DeclaredData.Boolean)],
-                ["Set", text(DeclaredData.Set)],
-                ["Range", text(DeclaredData.Range)],
-                ["Season", text(DeclaredData.Season)],
-            ],
-            leftClasses: ["cm-declared-data"],
-            rightClasses: ["cm-default"]
-        }))
-    ];
-    const declaredDataCard = injectInCard(declaredDataBody, { attributes: { id: ELEMENT_IDS.DATA_SYNTAX } });
-    const Operators = _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__.LangBlocks.Operators;
-    const operatorsBody = [
-        cardHeader(text(Operators.title), 5),
-        cardBody({ classes: ["text-sm"], option: _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__.ComposeOption.NEST }),
-        filterSyntaxTable(SyntaxRulesTableRows({
-            entries: [
-                ["=", text(Operators.equal)],
-                ["!=", text(Operators.notEqual)],
-                [">", text(Operators.gt)],
-                [">=", text(Operators.gte)],
-                ["<", text(Operators.lt)],
-                ["<=", text(Operators.lte)],
-                ["in", text(Operators.in)],
-                ["!in", text(Operators.notIn)],
-            ],
-            leftClasses: ["cm-operator"],
-            rightClasses: ["cm-default"]
-        }))
-    ];
-    const operatorsCard = injectInCard(operatorsBody, { attributes: { id: ELEMENT_IDS.OPERATOR_SYNTAX } });
-    const Functions = _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__.LangBlocks.Functions;
-    const functionsBody = [
-        cardHeader(text(Functions.title), 5),
-        cardBody({ classes: ["text-sm"], option: _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__.ComposeOption.NEST }),
-        paragraph(text(Functions.clauseFunctionsTitle)),
-        paragraph(text(Functions.clauseFunctionsDescription), ["text-sm"]),
-        filterSyntaxTable(SyntaxRulesTableRows({
-            entries: [
-                ["AND", text(Functions.AND)],
-                ["OR", text(Functions.OR)],
-                ["XOR", text(Functions.XOR)],
-                ["NOT", text(Functions.NOT)],
-            ],
-            leftClasses: ["cm-keyword"],
-            rightClasses: ["cm-default"]
-        })),
-        paragraph(text(Functions.directFunctionsTitle)),
-        paragraph(text(Functions.directFunctionsDescription), ["text-sm"]),
-        filterSyntaxTable(SyntaxRulesTableRows({
-            entries: [
-                ["[p1/p2].equipment(hero, str/set)", text(Functions.EQUIPMENT)],
-                ["[p1/p2].artifact(hero, str/set)", text(Functions.ARTIFACT)],
-                ["[p1/p2].CR(hero, operator, integer)", text(Functions.CR)],
-            ],
-            leftClasses: ["cm-keyword"],
-            rightClasses: ["cm-default"]
-        })),
-        paragraph(text(Functions.globalFiltersTitle)),
-        paragraph(text(Functions.globalFiltersDescription), ["text-sm"]),
-        filterSyntaxTable(SyntaxRulesTableRows({
-            entries: [
-                ["last-N", text(Functions.lastN)],
-            ],
-            leftClasses: ["cm-keyword"],
-            rightClasses: ["cm-default"]
-        })),
-    ];
-    const functionsCard = injectInCard(functionsBody, { attributes: { id: ELEMENT_IDS.FUNCTION_SYNTAX } });
-    const Syntax = _language_support_information_lang_blocks_ts__WEBPACK_IMPORTED_MODULE_3__.LangBlocks.Syntax;
-    const syntaxBody = [
-        cardHeader(text(Syntax.title), 5),
-        cardBody({ classes: ["text-sm"], option: _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__.ComposeOption.NEST }),
-        filterSyntaxTable(SyntaxRulesTableRows({
-            entries: [
-                [";", text(Syntax.semiColon)],
-                [",", text(Syntax.comma)],
-                ["(", text(Syntax.parentheses)],
-                ["{", text(Syntax.braces)],
-            ],
-            leftClasses: ["cm-bracket"],
-            rightClasses: ["cm-default"]
-        }))
-    ];
-    const syntaxCard = injectInCard(syntaxBody, { attributes: { id: ELEMENT_IDS.STRUCTURAL_SYNTAX } });
-    return [filterOverviewCard, fieldCard, declaredDataCard, operatorsCard, functionsCard, syntaxCard];
-}
-function makeExFilter(textAreaID, str) {
-    const textArea = _html_safe_ts__WEBPACK_IMPORTED_MODULE_6__.Safe.unwrapHtmlElt(textAreaID);
-    textArea.value = str.replace(/^\n/, "");
-    // @ts-ignore
-    const editor = CodeMirror.fromTextArea(textArea, {
-        mode: "filterSyntax",
-        lineNumbers: true,
-        theme: "default",
-        readOnly: true,
-    });
-    EDITORS.push(editor);
-    textArea.classList.remove("codemirror-hidden");
-}
-function initializeCodeBlocksAndAddListeners() {
-    // @ts-ignore
-    CodeMirror.defineMode("filterSyntax", function () {
-        return {
-            token: function (stream, _state) {
-                return _e7_regex_ts__WEBPACK_IMPORTED_MODULE_0__.RegExps.tokenMatch(stream);
-            },
-        };
-    });
-    const ex1Str = `
-season = current-season;
-is-first-pick = true;
-p1.pick1 in {lone wolf peira, new moon luna};
-OR("harsetti" in p1.prebans, "harsetti" in p2.prebans);`;
-    makeExFilter("exFilter1", ex1Str);
-    const ex2Str = `
-last-n(500);
-date in 2025-04-01...2025-07-01;
-is-first-pick = false;
-OR(
-	AND(
-		p2.league in {warlord, emperor, legend},
-    	p2.pick3 = "zio"
-    ),
-    victory-points >= 3000
-)`;
-    makeExFilter("exFilter2", ex2Str);
-    const ex3Str = `
-"Rinak" in prebans;
-"Boss Arunka" in prebans;
-"Harsetti" in p1.picks;
-NOT("Harsetti" = p2.postban);
-victory-points in 2500...=3000;`;
-    makeExFilter("exFilter3", ex3Str);
-    const ex4Str = `
-season = season-16f;
-is-win = true;`;
-    makeExFilter("exFilter4", ex4Str);
-    const ex5Str = `
-p1.equipment("belian", {immunity, counter});
-p1.artifact("belian", {3f, elbris ritual sword});
-p2.cr("New Moon Luna" > 100);
-p2.server in {global, asia, Japan};`;
-    makeExFilter("exFilter5", ex5Str);
-    const textarea = _html_safe_ts__WEBPACK_IMPORTED_MODULE_6__.Safe.unwrapHtmlElt("codeArea");
-    // @ts-ignore
-    const editor = CodeMirror.fromTextArea(textarea, {
-        mode: "filterSyntax",
-        lineNumbers: true,
-        theme: "default",
-    });
-    EDITORS.push(editor);
-    // Intercept form submission
-    const checkSyntaxBtn = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.CHECK_SYNTAX_BTN);
-    checkSyntaxBtn.addEventListener("click", async function (event) {
-        event.preventDefault(); // Prevent actual form submission to server
-        // Ensure value is synced back to textarea before submit ; not strictly necessary since processed client-side
-        // @ts-ignore
-        _html_safe_ts__WEBPACK_IMPORTED_MODULE_6__.Safe.unwrapHtmlElt("codeArea").value = editor.getValue();
-        const syntaxStr = editor.getValue();
-        console.log("Checking Str", syntaxStr);
-        await _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].validateFilterSyntax(syntaxStr);
-    });
-    // sync changes back to textarea if needed
-    editor.on("change", () => {
-        editor.save(); // Updates the hidden textarea for form submit
-    });
-    // Show the editor after it's initialized
-    textarea.classList.remove("codemirror-hidden");
-}
-async function addText() {
-    const rulesContainer = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.FILTER_SYNTAX_CONTAINER);
-    const lang = await _lang_manager_ts__WEBPACK_IMPORTED_MODULE_7__.LangManager.getLang();
-    const composeList = makeComposeList(lang);
-    console.log("Compose List", composeList);
-    const constructor = new _html_constructor_html_constructor_ts__WEBPACK_IMPORTED_MODULE_4__.HTMLConstructor(rulesContainer);
-    constructor.compose(composeList);
-    const exampleAndTestContainer = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.FILTER_EXAMPLES_AND_TEST_CONTAINER);
-    const exampleAndTestHTMLStr = makeExampleAndTestHTMLStr(lang);
-    exampleAndTestContainer.innerHTML = exampleAndTestHTMLStr;
-    const overviewContainer = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.OVERVIEW_CONTAINER);
-    const overviewHTMLStr = makeOverviewHTMLStr(lang);
-    overviewContainer.innerHTML = overviewHTMLStr;
-}
-function addLinkClickListener() {
-    const linkContainer = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.INFORMATION_CONTENT_LINKS_CONTAINER);
-    linkContainer.addEventListener("click", function (event) {
-        const target = event.target;
-        if (target.name === "link-button") {
-            const id = target.id;
-            const cardTarget = id.replace("link", "card");
-            const card = document.getElementById(cardTarget);
-            CURRENT_CARD = card;
-            card?.classList.remove("d-none");
-            for (const editor of EDITORS) {
-                editor.refresh();
-            }
-            _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.RETURN_CONTAINER).classList.remove("d-none");
-            linkContainer.classList.add("d-none");
-        }
-    });
-}
-;
-function addReturnBtnListener() {
-    const returnBtn = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.RETURN_BTN);
-    const linkContainer = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.INFORMATION_CONTENT_LINKS_CONTAINER);
-    returnBtn.addEventListener("click", function (event) {
-        linkContainer.classList.remove("d-none");
-        CURRENT_CARD?.classList.add("d-none");
-        _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.getFromId(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].INFO_PAGE.IDS.RETURN_CONTAINER).classList.add("d-none");
-    });
-}
-async function main() {
-    await addText();
-    await _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_2__.NavBarUtils.initialize();
-    addLinkClickListener();
-    addReturnBtnListener();
-    _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].setVisibility(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_5__["default"].BODY_FOOTER_CONTAINER, true);
-    initializeCodeBlocksAndAddListeners();
-}
-await main();
-
-__webpack_async_result__();
-} catch(e) { __webpack_async_result__(e); } }, 1);
 
 /***/ }),
 
@@ -6161,6 +5361,68 @@ var PageUtils = {
 
 /***/ }),
 
+/***/ "./static/assets/js/pages/test.js":
+/*!****************************************!*\
+  !*** ./static/assets/js/pages/test.js ***!
+  \****************************************/
+/***/ ((__webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _content_manager_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../content-manager.ts */ "./static/assets/js/content-manager.ts");
+/* harmony import */ var _tests_run_tests_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../tests/run-tests.ts */ "./static/assets/js/tests/run-tests.ts");
+/* harmony import */ var _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-utilities/nav-bar-utils.ts */ "./static/assets/js/pages/page-utilities/nav-bar-utils.ts");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
+
+// Must upload test data before running tests
+function main() {
+  return _main.apply(this, arguments);
+}
+function _main() {
+  _main = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+    var seasonDetails, timestamp;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          console.log("test page loaded");
+          _context.n = 1;
+          return _content_manager_ts__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.clearUserLists();
+        case 1:
+          _context.n = 2;
+          return _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_2__.NavBarUtils.initialize();
+        case 2:
+          _context.n = 3;
+          return (0,_tests_run_tests_ts__WEBPACK_IMPORTED_MODULE_1__.runTests)();
+        case 3:
+          _context.n = 4;
+          return _content_manager_ts__WEBPACK_IMPORTED_MODULE_0__.ContentManager.SeasonManager.getSeasonDetails();
+        case 4:
+          seasonDetails = _context.v;
+          _context.n = 5;
+          return _content_manager_ts__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.getTimestamp(_content_manager_ts__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.Keys.SEASON_DETAILS);
+        case 5:
+          timestamp = _context.v;
+          console.log("season details: ", seasonDetails, timestamp, "Diff = ", Date.now() - timestamp);
+          console.log("One Day = ", 1000 * 60 * 60 * 24);
+        case 6:
+          return _context.a(2);
+      }
+    }, _callee);
+  }));
+  return _main.apply(this, arguments);
+}
+await main();
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } }, 1);
+
+/***/ }),
+
 /***/ "./static/assets/js/str-functions.ts":
 /*!*******************************************!*\
   !*** ./static/assets/js/str-functions.ts ***!
@@ -6182,6 +5444,692 @@ function strArrToCountMap(strArr) {
         return acc;
     }, acc);
 }
+
+
+/***/ }),
+
+/***/ "./static/assets/js/tests/run-tests.ts":
+/*!*********************************************!*\
+  !*** ./static/assets/js/tests/run-tests.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   runFilterBehaviorTests: () => (/* binding */ runFilterBehaviorTests),
+/* harmony export */   runFilterParseTests: () => (/* binding */ runFilterParseTests),
+/* harmony export */   runStatsTests: () => (/* binding */ runStatsTests),
+/* harmony export */   runTests: () => (/* binding */ runTests)
+/* harmony export */ });
+/* harmony import */ var _content_manager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../content-manager */ "./static/assets/js/content-manager.ts");
+/* harmony import */ var _e7_filter_parsing_filter_parser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../e7/filter-parsing/filter-parser */ "./static/assets/js/e7/filter-parsing/filter-parser.ts");
+/* harmony import */ var _test_definitions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./test-definitions */ "./static/assets/js/tests/test-definitions.ts");
+/* harmony import */ var _test_struct__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./test-struct */ "./static/assets/js/tests/test-struct.ts");
+/* harmony import */ var _console_logging__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../console-logging */ "./static/assets/js/console-logging.ts");
+
+
+
+
+
+const bar = () => console.log("------------------------------------------------");
+async function runEvalTest(test, battles, heroDicts) {
+    _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.bindCapture(test.name);
+    const testResult = await performTest(test, battles, heroDicts);
+    _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.unbindCapture();
+    if (testResult) {
+        console.log(`Test: "${test.name}" Passed`);
+    }
+    else {
+        bar();
+        console.log("Captured Logs:");
+        const captures = _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.captures[test.name];
+        for (const capture of captures) {
+            console.log(...capture);
+        }
+        bar();
+    }
+}
+async function performTest(test, battles, heroDicts) {
+    try {
+        const parser = await _e7_filter_parsing_filter_parser__WEBPACK_IMPORTED_MODULE_1__.FilterParser.fromFilterStr(test.filterStr, heroDicts);
+        const filters = parser.getFilters();
+        const filteredBattles = await _content_manager__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.applyFilters(battles, filters);
+        const result = test.eval(battles, filteredBattles);
+        if (Array.isArray(result)) {
+            const [filterResult, scriptResult] = result;
+            if (!(filterResult === scriptResult)) {
+                console.error(`Test: "${test.name}" Failed; Filter Result: ${filterResult}; Script Result: ${scriptResult}; `, battles, filteredBattles);
+                return false;
+            }
+        }
+        else if (typeof result === "boolean") {
+            if (!result) {
+                console.error(`Test: "${test.name}" Failed; `, battles, filteredBattles);
+                return false;
+            }
+        }
+        else if (result === _test_struct__WEBPACK_IMPORTED_MODULE_3__.NOT_IMPLEMENTED) {
+            console.warn(`Test: "${test.name}" Not Implemented; `);
+            return false;
+        }
+        return true;
+    }
+    catch (e) {
+        console.error(`Test: "${test.name}" Failed: `, e);
+        return false;
+    }
+}
+async function runParseTest(test, battles, heroDicts) {
+    _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.bindCategory(_console_logging__WEBPACK_IMPORTED_MODULE_4__.LOG_CATEGORIES.TEST);
+    try {
+        const parser = await _e7_filter_parsing_filter_parser__WEBPACK_IMPORTED_MODULE_1__.FilterParser.fromFilterStr(test.filterStr, heroDicts);
+        const filters = parser.getFilters();
+        await _content_manager__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.applyFilters(battles, filters);
+    }
+    catch (e) {
+        console.error(`Test: "${test.name}" Failed: `, e);
+        return;
+    }
+    _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.unbindCategory();
+    console.log(`Test: "${test.name}" Passed`);
+}
+async function runStatsTests(battles, heroDicts) {
+    console.log("\n=======RUNNING STATS TESTS=======\n");
+    const battlesList = Object.values(battles);
+    for (const test of _test_definitions__WEBPACK_IMPORTED_MODULE_2__.STATS_TESTS) {
+        await runEvalTest(test, battlesList, heroDicts);
+    }
+}
+async function runFilterBehaviorTests(battles, heroDicts) {
+    console.log("\n=======RUNNING FILTER BEHAVIOR TESTS=======\n");
+    const battlesList = Object.values(battles);
+    for (const test of _test_definitions__WEBPACK_IMPORTED_MODULE_2__.FilterTests) {
+        await runEvalTest(test, battlesList, heroDicts);
+    }
+}
+async function runFilterParseTests(battles, heroDicts) {
+    console.log("\n=======RUNNING FILTER PARSE TESTS=======\n");
+    const battlesList = Object.values(battles);
+    for (const test of _test_definitions__WEBPACK_IMPORTED_MODULE_2__.FilterTests) {
+        await runParseTest(test, battlesList, heroDicts);
+    }
+}
+async function runTests() {
+    const battles = await _content_manager__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.getBattles();
+    if (!battles) {
+        console.error("No battles found for stats tests");
+        return;
+    }
+    const battlesList = Object.values(battles);
+    const heroDicts = await _content_manager__WEBPACK_IMPORTED_MODULE_0__.ContentManager.HeroManager.getHeroDicts();
+    await runFilterParseTests(battlesList, heroDicts);
+    await runFilterBehaviorTests(battlesList, heroDicts);
+    await runStatsTests(battlesList, heroDicts);
+}
+
+
+/***/ }),
+
+/***/ "./static/assets/js/tests/test-definitions.ts":
+/*!****************************************************!*\
+  !*** ./static/assets/js/tests/test-definitions.ts ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FilterTests: () => (/* binding */ FilterTests),
+/* harmony export */   STATS_TESTS: () => (/* binding */ STATS_TESTS)
+/* harmony export */ });
+/* harmony import */ var _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/battle-manager */ "./static/assets/js/e7/battle-manager.ts");
+/* harmony import */ var _e7_references__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../e7/references */ "./static/assets/js/e7/references.ts");
+/* harmony import */ var _e7_stats_builder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../e7/stats-builder */ "./static/assets/js/e7/stats-builder.ts");
+
+
+
+const genStats = _e7_stats_builder__WEBPACK_IMPORTED_MODULE_2__["default"].computeGenericStats;
+const compWins = (battles) => battles.reduce((acc, b) => acc + +b["Win"], 0);
+const compWinrate = (battles) => compWins(battles) / battles.length;
+const compPlusMinus = (battles) => 2 * compWins(battles) - battles.length;
+function getSeqNumArray(battles) {
+    return battles.map((b) => Number(b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.SEQ_NUM]));
+}
+function getSeqNumSet(battles) {
+    return new Set(getSeqNumArray(battles));
+}
+function arraysEqual(a, b) {
+    a.sort();
+    b.sort();
+    if (a === b)
+        return true;
+    if (a.length !== b.length)
+        return false;
+    for (let i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) {
+            console.log(`Failed at index ${i}: a: ${a[i]}, b: ${b[i]}`);
+            return false;
+        }
+        ;
+    }
+    return true;
+}
+function setsEqual(setA, setB) {
+    if (setA.size !== setB.size)
+        return false;
+    for (const val of setA) {
+        if (!setB.has(val))
+            return false;
+    }
+    return true;
+}
+function arrToCounts(arr) {
+    const counts = {};
+    for (const val of arr) {
+        const key = val.toString();
+        counts[key] = (counts[key] || 0) + 1;
+    }
+    return counts;
+}
+function isArrCountSubset(iterA, iterB) {
+    const arrayA = Array.from(iterA);
+    const arrayB = Array.from(iterB);
+    const countsA = arrToCounts(arrayA);
+    const countsB = arrToCounts(arrayB);
+    for (const key in countsA) {
+        if (!(key in countsB))
+            return false;
+        if (countsB[key] < countsA[key])
+            return false;
+    }
+    return true;
+}
+function filterColByVals(battles, column, values, keep = true) {
+    return battles.filter((b) => keep ? values.includes(b[column]) : !values.includes(b[column]));
+}
+function filterColByFn(battles, column, fn, keep = true) {
+    return battles.filter((b) => keep ? fn(b[column]) : !fn(b[column]));
+}
+function removeBattles(battles, seqNums) {
+    return battles.filter((b) => !seqNums.has(Number(b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.SEQ_NUM])));
+}
+function filterCR({ battles, crEvalFn, heroName }) {
+    return battles.filter((b) => {
+        const crBar = b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.CR_BAR];
+        const entry = crBar.find((entry) => entry[0] === heroName);
+        if (!entry)
+            return false;
+        return crEvalFn(entry[1]);
+    });
+}
+function filterDates(battles, dates) {
+    return battles.filter((b) => dates.includes(b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME].slice(0, 10)));
+}
+function filterPick(battles, { heroNames, pick, isP1 }) {
+    const pickCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS;
+    return battles.filter((b) => {
+        const hero = b[pickCol][pick - 1];
+        return heroNames.includes(hero);
+    });
+}
+function filterPicks({ battles, heroName, isP1 }) {
+    const pickCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS;
+    return battles.filter((b) => {
+        return b[pickCol].includes(heroName);
+    });
+}
+function locateHeroIndex({ battle, heroName, isP1 }) {
+    const pickCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS;
+    return battle[pickCol].indexOf(heroName);
+}
+function filterEquipment({ battles, heroName, targetEquipVec, isP1 }) {
+    const equipCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_EQUIPMENT : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_EQUIPMENT;
+    return battles.filter((b) => {
+        const equipArr = b[equipCol];
+        const index = locateHeroIndex({ battle: b, heroName, isP1 });
+        if (index === -1)
+            return false;
+        return isArrCountSubset(targetEquipVec, equipArr[index]);
+    });
+}
+function filterArtifact({ battles, heroName, artifactNames, isP1 }) {
+    const artCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_ARTIFACTS : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_ARTIFACTS;
+    return battles.filter((b) => {
+        const artArr = b[artCol];
+        const index = locateHeroIndex({ battle: b, heroName, isP1 });
+        if (index === -1)
+            return false;
+        const arti = artArr[index];
+        return artifactNames.includes(arti);
+    });
+}
+function mergeBattles(battles1, battles2) {
+    return [...battles1, ...battles2];
+}
+const FilterTests = [
+    // Base Filters - Boolean
+    {
+        name: "isWinTrue",
+        filterStr: "is-win = true;",
+        eval: (battles, filteredBattles) => {
+            const isWinTrue = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, (v) => v === true);
+            return setsEqual(getSeqNumSet(isWinTrue), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "notFirstPick",
+        filterStr: "is-first-pick != false;",
+        eval: (battles, filteredBattles) => {
+            const notFirstPick = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK, (v) => v !== false);
+            return setsEqual(getSeqNumSet(notFirstPick), getSeqNumSet(filteredBattles));
+        }
+    },
+    // Base Filters - Integer
+    {
+        name: "highVictoryPoints",
+        filterStr: "victory-points > 2500;",
+        eval: (battles, filteredBattles) => {
+            const highVictoryPoints = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS, (v) => v > 2500);
+            return setsEqual(getSeqNumSet(highVictoryPoints), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "shortBattle",
+        filterStr: "turns <= 10;",
+        eval: (battles, filteredBattles) => {
+            const shortBattle = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS, (v) => v <= 10);
+            return setsEqual(getSeqNumSet(shortBattle), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "negativePointGain",
+        filterStr: "point-gain < 0;",
+        eval: (battles, filteredBattles) => {
+            const negativePointGain = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN, (v) => v < 0);
+            return setsEqual(getSeqNumSet(negativePointGain), getSeqNumSet(filteredBattles));
+        },
+    },
+    // Base Filters - Date
+    {
+        name: "after2025Aug",
+        filterStr: "date >= 2025-08-01;",
+        eval: (battles, filteredBattles) => {
+            const after2025Aug = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME, (dt) => dt.slice(0, 10) >= "2025-08-01");
+            return setsEqual(getSeqNumSet(after2025Aug), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "july2025Range",
+        filterStr: "date in 2025-07-01...2025-07-31;",
+        eval: (battles, filteredBattles) => {
+            const july2025Range = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME, (dt) => dt.slice(0, 10) >= "2025-07-01" && dt.slice(0, 10) < "2025-07-31");
+            console.log(july2025Range);
+            return setsEqual(getSeqNumSet(july2025Range), getSeqNumSet(filteredBattles));
+        }
+    },
+    // Base Filters - String
+    {
+        name: "p2LeagueChampion",
+        filterStr: `p2.league = "champion";`,
+        eval: (battles, filteredBattles) => {
+            const p2Champion = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE, (league) => league === "Champion");
+            return setsEqual(getSeqNumSet(p2Champion), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "notZioFirstTurn",
+        filterStr: `first-turn-hero != 'Zio';`,
+        eval: (battles, filteredBattles) => {
+            const notZioFirstTurn = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN_HERO, (v) => v === "Zio", false);
+            return setsEqual(getSeqNumSet(notZioFirstTurn), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "p1serverGlobal",
+        filterStr: `p1.server = "Global";`,
+        eval: (battles, filteredBattles) => {
+            const p1Global = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_SERVER, (v) => v === "Global");
+            return setsEqual(getSeqNumSet(p1Global), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "p2serverGlobal",
+        filterStr: `p2.server = "Global";`,
+        eval: (battles, filteredBattles) => {
+            const p2Global = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, (v) => v === "Global");
+            return setsEqual(getSeqNumSet(p2Global), getSeqNumSet(filteredBattles));
+        }
+    },
+    // Base Filters - Set Membership
+    {
+        name: "rinakInPrebans",
+        filterStr: `"Rinak" in prebans;`,
+        eval: (battles, filteredBattles) => {
+            const rinakPreban1 = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS, (v) => v.includes("Rinak"));
+            const rinakPreban2 = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PREBANS, (v) => v.includes("Rinak"));
+            const subset = mergeBattles(rinakPreban1, rinakPreban2);
+            return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "peiraNotInP2Picks",
+        filterStr: `"Lone Wolf Peira" !in p2.picks;`,
+        eval: (battles, filteredBattles) => {
+            const peiraPick = filterPicks({ battles, heroName: "Lone Wolf Peira", isP1: false });
+            const subset = removeBattles(battles, getSeqNumSet(peiraPick));
+            return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "pick1InSet",
+        filterStr: `p1.pick1 in { "Lone Wolf Peira", "Boss Arunka"};`,
+        eval: (battles, filteredBattles) => {
+            const subset = filterPick(battles, {
+                heroNames: ["Lone Wolf Peira", "Boss Arunka"],
+                pick: 1,
+                isP1: true,
+            });
+            return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
+        },
+    },
+    // Base Filters - Range
+    {
+        name: "victoryPointsRange",
+        filterStr: "victory-points in 2400...=2600;",
+        eval: (battles, filteredBattles) => {
+            const victoryPoints = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS, (v) => v >= 2400 && v <= 2600);
+            return setsEqual(getSeqNumSet(victoryPoints), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "dateNotInRange",
+        filterStr: "date !in 2025-07-15...=2025-07-31;",
+        eval: (battles, filtered) => {
+            const inRange = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME, (d) => !(d.slice(0, 10) >= "2025-07-15" && d.slice(0, 10) <= "2025-07-31"));
+            return setsEqual(getSeqNumSet(inRange), getSeqNumSet(filtered));
+        },
+    },
+    // Clause Functions
+    {
+        name: "andExample",
+        filterStr: `AND(is-win = true, p2.league = "Champion", victory-points > 2400);`,
+        eval: (battles, filtered) => {
+            const wins = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true]);
+            const winChamp = filterColByVals(wins, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE, ["Champion"]);
+            const victoryPoints = filterColByFn(winChamp, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS, (vp) => vp > 2400);
+            return setsEqual(getSeqNumSet(victoryPoints), getSeqNumSet(filtered));
+        }
+    },
+    {
+        name: "orExample",
+        filterStr: `OR(p2.server = "Global", p2.server = "Asia", p2.server = "Europe");`,
+        eval: (battles, filtered) => {
+            const globalAsiaEurope = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, ["Global", "Asia", "Europe"]);
+            return setsEqual(getSeqNumSet(globalAsiaEurope), getSeqNumSet(filtered));
+        }
+    },
+    {
+        name: "xorExample",
+        filterStr: `XOR(is-first-pick = true, is-first-turn = true);`,
+        eval: (battles, filtered) => {
+            const firstPick = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK, [true]);
+            const firstTurn = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN, [true]);
+            const firstPickSet = getSeqNumSet(firstPick);
+            const firstTurnSet = getSeqNumSet(firstTurn);
+            const xorSet = firstPickSet.difference(firstTurnSet).union(firstTurnSet.difference(firstPickSet));
+            return setsEqual(xorSet, getSeqNumSet(filtered));
+        }
+    },
+    {
+        name: "notExample",
+        filterStr: `NOT(is-win = true);`,
+        eval: (battles, filtered) => {
+            const losses = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true], false);
+            return setsEqual(getSeqNumSet(losses), getSeqNumSet(filtered));
+        },
+    },
+    {
+        name: "notPickExample",
+        filterStr: `NOT(p1.pick1 = "Arbiter Vildred");`,
+        eval: (battles, filtered) => {
+            const p1Vildred = filterPick(battles, { pick: 1, heroNames: ["Arbiter Vildred"], isP1: true });
+            const negated = removeBattles(battles, getSeqNumSet(p1Vildred));
+            return setsEqual(getSeqNumSet(negated), getSeqNumSet(filtered));
+        },
+    },
+    // Nested Clauses
+    {
+        name: "nestedAndOr",
+        filterStr: `AND(OR(is-win = true, point-gain > 0), NOT(p2.league = "challenger"));`,
+        eval: (battles, filteredBattles) => {
+            const p2NotChallenger = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE, [_e7_references__WEBPACK_IMPORTED_MODULE_1__.LEAGUE_MAP.challenger], false);
+            const p2NotChallengerWin = filterColByVals(p2NotChallenger, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true]);
+            const p2NotChallengerGain = filterColByFn(p2NotChallenger, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN, (v) => v > 0);
+            const merged = mergeBattles(p2NotChallengerWin, p2NotChallengerGain);
+            return setsEqual(getSeqNumSet(merged), getSeqNumSet(filteredBattles));
+        }
+    },
+    // Direct Functions
+    {
+        name: "equipmentExample1",
+        filterStr: `p1.equipment("Arbiter Vildred", {Torrent, Torrent, Immunity});`,
+        eval: (battles, filteredBattles) => {
+            const p1EquipmentArbiterVildred = filterEquipment({ battles, heroName: "Arbiter Vildred", targetEquipVec: ["Torrent", "Torrent", "Immunity"], isP1: true });
+            console.log(p1EquipmentArbiterVildred);
+            return setsEqual(getSeqNumSet(p1EquipmentArbiterVildred), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "equipmentExample2",
+        filterStr: `p1.equipment("Arbiter Vildred", {Torrent, Torrent, Torrent});`,
+        eval: (battles, filteredBattles) => {
+            const p1EquipmentArbiterVildred = filterEquipment({ battles, heroName: "Arbiter Vildred", targetEquipVec: ["Torrent", "Torrent", "Torrent"], isP1: true });
+            return setsEqual(getSeqNumSet(p1EquipmentArbiterVildred), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "equipmentExampleBelian",
+        filterStr: `p1.equipment("Belian", {Counter, Immunity,});`,
+        eval: (battles, filteredBattles) => {
+            const subset = filterEquipment({ battles, heroName: "Belian", targetEquipVec: ["Counter", "Immunity"], isP1: true });
+            return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "equipmentSingle",
+        filterStr: `p2.equipment("Lone Wolf Peira", "Speed");`,
+        eval: (battles, filteredBattles) => {
+            const p2EquipmentLoneWolfPeira = filterEquipment({ battles, heroName: "Lone Wolf Peira", targetEquipVec: ["Speed"], isP1: false });
+            return setsEqual(getSeqNumSet(p2EquipmentLoneWolfPeira), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "artifactSingle",
+        filterStr: `p1.artifact("Arbiter Vildred", "Alexa's Basket");`,
+        eval: (battles, filteredBattles) => {
+            const p1ArtifactArbiterVildred = filterArtifact({ battles, heroName: "Arbiter Vildred", artifactNames: ["Alexa's Basket"], isP1: true });
+            return setsEqual(getSeqNumSet(p1ArtifactArbiterVildred), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "artifactSet",
+        filterStr: `p2.artifact("Abyssal Yufine", {"Elbris Ritual Sword", "Aurius"});`,
+        eval: (battles, filteredBattles) => {
+            const p2ArtifactAbyssalYufine = filterArtifact({ battles, heroName: "Abyssal Yufine", artifactNames: ["Elbris Ritual Sword", "Aurius"], isP1: false });
+            console.log(p2ArtifactAbyssalYufine);
+            return setsEqual(getSeqNumSet(p2ArtifactAbyssalYufine), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "crEqual",
+        filterStr: `p2.cr("Harsetti" = 100);`,
+        eval: (battles, filteredBattles) => {
+            const crHarsetti = filterCR({ battles, crEvalFn: (cr) => cr === 100, heroName: "Harsetti" });
+            const p2crHarsetti = filterPicks({ battles: crHarsetti, heroName: "Harsetti", isP1: false });
+            return setsEqual(getSeqNumSet(p2crHarsetti), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "crGreater",
+        filterStr: `p1.cr("Amid", > , 95);`,
+        eval: (battles, filteredBattles) => {
+            const crAmid = filterCR({ battles, crEvalFn: (cr) => cr > 95, heroName: "Amid" });
+            const p1crAmid = filterPicks({ battles: crAmid, heroName: "Amid", isP1: true });
+            return setsEqual(getSeqNumSet(p1crAmid), getSeqNumSet(filteredBattles));
+        }
+    },
+    // Global Filters
+    {
+        name: "last100",
+        filterStr: "last-N(100);",
+        eval: (battles, filteredBattles) => {
+            battles = structuredClone(battles);
+            battles = _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__["default"].sortBattlesList(battles, false);
+            filteredBattles = _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__["default"].sortBattlesList(filteredBattles, false);
+            const battlesTop100 = battles.slice(0, 100);
+            return setsEqual(getSeqNumSet(battlesTop100), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "last10",
+        filterStr: "last-N(10);",
+        eval: (battles, filteredBattles) => {
+            battles = structuredClone(battles);
+            battles = _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__["default"].sortBattlesList(battles, false);
+            const battlesTop10 = battles.slice(0, 10);
+            console.log(battlesTop10);
+            return setsEqual(getSeqNumSet(battlesTop10), getSeqNumSet(filteredBattles));
+        },
+    },
+    // Pure Syntax Examples
+    {
+        name: "semicolonChain",
+        filterStr: `is-win = true; p2.league = "Champion"; last-N(100);`,
+        eval: (battles, filteredBattles) => {
+            battles = _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__["default"].sortBattlesList(battles, false);
+            const battlesTop100 = battles.slice(0, 100);
+            const champSubset = filterColByVals(battlesTop100, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE, [_e7_references__WEBPACK_IMPORTED_MODULE_1__.LEAGUE_MAP.champion]);
+            const winSubset = filterColByVals(champSubset, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true]);
+            return setsEqual(getSeqNumSet(winSubset), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "commasInOr",
+        filterStr: `OR(p2.server = "Global", p2.server = "Asia");`,
+        eval: (battles, filteredBattles) => {
+            const globalAsia = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, ["Global", "Asia"]);
+            return setsEqual(getSeqNumSet(globalAsia), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "setWithStrings",
+        filterStr: `p1.pick3 in {Zio, "Amid", "Lionheart Cermia"};`,
+        eval: (battles, filteredbattles) => {
+            const zioAmidLion = filterPick(battles, { heroNames: ["Zio", "Amid", "Lionheart Cermia"], pick: 3, isP1: true });
+            return setsEqual(getSeqNumSet(zioAmidLion), getSeqNumSet(filteredbattles));
+        },
+    },
+    {
+        name: "parenthesesNot",
+        filterStr: `NOT(is-first-turn = true);`,
+        eval: (battles, filteredBattles) => {
+            const notFirstTurn = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN, [false]);
+            return setsEqual(getSeqNumSet(notFirstTurn), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "nestedParentheses",
+        filterStr: `AND(is-win = true, OR(p2.server = "Global", p2.server = "Korea"));`,
+        eval: (battles, filteredBattles) => {
+            const wins = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true]);
+            const globalWins = filterColByVals(wins, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, ["Global"]);
+            const koreaWins = filterColByVals(wins, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, ["Korea"]);
+            const merged = mergeBattles(globalWins, koreaWins);
+            return setsEqual(getSeqNumSet(merged), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "braceHeroSet",
+        filterStr: `p1.pick1 in {"Abyssal Yufine", "New Moon luna"};`,
+        eval: (battles, filteredBattles) => {
+            const yufineLuna = filterPick(battles, { heroNames: ["Abyssal Yufine", "New Moon Luna"], pick: 1, isP1: true });
+            console.log(yufineLuna);
+            return setsEqual(getSeqNumSet(yufineLuna), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "braceVictoryPoints",
+        filterStr: `victory-points in {1646, 1668};`,
+        eval: (battles, filteredBattles) => {
+            const victoryPoints = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS, [1646, 1668]);
+            return setsEqual(getSeqNumSet(victoryPoints), getSeqNumSet(filteredBattles));
+        }
+    },
+    {
+        name: "braceDateSet",
+        filterStr: `date in {2025-01-01, 2025-01-05, 2025-01-07};`,
+        eval: (battles, filteredBattles) => {
+            const dates = filterDates(battles, ["2025-01-01", "2025-01-05", "2025-01-07"]);
+            return setsEqual(getSeqNumSet(dates), getSeqNumSet(filteredBattles));
+        },
+    },
+    {
+        name: "trailingSetComma",
+        filterStr: `p1.pick1 in { "Lone Wolf Peira", "Boss Arunka", };`,
+        eval: (battles, fitleredBattles) => {
+            const peiraArunka = filterPick(battles, { heroNames: ["Lone Wolf Peira", "Boss Arunka"], pick: 1, isP1: true });
+            return setsEqual(getSeqNumSet(peiraArunka), getSeqNumSet(fitleredBattles));
+        },
+    },
+];
+const STATS_TESTS = [
+    {
+        name: "Total Win Rate",
+        filterStr: "is-win = true;",
+        eval: (battles, filteredBattles) => {
+            const filterResult = compWinrate(filteredBattles);
+            const stats = genStats(battles, filteredBattles.length);
+            const scriptResult = stats.wins / filteredBattles.length;
+            return [filterResult, scriptResult];
+        }
+    },
+    {
+        name: "Global Server Win Rate",
+        filterStr: `p2.server = "Global"`,
+        eval: (battles, filteredBattles) => {
+            const filterResult = compWinrate(filteredBattles);
+            const globalBattles = battles.filter((b) => b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER] === _e7_references__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR[_e7_references__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_ENUM.GLOBAL]);
+            const stats = genStats(globalBattles, globalBattles.length);
+            const scriptResult = stats.wins / globalBattles.length;
+            return [filterResult, scriptResult];
+        }
+    },
+    {
+        name: "Boss Arunka +/-",
+        filterStr: `"Boss Arunka" in p1.picks;`,
+        eval: (battles, filteredBattles) => {
+            const filterResult = compPlusMinus(filteredBattles);
+            const bossArunkaBattles = battles.filter((b) => b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS].includes("Boss Arunka"));
+            const stats = genStats(bossArunkaBattles, bossArunkaBattles.length);
+            const scriptResult = stats.plusMinus;
+            return [filterResult, scriptResult];
+        }
+    }
+];
+
+
+/***/ }),
+
+/***/ "./static/assets/js/tests/test-struct.ts":
+/*!***********************************************!*\
+  !*** ./static/assets/js/tests/test-struct.ts ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NOT_IMPLEMENTED: () => (/* binding */ NOT_IMPLEMENTED)
+/* harmony export */ });
+const NOT_IMPLEMENTED = "~NotImplemented~";
 
 
 /***/ })
@@ -6323,8 +6271,8 @@ function strArrToCountMap(strArr) {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module used 'module' so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./static/assets/js/pages/information.ts");
+/******/ 	var __webpack_exports__ = __webpack_require__("./static/assets/js/pages/test.js");
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=information.3e3c1294f3af2bc87bc8.bundle.js.map
+//# sourceMappingURL=test.df21c0bef40e8365636f.bundle.js.map

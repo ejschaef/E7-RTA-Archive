@@ -199,7 +199,7 @@ let UserManager = {
 
 	getUser: async function (): Promise<User | null> {
 		const user = await ClientCache.get(ClientCache.Keys.USER);
-		await ClientCache.setTimestampNow(ClientCache.Keys.USER);
+		await ClientCache.setTimeoutDataNow(ClientCache.Keys.USER);
 		return user;
 	},
 

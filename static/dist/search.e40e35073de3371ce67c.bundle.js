@@ -2,6 +2,1813 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./node_modules/fuse.js/dist/fuse.mjs":
+/*!********************************************!*\
+  !*** ./node_modules/fuse.js/dist/fuse.mjs ***!
+  \********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Fuse)
+/* harmony export */ });
+/**
+ * Fuse.js v7.1.0 - Lightweight fuzzy-search (http://fusejs.io)
+ *
+ * Copyright (c) 2025 Kiro Risk (http://kiro.me)
+ * All Rights Reserved. Apache Software License 2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+function isArray(value) {
+  return !Array.isArray
+    ? getTag(value) === '[object Array]'
+    : Array.isArray(value)
+}
+
+// Adapted from: https://github.com/lodash/lodash/blob/master/.internal/baseToString.js
+const INFINITY = 1 / 0;
+function baseToString(value) {
+  // Exit early for strings to avoid a performance hit in some environments.
+  if (typeof value == 'string') {
+    return value
+  }
+  let result = value + '';
+  return result == '0' && 1 / value == -INFINITY ? '-0' : result
+}
+
+function toString(value) {
+  return value == null ? '' : baseToString(value)
+}
+
+function isString(value) {
+  return typeof value === 'string'
+}
+
+function isNumber(value) {
+  return typeof value === 'number'
+}
+
+// Adapted from: https://github.com/lodash/lodash/blob/master/isBoolean.js
+function isBoolean(value) {
+  return (
+    value === true ||
+    value === false ||
+    (isObjectLike(value) && getTag(value) == '[object Boolean]')
+  )
+}
+
+function isObject(value) {
+  return typeof value === 'object'
+}
+
+// Checks if `value` is object-like.
+function isObjectLike(value) {
+  return isObject(value) && value !== null
+}
+
+function isDefined(value) {
+  return value !== undefined && value !== null
+}
+
+function isBlank(value) {
+  return !value.trim().length
+}
+
+// Gets the `toStringTag` of `value`.
+// Adapted from: https://github.com/lodash/lodash/blob/master/.internal/getTag.js
+function getTag(value) {
+  return value == null
+    ? value === undefined
+      ? '[object Undefined]'
+      : '[object Null]'
+    : Object.prototype.toString.call(value)
+}
+
+const EXTENDED_SEARCH_UNAVAILABLE = 'Extended search is not available';
+
+const INCORRECT_INDEX_TYPE = "Incorrect 'index' type";
+
+const LOGICAL_SEARCH_INVALID_QUERY_FOR_KEY = (key) =>
+  `Invalid value for key ${key}`;
+
+const PATTERN_LENGTH_TOO_LARGE = (max) =>
+  `Pattern length exceeds max of ${max}.`;
+
+const MISSING_KEY_PROPERTY = (name) => `Missing ${name} property in key`;
+
+const INVALID_KEY_WEIGHT_VALUE = (key) =>
+  `Property 'weight' in key '${key}' must be a positive integer`;
+
+const hasOwn = Object.prototype.hasOwnProperty;
+
+class KeyStore {
+  constructor(keys) {
+    this._keys = [];
+    this._keyMap = {};
+
+    let totalWeight = 0;
+
+    keys.forEach((key) => {
+      let obj = createKey(key);
+
+      this._keys.push(obj);
+      this._keyMap[obj.id] = obj;
+
+      totalWeight += obj.weight;
+    });
+
+    // Normalize weights so that their sum is equal to 1
+    this._keys.forEach((key) => {
+      key.weight /= totalWeight;
+    });
+  }
+  get(keyId) {
+    return this._keyMap[keyId]
+  }
+  keys() {
+    return this._keys
+  }
+  toJSON() {
+    return JSON.stringify(this._keys)
+  }
+}
+
+function createKey(key) {
+  let path = null;
+  let id = null;
+  let src = null;
+  let weight = 1;
+  let getFn = null;
+
+  if (isString(key) || isArray(key)) {
+    src = key;
+    path = createKeyPath(key);
+    id = createKeyId(key);
+  } else {
+    if (!hasOwn.call(key, 'name')) {
+      throw new Error(MISSING_KEY_PROPERTY('name'))
+    }
+
+    const name = key.name;
+    src = name;
+
+    if (hasOwn.call(key, 'weight')) {
+      weight = key.weight;
+
+      if (weight <= 0) {
+        throw new Error(INVALID_KEY_WEIGHT_VALUE(name))
+      }
+    }
+
+    path = createKeyPath(name);
+    id = createKeyId(name);
+    getFn = key.getFn;
+  }
+
+  return { path, id, weight, src, getFn }
+}
+
+function createKeyPath(key) {
+  return isArray(key) ? key : key.split('.')
+}
+
+function createKeyId(key) {
+  return isArray(key) ? key.join('.') : key
+}
+
+function get(obj, path) {
+  let list = [];
+  let arr = false;
+
+  const deepGet = (obj, path, index) => {
+    if (!isDefined(obj)) {
+      return
+    }
+    if (!path[index]) {
+      // If there's no path left, we've arrived at the object we care about.
+      list.push(obj);
+    } else {
+      let key = path[index];
+
+      const value = obj[key];
+
+      if (!isDefined(value)) {
+        return
+      }
+
+      // If we're at the last value in the path, and if it's a string/number/bool,
+      // add it to the list
+      if (
+        index === path.length - 1 &&
+        (isString(value) || isNumber(value) || isBoolean(value))
+      ) {
+        list.push(toString(value));
+      } else if (isArray(value)) {
+        arr = true;
+        // Search each item in the array.
+        for (let i = 0, len = value.length; i < len; i += 1) {
+          deepGet(value[i], path, index + 1);
+        }
+      } else if (path.length) {
+        // An object. Recurse further.
+        deepGet(value, path, index + 1);
+      }
+    }
+  };
+
+  // Backwards compatibility (since path used to be a string)
+  deepGet(obj, isString(path) ? path.split('.') : path, 0);
+
+  return arr ? list : list[0]
+}
+
+const MatchOptions = {
+  // Whether the matches should be included in the result set. When `true`, each record in the result
+  // set will include the indices of the matched characters.
+  // These can consequently be used for highlighting purposes.
+  includeMatches: false,
+  // When `true`, the matching function will continue to the end of a search pattern even if
+  // a perfect match has already been located in the string.
+  findAllMatches: false,
+  // Minimum number of characters that must be matched before a result is considered a match
+  minMatchCharLength: 1
+};
+
+const BasicOptions = {
+  // When `true`, the algorithm continues searching to the end of the input even if a perfect
+  // match is found before the end of the same input.
+  isCaseSensitive: false,
+  // When `true`, the algorithm will ignore diacritics (accents) in comparisons
+  ignoreDiacritics: false,
+  // When true, the matching function will continue to the end of a search pattern even if
+  includeScore: false,
+  // List of properties that will be searched. This also supports nested properties.
+  keys: [],
+  // Whether to sort the result list, by score
+  shouldSort: true,
+  // Default sort function: sort by ascending score, ascending index
+  sortFn: (a, b) =>
+    a.score === b.score ? (a.idx < b.idx ? -1 : 1) : a.score < b.score ? -1 : 1
+};
+
+const FuzzyOptions = {
+  // Approximately where in the text is the pattern expected to be found?
+  location: 0,
+  // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
+  // (of both letters and location), a threshold of '1.0' would match anything.
+  threshold: 0.6,
+  // Determines how close the match must be to the fuzzy location (specified above).
+  // An exact letter match which is 'distance' characters away from the fuzzy location
+  // would score as a complete mismatch. A distance of '0' requires the match be at
+  // the exact location specified, a threshold of '1000' would require a perfect match
+  // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
+  distance: 100
+};
+
+const AdvancedOptions = {
+  // When `true`, it enables the use of unix-like search commands
+  useExtendedSearch: false,
+  // The get function to use when fetching an object's properties.
+  // The default will search nested paths *ie foo.bar.baz*
+  getFn: get,
+  // When `true`, search will ignore `location` and `distance`, so it won't matter
+  // where in the string the pattern appears.
+  // More info: https://fusejs.io/concepts/scoring-theory.html#fuzziness-score
+  ignoreLocation: false,
+  // When `true`, the calculation for the relevance score (used for sorting) will
+  // ignore the field-length norm.
+  // More info: https://fusejs.io/concepts/scoring-theory.html#field-length-norm
+  ignoreFieldNorm: false,
+  // The weight to determine how much field length norm effects scoring.
+  fieldNormWeight: 1
+};
+
+var Config = {
+  ...BasicOptions,
+  ...MatchOptions,
+  ...FuzzyOptions,
+  ...AdvancedOptions
+};
+
+const SPACE = /[^ ]+/g;
+
+// Field-length norm: the shorter the field, the higher the weight.
+// Set to 3 decimals to reduce index size.
+function norm(weight = 1, mantissa = 3) {
+  const cache = new Map();
+  const m = Math.pow(10, mantissa);
+
+  return {
+    get(value) {
+      const numTokens = value.match(SPACE).length;
+
+      if (cache.has(numTokens)) {
+        return cache.get(numTokens)
+      }
+
+      // Default function is 1/sqrt(x), weight makes that variable
+      const norm = 1 / Math.pow(numTokens, 0.5 * weight);
+
+      // In place of `toFixed(mantissa)`, for faster computation
+      const n = parseFloat(Math.round(norm * m) / m);
+
+      cache.set(numTokens, n);
+
+      return n
+    },
+    clear() {
+      cache.clear();
+    }
+  }
+}
+
+class FuseIndex {
+  constructor({
+    getFn = Config.getFn,
+    fieldNormWeight = Config.fieldNormWeight
+  } = {}) {
+    this.norm = norm(fieldNormWeight, 3);
+    this.getFn = getFn;
+    this.isCreated = false;
+
+    this.setIndexRecords();
+  }
+  setSources(docs = []) {
+    this.docs = docs;
+  }
+  setIndexRecords(records = []) {
+    this.records = records;
+  }
+  setKeys(keys = []) {
+    this.keys = keys;
+    this._keysMap = {};
+    keys.forEach((key, idx) => {
+      this._keysMap[key.id] = idx;
+    });
+  }
+  create() {
+    if (this.isCreated || !this.docs.length) {
+      return
+    }
+
+    this.isCreated = true;
+
+    // List is Array<String>
+    if (isString(this.docs[0])) {
+      this.docs.forEach((doc, docIndex) => {
+        this._addString(doc, docIndex);
+      });
+    } else {
+      // List is Array<Object>
+      this.docs.forEach((doc, docIndex) => {
+        this._addObject(doc, docIndex);
+      });
+    }
+
+    this.norm.clear();
+  }
+  // Adds a doc to the end of the index
+  add(doc) {
+    const idx = this.size();
+
+    if (isString(doc)) {
+      this._addString(doc, idx);
+    } else {
+      this._addObject(doc, idx);
+    }
+  }
+  // Removes the doc at the specified index of the index
+  removeAt(idx) {
+    this.records.splice(idx, 1);
+
+    // Change ref index of every subsquent doc
+    for (let i = idx, len = this.size(); i < len; i += 1) {
+      this.records[i].i -= 1;
+    }
+  }
+  getValueForItemAtKeyId(item, keyId) {
+    return item[this._keysMap[keyId]]
+  }
+  size() {
+    return this.records.length
+  }
+  _addString(doc, docIndex) {
+    if (!isDefined(doc) || isBlank(doc)) {
+      return
+    }
+
+    let record = {
+      v: doc,
+      i: docIndex,
+      n: this.norm.get(doc)
+    };
+
+    this.records.push(record);
+  }
+  _addObject(doc, docIndex) {
+    let record = { i: docIndex, $: {} };
+
+    // Iterate over every key (i.e, path), and fetch the value at that key
+    this.keys.forEach((key, keyIndex) => {
+      let value = key.getFn ? key.getFn(doc) : this.getFn(doc, key.path);
+
+      if (!isDefined(value)) {
+        return
+      }
+
+      if (isArray(value)) {
+        let subRecords = [];
+        const stack = [{ nestedArrIndex: -1, value }];
+
+        while (stack.length) {
+          const { nestedArrIndex, value } = stack.pop();
+
+          if (!isDefined(value)) {
+            continue
+          }
+
+          if (isString(value) && !isBlank(value)) {
+            let subRecord = {
+              v: value,
+              i: nestedArrIndex,
+              n: this.norm.get(value)
+            };
+
+            subRecords.push(subRecord);
+          } else if (isArray(value)) {
+            value.forEach((item, k) => {
+              stack.push({
+                nestedArrIndex: k,
+                value: item
+              });
+            });
+          } else ;
+        }
+        record.$[keyIndex] = subRecords;
+      } else if (isString(value) && !isBlank(value)) {
+        let subRecord = {
+          v: value,
+          n: this.norm.get(value)
+        };
+
+        record.$[keyIndex] = subRecord;
+      }
+    });
+
+    this.records.push(record);
+  }
+  toJSON() {
+    return {
+      keys: this.keys,
+      records: this.records
+    }
+  }
+}
+
+function createIndex(
+  keys,
+  docs,
+  { getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {}
+) {
+  const myIndex = new FuseIndex({ getFn, fieldNormWeight });
+  myIndex.setKeys(keys.map(createKey));
+  myIndex.setSources(docs);
+  myIndex.create();
+  return myIndex
+}
+
+function parseIndex(
+  data,
+  { getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {}
+) {
+  const { keys, records } = data;
+  const myIndex = new FuseIndex({ getFn, fieldNormWeight });
+  myIndex.setKeys(keys);
+  myIndex.setIndexRecords(records);
+  return myIndex
+}
+
+function computeScore$1(
+  pattern,
+  {
+    errors = 0,
+    currentLocation = 0,
+    expectedLocation = 0,
+    distance = Config.distance,
+    ignoreLocation = Config.ignoreLocation
+  } = {}
+) {
+  const accuracy = errors / pattern.length;
+
+  if (ignoreLocation) {
+    return accuracy
+  }
+
+  const proximity = Math.abs(expectedLocation - currentLocation);
+
+  if (!distance) {
+    // Dodge divide by zero error.
+    return proximity ? 1.0 : accuracy
+  }
+
+  return accuracy + proximity / distance
+}
+
+function convertMaskToIndices(
+  matchmask = [],
+  minMatchCharLength = Config.minMatchCharLength
+) {
+  let indices = [];
+  let start = -1;
+  let end = -1;
+  let i = 0;
+
+  for (let len = matchmask.length; i < len; i += 1) {
+    let match = matchmask[i];
+    if (match && start === -1) {
+      start = i;
+    } else if (!match && start !== -1) {
+      end = i - 1;
+      if (end - start + 1 >= minMatchCharLength) {
+        indices.push([start, end]);
+      }
+      start = -1;
+    }
+  }
+
+  // (i-1 - start) + 1 => i - start
+  if (matchmask[i - 1] && i - start >= minMatchCharLength) {
+    indices.push([start, i - 1]);
+  }
+
+  return indices
+}
+
+// Machine word size
+const MAX_BITS = 32;
+
+function search(
+  text,
+  pattern,
+  patternAlphabet,
+  {
+    location = Config.location,
+    distance = Config.distance,
+    threshold = Config.threshold,
+    findAllMatches = Config.findAllMatches,
+    minMatchCharLength = Config.minMatchCharLength,
+    includeMatches = Config.includeMatches,
+    ignoreLocation = Config.ignoreLocation
+  } = {}
+) {
+  if (pattern.length > MAX_BITS) {
+    throw new Error(PATTERN_LENGTH_TOO_LARGE(MAX_BITS))
+  }
+
+  const patternLen = pattern.length;
+  // Set starting location at beginning text and initialize the alphabet.
+  const textLen = text.length;
+  // Handle the case when location > text.length
+  const expectedLocation = Math.max(0, Math.min(location, textLen));
+  // Highest score beyond which we give up.
+  let currentThreshold = threshold;
+  // Is there a nearby exact match? (speedup)
+  let bestLocation = expectedLocation;
+
+  // Performance: only computer matches when the minMatchCharLength > 1
+  // OR if `includeMatches` is true.
+  const computeMatches = minMatchCharLength > 1 || includeMatches;
+  // A mask of the matches, used for building the indices
+  const matchMask = computeMatches ? Array(textLen) : [];
+
+  let index;
+
+  // Get all exact matches, here for speed up
+  while ((index = text.indexOf(pattern, bestLocation)) > -1) {
+    let score = computeScore$1(pattern, {
+      currentLocation: index,
+      expectedLocation,
+      distance,
+      ignoreLocation
+    });
+
+    currentThreshold = Math.min(score, currentThreshold);
+    bestLocation = index + patternLen;
+
+    if (computeMatches) {
+      let i = 0;
+      while (i < patternLen) {
+        matchMask[index + i] = 1;
+        i += 1;
+      }
+    }
+  }
+
+  // Reset the best location
+  bestLocation = -1;
+
+  let lastBitArr = [];
+  let finalScore = 1;
+  let binMax = patternLen + textLen;
+
+  const mask = 1 << (patternLen - 1);
+
+  for (let i = 0; i < patternLen; i += 1) {
+    // Scan for the best match; each iteration allows for one more error.
+    // Run a binary search to determine how far from the match location we can stray
+    // at this error level.
+    let binMin = 0;
+    let binMid = binMax;
+
+    while (binMin < binMid) {
+      const score = computeScore$1(pattern, {
+        errors: i,
+        currentLocation: expectedLocation + binMid,
+        expectedLocation,
+        distance,
+        ignoreLocation
+      });
+
+      if (score <= currentThreshold) {
+        binMin = binMid;
+      } else {
+        binMax = binMid;
+      }
+
+      binMid = Math.floor((binMax - binMin) / 2 + binMin);
+    }
+
+    // Use the result from this iteration as the maximum for the next.
+    binMax = binMid;
+
+    let start = Math.max(1, expectedLocation - binMid + 1);
+    let finish = findAllMatches
+      ? textLen
+      : Math.min(expectedLocation + binMid, textLen) + patternLen;
+
+    // Initialize the bit array
+    let bitArr = Array(finish + 2);
+
+    bitArr[finish + 1] = (1 << i) - 1;
+
+    for (let j = finish; j >= start; j -= 1) {
+      let currentLocation = j - 1;
+      let charMatch = patternAlphabet[text.charAt(currentLocation)];
+
+      if (computeMatches) {
+        // Speed up: quick bool to int conversion (i.e, `charMatch ? 1 : 0`)
+        matchMask[currentLocation] = +!!charMatch;
+      }
+
+      // First pass: exact match
+      bitArr[j] = ((bitArr[j + 1] << 1) | 1) & charMatch;
+
+      // Subsequent passes: fuzzy match
+      if (i) {
+        bitArr[j] |=
+          ((lastBitArr[j + 1] | lastBitArr[j]) << 1) | 1 | lastBitArr[j + 1];
+      }
+
+      if (bitArr[j] & mask) {
+        finalScore = computeScore$1(pattern, {
+          errors: i,
+          currentLocation,
+          expectedLocation,
+          distance,
+          ignoreLocation
+        });
+
+        // This match will almost certainly be better than any existing match.
+        // But check anyway.
+        if (finalScore <= currentThreshold) {
+          // Indeed it is
+          currentThreshold = finalScore;
+          bestLocation = currentLocation;
+
+          // Already passed `loc`, downhill from here on in.
+          if (bestLocation <= expectedLocation) {
+            break
+          }
+
+          // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
+          start = Math.max(1, 2 * expectedLocation - bestLocation);
+        }
+      }
+    }
+
+    // No hope for a (better) match at greater error levels.
+    const score = computeScore$1(pattern, {
+      errors: i + 1,
+      currentLocation: expectedLocation,
+      expectedLocation,
+      distance,
+      ignoreLocation
+    });
+
+    if (score > currentThreshold) {
+      break
+    }
+
+    lastBitArr = bitArr;
+  }
+
+  const result = {
+    isMatch: bestLocation >= 0,
+    // Count exact matches (those with a score of 0) to be "almost" exact
+    score: Math.max(0.001, finalScore)
+  };
+
+  if (computeMatches) {
+    const indices = convertMaskToIndices(matchMask, minMatchCharLength);
+    if (!indices.length) {
+      result.isMatch = false;
+    } else if (includeMatches) {
+      result.indices = indices;
+    }
+  }
+
+  return result
+}
+
+function createPatternAlphabet(pattern) {
+  let mask = {};
+
+  for (let i = 0, len = pattern.length; i < len; i += 1) {
+    const char = pattern.charAt(i);
+    mask[char] = (mask[char] || 0) | (1 << (len - i - 1));
+  }
+
+  return mask
+}
+
+const stripDiacritics = String.prototype.normalize
+    ? ((str) => str.normalize('NFD').replace(/[\u0300-\u036F\u0483-\u0489\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u0711\u0730-\u074A\u07A6-\u07B0\u07EB-\u07F3\u07FD\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u08D3-\u08E1\u08E3-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09CB-\u09CD\u09D7\u09E2\u09E3\u09FE\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A70\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2\u0AE3\u0AFA-\u0AFF\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B56\u0B57\u0B62\u0B63\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0C00-\u0C04\u0C3E-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C81-\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2\u0CE3\u0D00-\u0D03\u0D3B\u0D3C\u0D3E-\u0D44\u0D46-\u0D48\u0D4A-\u0D4D\u0D57\u0D62\u0D63\u0D82\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DF2\u0DF3\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0EB1\u0EB4-\u0EB9\u0EBB\u0EBC\u0EC8-\u0ECD\u0F18\u0F19\u0F35\u0F37\u0F39\u0F3E\u0F3F\u0F71-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102B-\u103E\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F\u109A-\u109D\u135D-\u135F\u1712-\u1714\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4-\u17D3\u17DD\u180B-\u180D\u1885\u1886\u18A9\u1920-\u192B\u1930-\u193B\u1A17-\u1A1B\u1A55-\u1A5E\u1A60-\u1A7C\u1A7F\u1AB0-\u1ABE\u1B00-\u1B04\u1B34-\u1B44\u1B6B-\u1B73\u1B80-\u1B82\u1BA1-\u1BAD\u1BE6-\u1BF3\u1C24-\u1C37\u1CD0-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF2-\u1CF4\u1CF7-\u1CF9\u1DC0-\u1DF9\u1DFB-\u1DFF\u20D0-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302F\u3099\u309A\uA66F-\uA672\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA823-\uA827\uA880\uA881\uA8B4-\uA8C5\uA8E0-\uA8F1\uA8FF\uA926-\uA92D\uA947-\uA953\uA980-\uA983\uA9B3-\uA9C0\uA9E5\uAA29-\uAA36\uAA43\uAA4C\uAA4D\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEB-\uAAEF\uAAF5\uAAF6\uABE3-\uABEA\uABEC\uABED\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F]/g, ''))
+    : ((str) => str);
+
+class BitapSearch {
+  constructor(
+    pattern,
+    {
+      location = Config.location,
+      threshold = Config.threshold,
+      distance = Config.distance,
+      includeMatches = Config.includeMatches,
+      findAllMatches = Config.findAllMatches,
+      minMatchCharLength = Config.minMatchCharLength,
+      isCaseSensitive = Config.isCaseSensitive,
+      ignoreDiacritics = Config.ignoreDiacritics,
+      ignoreLocation = Config.ignoreLocation
+    } = {}
+  ) {
+    this.options = {
+      location,
+      threshold,
+      distance,
+      includeMatches,
+      findAllMatches,
+      minMatchCharLength,
+      isCaseSensitive,
+      ignoreDiacritics,
+      ignoreLocation
+    };
+
+    pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
+    pattern = ignoreDiacritics ? stripDiacritics(pattern) : pattern;
+    this.pattern = pattern;
+
+    this.chunks = [];
+
+    if (!this.pattern.length) {
+      return
+    }
+
+    const addChunk = (pattern, startIndex) => {
+      this.chunks.push({
+        pattern,
+        alphabet: createPatternAlphabet(pattern),
+        startIndex
+      });
+    };
+
+    const len = this.pattern.length;
+
+    if (len > MAX_BITS) {
+      let i = 0;
+      const remainder = len % MAX_BITS;
+      const end = len - remainder;
+
+      while (i < end) {
+        addChunk(this.pattern.substr(i, MAX_BITS), i);
+        i += MAX_BITS;
+      }
+
+      if (remainder) {
+        const startIndex = len - MAX_BITS;
+        addChunk(this.pattern.substr(startIndex), startIndex);
+      }
+    } else {
+      addChunk(this.pattern, 0);
+    }
+  }
+
+  searchIn(text) {
+    const { isCaseSensitive, ignoreDiacritics, includeMatches } = this.options;
+
+    text = isCaseSensitive ? text : text.toLowerCase();
+    text = ignoreDiacritics ? stripDiacritics(text) : text;
+
+    // Exact match
+    if (this.pattern === text) {
+      let result = {
+        isMatch: true,
+        score: 0
+      };
+
+      if (includeMatches) {
+        result.indices = [[0, text.length - 1]];
+      }
+
+      return result
+    }
+
+    // Otherwise, use Bitap algorithm
+    const {
+      location,
+      distance,
+      threshold,
+      findAllMatches,
+      minMatchCharLength,
+      ignoreLocation
+    } = this.options;
+
+    let allIndices = [];
+    let totalScore = 0;
+    let hasMatches = false;
+
+    this.chunks.forEach(({ pattern, alphabet, startIndex }) => {
+      const { isMatch, score, indices } = search(text, pattern, alphabet, {
+        location: location + startIndex,
+        distance,
+        threshold,
+        findAllMatches,
+        minMatchCharLength,
+        includeMatches,
+        ignoreLocation
+      });
+
+      if (isMatch) {
+        hasMatches = true;
+      }
+
+      totalScore += score;
+
+      if (isMatch && indices) {
+        allIndices = [...allIndices, ...indices];
+      }
+    });
+
+    let result = {
+      isMatch: hasMatches,
+      score: hasMatches ? totalScore / this.chunks.length : 1
+    };
+
+    if (hasMatches && includeMatches) {
+      result.indices = allIndices;
+    }
+
+    return result
+  }
+}
+
+class BaseMatch {
+  constructor(pattern) {
+    this.pattern = pattern;
+  }
+  static isMultiMatch(pattern) {
+    return getMatch(pattern, this.multiRegex)
+  }
+  static isSingleMatch(pattern) {
+    return getMatch(pattern, this.singleRegex)
+  }
+  search(/*text*/) {}
+}
+
+function getMatch(pattern, exp) {
+  const matches = pattern.match(exp);
+  return matches ? matches[1] : null
+}
+
+// Token: 'file
+
+class ExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'exact'
+  }
+  static get multiRegex() {
+    return /^="(.*)"$/
+  }
+  static get singleRegex() {
+    return /^=(.*)$/
+  }
+  search(text) {
+    const isMatch = text === this.pattern;
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, this.pattern.length - 1]
+    }
+  }
+}
+
+// Token: !fire
+
+class InverseExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'inverse-exact'
+  }
+  static get multiRegex() {
+    return /^!"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^!(.*)$/
+  }
+  search(text) {
+    const index = text.indexOf(this.pattern);
+    const isMatch = index === -1;
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, text.length - 1]
+    }
+  }
+}
+
+// Token: ^file
+
+class PrefixExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'prefix-exact'
+  }
+  static get multiRegex() {
+    return /^\^"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^\^(.*)$/
+  }
+  search(text) {
+    const isMatch = text.startsWith(this.pattern);
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, this.pattern.length - 1]
+    }
+  }
+}
+
+// Token: !^fire
+
+class InversePrefixExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'inverse-prefix-exact'
+  }
+  static get multiRegex() {
+    return /^!\^"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^!\^(.*)$/
+  }
+  search(text) {
+    const isMatch = !text.startsWith(this.pattern);
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, text.length - 1]
+    }
+  }
+}
+
+// Token: .file$
+
+class SuffixExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'suffix-exact'
+  }
+  static get multiRegex() {
+    return /^"(.*)"\$$/
+  }
+  static get singleRegex() {
+    return /^(.*)\$$/
+  }
+  search(text) {
+    const isMatch = text.endsWith(this.pattern);
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [text.length - this.pattern.length, text.length - 1]
+    }
+  }
+}
+
+// Token: !.file$
+
+class InverseSuffixExactMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'inverse-suffix-exact'
+  }
+  static get multiRegex() {
+    return /^!"(.*)"\$$/
+  }
+  static get singleRegex() {
+    return /^!(.*)\$$/
+  }
+  search(text) {
+    const isMatch = !text.endsWith(this.pattern);
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices: [0, text.length - 1]
+    }
+  }
+}
+
+class FuzzyMatch extends BaseMatch {
+  constructor(
+    pattern,
+    {
+      location = Config.location,
+      threshold = Config.threshold,
+      distance = Config.distance,
+      includeMatches = Config.includeMatches,
+      findAllMatches = Config.findAllMatches,
+      minMatchCharLength = Config.minMatchCharLength,
+      isCaseSensitive = Config.isCaseSensitive,
+      ignoreDiacritics = Config.ignoreDiacritics,
+      ignoreLocation = Config.ignoreLocation
+    } = {}
+  ) {
+    super(pattern);
+    this._bitapSearch = new BitapSearch(pattern, {
+      location,
+      threshold,
+      distance,
+      includeMatches,
+      findAllMatches,
+      minMatchCharLength,
+      isCaseSensitive,
+      ignoreDiacritics,
+      ignoreLocation
+    });
+  }
+  static get type() {
+    return 'fuzzy'
+  }
+  static get multiRegex() {
+    return /^"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^(.*)$/
+  }
+  search(text) {
+    return this._bitapSearch.searchIn(text)
+  }
+}
+
+// Token: 'file
+
+class IncludeMatch extends BaseMatch {
+  constructor(pattern) {
+    super(pattern);
+  }
+  static get type() {
+    return 'include'
+  }
+  static get multiRegex() {
+    return /^'"(.*)"$/
+  }
+  static get singleRegex() {
+    return /^'(.*)$/
+  }
+  search(text) {
+    let location = 0;
+    let index;
+
+    const indices = [];
+    const patternLen = this.pattern.length;
+
+    // Get all exact matches
+    while ((index = text.indexOf(this.pattern, location)) > -1) {
+      location = index + patternLen;
+      indices.push([index, location - 1]);
+    }
+
+    const isMatch = !!indices.length;
+
+    return {
+      isMatch,
+      score: isMatch ? 0 : 1,
+      indices
+    }
+  }
+}
+
+// ❗Order is important. DO NOT CHANGE.
+const searchers = [
+  ExactMatch,
+  IncludeMatch,
+  PrefixExactMatch,
+  InversePrefixExactMatch,
+  InverseSuffixExactMatch,
+  SuffixExactMatch,
+  InverseExactMatch,
+  FuzzyMatch
+];
+
+const searchersLen = searchers.length;
+
+// Regex to split by spaces, but keep anything in quotes together
+const SPACE_RE = / +(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/;
+const OR_TOKEN = '|';
+
+// Return a 2D array representation of the query, for simpler parsing.
+// Example:
+// "^core go$ | rb$ | py$ xy$" => [["^core", "go$"], ["rb$"], ["py$", "xy$"]]
+function parseQuery(pattern, options = {}) {
+  return pattern.split(OR_TOKEN).map((item) => {
+    let query = item
+      .trim()
+      .split(SPACE_RE)
+      .filter((item) => item && !!item.trim());
+
+    let results = [];
+    for (let i = 0, len = query.length; i < len; i += 1) {
+      const queryItem = query[i];
+
+      // 1. Handle multiple query match (i.e, once that are quoted, like `"hello world"`)
+      let found = false;
+      let idx = -1;
+      while (!found && ++idx < searchersLen) {
+        const searcher = searchers[idx];
+        let token = searcher.isMultiMatch(queryItem);
+        if (token) {
+          results.push(new searcher(token, options));
+          found = true;
+        }
+      }
+
+      if (found) {
+        continue
+      }
+
+      // 2. Handle single query matches (i.e, once that are *not* quoted)
+      idx = -1;
+      while (++idx < searchersLen) {
+        const searcher = searchers[idx];
+        let token = searcher.isSingleMatch(queryItem);
+        if (token) {
+          results.push(new searcher(token, options));
+          break
+        }
+      }
+    }
+
+    return results
+  })
+}
+
+// These extended matchers can return an array of matches, as opposed
+// to a singl match
+const MultiMatchSet = new Set([FuzzyMatch.type, IncludeMatch.type]);
+
+/**
+ * Command-like searching
+ * ======================
+ *
+ * Given multiple search terms delimited by spaces.e.g. `^jscript .python$ ruby !java`,
+ * search in a given text.
+ *
+ * Search syntax:
+ *
+ * | Token       | Match type                 | Description                            |
+ * | ----------- | -------------------------- | -------------------------------------- |
+ * | `jscript`   | fuzzy-match                | Items that fuzzy match `jscript`       |
+ * | `=scheme`   | exact-match                | Items that are `scheme`                |
+ * | `'python`   | include-match              | Items that include `python`            |
+ * | `!ruby`     | inverse-exact-match        | Items that do not include `ruby`       |
+ * | `^java`     | prefix-exact-match         | Items that start with `java`           |
+ * | `!^earlang` | inverse-prefix-exact-match | Items that do not start with `earlang` |
+ * | `.js$`      | suffix-exact-match         | Items that end with `.js`              |
+ * | `!.go$`     | inverse-suffix-exact-match | Items that do not end with `.go`       |
+ *
+ * A single pipe character acts as an OR operator. For example, the following
+ * query matches entries that start with `core` and end with either`go`, `rb`,
+ * or`py`.
+ *
+ * ```
+ * ^core go$ | rb$ | py$
+ * ```
+ */
+class ExtendedSearch {
+  constructor(
+    pattern,
+    {
+      isCaseSensitive = Config.isCaseSensitive,
+      ignoreDiacritics = Config.ignoreDiacritics,
+      includeMatches = Config.includeMatches,
+      minMatchCharLength = Config.minMatchCharLength,
+      ignoreLocation = Config.ignoreLocation,
+      findAllMatches = Config.findAllMatches,
+      location = Config.location,
+      threshold = Config.threshold,
+      distance = Config.distance
+    } = {}
+  ) {
+    this.query = null;
+    this.options = {
+      isCaseSensitive,
+      ignoreDiacritics,
+      includeMatches,
+      minMatchCharLength,
+      findAllMatches,
+      ignoreLocation,
+      location,
+      threshold,
+      distance
+    };
+
+    pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
+    pattern = ignoreDiacritics ? stripDiacritics(pattern) : pattern;
+    this.pattern = pattern;
+    this.query = parseQuery(this.pattern, this.options);
+  }
+
+  static condition(_, options) {
+    return options.useExtendedSearch
+  }
+
+  searchIn(text) {
+    const query = this.query;
+
+    if (!query) {
+      return {
+        isMatch: false,
+        score: 1
+      }
+    }
+
+    const { includeMatches, isCaseSensitive, ignoreDiacritics } = this.options;
+
+    text = isCaseSensitive ? text : text.toLowerCase();
+    text = ignoreDiacritics ? stripDiacritics(text) : text;
+
+    let numMatches = 0;
+    let allIndices = [];
+    let totalScore = 0;
+
+    // ORs
+    for (let i = 0, qLen = query.length; i < qLen; i += 1) {
+      const searchers = query[i];
+
+      // Reset indices
+      allIndices.length = 0;
+      numMatches = 0;
+
+      // ANDs
+      for (let j = 0, pLen = searchers.length; j < pLen; j += 1) {
+        const searcher = searchers[j];
+        const { isMatch, indices, score } = searcher.search(text);
+
+        if (isMatch) {
+          numMatches += 1;
+          totalScore += score;
+          if (includeMatches) {
+            const type = searcher.constructor.type;
+            if (MultiMatchSet.has(type)) {
+              allIndices = [...allIndices, ...indices];
+            } else {
+              allIndices.push(indices);
+            }
+          }
+        } else {
+          totalScore = 0;
+          numMatches = 0;
+          allIndices.length = 0;
+          break
+        }
+      }
+
+      // OR condition, so if TRUE, return
+      if (numMatches) {
+        let result = {
+          isMatch: true,
+          score: totalScore / numMatches
+        };
+
+        if (includeMatches) {
+          result.indices = allIndices;
+        }
+
+        return result
+      }
+    }
+
+    // Nothing was matched
+    return {
+      isMatch: false,
+      score: 1
+    }
+  }
+}
+
+const registeredSearchers = [];
+
+function register(...args) {
+  registeredSearchers.push(...args);
+}
+
+function createSearcher(pattern, options) {
+  for (let i = 0, len = registeredSearchers.length; i < len; i += 1) {
+    let searcherClass = registeredSearchers[i];
+    if (searcherClass.condition(pattern, options)) {
+      return new searcherClass(pattern, options)
+    }
+  }
+
+  return new BitapSearch(pattern, options)
+}
+
+const LogicalOperator = {
+  AND: '$and',
+  OR: '$or'
+};
+
+const KeyType = {
+  PATH: '$path',
+  PATTERN: '$val'
+};
+
+const isExpression = (query) =>
+  !!(query[LogicalOperator.AND] || query[LogicalOperator.OR]);
+
+const isPath = (query) => !!query[KeyType.PATH];
+
+const isLeaf = (query) =>
+  !isArray(query) && isObject(query) && !isExpression(query);
+
+const convertToExplicit = (query) => ({
+  [LogicalOperator.AND]: Object.keys(query).map((key) => ({
+    [key]: query[key]
+  }))
+});
+
+// When `auto` is `true`, the parse function will infer and initialize and add
+// the appropriate `Searcher` instance
+function parse(query, options, { auto = true } = {}) {
+  const next = (query) => {
+    let keys = Object.keys(query);
+
+    const isQueryPath = isPath(query);
+
+    if (!isQueryPath && keys.length > 1 && !isExpression(query)) {
+      return next(convertToExplicit(query))
+    }
+
+    if (isLeaf(query)) {
+      const key = isQueryPath ? query[KeyType.PATH] : keys[0];
+
+      const pattern = isQueryPath ? query[KeyType.PATTERN] : query[key];
+
+      if (!isString(pattern)) {
+        throw new Error(LOGICAL_SEARCH_INVALID_QUERY_FOR_KEY(key))
+      }
+
+      const obj = {
+        keyId: createKeyId(key),
+        pattern
+      };
+
+      if (auto) {
+        obj.searcher = createSearcher(pattern, options);
+      }
+
+      return obj
+    }
+
+    let node = {
+      children: [],
+      operator: keys[0]
+    };
+
+    keys.forEach((key) => {
+      const value = query[key];
+
+      if (isArray(value)) {
+        value.forEach((item) => {
+          node.children.push(next(item));
+        });
+      }
+    });
+
+    return node
+  };
+
+  if (!isExpression(query)) {
+    query = convertToExplicit(query);
+  }
+
+  return next(query)
+}
+
+// Practical scoring function
+function computeScore(
+  results,
+  { ignoreFieldNorm = Config.ignoreFieldNorm }
+) {
+  results.forEach((result) => {
+    let totalScore = 1;
+
+    result.matches.forEach(({ key, norm, score }) => {
+      const weight = key ? key.weight : null;
+
+      totalScore *= Math.pow(
+        score === 0 && weight ? Number.EPSILON : score,
+        (weight || 1) * (ignoreFieldNorm ? 1 : norm)
+      );
+    });
+
+    result.score = totalScore;
+  });
+}
+
+function transformMatches(result, data) {
+  const matches = result.matches;
+  data.matches = [];
+
+  if (!isDefined(matches)) {
+    return
+  }
+
+  matches.forEach((match) => {
+    if (!isDefined(match.indices) || !match.indices.length) {
+      return
+    }
+
+    const { indices, value } = match;
+
+    let obj = {
+      indices,
+      value
+    };
+
+    if (match.key) {
+      obj.key = match.key.src;
+    }
+
+    if (match.idx > -1) {
+      obj.refIndex = match.idx;
+    }
+
+    data.matches.push(obj);
+  });
+}
+
+function transformScore(result, data) {
+  data.score = result.score;
+}
+
+function format(
+  results,
+  docs,
+  {
+    includeMatches = Config.includeMatches,
+    includeScore = Config.includeScore
+  } = {}
+) {
+  const transformers = [];
+
+  if (includeMatches) transformers.push(transformMatches);
+  if (includeScore) transformers.push(transformScore);
+
+  return results.map((result) => {
+    const { idx } = result;
+
+    const data = {
+      item: docs[idx],
+      refIndex: idx
+    };
+
+    if (transformers.length) {
+      transformers.forEach((transformer) => {
+        transformer(result, data);
+      });
+    }
+
+    return data
+  })
+}
+
+class Fuse {
+  constructor(docs, options = {}, index) {
+    this.options = { ...Config, ...options };
+
+    if (
+      this.options.useExtendedSearch &&
+      !true
+    ) // removed by dead control flow
+{}
+
+    this._keyStore = new KeyStore(this.options.keys);
+
+    this.setCollection(docs, index);
+  }
+
+  setCollection(docs, index) {
+    this._docs = docs;
+
+    if (index && !(index instanceof FuseIndex)) {
+      throw new Error(INCORRECT_INDEX_TYPE)
+    }
+
+    this._myIndex =
+      index ||
+      createIndex(this.options.keys, this._docs, {
+        getFn: this.options.getFn,
+        fieldNormWeight: this.options.fieldNormWeight
+      });
+  }
+
+  add(doc) {
+    if (!isDefined(doc)) {
+      return
+    }
+
+    this._docs.push(doc);
+    this._myIndex.add(doc);
+  }
+
+  remove(predicate = (/* doc, idx */) => false) {
+    const results = [];
+
+    for (let i = 0, len = this._docs.length; i < len; i += 1) {
+      const doc = this._docs[i];
+      if (predicate(doc, i)) {
+        this.removeAt(i);
+        i -= 1;
+        len -= 1;
+
+        results.push(doc);
+      }
+    }
+
+    return results
+  }
+
+  removeAt(idx) {
+    this._docs.splice(idx, 1);
+    this._myIndex.removeAt(idx);
+  }
+
+  getIndex() {
+    return this._myIndex
+  }
+
+  search(query, { limit = -1 } = {}) {
+    const {
+      includeMatches,
+      includeScore,
+      shouldSort,
+      sortFn,
+      ignoreFieldNorm
+    } = this.options;
+
+    let results = isString(query)
+      ? isString(this._docs[0])
+        ? this._searchStringList(query)
+        : this._searchObjectList(query)
+      : this._searchLogical(query);
+
+    computeScore(results, { ignoreFieldNorm });
+
+    if (shouldSort) {
+      results.sort(sortFn);
+    }
+
+    if (isNumber(limit) && limit > -1) {
+      results = results.slice(0, limit);
+    }
+
+    return format(results, this._docs, {
+      includeMatches,
+      includeScore
+    })
+  }
+
+  _searchStringList(query) {
+    const searcher = createSearcher(query, this.options);
+    const { records } = this._myIndex;
+    const results = [];
+
+    // Iterate over every string in the index
+    records.forEach(({ v: text, i: idx, n: norm }) => {
+      if (!isDefined(text)) {
+        return
+      }
+
+      const { isMatch, score, indices } = searcher.searchIn(text);
+
+      if (isMatch) {
+        results.push({
+          item: text,
+          idx,
+          matches: [{ score, value: text, norm, indices }]
+        });
+      }
+    });
+
+    return results
+  }
+
+  _searchLogical(query) {
+
+    const expression = parse(query, this.options);
+
+    const evaluate = (node, item, idx) => {
+      if (!node.children) {
+        const { keyId, searcher } = node;
+
+        const matches = this._findMatches({
+          key: this._keyStore.get(keyId),
+          value: this._myIndex.getValueForItemAtKeyId(item, keyId),
+          searcher
+        });
+
+        if (matches && matches.length) {
+          return [
+            {
+              idx,
+              item,
+              matches
+            }
+          ]
+        }
+
+        return []
+      }
+
+      const res = [];
+      for (let i = 0, len = node.children.length; i < len; i += 1) {
+        const child = node.children[i];
+        const result = evaluate(child, item, idx);
+        if (result.length) {
+          res.push(...result);
+        } else if (node.operator === LogicalOperator.AND) {
+          return []
+        }
+      }
+      return res
+    };
+
+    const records = this._myIndex.records;
+    const resultMap = {};
+    const results = [];
+
+    records.forEach(({ $: item, i: idx }) => {
+      if (isDefined(item)) {
+        let expResults = evaluate(expression, item, idx);
+
+        if (expResults.length) {
+          // Dedupe when adding
+          if (!resultMap[idx]) {
+            resultMap[idx] = { idx, item, matches: [] };
+            results.push(resultMap[idx]);
+          }
+          expResults.forEach(({ matches }) => {
+            resultMap[idx].matches.push(...matches);
+          });
+        }
+      }
+    });
+
+    return results
+  }
+
+  _searchObjectList(query) {
+    const searcher = createSearcher(query, this.options);
+    const { keys, records } = this._myIndex;
+    const results = [];
+
+    // List is Array<Object>
+    records.forEach(({ $: item, i: idx }) => {
+      if (!isDefined(item)) {
+        return
+      }
+
+      let matches = [];
+
+      // Iterate over every key (i.e, path), and fetch the value at that key
+      keys.forEach((key, keyIndex) => {
+        matches.push(
+          ...this._findMatches({
+            key,
+            value: item[keyIndex],
+            searcher
+          })
+        );
+      });
+
+      if (matches.length) {
+        results.push({
+          idx,
+          item,
+          matches
+        });
+      }
+    });
+
+    return results
+  }
+  _findMatches({ key, value, searcher }) {
+    if (!isDefined(value)) {
+      return []
+    }
+
+    let matches = [];
+
+    if (isArray(value)) {
+      value.forEach(({ v: text, i: idx, n: norm }) => {
+        if (!isDefined(text)) {
+          return
+        }
+
+        const { isMatch, score, indices } = searcher.searchIn(text);
+
+        if (isMatch) {
+          matches.push({
+            score,
+            key,
+            value: text,
+            idx,
+            norm,
+            indices
+          });
+        }
+      });
+    } else {
+      const { v: text, n: norm } = value;
+
+      const { isMatch, score, indices } = searcher.searchIn(text);
+
+      if (isMatch) {
+        matches.push({ score, key, value: text, norm, indices });
+      }
+    }
+
+    return matches
+  }
+}
+
+Fuse.version = '7.1.0';
+Fuse.createIndex = createIndex;
+Fuse.parseIndex = parseIndex;
+Fuse.config = Config;
+
+{
+  Fuse.parseQuery = parse;
+}
+
+{
+  register(ExtendedSearch);
+}
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/idb/build/index.js":
 /*!*****************************************!*\
   !*** ./node_modules/idb/build/index.js ***!
@@ -741,10 +2548,14 @@ const Keys = {
 };
 const DEFAULT_TIMEOUT = 1000 * 60 * 60 * 24 * 2; // 2 days
 const REFERENCE_DATA_TIMEOUT = 1000 * 60 * 60 * 24; // 1 day
+const REFERENCE_DATA_KEY_LIST = Object.values(REFERENCE_DATA_KEYS);
 function getCacheTimeout(key) {
-    return (key in REFERENCE_DATA_KEYS)
+    return (REFERENCE_DATA_KEY_LIST.includes(key))
         ? REFERENCE_DATA_TIMEOUT
         : DEFAULT_TIMEOUT;
+}
+function makeTimeoutData(key) {
+    return [Date.now(), getCacheTimeout(key)];
 }
 let ClientCache = {
     consts: {
@@ -799,7 +2610,7 @@ let ClientCache = {
         console.log(`Caching ${key}`);
         const db = await this.openDB();
         await db.put(this.consts.STORE_NAME, data, key);
-        await this.setTimestamp(key, Date.now());
+        await this.setTimeoutData(key, makeTimeoutData(key));
     },
     delete: async function (key) {
         const db = await this.openDB();
@@ -810,19 +2621,20 @@ let ClientCache = {
         await indexedDB.deleteDatabase(this.consts.DB_NAME);
         console.log('Database deleted');
     },
-    getTimestamp: async function (key) {
+    getTimeoutData: async function (key) {
         const db = await this.openDB();
         const metakey = `${key + this.MetaKeys.TIMESTAMP}`;
         const timestamp = await db.get(this.consts.META_STORE_NAME, metakey);
         return timestamp ?? 0;
     },
-    setTimestamp: async function (key, timestamp) {
+    setTimeoutData: async function (key, timestamp) {
         const db = await this.openDB();
         const metakey = `${key + this.MetaKeys.TIMESTAMP}`;
         await db.put(this.consts.META_STORE_NAME, timestamp, metakey);
     },
-    setTimestampNow: async function (key) {
-        await this.setTimestamp(key, Date.now());
+    setTimeoutDataNow: async function (key) {
+        const timeoutData = makeTimeoutData(key);
+        await this.setTimeoutData(key, timeoutData);
     },
     deleteTimestamp: async function (key) {
         const db = await this.openDB();
@@ -856,13 +2668,14 @@ let ClientCache = {
         console.log("Reference data cleared from data cache");
     },
     checkCacheTimeout: async function (key) {
-        const timestamp = await this.getTimestamp(key);
+        const timeoutData = await this.getTimeoutData(key);
         const currentTime = Date.now();
-        if (!timestamp || (currentTime - timestamp > getCacheTimeout(key))) {
-            console.log(`Cache timeout for ${key}; timestamp: ${timestamp}; currentTime: ${currentTime}`);
+        if (!timeoutData || (currentTime - timeoutData[0] > timeoutData[1])) {
+            console.log(`Cache timeout for ${key}; Timeout Record: ${timeoutData}; currentTime: ${currentTime}`);
             await this.delete(key);
             return false;
         }
+        console.log(`Cache ok for ${key}; Timeout Record: ${timeoutData}; currentTime: ${currentTime}; timeout: ${getCacheTimeout(key)}; diff: ${currentTime - timeoutData[0]}`);
         return true;
     },
     getFilterStr: async function () {
@@ -885,68 +2698,6 @@ let ClientCache = {
     },
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ClientCache);
-
-
-/***/ }),
-
-/***/ "./static/assets/js/console-logging.ts":
-/*!*********************************************!*\
-  !*** ./static/assets/js/console-logging.ts ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CONSOLE_LOGGER: () => (/* binding */ CONSOLE_LOGGER),
-/* harmony export */   LOG_CATEGORIES: () => (/* binding */ LOG_CATEGORIES)
-/* harmony export */ });
-const LOG_CATEGORIES = {
-    TEST: "~TEST~",
-    CACHE: "~CACHE~",
-    FILTER_PARSING: "~FLT~",
-    PAGE_LOGIC: "~PAGE~",
-    APIS: "~API~",
-    CODE_MIRROR: "~CM~"
-};
-const SUPPRESS_CATEGORIES = [
-    LOG_CATEGORIES.TEST,
-    LOG_CATEGORIES.CODE_MIRROR
-];
-class Logger {
-    originalLog = console.log;
-    suppressCategories = SUPPRESS_CATEGORIES;
-    boundCategory = null;
-    captures = {};
-    captureKey = null;
-    log(...args) {
-        if (this.captureKey !== null) {
-            this.captures[this.captureKey].push(args);
-            return;
-        }
-        if (this.boundCategory && this.suppressCategories.includes(this.boundCategory))
-            return;
-        this.originalLog(...args);
-    }
-    initialize() {
-        console.log = (...args) => this.log(...args);
-    }
-    bindCategory(category) {
-        this.boundCategory = category;
-    }
-    unbindCategory() {
-        this.boundCategory = null;
-    }
-    bindCapture(key) {
-        this.captures[key] = [];
-        this.captureKey = key;
-    }
-    unbindCapture() {
-        this.captureKey = null;
-    }
-}
-const CONSOLE_LOGGER = new Logger();
-CONSOLE_LOGGER.initialize();
-
 
 
 /***/ }),
@@ -985,6 +2736,36 @@ let ContentManager = {
     LangManager: _lang_manager_ts__WEBPACK_IMPORTED_MODULE_6__.LangManager,
 };
 
+
+
+/***/ }),
+
+/***/ "./static/assets/js/data-table-utils.ts":
+/*!**********************************************!*\
+  !*** ./static/assets/js/data-table-utils.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function destroyDataTable(tableid) {
+    const tableSelector = $(`#${tableid}`);
+    if ($.fn.dataTable.isDataTable(tableSelector)) {
+        console.log("Destroying DataTable: ", tableid);
+        tableSelector.DataTable().clear().destroy();
+    }
+}
+function replaceData(tableid, data) {
+    const datatableReference = $(`#${tableid}`).DataTable();
+    datatableReference.clear().rows.add(data).draw();
+}
+let DataTableUtils = {
+    destroyDataTable,
+    replaceData,
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DataTableUtils);
 
 
 /***/ }),
@@ -1125,7 +2906,7 @@ let BattleManager = {
     getBattles: async function () {
         console.log("Getting battles");
         const battles = (await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].get(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES)) ?? null;
-        _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].setTimestampNow(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
+        _cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].setTimeoutDataNow(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].Keys.BATTLES);
         return battles;
     },
     // Removes all user battle data from cache, should be called when user is switched out
@@ -2500,7 +4281,7 @@ class InOperator extends Operator {
     }
     call(a, b) {
         const contains = Array.isArray(b) ? b.includes(a) : b.has(a);
-        console.log(`IN OPER: Left: ${a}, Op: ${this.opStr}, Right: ${collectionToString(b)}; Result: ${contains}`);
+        // console.log(`IN OPER: Left: ${a}, Op: ${this.opStr}, Right: ${collectionToString(b)}; Result: ${contains}`);
         return this.negate ? !contains : contains;
     }
 }
@@ -3242,6 +5023,140 @@ let RegExps = {
 
 /***/ }),
 
+/***/ "./static/assets/js/e7/searcher.ts":
+/*!*****************************************!*\
+  !*** ./static/assets/js/e7/searcher.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Searcher: () => (/* binding */ Searcher),
+/* harmony export */   getStrMatches: () => (/* binding */ getStrMatches)
+/* harmony export */ });
+/* harmony import */ var _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.ts */ "./static/assets/js/e7/hero-manager.ts");
+/* harmony import */ var _artifact_manager_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./artifact-manager.ts */ "./static/assets/js/e7/artifact-manager.ts");
+/* harmony import */ var _user_manager_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./user-manager.ts */ "./static/assets/js/e7/user-manager.ts");
+/* harmony import */ var _references_ts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./references.ts */ "./static/assets/js/e7/references.ts");
+/* harmony import */ var fuse_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! fuse.js */ "./node_modules/fuse.js/dist/fuse.mjs");
+
+
+
+
+
+const USER_DOMAINS = {
+    GLOBAL_SERVER: "Global Server",
+    KOR_SERVER: "Korea Server",
+    JPN_SERVER: "Japan Server",
+    ASIA_SERVER: "Asia Server",
+    EU_SERVER: "Europe Server",
+};
+const USER_DOMAIN_CODES = {
+    [USER_DOMAINS.GLOBAL_SERVER]: _references_ts__WEBPACK_IMPORTED_MODULE_3__.WORLD_CODE_ENUM.GLOBAL,
+    [USER_DOMAINS.KOR_SERVER]: _references_ts__WEBPACK_IMPORTED_MODULE_3__.WORLD_CODE_ENUM.KOR,
+    [USER_DOMAINS.JPN_SERVER]: _references_ts__WEBPACK_IMPORTED_MODULE_3__.WORLD_CODE_ENUM.JPN,
+    [USER_DOMAINS.ASIA_SERVER]: _references_ts__WEBPACK_IMPORTED_MODULE_3__.WORLD_CODE_ENUM.ASIA,
+    [USER_DOMAINS.EU_SERVER]: _references_ts__WEBPACK_IMPORTED_MODULE_3__.WORLD_CODE_ENUM.EU,
+};
+const SEARCH_DOMAINS = {
+    [USER_DOMAINS.GLOBAL_SERVER]: "Global Server",
+    [USER_DOMAINS.KOR_SERVER]: "Korea Server",
+    [USER_DOMAINS.JPN_SERVER]: "Japan Server",
+    [USER_DOMAINS.ASIA_SERVER]: "Asia Server",
+    [USER_DOMAINS.EU_SERVER]: "Europe Server",
+    HEROES: "Heroes",
+    ARTIFACTS: "Artifacts",
+};
+const HERO_SEARCH_CONFIG = { keys: ["name"], threshold: 0.4 };
+const USER_SEARCH_CONFIG = { keys: ["name"], threshold: 0.4 };
+const ARTIFACT_SEARCH_CONFIG = { keys: ["name"], threshold: 0.4 };
+function getStrMatches(str, strings, numMatches = null, customConfig = {}) {
+    let config = {
+        includeScore: true,
+        threshold: 0.3,
+    };
+    config = { ...config, ...customConfig };
+    let fuse = null;
+    fuse = new fuse_js__WEBPACK_IMPORTED_MODULE_4__["default"](strings, config);
+    const result = fuse.search(str);
+    if (numMatches !== null) {
+        return result.slice(0, numMatches);
+    }
+    return result;
+}
+function searchHeroes(heroName, heroes) {
+    return getStrMatches(heroName, heroes, null, HERO_SEARCH_CONFIG);
+}
+function searchUsers(userName, users) {
+    return getStrMatches(userName, users, null, USER_SEARCH_CONFIG);
+}
+function searchArtifacts(artiName, artifactNames) {
+    return getStrMatches(artiName, artifactNames, null, ARTIFACT_SEARCH_CONFIG);
+}
+class Searcher {
+    static DOMAINS = SEARCH_DOMAINS;
+    DOMAIN_CACHE = {
+        [USER_DOMAINS.GLOBAL_SERVER]: null,
+        [USER_DOMAINS.KOR_SERVER]: null,
+        [USER_DOMAINS.JPN_SERVER]: null,
+        [USER_DOMAINS.ASIA_SERVER]: null,
+        [USER_DOMAINS.EU_SERVER]: null,
+        [SEARCH_DOMAINS.HEROES]: null,
+        [SEARCH_DOMAINS.ARTIFACTS]: null,
+    };
+    async get_domain(domain) {
+        if (!this.DOMAIN_CACHE[domain]) {
+            if (Object.values(USER_DOMAINS).includes(domain)) {
+                const userDomain = domain;
+                const users = await _user_manager_ts__WEBPACK_IMPORTED_MODULE_2__["default"].getUserMap(USER_DOMAIN_CODES[userDomain]);
+                this.DOMAIN_CACHE[userDomain] = users ? Object.values(users) : [];
+            }
+            else if (domain === SEARCH_DOMAINS.HEROES) {
+                const heroDicts = await _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroDicts();
+                this.DOMAIN_CACHE[domain] = heroDicts.heroes;
+            }
+            else if (domain === SEARCH_DOMAINS.ARTIFACTS) {
+                const artifacts = await _artifact_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].getArtifactObjectList();
+                this.DOMAIN_CACHE[domain] = artifacts;
+            }
+        }
+        const elements = await this.DOMAIN_CACHE[domain];
+        return elements;
+    }
+    async search(domain, searchTerm) {
+        let users;
+        switch (domain) {
+            case USER_DOMAINS.GLOBAL_SERVER:
+                users = await this.get_domain(domain);
+                return searchUsers(searchTerm, users);
+            case USER_DOMAINS.KOR_SERVER:
+                users = await this.get_domain(domain);
+                return searchUsers(searchTerm, users);
+            case USER_DOMAINS.JPN_SERVER:
+                users = await this.get_domain(domain);
+                return searchUsers(searchTerm, users);
+            case USER_DOMAINS.ASIA_SERVER:
+                users = await this.get_domain(domain);
+                return searchUsers(searchTerm, users);
+            case USER_DOMAINS.EU_SERVER:
+                users = await this.get_domain(domain);
+                return searchUsers(searchTerm, users);
+            case SEARCH_DOMAINS.HEROES:
+                const heroes = await this.get_domain(domain);
+                return searchHeroes(searchTerm, heroes);
+            case SEARCH_DOMAINS.ARTIFACTS:
+                const artifacts = await this.get_domain(domain);
+                return searchArtifacts(searchTerm, artifacts);
+            default:
+                throw new Error(`Unknown domain: ${domain}`);
+        }
+    }
+}
+
+
+
+/***/ }),
+
 /***/ "./static/assets/js/e7/season-manager.ts":
 /*!***********************************************!*\
   !*** ./static/assets/js/e7/season-manager.ts ***!
@@ -3691,342 +5606,6 @@ let StatsBuilder = {
 
 /***/ }),
 
-/***/ "./static/assets/js/e7/stats-builder.ts":
-/*!**********************************************!*\
-  !*** ./static/assets/js/e7/stats-builder.ts ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hero-manager.ts */ "./static/assets/js/e7/hero-manager.ts");
-/* harmony import */ var _references_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./references.ts */ "./static/assets/js/e7/references.ts");
-
-
-const getWins = (battleList) => battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN]);
-const getFirstPickSubset = (battleList) => battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK]);
-const getSecondPickSubset = (battleList) => battleList.filter((b) => !b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK]);
-const isIncomplete = (b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS] === 0;
-const NA = "N/A";
-function toPercent(value) {
-    return (value * 100).toFixed(2) + "%";
-}
-function divideToPercentString(a, b) {
-    if (a === 0)
-        return NA;
-    return b !== 0 ? toPercent(a / b) : toPercent(0);
-}
-function divideToString(a, b) {
-    if (b === 0)
-        return NA;
-    return (a / b).toFixed(2);
-}
-function getCR(battle, heroName) {
-    const entry = battle[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.CR_BAR].find((entry) => entry[0] === heroName);
-    return entry ? entry[1] : null;
-}
-function computeGenericStats(subset, totalBattles) {
-    const wins = getWins(subset).length;
-    const subsetLength = subset.length;
-    const firstTurns = subset.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN]).length;
-    const firstTurnRate = divideToPercentString(firstTurns, subset.length);
-    const pointGain = subset.reduce((acc, b) => acc + (b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN] || 0), 0);
-    return {
-        wins,
-        subsetLength,
-        frequency: divideToPercentString(subset.length, totalBattles),
-        winRate: divideToPercentString(getWins(subset).length, subset.length),
-        plusMinus: 2 * wins - subsetLength,
-        pointGain: subset.reduce((acc, b) => acc + (b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN] || 0), 0),
-        avgPPG: divideToString(pointGain, subsetLength),
-        firstTurns,
-        firstTurnRate,
-    };
-}
-;
-function queryStats(battleList, totalBattles, heroName) {
-    const genericStats = computeGenericStats(battleList, totalBattles);
-    const postBanned = battleList.reduce((acc, b) => acc +
-        +(b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN] === heroName ||
-            b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN] === heroName), 0);
-    const successes = battleList.reduce((acc, b) => acc +
-        +(b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN] ||
-            b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POSTBAN] === heroName ||
-            b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_POSTBAN] === heroName), 0);
-    let gamesConsidered = 0;
-    let crTotal = 0;
-    let firstTurns = 0;
-    for (const battle of battleList) {
-        const cr = getCR(battle, heroName);
-        if (cr !== null && cr !== 0) {
-            gamesConsidered += 1;
-            crTotal += cr;
-            if (cr === 100) {
-                firstTurns += 1;
-            }
-        }
-    }
-    const avgCR = divideToPercentString(crTotal / 100, gamesConsidered);
-    return {
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME]: heroName,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.BATTLES]: genericStats.subsetLength,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PICK_RATE]: genericStats.frequency,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WINS]: genericStats.wins,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.WIN_RATE]: genericStats.winRate,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBANS]: postBanned,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POSTBAN_RATE]: divideToPercentString(postBanned, genericStats.subsetLength),
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.SUCCESS_RATE]: divideToPercentString(successes, genericStats.subsetLength),
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.PLUS_MINUS]: genericStats.plusMinus,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.POINT_GAIN]: genericStats.pointGain,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.AVG_CR]: avgCR,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURNS]: firstTurns,
-        [_references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE]: divideToPercentString(firstTurns, gamesConsidered),
-    };
-}
-function getPrimes(battleList, isP1 = true) {
-    const primeSet = new Set();
-    for (const battle of Object.values(battleList)) {
-        const picks = isP1
-            ? battle[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES]
-            : battle[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIMES];
-        picks.forEach((element) => {
-            primeSet.add(element);
-        });
-    }
-    return primeSet;
-}
-function getHeroStats(battleList, HeroDicts) {
-    if (battleList.length === 0) {
-        return { playerHeroStats: [], enemyHeroStats: [] };
-    }
-    const totalBattles = battleList.length;
-    const playerPrimes = getPrimes(battleList, true);
-    const enemyPrimes = getPrimes(battleList, false);
-    const playerHeroStats = [];
-    const enemyHeroStats = [];
-    for (const prime of playerPrimes) {
-        const hero = _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HeroDicts);
-        if (!hero)
-            continue;
-        const playerSubset = battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES].includes(prime));
-        if (playerSubset.length > 0) {
-            playerHeroStats.push(queryStats(playerSubset, totalBattles, hero.name));
-        }
-    }
-    for (const prime of enemyPrimes) {
-        const hero = _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HeroDicts);
-        if (!hero)
-            continue;
-        const enemySubset = battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS_PRIMES].includes(prime));
-        if (enemySubset.length > 0) {
-            enemyHeroStats.push(queryStats(enemySubset, totalBattles, hero.name));
-        }
-    }
-    const nameCol = _references_ts__WEBPACK_IMPORTED_MODULE_1__.HERO_STATS_COLUMN_MAP.HERO_NAME;
-    return {
-        playerHeroStats: playerHeroStats.sort((b1, b2) => b1[nameCol].localeCompare(b2[nameCol])),
-        enemyHeroStats: enemyHeroStats.sort((b1, b2) => b1[nameCol].localeCompare(b2[nameCol])),
-    };
-}
-function getFirstPickStats(battleList, HeroDicts) {
-    battleList = getFirstPickSubset(Object.values(battleList));
-    if (battleList.length === 0) {
-        return [];
-    }
-    const totalBattles = battleList.length;
-    const grouped = {};
-    for (const b of battleList) {
-        if (b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES].length === 0)
-            continue; // skip any battle where player didn't get to pick a first unit
-        const hero = b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS_PRIMES][0];
-        if (!(hero in grouped))
-            grouped[hero] = { wins: 0, appearances: 0 };
-        grouped[hero].wins += +b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN];
-        grouped[hero].appearances += 1;
-    }
-    const result = Object.entries(grouped).map(([prime, stats]) => {
-        const name = _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].getHeroByPrime(prime, HeroDicts)?.name ?? _hero_manager_ts__WEBPACK_IMPORTED_MODULE_0__["default"].EMPTY_NAME;
-        return {
-            hero: name,
-            wins: stats.wins,
-            appearances: stats.appearances,
-            win_rate: toPercent(stats.wins / stats.appearances),
-            appearance_rate: toPercent(stats.appearances / totalBattles),
-            "+/-": 2 * stats.wins - stats.appearances,
-        };
-    });
-    result.sort((a, b) => b.appearances - a.appearances);
-    return result;
-}
-function getPrebanStats(battleList, HeroDicts) {
-    //console.log(`Got HeroDicts: ${HeroDicts}`);
-    if (battleList.length === 0) {
-        return [];
-    }
-    const prebanSet = new Set();
-    for (const b of battleList) {
-        const prebans = b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES];
-        prebanSet.add(prebans[0]);
-        prebanSet.add(prebans[1]);
-        prebanSet.add(prebans[0] * prebans[1]);
-    }
-    const totalBattles = battleList.length;
-    const output = [];
-    for (const preban of prebanSet) {
-        const filtered = battleList.filter((b) => b[_references_ts__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS_PRIMES].includes(preban));
-        const genericStats = computeGenericStats(filtered, totalBattles);
-        output.push({
-            preban: HeroDicts.prime_pair_lookup[preban],
-            wins: genericStats.wins,
-            appearances: genericStats.subsetLength,
-            appearance_rate: genericStats.frequency,
-            win_rate: genericStats.winRate,
-            "+/-": genericStats.plusMinus,
-        });
-    }
-    output.sort((a, b) => b.appearances - a.appearances);
-    return output;
-}
-function secondsToTimeStr(inputSeconds) {
-    let timeStr;
-    const mins = Math.floor(inputSeconds / 60);
-    const secs = (inputSeconds % 60).toFixed(1);
-    if (mins === 0) {
-        timeStr = `${secs} secs`;
-    }
-    else {
-        timeStr = `${mins} : ${secs}s`;
-    }
-    return timeStr;
-}
-function getGeneralStats(battleList) {
-    battleList.sort((b1, b2) => new Date(b1["Date/Time"]).getTime() - new Date(b2["Date/Time"]).getTime());
-    const totalBattles = battleList.length;
-    const totalGain = battleList.reduce((acc, b) => acc + (b["Point Gain"] || 0), 0);
-    const avgPPG = divideToString(totalGain, totalBattles);
-    const totalTurns = battleList.reduce((acc, b) => acc + b["Turns"], 0);
-    const avgTurns = divideToString(totalTurns, totalBattles);
-    const maxTurns = battleList.length > 0 ? Math.max(...battleList.map((b) => b["Turns"])) : 0;
-    const totalSeconds = battleList.reduce((acc, b) => acc + b["Seconds"], 0);
-    const avgSeconds = totalBattles > 0 ? totalSeconds / totalBattles : 0;
-    const maxSeconds = battleList.length > 0
-        ? Math.max(...battleList.map((b) => b["Seconds"]))
-        : 0;
-    let avgTimeStr = secondsToTimeStr(avgSeconds);
-    let maxTimeStr = secondsToTimeStr(maxSeconds);
-    const totalFirstTurnGames = battleList.reduce((acc, b) => acc + +b["First Turn"], 0);
-    // create subsets for first pick and second pick battles
-    const fpBattles = getFirstPickSubset(battleList);
-    const spBattles = getSecondPickSubset(battleList);
-    const fpStats = computeGenericStats(fpBattles, totalBattles);
-    const spStats = computeGenericStats(spBattles, totalBattles);
-    // calculate total win rate
-    const winRate = divideToPercentString(fpStats.wins + spStats.wins, totalBattles);
-    // iterate through battles and calculate longest win/loss streaks
-    let [maxWinStreak, maxLossStreak, winStreak, lossStreak] = [0, 0, 0, 0];
-    for (let b of battleList) {
-        if (b.Win) {
-            winStreak += 1;
-            maxWinStreak = Math.max(maxWinStreak, winStreak);
-            lossStreak = 0;
-        }
-        else {
-            winStreak = 0;
-            lossStreak += 1;
-            maxLossStreak = Math.max(maxLossStreak, lossStreak);
-        }
-    }
-    return {
-        first_pick_count: fpStats.subsetLength,
-        second_pick_count: spStats.subsetLength,
-        first_pick_rate: fpStats.frequency,
-        second_pick_rate: spStats.frequency,
-        first_pick_winrate: fpStats.winRate,
-        second_pick_winrate: spStats.winRate,
-        total_winrate: winRate,
-        total_battles: totalBattles,
-        total_wins: fpStats.wins + spStats.wins,
-        max_win_streak: maxWinStreak,
-        max_loss_streak: maxLossStreak,
-        avg_ppg: avgPPG,
-        avg_turns: avgTurns,
-        avg_time: avgTimeStr,
-        max_turns: maxTurns,
-        max_time: maxTimeStr,
-        first_turn_games: totalFirstTurnGames,
-        first_turn_rate: totalBattles
-            ? toPercent(totalFirstTurnGames / totalBattles)
-            : NA,
-    };
-}
-function getPerformanceStats(battlesList) {
-    const perfStatsContainer = {
-        servers: [],
-        leagues: [],
-    };
-    const totalBattles = battlesList.length;
-    const servers = Object.values(_references_ts__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR);
-    const leagues = Object.values(_references_ts__WEBPACK_IMPORTED_MODULE_1__.LEAGUE_MAP);
-    const subsetFilters = [
-        ...servers.map((server) => [
-            `Server: ${server}`,
-            (b) => b["P2 Server"] === server,
-        ]),
-        ...leagues.map((league) => [
-            `League: ${league}`,
-            (b) => b["P2 League"] === league,
-        ]),
-    ];
-    for (const [label, subsetFilter] of subsetFilters) {
-        const subset = battlesList.filter(subsetFilter);
-        const count = subset.length;
-        if (count === 0)
-            continue;
-        const subsetStats = computeGenericStats(subset, totalBattles);
-        const firstPickGames = subset.filter((b) => b["First Pick"]);
-        const fpWins = firstPickGames.reduce((acc, b) => acc + +b.Win, 0);
-        const secondPickGames = subset.filter((b) => !b["First Pick"]);
-        const spWins = secondPickGames.reduce((acc, b) => acc + +b.Win, 0);
-        const targetList = label.toLowerCase().includes("server")
-            ? perfStatsContainer.servers
-            : perfStatsContainer.leagues;
-        targetList.push({
-            label,
-            count,
-            wins: subsetStats.wins,
-            win_rate: subsetStats.winRate,
-            frequency: subsetStats.frequency,
-            "+/-": subsetStats.plusMinus,
-            fp_games: firstPickGames.length,
-            sp_games: secondPickGames.length,
-            fp_wr: firstPickGames.length > 0
-                ? toPercent(fpWins / firstPickGames.length)
-                : "N/A",
-            sp_wr: secondPickGames.length > 0
-                ? toPercent(spWins / secondPickGames.length)
-                : "N/A",
-        });
-    }
-    return [
-        ...perfStatsContainer.servers,
-        ...perfStatsContainer.leagues.slice(-4), // only show highest 4 leagues the player has played against
-    ];
-}
-let StatsBuilder = {
-    getHeroStats,
-    getFirstPickStats,
-    getPrebanStats,
-    getPerformanceStats,
-    getGeneralStats,
-    computeGenericStats,
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StatsBuilder);
-
-
-/***/ }),
-
 /***/ "./static/assets/js/e7/user-manager.ts":
 /*!*********************************************!*\
   !*** ./static/assets/js/e7/user-manager.ts ***!
@@ -4189,7 +5768,7 @@ let UserManager = {
     },
     getUser: async function () {
         const user = await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].get(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
-        await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].setTimestampNow(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
+        await _cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].setTimeoutDataNow(_cache_manager_ts__WEBPACK_IMPORTED_MODULE_1__["default"].Keys.USER);
         return user;
     },
     clearUserData: async function () {
@@ -5355,17 +6934,21 @@ var PageUtils = {
 
 /***/ }),
 
-/***/ "./static/assets/js/pages/test.js":
-/*!****************************************!*\
-  !*** ./static/assets/js/pages/test.js ***!
-  \****************************************/
+/***/ "./static/assets/js/pages/search.js":
+/*!******************************************!*\
+  !*** ./static/assets/js/pages/search.js ***!
+  \******************************************/
 /***/ ((__webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _content_manager_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../content-manager.ts */ "./static/assets/js/content-manager.ts");
-/* harmony import */ var _tests_run_tests_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../tests/run-tests.ts */ "./static/assets/js/tests/run-tests.ts");
-/* harmony import */ var _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-utilities/nav-bar-utils.ts */ "./static/assets/js/pages/page-utilities/nav-bar-utils.ts");
+/* harmony import */ var _e7_searcher_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/searcher.ts */ "./static/assets/js/e7/searcher.ts");
+/* harmony import */ var _data_table_utils_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../data-table-utils.ts */ "./static/assets/js/data-table-utils.ts");
+/* harmony import */ var _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-utilities/page-utils.js */ "./static/assets/js/pages/page-utilities/page-utils.js");
+/* harmony import */ var _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./page-utilities/nav-bar-utils.ts */ "./static/assets/js/pages/page-utilities/nav-bar-utils.ts");
+/* harmony import */ var _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./page-utilities/doc-element-references.ts */ "./static/assets/js/pages/page-utilities/doc-element-references.ts");
+/* harmony import */ var _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../e7/user-manager.ts */ "./static/assets/js/e7/user-manager.ts");
+/* harmony import */ var _orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./orchestration/inter-page-manager.ts */ "./static/assets/js/pages/orchestration/inter-page-manager.ts");
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -5374,28 +6957,154 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
-// Must upload test data before running tests
+
+
+
+var SEARCH_TABLE_ID = "search-table";
+var searcher = new _e7_searcher_ts__WEBPACK_IMPORTED_MODULE_0__.Searcher();
+var SEARCH_TABLE_COLUMNS = ["Name", "ID", "Search Score", "Raw Search Result"];
+var MAX_SEARCH_RESULTS = 5000;
+function handleClick(_x) {
+  return _handleClick.apply(this, arguments);
+}
+function _handleClick() {
+  _handleClick = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(rowData) {
+    var item, user;
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
+        case 0:
+          console.log("Clicked row:", rowData);
+          item = JSON.parse(rowData["Raw Search Result"]);
+          if (item.world_code) {
+            _context3.n = 1;
+            break;
+          }
+          console.log("Ignoring click on item with no world code:", item);
+          return _context3.a(2);
+        case 1:
+          _context3.n = 2;
+          return _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_5__["default"].findUser({
+            id: item.id,
+            world_code: item.world_code
+          });
+        case 2:
+          user = _context3.v;
+          if (!(user === null)) {
+            _context3.n = 3;
+            break;
+          }
+          throw new Error("User not found:", item);
+        case 3:
+          _context3.n = 4;
+          return _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_5__["default"].clearUserData();
+        case 4:
+          _context3.n = 5;
+          return _e7_user_manager_ts__WEBPACK_IMPORTED_MODULE_5__["default"].setUser(user);
+        case 5:
+          _orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_6__["default"].pushAction({
+            action: _orchestration_inter_page_manager_ts__WEBPACK_IMPORTED_MODULE_6__["default"].ACTIONS.QUERY_USER
+          });
+          _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_3__.NavBarUtils.navToHome();
+        case 6:
+          return _context3.a(2);
+      }
+    }, _callee3);
+  }));
+  return _handleClick.apply(this, arguments);
+}
+function initializeTable() {
+  var table = $("#".concat(SEARCH_TABLE_ID)).DataTable({
+    layout: {},
+    language: {},
+    searching: false,
+    order: [[2, "asc"]],
+    // Sort by Date/Time desc by default
+    columnDefs: [{
+      targets: "_all",
+      className: "nowrap"
+    }],
+    buttons: {},
+    pageLength: 50,
+    scrollY: "200px",
+    deferRender: true,
+    scroller: true,
+    scrollCollapse: false,
+    columns: Object.values(SEARCH_TABLE_COLUMNS).map(function (col) {
+      return {
+        data: col
+      };
+    })
+  });
+  $("#".concat(SEARCH_TABLE_ID, " tbody")).on("click", "tr", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+    var rowData;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          rowData = table.row(this).data();
+          _context.n = 1;
+          return handleClick(rowData);
+        case 1:
+          return _context.a(2);
+      }
+    }, _callee, this);
+  })));
+}
+function parseTableData(searchElement) {
+  return {
+    Name: searchElement.item.name,
+    ID: searchElement.item.id || searchElement.item.code,
+    "Search Score": searchElement.score.toFixed(4),
+    "Raw Search Result": JSON.stringify(searchElement.item)
+  };
+}
+function addSearchListener() {
+  var searchForm = _page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_4__["default"].SEARCH_PAGE.SEARCH_FORM;
+  searchForm.addEventListener("submit", /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(event) {
+      var data, searchTerm, domain, results, tableData;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            event.preventDefault();
+            data = new FormData(searchForm);
+            searchTerm = data.get("searchTerm");
+            domain = data.get("searchDomain");
+            _context2.n = 1;
+            return searcher.search(domain, searchTerm);
+          case 1:
+            results = _context2.v;
+            console.log("Search results:", results);
+            tableData = results.map(parseTableData);
+            tableData = tableData.slice(0, MAX_SEARCH_RESULTS);
+            _data_table_utils_ts__WEBPACK_IMPORTED_MODULE_1__["default"].replaceData(SEARCH_TABLE_ID, tableData);
+          case 2:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
+}
 function main() {
   return _main.apply(this, arguments);
 }
 function _main() {
-  _main = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-    return _regenerator().w(function (_context) {
-      while (1) switch (_context.n) {
+  _main = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
         case 0:
-          console.log("test page loaded");
-          _context.n = 1;
-          return _content_manager_ts__WEBPACK_IMPORTED_MODULE_0__.ContentManager.ClientCache.clearUserLists();
+          _context4.n = 1;
+          return _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_3__.NavBarUtils.initialize();
         case 1:
-          _context.n = 2;
-          return _page_utilities_nav_bar_utils_ts__WEBPACK_IMPORTED_MODULE_2__.NavBarUtils.initialize();
+          initializeTable();
+          addSearchListener();
+          _page_utilities_page_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].setVisibility(_page_utilities_doc_element_references_ts__WEBPACK_IMPORTED_MODULE_4__["default"].BODY_FOOTER_CONTAINER, true);
         case 2:
-          _context.n = 3;
-          return (0,_tests_run_tests_ts__WEBPACK_IMPORTED_MODULE_1__.runTests)();
-        case 3:
-          return _context.a(2);
+          return _context4.a(2);
       }
-    }, _callee);
+    }, _callee4);
   }));
   return _main.apply(this, arguments);
 }
@@ -5426,692 +7135,6 @@ function strArrToCountMap(strArr) {
         return acc;
     }, acc);
 }
-
-
-/***/ }),
-
-/***/ "./static/assets/js/tests/run-tests.ts":
-/*!*********************************************!*\
-  !*** ./static/assets/js/tests/run-tests.ts ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   runFilterBehaviorTests: () => (/* binding */ runFilterBehaviorTests),
-/* harmony export */   runFilterParseTests: () => (/* binding */ runFilterParseTests),
-/* harmony export */   runStatsTests: () => (/* binding */ runStatsTests),
-/* harmony export */   runTests: () => (/* binding */ runTests)
-/* harmony export */ });
-/* harmony import */ var _content_manager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../content-manager */ "./static/assets/js/content-manager.ts");
-/* harmony import */ var _e7_filter_parsing_filter_parser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../e7/filter-parsing/filter-parser */ "./static/assets/js/e7/filter-parsing/filter-parser.ts");
-/* harmony import */ var _test_definitions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./test-definitions */ "./static/assets/js/tests/test-definitions.ts");
-/* harmony import */ var _test_struct__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./test-struct */ "./static/assets/js/tests/test-struct.ts");
-/* harmony import */ var _console_logging__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../console-logging */ "./static/assets/js/console-logging.ts");
-
-
-
-
-
-const bar = () => console.log("------------------------------------------------");
-async function runEvalTest(test, battles, heroDicts) {
-    _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.bindCapture(test.name);
-    const testResult = await performTest(test, battles, heroDicts);
-    _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.unbindCapture();
-    if (testResult) {
-        console.log(`Test: "${test.name}" Passed`);
-    }
-    else {
-        bar();
-        console.log("Captured Logs:");
-        const captures = _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.captures[test.name];
-        for (const capture of captures) {
-            console.log(...capture);
-        }
-        bar();
-    }
-}
-async function performTest(test, battles, heroDicts) {
-    try {
-        const parser = await _e7_filter_parsing_filter_parser__WEBPACK_IMPORTED_MODULE_1__.FilterParser.fromFilterStr(test.filterStr, heroDicts);
-        const filters = parser.getFilters();
-        const filteredBattles = await _content_manager__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.applyFilters(battles, filters);
-        const result = test.eval(battles, filteredBattles);
-        if (Array.isArray(result)) {
-            const [filterResult, scriptResult] = result;
-            if (!(filterResult === scriptResult)) {
-                console.error(`Test: "${test.name}" Failed; Filter Result: ${filterResult}; Script Result: ${scriptResult}; `, battles, filteredBattles);
-                return false;
-            }
-        }
-        else if (typeof result === "boolean") {
-            if (!result) {
-                console.error(`Test: "${test.name}" Failed; `, battles, filteredBattles);
-                return false;
-            }
-        }
-        else if (result === _test_struct__WEBPACK_IMPORTED_MODULE_3__.NOT_IMPLEMENTED) {
-            console.warn(`Test: "${test.name}" Not Implemented; `);
-            return false;
-        }
-        return true;
-    }
-    catch (e) {
-        console.error(`Test: "${test.name}" Failed: `, e);
-        return false;
-    }
-}
-async function runParseTest(test, battles, heroDicts) {
-    _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.bindCategory(_console_logging__WEBPACK_IMPORTED_MODULE_4__.LOG_CATEGORIES.TEST);
-    try {
-        const parser = await _e7_filter_parsing_filter_parser__WEBPACK_IMPORTED_MODULE_1__.FilterParser.fromFilterStr(test.filterStr, heroDicts);
-        const filters = parser.getFilters();
-        await _content_manager__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.applyFilters(battles, filters);
-    }
-    catch (e) {
-        console.error(`Test: "${test.name}" Failed: `, e);
-        return;
-    }
-    _console_logging__WEBPACK_IMPORTED_MODULE_4__.CONSOLE_LOGGER.unbindCategory();
-    console.log(`Test: "${test.name}" Passed`);
-}
-async function runStatsTests(battles, heroDicts) {
-    console.log("\n=======RUNNING STATS TESTS=======\n");
-    const battlesList = Object.values(battles);
-    for (const test of _test_definitions__WEBPACK_IMPORTED_MODULE_2__.STATS_TESTS) {
-        await runEvalTest(test, battlesList, heroDicts);
-    }
-}
-async function runFilterBehaviorTests(battles, heroDicts) {
-    console.log("\n=======RUNNING FILTER BEHAVIOR TESTS=======\n");
-    const battlesList = Object.values(battles);
-    for (const test of _test_definitions__WEBPACK_IMPORTED_MODULE_2__.FilterTests) {
-        await runEvalTest(test, battlesList, heroDicts);
-    }
-}
-async function runFilterParseTests(battles, heroDicts) {
-    console.log("\n=======RUNNING FILTER PARSE TESTS=======\n");
-    const battlesList = Object.values(battles);
-    for (const test of _test_definitions__WEBPACK_IMPORTED_MODULE_2__.FilterTests) {
-        await runParseTest(test, battlesList, heroDicts);
-    }
-}
-async function runTests() {
-    const battles = await _content_manager__WEBPACK_IMPORTED_MODULE_0__.ContentManager.BattleManager.getBattles();
-    if (!battles) {
-        console.error("No battles found for stats tests");
-        return;
-    }
-    const battlesList = Object.values(battles);
-    const heroDicts = await _content_manager__WEBPACK_IMPORTED_MODULE_0__.ContentManager.HeroManager.getHeroDicts();
-    await runFilterParseTests(battlesList, heroDicts);
-    await runFilterBehaviorTests(battlesList, heroDicts);
-    await runStatsTests(battlesList, heroDicts);
-}
-
-
-/***/ }),
-
-/***/ "./static/assets/js/tests/test-definitions.ts":
-/*!****************************************************!*\
-  !*** ./static/assets/js/tests/test-definitions.ts ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   FilterTests: () => (/* binding */ FilterTests),
-/* harmony export */   STATS_TESTS: () => (/* binding */ STATS_TESTS)
-/* harmony export */ });
-/* harmony import */ var _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../e7/battle-manager */ "./static/assets/js/e7/battle-manager.ts");
-/* harmony import */ var _e7_references__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../e7/references */ "./static/assets/js/e7/references.ts");
-/* harmony import */ var _e7_stats_builder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../e7/stats-builder */ "./static/assets/js/e7/stats-builder.ts");
-
-
-
-const genStats = _e7_stats_builder__WEBPACK_IMPORTED_MODULE_2__["default"].computeGenericStats;
-const compWins = (battles) => battles.reduce((acc, b) => acc + +b["Win"], 0);
-const compWinrate = (battles) => compWins(battles) / battles.length;
-const compPlusMinus = (battles) => 2 * compWins(battles) - battles.length;
-function getSeqNumArray(battles) {
-    return battles.map((b) => Number(b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.SEQ_NUM]));
-}
-function getSeqNumSet(battles) {
-    return new Set(getSeqNumArray(battles));
-}
-function arraysEqual(a, b) {
-    a.sort();
-    b.sort();
-    if (a === b)
-        return true;
-    if (a.length !== b.length)
-        return false;
-    for (let i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) {
-            console.log(`Failed at index ${i}: a: ${a[i]}, b: ${b[i]}`);
-            return false;
-        }
-        ;
-    }
-    return true;
-}
-function setsEqual(setA, setB) {
-    if (setA.size !== setB.size)
-        return false;
-    for (const val of setA) {
-        if (!setB.has(val))
-            return false;
-    }
-    return true;
-}
-function arrToCounts(arr) {
-    const counts = {};
-    for (const val of arr) {
-        const key = val.toString();
-        counts[key] = (counts[key] || 0) + 1;
-    }
-    return counts;
-}
-function isArrCountSubset(iterA, iterB) {
-    const arrayA = Array.from(iterA);
-    const arrayB = Array.from(iterB);
-    const countsA = arrToCounts(arrayA);
-    const countsB = arrToCounts(arrayB);
-    for (const key in countsA) {
-        if (!(key in countsB))
-            return false;
-        if (countsB[key] < countsA[key])
-            return false;
-    }
-    return true;
-}
-function filterColByVals(battles, column, values, keep = true) {
-    return battles.filter((b) => keep ? values.includes(b[column]) : !values.includes(b[column]));
-}
-function filterColByFn(battles, column, fn, keep = true) {
-    return battles.filter((b) => keep ? fn(b[column]) : !fn(b[column]));
-}
-function removeBattles(battles, seqNums) {
-    return battles.filter((b) => !seqNums.has(Number(b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.SEQ_NUM])));
-}
-function filterCR({ battles, crEvalFn, heroName }) {
-    return battles.filter((b) => {
-        const crBar = b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.CR_BAR];
-        const entry = crBar.find((entry) => entry[0] === heroName);
-        if (!entry)
-            return false;
-        return crEvalFn(entry[1]);
-    });
-}
-function filterDates(battles, dates) {
-    return battles.filter((b) => dates.includes(b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME].slice(0, 10)));
-}
-function filterPick(battles, { heroNames, pick, isP1 }) {
-    const pickCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS;
-    return battles.filter((b) => {
-        const hero = b[pickCol][pick - 1];
-        return heroNames.includes(hero);
-    });
-}
-function filterPicks({ battles, heroName, isP1 }) {
-    const pickCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS;
-    return battles.filter((b) => {
-        return b[pickCol].includes(heroName);
-    });
-}
-function locateHeroIndex({ battle, heroName, isP1 }) {
-    const pickCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PICKS;
-    return battle[pickCol].indexOf(heroName);
-}
-function filterEquipment({ battles, heroName, targetEquipVec, isP1 }) {
-    const equipCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_EQUIPMENT : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_EQUIPMENT;
-    return battles.filter((b) => {
-        const equipArr = b[equipCol];
-        const index = locateHeroIndex({ battle: b, heroName, isP1 });
-        if (index === -1)
-            return false;
-        return isArrCountSubset(targetEquipVec, equipArr[index]);
-    });
-}
-function filterArtifact({ battles, heroName, artifactNames, isP1 }) {
-    const artCol = isP1 ? _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_ARTIFACTS : _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_ARTIFACTS;
-    return battles.filter((b) => {
-        const artArr = b[artCol];
-        const index = locateHeroIndex({ battle: b, heroName, isP1 });
-        if (index === -1)
-            return false;
-        const arti = artArr[index];
-        return artifactNames.includes(arti);
-    });
-}
-function mergeBattles(battles1, battles2) {
-    return [...battles1, ...battles2];
-}
-const FilterTests = [
-    // Base Filters - Boolean
-    {
-        name: "isWinTrue",
-        filterStr: "is-win = true;",
-        eval: (battles, filteredBattles) => {
-            const isWinTrue = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, (v) => v === true);
-            return setsEqual(getSeqNumSet(isWinTrue), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "notFirstPick",
-        filterStr: "is-first-pick != false;",
-        eval: (battles, filteredBattles) => {
-            const notFirstPick = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK, (v) => v !== false);
-            return setsEqual(getSeqNumSet(notFirstPick), getSeqNumSet(filteredBattles));
-        }
-    },
-    // Base Filters - Integer
-    {
-        name: "highVictoryPoints",
-        filterStr: "victory-points > 2500;",
-        eval: (battles, filteredBattles) => {
-            const highVictoryPoints = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS, (v) => v > 2500);
-            return setsEqual(getSeqNumSet(highVictoryPoints), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "shortBattle",
-        filterStr: "turns <= 10;",
-        eval: (battles, filteredBattles) => {
-            const shortBattle = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.TURNS, (v) => v <= 10);
-            return setsEqual(getSeqNumSet(shortBattle), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "negativePointGain",
-        filterStr: "point-gain < 0;",
-        eval: (battles, filteredBattles) => {
-            const negativePointGain = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN, (v) => v < 0);
-            return setsEqual(getSeqNumSet(negativePointGain), getSeqNumSet(filteredBattles));
-        },
-    },
-    // Base Filters - Date
-    {
-        name: "after2025Aug",
-        filterStr: "date >= 2025-08-01;",
-        eval: (battles, filteredBattles) => {
-            const after2025Aug = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME, (dt) => dt.slice(0, 10) >= "2025-08-01");
-            return setsEqual(getSeqNumSet(after2025Aug), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "july2025Range",
-        filterStr: "date in 2025-07-01...2025-07-31;",
-        eval: (battles, filteredBattles) => {
-            const july2025Range = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME, (dt) => dt.slice(0, 10) >= "2025-07-01" && dt.slice(0, 10) < "2025-07-31");
-            console.log(july2025Range);
-            return setsEqual(getSeqNumSet(july2025Range), getSeqNumSet(filteredBattles));
-        }
-    },
-    // Base Filters - String
-    {
-        name: "p2LeagueChampion",
-        filterStr: `p2.league = "champion";`,
-        eval: (battles, filteredBattles) => {
-            const p2Champion = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE, (league) => league === "Champion");
-            return setsEqual(getSeqNumSet(p2Champion), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "notZioFirstTurn",
-        filterStr: `first-turn-hero != 'Zio';`,
-        eval: (battles, filteredBattles) => {
-            const notZioFirstTurn = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN_HERO, (v) => v === "Zio", false);
-            return setsEqual(getSeqNumSet(notZioFirstTurn), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "p1serverGlobal",
-        filterStr: `p1.server = "Global";`,
-        eval: (battles, filteredBattles) => {
-            const p1Global = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_SERVER, (v) => v === "Global");
-            return setsEqual(getSeqNumSet(p1Global), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "p2serverGlobal",
-        filterStr: `p2.server = "Global";`,
-        eval: (battles, filteredBattles) => {
-            const p2Global = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, (v) => v === "Global");
-            return setsEqual(getSeqNumSet(p2Global), getSeqNumSet(filteredBattles));
-        }
-    },
-    // Base Filters - Set Membership
-    {
-        name: "rinakInPrebans",
-        filterStr: `"Rinak" in prebans;`,
-        eval: (battles, filteredBattles) => {
-            const rinakPreban1 = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PREBANS, (v) => v.includes("Rinak"));
-            const rinakPreban2 = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_PREBANS, (v) => v.includes("Rinak"));
-            const subset = mergeBattles(rinakPreban1, rinakPreban2);
-            return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "peiraNotInP2Picks",
-        filterStr: `"Lone Wolf Peira" !in p2.picks;`,
-        eval: (battles, filteredBattles) => {
-            const peiraPick = filterPicks({ battles, heroName: "Lone Wolf Peira", isP1: false });
-            const subset = removeBattles(battles, getSeqNumSet(peiraPick));
-            return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "pick1InSet",
-        filterStr: `p1.pick1 in { "Lone Wolf Peira", "Boss Arunka"};`,
-        eval: (battles, filteredBattles) => {
-            const subset = filterPick(battles, {
-                heroNames: ["Lone Wolf Peira", "Boss Arunka"],
-                pick: 1,
-                isP1: true,
-            });
-            return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
-        },
-    },
-    // Base Filters - Range
-    {
-        name: "victoryPointsRange",
-        filterStr: "victory-points in 2400...=2600;",
-        eval: (battles, filteredBattles) => {
-            const victoryPoints = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS, (v) => v >= 2400 && v <= 2600);
-            return setsEqual(getSeqNumSet(victoryPoints), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "dateNotInRange",
-        filterStr: "date !in 2025-07-15...=2025-07-31;",
-        eval: (battles, filtered) => {
-            const inRange = filterColByFn(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.DATE_TIME, (d) => !(d.slice(0, 10) >= "2025-07-15" && d.slice(0, 10) <= "2025-07-31"));
-            return setsEqual(getSeqNumSet(inRange), getSeqNumSet(filtered));
-        },
-    },
-    // Clause Functions
-    {
-        name: "andExample",
-        filterStr: `AND(is-win = true, p2.league = "Champion", victory-points > 2400);`,
-        eval: (battles, filtered) => {
-            const wins = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true]);
-            const winChamp = filterColByVals(wins, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE, ["Champion"]);
-            const victoryPoints = filterColByFn(winChamp, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS, (vp) => vp > 2400);
-            return setsEqual(getSeqNumSet(victoryPoints), getSeqNumSet(filtered));
-        }
-    },
-    {
-        name: "orExample",
-        filterStr: `OR(p2.server = "Global", p2.server = "Asia", p2.server = "Europe");`,
-        eval: (battles, filtered) => {
-            const globalAsiaEurope = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, ["Global", "Asia", "Europe"]);
-            return setsEqual(getSeqNumSet(globalAsiaEurope), getSeqNumSet(filtered));
-        }
-    },
-    {
-        name: "xorExample",
-        filterStr: `XOR(is-first-pick = true, is-first-turn = true);`,
-        eval: (battles, filtered) => {
-            const firstPick = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_PICK, [true]);
-            const firstTurn = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN, [true]);
-            const firstPickSet = getSeqNumSet(firstPick);
-            const firstTurnSet = getSeqNumSet(firstTurn);
-            const xorSet = firstPickSet.difference(firstTurnSet).union(firstTurnSet.difference(firstPickSet));
-            return setsEqual(xorSet, getSeqNumSet(filtered));
-        }
-    },
-    {
-        name: "notExample",
-        filterStr: `NOT(is-win = true);`,
-        eval: (battles, filtered) => {
-            const losses = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true], false);
-            return setsEqual(getSeqNumSet(losses), getSeqNumSet(filtered));
-        },
-    },
-    {
-        name: "notPickExample",
-        filterStr: `NOT(p1.pick1 = "Arbiter Vildred");`,
-        eval: (battles, filtered) => {
-            const p1Vildred = filterPick(battles, { pick: 1, heroNames: ["Arbiter Vildred"], isP1: true });
-            const negated = removeBattles(battles, getSeqNumSet(p1Vildred));
-            return setsEqual(getSeqNumSet(negated), getSeqNumSet(filtered));
-        },
-    },
-    // Nested Clauses
-    {
-        name: "nestedAndOr",
-        filterStr: `AND(OR(is-win = true, point-gain > 0), NOT(p2.league = "challenger"));`,
-        eval: (battles, filteredBattles) => {
-            const p2NotChallenger = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE, [_e7_references__WEBPACK_IMPORTED_MODULE_1__.LEAGUE_MAP.challenger], false);
-            const p2NotChallengerWin = filterColByVals(p2NotChallenger, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true]);
-            const p2NotChallengerGain = filterColByFn(p2NotChallenger, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.POINT_GAIN, (v) => v > 0);
-            const merged = mergeBattles(p2NotChallengerWin, p2NotChallengerGain);
-            return setsEqual(getSeqNumSet(merged), getSeqNumSet(filteredBattles));
-        }
-    },
-    // Direct Functions
-    {
-        name: "equipmentExample1",
-        filterStr: `p1.equipment("Arbiter Vildred", {Torrent, Torrent, Immunity});`,
-        eval: (battles, filteredBattles) => {
-            const p1EquipmentArbiterVildred = filterEquipment({ battles, heroName: "Arbiter Vildred", targetEquipVec: ["Torrent", "Torrent", "Immunity"], isP1: true });
-            console.log(p1EquipmentArbiterVildred);
-            return setsEqual(getSeqNumSet(p1EquipmentArbiterVildred), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "equipmentExample2",
-        filterStr: `p1.equipment("Arbiter Vildred", {Torrent, Torrent, Torrent});`,
-        eval: (battles, filteredBattles) => {
-            const p1EquipmentArbiterVildred = filterEquipment({ battles, heroName: "Arbiter Vildred", targetEquipVec: ["Torrent", "Torrent", "Torrent"], isP1: true });
-            return setsEqual(getSeqNumSet(p1EquipmentArbiterVildred), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "equipmentExampleBelian",
-        filterStr: `p1.equipment("Belian", {Counter, Immunity,});`,
-        eval: (battles, filteredBattles) => {
-            const subset = filterEquipment({ battles, heroName: "Belian", targetEquipVec: ["Counter", "Immunity"], isP1: true });
-            return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "equipmentSingle",
-        filterStr: `p2.equipment("Lone Wolf Peira", "Speed");`,
-        eval: (battles, filteredBattles) => {
-            const p2EquipmentLoneWolfPeira = filterEquipment({ battles, heroName: "Lone Wolf Peira", targetEquipVec: ["Speed"], isP1: false });
-            return setsEqual(getSeqNumSet(p2EquipmentLoneWolfPeira), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "artifactSingle",
-        filterStr: `p1.artifact("Arbiter Vildred", "Alexa's Basket");`,
-        eval: (battles, filteredBattles) => {
-            const p1ArtifactArbiterVildred = filterArtifact({ battles, heroName: "Arbiter Vildred", artifactNames: ["Alexa's Basket"], isP1: true });
-            return setsEqual(getSeqNumSet(p1ArtifactArbiterVildred), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "artifactSet",
-        filterStr: `p2.artifact("Abyssal Yufine", {"Elbris Ritual Sword", "Aurius"});`,
-        eval: (battles, filteredBattles) => {
-            const p2ArtifactAbyssalYufine = filterArtifact({ battles, heroName: "Abyssal Yufine", artifactNames: ["Elbris Ritual Sword", "Aurius"], isP1: false });
-            console.log(p2ArtifactAbyssalYufine);
-            return setsEqual(getSeqNumSet(p2ArtifactAbyssalYufine), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "crEqual",
-        filterStr: `p2.cr("Harsetti" = 100);`,
-        eval: (battles, filteredBattles) => {
-            const crHarsetti = filterCR({ battles, crEvalFn: (cr) => cr === 100, heroName: "Harsetti" });
-            const p2crHarsetti = filterPicks({ battles: crHarsetti, heroName: "Harsetti", isP1: false });
-            return setsEqual(getSeqNumSet(p2crHarsetti), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "crGreater",
-        filterStr: `p1.cr("Amid", > , 95);`,
-        eval: (battles, filteredBattles) => {
-            const crAmid = filterCR({ battles, crEvalFn: (cr) => cr > 95, heroName: "Amid" });
-            const p1crAmid = filterPicks({ battles: crAmid, heroName: "Amid", isP1: true });
-            return setsEqual(getSeqNumSet(p1crAmid), getSeqNumSet(filteredBattles));
-        }
-    },
-    // Global Filters
-    {
-        name: "last100",
-        filterStr: "last-N(100);",
-        eval: (battles, filteredBattles) => {
-            battles = structuredClone(battles);
-            battles = _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__["default"].sortBattlesList(battles, false);
-            filteredBattles = _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__["default"].sortBattlesList(filteredBattles, false);
-            const battlesTop100 = battles.slice(0, 100);
-            return setsEqual(getSeqNumSet(battlesTop100), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "last10",
-        filterStr: "last-N(10);",
-        eval: (battles, filteredBattles) => {
-            battles = structuredClone(battles);
-            battles = _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__["default"].sortBattlesList(battles, false);
-            const battlesTop10 = battles.slice(0, 10);
-            console.log(battlesTop10);
-            return setsEqual(getSeqNumSet(battlesTop10), getSeqNumSet(filteredBattles));
-        },
-    },
-    // Pure Syntax Examples
-    {
-        name: "semicolonChain",
-        filterStr: `is-win = true; p2.league = "Champion"; last-N(100);`,
-        eval: (battles, filteredBattles) => {
-            battles = _e7_battle_manager__WEBPACK_IMPORTED_MODULE_0__["default"].sortBattlesList(battles, false);
-            const battlesTop100 = battles.slice(0, 100);
-            const champSubset = filterColByVals(battlesTop100, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_LEAGUE, [_e7_references__WEBPACK_IMPORTED_MODULE_1__.LEAGUE_MAP.champion]);
-            const winSubset = filterColByVals(champSubset, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true]);
-            return setsEqual(getSeqNumSet(winSubset), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "commasInOr",
-        filterStr: `OR(p2.server = "Global", p2.server = "Asia");`,
-        eval: (battles, filteredBattles) => {
-            const globalAsia = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, ["Global", "Asia"]);
-            return setsEqual(getSeqNumSet(globalAsia), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "setWithStrings",
-        filterStr: `p1.pick3 in {Zio, "Amid", "Lionheart Cermia"};`,
-        eval: (battles, filteredbattles) => {
-            const zioAmidLion = filterPick(battles, { heroNames: ["Zio", "Amid", "Lionheart Cermia"], pick: 3, isP1: true });
-            return setsEqual(getSeqNumSet(zioAmidLion), getSeqNumSet(filteredbattles));
-        },
-    },
-    {
-        name: "parenthesesNot",
-        filterStr: `NOT(is-first-turn = true);`,
-        eval: (battles, filteredBattles) => {
-            const notFirstTurn = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.FIRST_TURN, [false]);
-            return setsEqual(getSeqNumSet(notFirstTurn), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "nestedParentheses",
-        filterStr: `AND(is-win = true, OR(p2.server = "Global", p2.server = "Korea"));`,
-        eval: (battles, filteredBattles) => {
-            const wins = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.WIN, [true]);
-            const globalWins = filterColByVals(wins, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, ["Global"]);
-            const koreaWins = filterColByVals(wins, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER, ["Korea"]);
-            const merged = mergeBattles(globalWins, koreaWins);
-            return setsEqual(getSeqNumSet(merged), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "braceHeroSet",
-        filterStr: `p1.pick1 in {"Abyssal Yufine", "New Moon luna"};`,
-        eval: (battles, filteredBattles) => {
-            const yufineLuna = filterPick(battles, { heroNames: ["Abyssal Yufine", "New Moon Luna"], pick: 1, isP1: true });
-            console.log(yufineLuna);
-            return setsEqual(getSeqNumSet(yufineLuna), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "braceVictoryPoints",
-        filterStr: `victory-points in {1646, 1668};`,
-        eval: (battles, filteredBattles) => {
-            const victoryPoints = filterColByVals(battles, _e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_POINTS, [1646, 1668]);
-            return setsEqual(getSeqNumSet(victoryPoints), getSeqNumSet(filteredBattles));
-        }
-    },
-    {
-        name: "braceDateSet",
-        filterStr: `date in {2025-01-01, 2025-01-05, 2025-01-07};`,
-        eval: (battles, filteredBattles) => {
-            const dates = filterDates(battles, ["2025-01-01", "2025-01-05", "2025-01-07"]);
-            return setsEqual(getSeqNumSet(dates), getSeqNumSet(filteredBattles));
-        },
-    },
-    {
-        name: "trailingSetComma",
-        filterStr: `p1.pick1 in { "Lone Wolf Peira", "Boss Arunka", };`,
-        eval: (battles, fitleredBattles) => {
-            const peiraArunka = filterPick(battles, { heroNames: ["Lone Wolf Peira", "Boss Arunka"], pick: 1, isP1: true });
-            return setsEqual(getSeqNumSet(peiraArunka), getSeqNumSet(fitleredBattles));
-        },
-    },
-];
-const STATS_TESTS = [
-    {
-        name: "Total Win Rate",
-        filterStr: "is-win = true;",
-        eval: (battles, filteredBattles) => {
-            const filterResult = compWinrate(filteredBattles);
-            const stats = genStats(battles, filteredBattles.length);
-            const scriptResult = stats.wins / filteredBattles.length;
-            return [filterResult, scriptResult];
-        }
-    },
-    {
-        name: "Global Server Win Rate",
-        filterStr: `p2.server = "Global"`,
-        eval: (battles, filteredBattles) => {
-            const filterResult = compWinrate(filteredBattles);
-            const globalBattles = battles.filter((b) => b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P2_SERVER] === _e7_references__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_TO_CLEAN_STR[_e7_references__WEBPACK_IMPORTED_MODULE_1__.WORLD_CODE_ENUM.GLOBAL]);
-            const stats = genStats(globalBattles, globalBattles.length);
-            const scriptResult = stats.wins / globalBattles.length;
-            return [filterResult, scriptResult];
-        }
-    },
-    {
-        name: "Boss Arunka +/-",
-        filterStr: `"Boss Arunka" in p1.picks;`,
-        eval: (battles, filteredBattles) => {
-            const filterResult = compPlusMinus(filteredBattles);
-            const bossArunkaBattles = battles.filter((b) => b[_e7_references__WEBPACK_IMPORTED_MODULE_1__.COLUMNS_MAP.P1_PICKS].includes("Boss Arunka"));
-            const stats = genStats(bossArunkaBattles, bossArunkaBattles.length);
-            const scriptResult = stats.plusMinus;
-            return [filterResult, scriptResult];
-        }
-    }
-];
-
-
-/***/ }),
-
-/***/ "./static/assets/js/tests/test-struct.ts":
-/*!***********************************************!*\
-  !*** ./static/assets/js/tests/test-struct.ts ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   NOT_IMPLEMENTED: () => (/* binding */ NOT_IMPLEMENTED)
-/* harmony export */ });
-const NOT_IMPLEMENTED = "~NotImplemented~";
 
 
 /***/ })
@@ -6253,8 +7276,8 @@ const NOT_IMPLEMENTED = "~NotImplemented~";
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module used 'module' so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./static/assets/js/pages/test.js");
+/******/ 	var __webpack_exports__ = __webpack_require__("./static/assets/js/pages/search.js");
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=test.ad3bcc0d87b7f5af6e76.bundle.js.map
+//# sourceMappingURL=search.e40e35073de3371ce67c.bundle.js.map
