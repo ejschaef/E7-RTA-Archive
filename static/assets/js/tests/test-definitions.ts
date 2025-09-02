@@ -3,6 +3,7 @@ import BattleManager from "../e7/battle-manager";
 import { BattleType, ColumnHeader, COLUMNS_MAP, LEAGUE_MAP, WORLD_CODE_ENUM, WORLD_CODE_TO_CLEAN_STR } from "../e7/references"
 import StatsBuilder from "../e7/stats-builder"
 import { NOT_IMPLEMENTED, Test } from "./test-struct";
+import { HeroDicts } from "../e7/hero-manager";
 
 
 const genStats = StatsBuilder.computeGenericStats;
@@ -146,6 +147,26 @@ function filterArtifact(
 		const arti = artArr[index];
 		return artifactNames.includes(arti);
 	})
+}
+
+function getCR(battle: BattleType, heroName: string): number | null {
+	const crEntry = battle[COLUMNS_MAP.CR_BAR].find((entry) => entry[0] === heroName);
+	return crEntry ? crEntry[1] : null;
+}
+
+function computeAvgCR(battles: BattleType[], heroName: string): string {
+	let totalCR = 0;
+	for (const b of battles) {
+		const cr = getCR(b, heroName);
+		if (cr === null) continue;
+		totalCR += cr;
+	}
+	return StatsBuilder.divideToPercentString(totalCR / 100, battles.length);
+}
+
+function computeFirstTurnRate(battles: BattleType[], heroName: string): string {
+	const firstTurns = battles.filter((b) => b[COLUMNS_MAP.FIRST_TURN_HERO] === heroName).length;
+	return StatsBuilder.divideToPercentString(firstTurns, battles.length);
 }
 
 function mergeBattles(battles1: BattleType[], battles2: BattleType[]): BattleType[] {
@@ -583,6 +604,20 @@ export const STATS_TESTS: Test[] = [
 		}
 	},
 	{
+		name: "Champion Opponent Second Pick Win Rate",
+		filterStr: `p2.league = "Champion"; is-win = true; is-first-pick = false`,
+		eval: (battles: BattleType[], filteredBattles: BattleType[]) => {
+			const champSubset = filterColByVals(battles, COLUMNS_MAP.P2_LEAGUE, [LEAGUE_MAP.champion]);
+			const champSubsetSecondPick = filterColByFn(champSubset, COLUMNS_MAP.FIRST_PICK, (isFirstPick) => !isFirstPick);
+			const filterResult = StatsBuilder.divideToPercentString(filteredBattles.length, champSubsetSecondPick.length);
+			const stats = StatsBuilder.getPerformanceStats(battles)
+			const champStats = stats.find((statsBundle) => statsBundle.label.toLowerCase().includes("champion"));
+			if (!champStats) return [filterResult, "Champ Stats not found"];
+			const scriptResult = champStats.sp_wr;
+			return [filterResult, scriptResult];
+		}
+	},
+	{
 		name: "Boss Arunka +/-",
 		filterStr: `"Boss Arunka" in p1.picks;`,
 		eval: (battles: BattleType[], filteredBattles: BattleType[]) => {
@@ -590,6 +625,168 @@ export const STATS_TESTS: Test[] = [
 			const bossArunkaBattles = battles.filter((b) => b[COLUMNS_MAP.P1_PICKS].includes("Boss Arunka"));
 			const stats = genStats(bossArunkaBattles, bossArunkaBattles.length);
 			const scriptResult = stats.plusMinus;
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Preban Harsetti",
+		filterStr: `"harsetti" in p1.prebans`,
+		eval: (battles: BattleType[], filteredBattles: BattleType[], heroDicts: HeroDicts) => {
+			const filterResult = compPlusMinus(filteredBattles);
+			const prebanStats = StatsBuilder.getPrebanStats(battles, heroDicts);
+			const harsettiPrebanStats = prebanStats.find((p) => p.preban.toLowerCase() === "harsetti");
+			let scriptResult: number;
+			if (!harsettiPrebanStats) {
+				scriptResult = 0; // player never prebanned Harsetti
+			}
+			else {
+				scriptResult = harsettiPrebanStats["+/-"];
+			}
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Preban Rinak Arunka",
+		filterStr: `"boss arunka" in p1.prebans; "rinak" in p1.prebans;`,
+		eval: (battles: BattleType[], filteredBattles: BattleType[], heroDicts: HeroDicts) => {
+			let filterResult = compPlusMinus(filteredBattles) + compWinrate(filteredBattles);
+			if (isNaN(filterResult)) filterResult = 0;
+			const prebanStats = StatsBuilder.getPrebanStats(battles, heroDicts);
+			const targetStats = prebanStats.find((p) => {
+				const preban = p.preban.toLowerCase();
+				return preban.includes("rinak") && preban.includes("boss arunka");
+			});
+			console.log("Got target stats:", targetStats);
+			let scriptResult: number;
+			if (!targetStats) {
+				scriptResult = 0;
+			}
+			else {
+				scriptResult = targetStats["+/-"] + targetStats.wins / targetStats.appearances;
+			}
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Success Rate New Moon Luna",
+		filterStr: `OR(
+						AND(
+							"New Moon Luna" in p1.picks,
+							is-win = true,
+						),
+						p2.postban = "New Moon Luna"
+					)
+					`,
+		eval(battles, filteredBattles) {
+			const newMoonLuna = filterPicks({
+				battles,
+				heroName: "New Moon Luna",
+				isP1: true
+			})
+			const filterResult = StatsBuilder.divideToPercentString(filteredBattles.length, newMoonLuna.length);
+			const stats = StatsBuilder.queryStats(newMoonLuna, battles.length, "New Moon Luna");
+			const scriptResult = stats["Success Rate"];
+			return [filterResult, scriptResult];
+		}
+	}, 
+	{
+		name: "CR Stats Lone Wolf Peira",
+		filterStr: `"lone wolf peira" in p1.picks; "lone wolf peira" != p2.postban;`,
+		eval(battles, filteredBattles) {
+			const filterResult = computeAvgCR(filteredBattles, "Lone Wolf Peira") + computeFirstTurnRate(filteredBattles, "Lone Wolf Peira");
+			const loneWolfPeira = filterPicks({
+				battles,
+				heroName: "Lone Wolf Peira",
+				isP1: true
+			})
+			const crStats = StatsBuilder.computeCRStats(loneWolfPeira, "Lone Wolf Peira");
+			const scriptResult = crStats.avgCR + crStats.firstTurnRate;
+			return [filterResult, scriptResult];
+		}
+
+	},
+	{
+		name: "Player CR Stats Zio",
+		filterStr: `"zio" in p1.picks; "zio" != p2.postban;`,
+		eval(battles, filteredBattles) {
+			const filterResult = computeAvgCR(filteredBattles, "Zio") + computeFirstTurnRate(filteredBattles, "Zio");
+			const zio = filterPicks({
+				battles,
+				heroName: "Zio",
+				isP1: true
+			})
+			const crStats = StatsBuilder.computeCRStats(zio, "Zio");
+			const scriptResult = crStats.avgCR + crStats.firstTurnRate;
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Enemy CR Stats Zio",
+		filterStr: `"zio" in p2.picks; "zio" != p1.postban;`,
+		eval(battles, filteredBattles) {
+			const filterResult = computeAvgCR(filteredBattles, "Zio") + computeFirstTurnRate(filteredBattles, "Zio");
+			const zio = filterPicks({
+				battles,
+				heroName: "Zio",
+				isP1: false
+			})
+			const crStats = StatsBuilder.computeCRStats(zio, "Zio");
+			const scriptResult = crStats.avgCR + crStats.firstTurnRate;
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Total Wins",
+		filterStr: `is-win = true;`,
+		eval(battles, filteredBattles) {
+			const generalStats = StatsBuilder.getGeneralStats(battles);
+			const scriptResult = generalStats.total_wins;
+			const filterResult = filteredBattles.length;
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Second Pick Winrate",
+		filterStr: `is-win = true; is-first-pick = false;`,
+		eval(battles, filteredBattles) {
+			const generalStats = StatsBuilder.getGeneralStats(battles);
+			const scriptResult = generalStats.second_pick_winrate;
+			const secondPickGames = filterColByFn(battles, COLUMNS_MAP.FIRST_PICK, (v) => !v);
+			const filterResult = StatsBuilder.divideToPercentString(filteredBattles.length, secondPickGames.length);
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Max Turns",
+		filterStr: "",
+		eval(battles) {
+			const generalStats = StatsBuilder.getGeneralStats(battles);
+			const scriptResult = generalStats.max_turns;
+			const filterResult = Math.max(...battles.map((b) => b[COLUMNS_MAP.TURNS]));
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Max Time",
+		filterStr: "",
+		eval(battles) {
+			const generalStats = StatsBuilder.getGeneralStats(battles);
+			const scriptResult = generalStats.max_time;
+			const filterResult = StatsBuilder.secondsToTimeStr(
+				Math.max(...battles.map((b) => b[COLUMNS_MAP.SECONDS]))
+			);
+			return [filterResult, scriptResult];
+		}
+	},
+	{
+		name: "Average PPG",
+		filterStr: "",
+		eval(battles) {
+			const generalStats = StatsBuilder.getGeneralStats(battles);
+			const scriptResult = generalStats.avg_ppg;
+			
+			const totalPoints = battles.reduce((acc, b) => acc + (b[COLUMNS_MAP.POINT_GAIN] || 0), 0);
+			const filterResult = StatsBuilder.divideToString(totalPoints, battles.length);
 			return [filterResult, scriptResult];
 		}
 	}

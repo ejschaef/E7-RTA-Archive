@@ -1,5 +1,5 @@
 import ClientCache from "../cache-manager.ts";
-import StatsBuilder from "./stats-builder -  old.ts";
+import StatsBuilder from "./stats-builder.ts";
 import {
 	buildFormattedBattleMap,
 	parsedCSVToFormattedBattleMap,

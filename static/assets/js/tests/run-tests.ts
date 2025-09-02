@@ -30,7 +30,7 @@ async function performTest(test: Test, battles: BattleType[], heroDicts: HeroDic
         const parser: FilterParser = await FilterParser.fromFilterStr(test.filterStr, heroDicts);
         const filters: Filters = parser.getFilters();
         const filteredBattles: BattleType[] = await ContentManager.BattleManager.applyFilters(battles, filters);
-        const result = test.eval(battles, filteredBattles);
+        const result = test.eval(battles, filteredBattles, heroDicts);
         if (Array.isArray(result)) {
             const [filterResult, scriptResult] = result;
             if (!(filterResult === scriptResult)) {

@@ -39,6 +39,31 @@ function getCR(battle: BattleType, heroName: string) {
 	return entry ? entry[1] : null;
 }
 
+function computeCRStats(battleList: BattleType[], heroName: string) {
+	const notPostbanned = battleList.filter((b) => {
+		const picked = b[COLUMNS_MAP.P1_PICKS].includes(heroName) || b[COLUMNS_MAP.P2_PICKS].includes(heroName);
+		const notBanned = b[COLUMNS_MAP.P1_POSTBAN] !== heroName && b[COLUMNS_MAP.P2_POSTBAN] !== heroName;
+		return picked && notBanned;
+	});
+
+	let gamesConsidered = notPostbanned.length;
+	let crTotal = 0;
+	let firstTurns = 0;
+	for (const battle of notPostbanned) {
+		const cr = getCR(battle, heroName);
+		if (cr === null) continue;
+		crTotal += cr;
+		firstTurns += +(cr === 100);
+	}
+	const avgCR = divideToPercentString(crTotal / 100, gamesConsidered);
+
+	return {
+		avgCR,
+		firstTurns,
+		firstTurnRate: divideToPercentString(firstTurns, gamesConsidered),
+	};
+}
+
 function computeGenericStats(subset: BattleType[], totalBattles: number) {
 	const wins = getWins(subset).length;
 	const subsetLength = subset.length;
@@ -72,26 +97,14 @@ function queryStats(battleList: BattleType[], totalBattles: number, heroName: st
 	const successes = battleList.reduce(
 		(acc, b) =>
 			acc +
-			+(b[COLUMNS_MAP.WIN] ||
-				b[COLUMNS_MAP.P1_POSTBAN] === heroName ||
-				b[COLUMNS_MAP.P2_POSTBAN] === heroName),
+			+(b[COLUMNS_MAP.WIN]
+				|| b[COLUMNS_MAP.P1_POSTBAN] === heroName
+				|| b[COLUMNS_MAP.P2_POSTBAN] === heroName
+			),
 		0
 	);
 
-	let gamesConsidered = 0;
-	let crTotal = 0;
-	let firstTurns = 0;
-	for (const battle of battleList) {
-		const cr = getCR(battle, heroName);
-		if (cr !== null && cr !== 0) {
-			gamesConsidered += 1;
-			crTotal += cr;
-			if (cr === 100) {
-				firstTurns += 1;
-			}
-		}
-	}
-	const avgCR = divideToPercentString(crTotal / 100, gamesConsidered);
+	const crStats = computeCRStats(battleList, heroName);
 
 	return {
 		[HERO_STATS_COLUMN_MAP.HERO_NAME]: heroName,
@@ -110,12 +123,9 @@ function queryStats(battleList: BattleType[], totalBattles: number, heroName: st
 		),
 		[HERO_STATS_COLUMN_MAP.PLUS_MINUS]: genericStats.plusMinus,
 		[HERO_STATS_COLUMN_MAP.POINT_GAIN]: genericStats.pointGain,
-		[HERO_STATS_COLUMN_MAP.AVG_CR]: avgCR,
-		[HERO_STATS_COLUMN_MAP.FIRST_TURNS]: firstTurns,
-		[HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE]: divideToPercentString(
-			firstTurns,
-			gamesConsidered
-		),
+		[HERO_STATS_COLUMN_MAP.AVG_CR]: crStats.avgCR,
+		[HERO_STATS_COLUMN_MAP.FIRST_TURNS]: crStats.firstTurns,
+		[HERO_STATS_COLUMN_MAP.FIRST_TURN_RATE]: crStats.firstTurnRate,
 	};
 }
 
@@ -217,20 +227,31 @@ function getPrebanStats(battleList: BattleType[], HeroDicts: HeroDicts) {
 		return [];
 	}
 
+	const product = (numVec: number[]) => numVec.reduce((acc, n) => acc * n, 1);
+
 	const prebanSet: Set<number> = new Set();
 	for (const b of battleList) {
 		const prebans = b[COLUMNS_MAP.P1_PREBANS_PRIMES];
-		prebanSet.add(prebans[0]);
-		prebanSet.add(prebans[1]);
-		prebanSet.add(prebans[0] * prebans[1]);
+		if (prebans.length === 0) continue;
+		for (const preban of prebans) {
+			if (preban === HeroDicts.Empty.prime) continue;
+			prebanSet.add(preban);
+		}
+		const prebanProduct = product(prebans);
+		if (prebanProduct !== HeroDicts.Empty.prime) prebanSet.add(prebanProduct);
 	}
+
+	console.log("Got prebanSet:", prebanSet);
 
 	const totalBattles = battleList.length;
 	const output = [];
 
 	for (const preban of prebanSet) {
 		const filtered = battleList.filter(
-			(b) => b[COLUMNS_MAP.P1_PREBANS_PRIMES].includes(preban)
+			(b) => {
+				const prebans = b[COLUMNS_MAP.P1_PREBANS_PRIMES];
+				return prebans.includes(preban) || product(prebans) === preban;
+			}
 		);
 		const genericStats = computeGenericStats(filtered, totalBattles);
 
@@ -244,6 +265,7 @@ function getPrebanStats(battleList: BattleType[], HeroDicts: HeroDicts) {
 		});
 	}
 	output.sort((a, b) => b.appearances - a.appearances);
+	console.log("Preban Stats:", output);
 	return output;
 }
 
@@ -340,8 +362,22 @@ function getGeneralStats(battleList: BattleType[]) {
 	};
 }
 
+
+type PerformanceStatBundle = {
+	label: string,
+	count: number,
+	wins: number,
+	win_rate: string,
+	frequency: string,
+	"+/-": number,
+	fp_games: number,
+	sp_games: number,
+	fp_wr: string,
+	sp_wr: string
+}
+
 function getPerformanceStats(battlesList: BattleType[]) {
-	const perfStatsContainer: Record<string, any> = {
+	const perfStatsContainer: Record<string, PerformanceStatBundle[]> = {
 		servers: [],
 		leagues: [],
 	};
@@ -368,11 +404,11 @@ function getPerformanceStats(battlesList: BattleType[]) {
 		if (count === 0) continue;
 		const subsetStats = computeGenericStats(subset, totalBattles);
 
-		const firstPickGames = subset.filter((b) => b["First Pick"]);
-		const fpWins = firstPickGames.reduce((acc, b) => acc + +b.Win, 0);
+		const firstPickGames = subset.filter((b) => b[COLUMNS_MAP.FIRST_PICK]);
+		const fpWins = firstPickGames.reduce((acc, b) => acc + +b[COLUMNS_MAP.WIN], 0);
 
-		const secondPickGames = subset.filter((b) => !b["First Pick"]);
-		const spWins = secondPickGames.reduce((acc, b) => acc + +b.Win, 0);
+		const secondPickGames = subset.filter((b) => !b[COLUMNS_MAP.FIRST_PICK]);
+		const spWins = secondPickGames.reduce((acc, b) => acc + +b[COLUMNS_MAP.WIN], 0);
 
 		const targetList = label.toLowerCase().includes("server")
 			? perfStatsContainer.servers
@@ -410,6 +446,12 @@ let StatsBuilder = {
 	getPerformanceStats,
 	getGeneralStats,
 	computeGenericStats,
+	queryStats,
+	toPercent,
+	divideToPercentString,
+	divideToString,
+	computeCRStats,
+	secondsToTimeStr,
 };
 
 export default StatsBuilder;

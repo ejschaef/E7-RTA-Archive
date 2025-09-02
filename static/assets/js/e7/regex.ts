@@ -1,4 +1,5 @@
 import { FIELD_EXTRACT_FN_MAP } from "./filter-parsing/field-extract-map";
+import { CONSOLE_LOGGER, LOG_CATEGORIES } from "../console-logging";
 
 /**
  * Returns a new RegExp object that matches if the input pattern matches the beginning of a string
@@ -125,7 +126,7 @@ const RANGE_LITERAL_RE = new RegExp(`^${RANGE_RE.source}$`);
 const FUNCTION_CALL_RE = /\(.*\)/i;
 
 // used by CodeMirror for syntax highlighting
-function tokenMatch(stream: any) {  // CodeMirror.StringStream
+function tokenMatchInner(stream: any) {
 	if (stream.match(FUNCTIONS_RE)) {
 		console.log("Matched stream as clause:", stream);
 		return "keyword";
@@ -186,6 +187,12 @@ function tokenMatch(stream: any) {  // CodeMirror.StringStream
 	stream.next();
 	console.log("Matched stream as null:", stream);
 	return null;
+}
+function tokenMatch(stream: any) {  // CodeMirror.StringStream
+	CONSOLE_LOGGER.bindCategory(LOG_CATEGORIES.CODE_MIRROR);
+	const result = tokenMatchInner(stream);
+	CONSOLE_LOGGER.unbindCategory();
+	return result;
 }
 
 let RegExps = {
