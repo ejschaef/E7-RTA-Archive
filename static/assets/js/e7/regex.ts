@@ -101,7 +101,7 @@ const DATE = DATE_RE.source;
 const FIELD_WORD = FIELD_WORD_RE.source;
 const DATA_WORD = DATA_WORD_RE.source;
 
-const QUOTED_STRING_RE = new RegExp(`(["'])(${STR})\\1`, "i");
+const QUOTED_STRING_RE = /"[^"]*"|'[^']*'/i;
 
 const STRING_LITERAL_RE = anchorExp(QUOTED_STRING_RE);
 

@@ -23,8 +23,8 @@ function toPercent(value: number) {
 }
 
 function divideToPercentString(a: number, b: number) {
-	if (a === 0) return NA;
-	return b !== 0 ? toPercent(a / b) : toPercent(0);
+	if (b === 0) return NA;
+	return toPercent(a / b)
 }
 
 function divideToString(a: number, b: number) {
@@ -74,7 +74,7 @@ function computeGenericStats(subset: BattleType[], totalBattles: number) {
 		wins,
 		subsetLength,
 		frequency: divideToPercentString(subset.length, totalBattles),
-		winRate: divideToPercentString(getWins(subset).length, subset.length),
+		winRate: divideToPercentString(wins, subset.length),
 		plusMinus: 2 * wins - subsetLength,
 		pointGain: subset.reduce((acc, b) => acc + (b[COLUMNS_MAP.POINT_GAIN] || 0), 0),
 		avgPPG: divideToString(pointGain, subsetLength),
