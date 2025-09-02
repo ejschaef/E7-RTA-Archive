@@ -13,8 +13,6 @@ const USER_DATA_KEYS = {
   USER: "current-user",
   BATTLES: "battles",
   RAW_UPLOAD: "raw-upload",
-  UPLOADED_BATTLES: "uploaded-battles",
-  FILTERED_BATTLES: "filtered-battles",
   STATS: "stats",
   FILTER_STR: "filter-str",
 }
@@ -52,17 +50,27 @@ const Keys = {
 
 type Key = typeof Keys[keyof typeof Keys];
 
-const DEFAULT_TIMEOUT = 1000 * 60 * 60 * 24 * 2; // 2 days
-const REFERENCE_DATA_TIMEOUT = 1000 * 60 * 60 * 24; // 1 day
+// time units in milliseconds
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR   = 60 * MINUTE;
+const DAY    = 24 * HOUR;
+const WEEK   = 7 * DAY;
 
+const DEFAULT_TIMEOUT = DAY * 2;
+const USER_DATA_TIMEOUT = WEEK;
+const REFERENCE_DATA_TIMEOUT = DAY;
+
+// Key list for creating custom timeouts
 const REFERENCE_DATA_KEY_LIST = Object.values(REFERENCE_DATA_KEYS);
+const USER_DATA_KEY_LIST = Object.values(USER_DATA_KEYS).filter((key) => key !== USER_DATA_KEYS.FILTER_STR);
 
 type TimeoutData = readonly [timestamp: number, timeout: number];
 
 function getCacheTimeout(key: Key): number {
-  return (REFERENCE_DATA_KEY_LIST.includes(key))
-    ? REFERENCE_DATA_TIMEOUT
-    : DEFAULT_TIMEOUT;
+  if (REFERENCE_DATA_KEY_LIST.includes(key)) return REFERENCE_DATA_TIMEOUT;
+  if (USER_DATA_KEY_LIST.includes(key)) return USER_DATA_TIMEOUT;
+  return DEFAULT_TIMEOUT
 }
 
 function makeTimeoutData(key: Key): TimeoutData {

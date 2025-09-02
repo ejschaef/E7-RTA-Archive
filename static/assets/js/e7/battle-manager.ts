@@ -46,23 +46,6 @@ let BattleManager = {
 		return battles;
 	},
 
-	// Removes all user battle data from cache, should be called when user is switched out
-	removeBattles: async function () {
-		await ClientCache.delete(ClientCache.Keys.BATTLES);
-		await ClientCache.delete(ClientCache.Keys.UPLOADED_BATTLES);
-		await ClientCache.delete(ClientCache.Keys.FILTERED_BATTLES);
-		console.log(
-			"Removed battle data from cache; cleared ['BATTLES', 'UPLOADED_BATTLES', 'FILTERED_BATTLES']"
-		);
-	},
-
-	removeFilteredBattles: async function () {
-		await ClientCache.delete(ClientCache.Keys.FILTERED_BATTLES);
-		console.log(
-			"Removed filtered battle data from cache; cleared ['FILTERED_BATTLES']"
-		);
-	},
-
 	applyFilters: applyFilters,
 
 	/* after battles are set in cache, applies filters to the battles and stores filtered arr in cache under filtered 
@@ -73,14 +56,8 @@ let BattleManager = {
 			Object.values(battles),
 			filters
 		)
-
 		console.log(
-			`Caching filtered battles ; total = ${Object.keys(battles).length}`
-		);
-		await ClientCache.cache(ClientCache.Keys.FILTERED_BATTLES, battles);
-		console.log(
-			`Filtered battles and stored in cache; modified ['FILTERED_BATTLES']; Applied total of <${filters.length
-			}> filters`
+			`Filtered battles from cache; Applied total of <${filters.length}> filters`
 		);
 		return battles;
 	},
@@ -127,10 +104,9 @@ let BattleManager = {
 			rawParsedBattleList,
 			HeroDicts
 		);
-		await ClientCache.cache(ClientCache.Keys.UPLOADED_BATTLES, cleanBattles);
 		let battles = await this.extendBattles(cleanBattles);
 		console.log(
-			"Ingested uploaded battle data into cache; modified [BATTLES] and overwrote [UPLOADED_BATTLES]"
+			"Ingested uploaded battle data into cache; modified [BATTLES]"
 		);
 		return battles;
 	},
