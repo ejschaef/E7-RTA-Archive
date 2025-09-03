@@ -145,8 +145,9 @@ async function runLogic(stateDispatcher) {
 		console.log("BATTLES DURING LOAD");
 		console.log(battles);
 
-		console.log("Checking if Reacquire of Seasons Details Needed");
-		await ContentManager.SeasonManager.reaquireIfNeeded(battlesList);
+		// TODO: Check if reacquire of seasons details is needed when next season starts
+		// console.log("Checking if Reacquire of Seasons Details Needed");
+		// await ContentManager.SeasonManager.reaquireIfNeeded(battlesList);
 
 		console.log("Getting Filters From Cache");
 		const filters = await FilterParser.getFiltersFromCache(HeroDicts);

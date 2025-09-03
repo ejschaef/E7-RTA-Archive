@@ -306,6 +306,31 @@ export const FilterTests: Test[] = [
 			return setsEqual(getSeqNumSet(subset), getSeqNumSet(filteredBattles));
 		},
 	},
+	// Base Filters - season
+	{
+		name: "Season 17f",
+		filterStr: `season = season-17f;`,
+		eval: (battles, filteredBattles) => {
+			const season17f = filterColByFn(battles, COLUMNS_MAP.SEASON_CODE, (v) => v.includes("17f"));
+			return setsEqual(getSeqNumSet(season17f), getSeqNumSet(filteredBattles));
+		}
+	},
+	{
+		name: "Season 17",
+		filterStr: `season = season-17;`,
+		eval: (battles, filteredBattles) => {
+			const currentSeason = filterColByFn(battles, COLUMNS_MAP.SEASON_CODE, (v) => v === "pvp_rta_ss17");
+			return setsEqual(getSeqNumSet(currentSeason), getSeqNumSet(filteredBattles));
+		}
+	},
+	{
+		name: "Season Code Set",
+		filterStr: `season in { "pvp_rta_ss17", "pvp_rta_ss17f" };`,
+		eval: (battles, filteredBattles) => {
+			const currentSeason = filterColByFn(battles, COLUMNS_MAP.SEASON_CODE, (v) => v === "pvp_rta_ss17" || v === "pvp_rta_ss17f");
+			return setsEqual(getSeqNumSet(currentSeason), getSeqNumSet(filteredBattles));
+		}
+	},
 
 	// Base Filters - Range
 	{

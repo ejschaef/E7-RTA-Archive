@@ -9,7 +9,7 @@ import pickle
 import pandas as pd
 from apps.redis_manager import GLOBAL_DB
 from apps.config import *
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 import time
 
@@ -26,15 +26,15 @@ ARTIFACT_JSON_PICKLE_PATH = os.path.join(Config.APP_DATA_PATH, 'artifact_json.pi
 
 REFRESH_CADENCE = timedelta(hours=18)
 
-def try_load(obj_name, fetch_fn, pickle_path):
+def try_load(obj_name, fetch_fn, pickle_path, recompute_dict: dict[str, bool]):
      # load from pickle if backup is recent
     if os.path.exists(pickle_path):
         modified_time = os.path.getmtime(pickle_path)
-        modified_datetime = datetime.fromtimestamp(modified_time)
-        age = datetime.now() - modified_datetime
-
+        modified_datetime = datetime.fromtimestamp(modified_time, timezone.utc)
+        age = datetime.now(timezone.utc) - modified_datetime
         if age < REFRESH_CADENCE:
             print(f"{obj_name} Loading From Recent Pickle Backup (Last updated: {modified_datetime})")
+            recompute_dict[obj_name] = False
             return load_pickle(pickle_path)
 
     try:
@@ -45,23 +45,26 @@ def try_load(obj_name, fetch_fn, pickle_path):
         print(f"{obj_name} Loaded From E7 API")
         save_pickle(obj, pickle_path)
         print(f"{obj_name} Saved To Pickle Backup")
+        recompute_dict[obj_name] = True
         return obj
     except Exception as e:
         print(f"ERROR LOADING FROM E7 API: {str(e)}")
         obj = load_pickle(pickle_path)
         modified_datetime = datetime.fromtimestamp(os.path.getmtime(pickle_path))
         print(f"{obj_name} Loaded From Pickle Backup last updated: {modified_datetime}")
+        recompute_dict[obj_name] = False
         return obj
 
 class ContentManager:
 
     def __init__(self):
         print("Initializing ContentManager")
-        self.HeroManager       : HeroManager  = try_load("HeroManager", lambda: HeroManager(), HERO_MANAGER_PICKLE_PATH)
-        self.UserManager       : UserManager  = try_load("UserManager", lambda: UserManager(load_all=True), USER_MANAGER_PICKLE_PATH)
-        self.SeasonDetails     : pd.DataFrame = try_load("SeasonDetails", get_rta_seasons_df, SEASON_DETAILS_PICKLE_PATH)
+        self.recompute_dict = dict()
+        self.HeroManager       : HeroManager  = try_load("HeroManager", lambda: HeroManager(), HERO_MANAGER_PICKLE_PATH, self.recompute_dict)
+        self.UserManager       : UserManager  = try_load("UserManager", lambda: UserManager(load_all=True), USER_MANAGER_PICKLE_PATH, self.recompute_dict)
+        self.SeasonDetails     : pd.DataFrame = try_load("SeasonDetails", get_rta_seasons_df, SEASON_DETAILS_PICKLE_PATH, self.recompute_dict)
         self.SeasonDetailsJSON : str          = self.get_season_details_json()
-        self.ArtifactJson      : str          = try_load("ArtifactJson", lambda: json.dumps(get_artifacts(), default=str), ARTIFACT_JSON_PICKLE_PATH)
+        self.ArtifactJson      : str          = try_load("ArtifactJson", lambda: json.dumps(get_artifacts(), default=str), ARTIFACT_JSON_PICKLE_PATH, self.recompute_dict)
 
     @classmethod
     def decode(cls, str) -> Self:

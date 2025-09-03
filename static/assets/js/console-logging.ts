@@ -11,7 +11,7 @@ const LOG_CATEGORIES = {
 export type LogCategory = typeof LOG_CATEGORIES[keyof typeof LOG_CATEGORIES];
 
 const SUPPRESS_CATEGORIES = [
-    LOG_CATEGORIES.TEST,
+   // LOG_CATEGORIES.TEST,
     LOG_CATEGORIES.CODE_MIRROR
 ]
 
@@ -29,11 +29,13 @@ class Logger {
         }
 
         if (this.boundCategory && this.suppressCategories.includes(this.boundCategory)) return;
-        this.originalLog(...args);
+        this.originalLog.apply(console, args);
     }
 
     initialize() {
-        console.log = (...args) => this.log(...args);
+        console.log = function(...args) {
+            this.log.apply(CONSOLE_LOGGER, args);
+        }
     }
 
     bindCategory(category: LogCategory) {
@@ -45,7 +47,7 @@ class Logger {
     }   
 
     bindCapture(key: string) {
-        this.captures[key] = [];
+        this.captures[key] = this.captures[key] || [];
         this.captureKey = key;
     }
 

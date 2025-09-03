@@ -43,7 +43,7 @@ async function addUserFormListener(stateDispatcher) {
 					ContentManager.ClientCache.Keys.ID_SEARCH_FLAG
 				);
 				const userObj = idSearchFlag
-					? { id: name, world_code }
+					? { id: Number(name), name, world_code }
 					: { name, world_code };
 				CONTEXT.TRY_SET_USER = userObj;
 				CONTEXT.AUTO_QUERY = true;

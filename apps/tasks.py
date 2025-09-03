@@ -82,15 +82,17 @@ def run_start_up_tasks(sender, **kwargs):
 def celery_beat_test( self, task_input ):
     task_json = {'info': 'Beat is running'}
     print("/n-----------------BEAT IS RUNNING-------------------/n")
-    logger.info(str(task_json))
+    logger.info(json.dumps(task_json))
     return task_json
 
 @celery_app.task(name="load_reference_content", bind=True)
 def load_reference_content( self):
     print("Updating E7 reference content")
     key = KEYS.CONTENT_MNGR_KEY
-    serialized_data = (ContentManager().encode())
+    mngr = ContentManager()
+    serialized_data = (mngr.encode())
     GLOBAL_CLIENT.set(key, serialized_data)
     print("E7 reference content Updated")
-    logger.info("E7 reference content Updated")
+    log_json = {'info': 'E7 reference content Updated', 'Recompute Dict' : mngr.recompute_dict  }
+    logger.info(json.dumps(log_json))
     return None

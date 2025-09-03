@@ -8,28 +8,12 @@ import type { BattleType } from "../e7/references";
 
 const bar = () => console.log("------------------------------------------------")
 
-async function runEvalTest(test: Test, battles: BattleType[], heroDicts: HeroDicts) {
-    CONSOLE_LOGGER.bindCapture(test.name);
-    const testResult = await performTest(test, battles, heroDicts);
-    CONSOLE_LOGGER.unbindCapture();
-    if (testResult) {
-        console.log(`Test: "${test.name}" Passed`);
-    } else {
-        bar();
-        console.log("Captured Logs:");
-        const captures = CONSOLE_LOGGER.captures[test.name];
-        for (const capture of captures) {
-            console.log(...capture);
-        }
-        bar();
-    }
-}
-
-async function performTest(test: Test, battles: BattleType[], heroDicts: HeroDicts): Promise<boolean> {
+async function performTest(test: Test, battles: BattleType[], heroDicts: HeroDicts, isParseTest?: boolean): Promise<boolean> {
     try {
         const parser: FilterParser = await FilterParser.fromFilterStr(test.filterStr, heroDicts);
         const filters: Filters = parser.getFilters();
         const filteredBattles: BattleType[] = await ContentManager.BattleManager.applyFilters(battles, filters);
+        if (isParseTest) return true;
         const result = test.eval(battles, filteredBattles, heroDicts);
         if (Array.isArray(result)) {
             const [filterResult, scriptResult] = result;
@@ -53,20 +37,33 @@ async function performTest(test: Test, battles: BattleType[], heroDicts: HeroDic
     }
 }
 
-async function runParseTest(test: Test, battles: BattleType[], heroDicts: HeroDicts) {
-    CONSOLE_LOGGER.bindCategory(LOG_CATEGORIES.TEST);
-    try {
-        const parser: FilterParser = await FilterParser.fromFilterStr(test.filterStr, heroDicts);
-        const filters: Filters = parser.getFilters();
-        await ContentManager.BattleManager.applyFilters(battles, filters);
-    } catch (e) {
-        console.error(`Test: "${test.name}" Failed: `, e);
-        return;
+async function runEvalTest(test: Test, battles: BattleType[], heroDicts: HeroDicts) {
+    CONSOLE_LOGGER.bindCapture(test.name);
+    const testResult = await performTest(test, battles, heroDicts);
+    CONSOLE_LOGGER.unbindCapture();
+    if (testResult) {
+        console.log(`Test: "${test.name}" Passed`);
+    } else {
+        bar();
+        console.log("Captured Logs:");
+        console.log(CONSOLE_LOGGER.captures[test.name]);
+        bar();
     }
-    CONSOLE_LOGGER.unbindCategory();
-    console.log(`Test: "${test.name}" Passed`);
 }
 
+async function runParseTest(test: Test, battles: BattleType[], heroDicts: HeroDicts) {
+    CONSOLE_LOGGER.bindCapture(test.name);
+    const testResult = await performTest(test, battles, heroDicts, true);
+    CONSOLE_LOGGER.unbindCapture();
+    if (testResult) {
+        console.log(`Test: "${test.name}" Passed`);
+    } else {
+        bar();
+        console.log("Captured Logs:");
+        console.log(CONSOLE_LOGGER.captures[test.name]);
+        bar();
+    }
+}
 
 export async function runStatsTests(battles: BattleType[], heroDicts: HeroDicts) {
     console.log("\n=======RUNNING STATS TESTS=======\n");
@@ -103,5 +100,7 @@ export async function runTests() {
     await runFilterParseTests(battlesList, heroDicts);
     await runFilterBehaviorTests(battlesList, heroDicts);
     await runStatsTests(battlesList, heroDicts);
+
+    console.log("Captured Logs:", CONSOLE_LOGGER.captures);
 }
 

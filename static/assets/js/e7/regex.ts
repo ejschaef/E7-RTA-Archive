@@ -1,5 +1,4 @@
 import { FIELD_EXTRACT_FN_MAP } from "./filter-parsing/field-extract-map";
-import { CONSOLE_LOGGER, LOG_CATEGORIES } from "../console-logging";
 
 /**
  * Returns a new RegExp object that matches if the input pattern matches the beginning of a string
@@ -128,11 +127,11 @@ const FUNCTION_CALL_RE = /\(.*\)/i;
 // used by CodeMirror for syntax highlighting
 function tokenMatchInner(stream: any) {
 	if (stream.match(FUNCTIONS_RE)) {
-		console.log("Matched stream as clause:", stream);
+		// console.log("Matched stream as clause:", stream);
 		return "keyword";
 	}
 	if (stream.match(/\s+(?:!=|<|>|=|>=|<=|in|!in)(?=\s+)/i)) {
-		console.log("Matched stream as operator:", stream);
+		// console.log("Matched stream as operator:", stream);
 		return "operator";
 	}
 	if (
@@ -140,58 +139,56 @@ function tokenMatchInner(stream: any) {
 			new RegExp(`[a-z0-9."'}=)-]${DATAFIELD_RE.source}(?=[,)\\s;]|$)`, "i")
 		)
 	) {
-		console.log("Matched stream as field with preceding fragment:", stream);
+		// console.log("Matched stream as field with preceding fragment:", stream);
 		return null;
 	}
 
 	if (stream.match(padRegex(FIELD_WORD_RE))) {
-		console.log("Matched stream as Data Field:", stream);
+		// console.log("Matched stream as Data Field:", stream);
 		return "field";
 	}
 	if (stream.match(padRegex(DATA_WORD_RE))) {
-		console.log("Matched stream as Data Field:", stream);
+		// console.log("Matched stream as Data Field:", stream);
 		return "declared-data";
 	}
 	if (stream.match(padRegex(QUOTED_STRING_RE))) {
-		console.log("Matched stream as string:", stream);
+		// console.log("Matched stream as string:", stream);
 		return "string";
 	}
 	if (stream.match(padRegex(SET_RE))) {
-		console.log("Matched stream as set:", stream);
+		// console.log("Matched stream as set:", stream);
 		return "set";
 	}
 	if (stream.match(padRegex(RANGE_RE))) {
-		console.log("Matched stream as range:", stream);
+		// console.log("Matched stream as range:", stream);
 		return "range";
 	}
 	if (stream.match(/[^(,\s;.=0-9\-]+\d+/i)) {
-		console.log("Matched stream as non-num null", stream);
+		// console.log("Matched stream as non-num null", stream);
 		return null;
 	}
 	if (stream.match(padRegex(INT_RE))) {
-		console.log("Matched stream as number:", stream);
+		// console.log("Matched stream as number:", stream);
 		return "declared-data";
 	}
 	if (stream.match(padRegex(DATE_RE))) {
-		console.log("Matched stream as date:", stream);
+		// console.log("Matched stream as date:", stream);
 		return "declared-data";
 	}
 	if (stream.match(/(?:^|\s)(?:true|false)(?=[,)\s;]|$)/i)) {
-		console.log("Matched stream as bool:", stream);
+		// console.log("Matched stream as bool:", stream);
 		return "declared-data";
 	}
 	if (stream.match(/[\(\)\{\}\;\,]/)) {
-		console.log("Matched stream as bracket:", stream);
+		// console.log("Matched stream as bracket:", stream);
 		return "bracket";
 	}
 	stream.next();
-	console.log("Matched stream as null:", stream);
+	// console.log("Matched stream as null:", stream);
 	return null;
 }
 function tokenMatch(stream: any) {  // CodeMirror.StringStream
-	CONSOLE_LOGGER.bindCategory(LOG_CATEGORIES.CODE_MIRROR);
 	const result = tokenMatchInner(stream);
-	CONSOLE_LOGGER.unbindCategory();
 	return result;
 }
 

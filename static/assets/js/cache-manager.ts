@@ -2,7 +2,7 @@
 import { openDB, IDBPDatabase } from 'idb';
 import { LanguageCode, LANGUAGES } from './e7/references';
 
-async function clearStore(db: IDBPDatabase, storeName: string) {
+async function clearStore(db: IDBPDatabase<any>, storeName: string) {
   const tx = db.transaction(storeName, 'readwrite');
   const store = tx.objectStore(storeName);
   store.clear();
@@ -41,9 +41,6 @@ const Keys = {
   AUTO_ZOOM_FLAG: "auto-zoom",
   AUTO_QUERY_FLAG: "auto-query",
   ID_SEARCH_FLAG: "id-search",
-  ARTIFACTS: "artifacts",
-  ARTIFACTS_LOWERCASE_NAMES_MAP: "artifacts-lowercase-names-map",
-  ARTIFACT_OBJECT_LIST: "artifact-object-list",
   HOME_PAGE_STATE: "home-page-state",
   INTER_PAGE_MANAGER: "inter-page-manager",
 } as const;
@@ -67,6 +64,10 @@ const USER_DATA_KEY_LIST = Object.values(USER_DATA_KEYS).filter((key) => key !==
 
 type TimeoutData = readonly [timestamp: number, timeout: number];
 
+function isTimeoutData(data: any): data is TimeoutData {
+  return Array.isArray(data) && data.length === 2 && typeof data[0] === 'number' && typeof data[1] === 'number';
+}
+
 function getCacheTimeout(key: Key): number {
   if (REFERENCE_DATA_KEY_LIST.includes(key)) return REFERENCE_DATA_TIMEOUT;
   if (USER_DATA_KEY_LIST.includes(key)) return USER_DATA_TIMEOUT;
@@ -77,14 +78,27 @@ function makeTimeoutData(key: Key): TimeoutData {
   return [Date.now(), getCacheTimeout(key)];
 }
 
+const DATA_STORE_NAME = 'DataStore' as const;
+const META_STORE_NAME = 'MetaStore' as const;
+
+interface DataSchema {
+  [DATA_STORE_NAME]: {
+    key: string;
+    value: any;
+  };
+  [META_STORE_NAME]: {
+    key: string;
+    value: TimeoutData;
+  };
+}
+
 
 let ClientCache = {
   consts: {
     DB_NAME: 'E7ArenaStatsClientDB',
     DB_VERSION: 1,
-    STORE_NAME: 'DataStore',
-    META_STORE_NAME: 'MetaStore',
-    CACHE_TIMEOUT: 1000 * 60 * 60 * 24 * 2, // 2 day cache timeout
+    STORE_NAME: DATA_STORE_NAME,
+    META_STORE_NAME: META_STORE_NAME,
   },
 
   Keys: { ...Keys },
@@ -95,28 +109,29 @@ let ClientCache = {
 
   loaded_UM: new Set(),
 
-  openDB: async () => {
-    return openDB(ClientCache.consts.DB_NAME, ClientCache.consts.DB_VERSION, {
+  openDB: async function() {
+     const db = await openDB<DataSchema>(ClientCache.consts.DB_NAME, ClientCache.consts.DB_VERSION, {
       upgrade(db) {
-        if (db.objectStoreNames.contains(ClientCache.consts.STORE_NAME)) {
-          db.deleteObjectStore(ClientCache.consts.STORE_NAME); // 🧹 clear old store
+        if (db.objectStoreNames.contains(DATA_STORE_NAME)) {
+          db.deleteObjectStore(DATA_STORE_NAME); // 🧹 clear old store
           console.log('Old store deleted');
         }
-        if (!db.objectStoreNames.contains(ClientCache.consts.STORE_NAME)) {
+        if (!db.objectStoreNames.contains(DATA_STORE_NAME)) {
           console.log('Created data store');
-          db.createObjectStore(ClientCache.consts.STORE_NAME);
+          db.createObjectStore(DATA_STORE_NAME);
         }
-        if (!db.objectStoreNames.contains(ClientCache.consts.META_STORE_NAME)) {
+        if (!db.objectStoreNames.contains(META_STORE_NAME)) {
           console.log('Created meta data store');
-          db.createObjectStore(ClientCache.consts.META_STORE_NAME);
+          db.createObjectStore(META_STORE_NAME);
         }
       }
     });
+    return db;
   },
 
   get: async function (key: string) {
     const db = await this.openDB();
-    const result = await db.get(this.consts.STORE_NAME, key);
+    const result = await db.get(DATA_STORE_NAME, key);
     if (result) {
       console.log(`Found ${key} in cache`);
     } else {
@@ -134,14 +149,14 @@ let ClientCache = {
   cache: async function (key: Key, data: any) {
     console.log(`Caching ${key}`);
     const db = await this.openDB();
-    await db.put(this.consts.STORE_NAME, data, key);
-    await this.setTimeoutData(key, makeTimeoutData(key));
+    await db.put(DATA_STORE_NAME, data, key);
+    await this.setTimeoutDataNow(key);
   },
 
   delete: async function (key: Key) {
     const db = await this.openDB();
-    await db.delete(this.consts.STORE_NAME, key);
-    await this.deleteTimestamp(key);
+    await db.delete(DATA_STORE_NAME, key);
+    await this.deleteTimeoutData(key);
   },
 
   deleteDB: async function () {
@@ -149,17 +164,17 @@ let ClientCache = {
     console.log('Database deleted');
   },
 
-  getTimeoutData: async function (key: Key): Promise<TimeoutData> {
+  getTimeoutData: async function (key: Key): Promise<TimeoutData | null> {
     const db = await this.openDB();
     const metakey = `${key + this.MetaKeys.TIMESTAMP}`;
-    const timestamp = await db.get(this.consts.META_STORE_NAME, metakey);
-    return timestamp ?? 0;
+    const timeoutData: TimeoutData | undefined = await db.get(META_STORE_NAME, metakey);
+    return timeoutData || null;
   },
 
-  setTimeoutData: async function (key: Key, timestamp: TimeoutData): Promise<void> {
+  setTimeoutData: async function (key: Key, timeoutData: TimeoutData): Promise<void> {
     const db = await this.openDB();
     const metakey = `${key + this.MetaKeys.TIMESTAMP}`;
-    await db.put(this.consts.META_STORE_NAME, timestamp, metakey);
+    await db.put(META_STORE_NAME, timeoutData, metakey);
   },
 
   setTimeoutDataNow: async function (key: Key): Promise<void> {
@@ -167,17 +182,17 @@ let ClientCache = {
     await this.setTimeoutData(key, timeoutData);
   },
 
-  deleteTimestamp: async function (key: Key): Promise<void> {
+  deleteTimeoutData: async function (key: Key): Promise<void> {
     const db = await this.openDB();
     const metakey = `${key + this.MetaKeys.TIMESTAMP}`;
-    await db.delete(this.consts.META_STORE_NAME, metakey);
+    await db.delete(META_STORE_NAME, metakey);
     console.log(`Deleted ${key} from cache`);
   },
 
   clearData: async function (): Promise<void> {
     const db = await this.openDB();
-    await clearStore(db, this.consts.STORE_NAME);
-    await clearStore(db, this.consts.META_STORE_NAME);
+    await clearStore(db, DATA_STORE_NAME);
+    await clearStore(db, META_STORE_NAME);
     console.log('All data cleared from data cache and meta data cache');
   },
 
@@ -208,7 +223,18 @@ let ClientCache = {
   checkCacheTimeout: async function (key: Key): Promise<boolean> {
     const timeoutData = await this.getTimeoutData(key);
     const currentTime = Date.now();
-    if (!timeoutData || (currentTime - timeoutData[0] > timeoutData[1])) {
+    if (!timeoutData) {
+      console.log("No timeout data found for " + key);
+      return false;
+    }
+    else if (!isTimeoutData(timeoutData)) {
+      console.log(`Invalid timeout data found for ${key}; Invalid Timeout Record: ${timeoutData}`);
+      await this.delete(key);
+      return false;
+    }
+    const [timestamp, timeout] = timeoutData;
+    const timedelta = currentTime - timestamp;
+    if (timedelta > timeout) {
       console.log(`Cache timeout for ${key}; Timeout Record: ${timeoutData}; currentTime: ${currentTime}`);
       await this.delete(key);
       return false;

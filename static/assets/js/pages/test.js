@@ -6,7 +6,7 @@ import { NavBarUtils } from "./page-utilities/nav-bar-utils.ts";
 
 async function main() {
 	console.log("test page loaded");
-	await ContentManager.ClientCache.clearUserLists();
+	await ContentManager.ClientCache.clearReferenceData();
 	await NavBarUtils.initialize();
 	await runTests();
 }

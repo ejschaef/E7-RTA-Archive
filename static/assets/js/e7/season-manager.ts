@@ -77,6 +77,7 @@ let SeasonManager = {
 	},
 
 	getSeasonDetails: async function (): Promise<Season[]> {
+		console.log("Getting season details");
 		const cached = await ClientCache.get(ClientCache.Keys.SEASON_DETAILS);
 		if (cached) {
 			return cached;
@@ -107,7 +108,6 @@ let SeasonManager = {
 				return;
 			}
 		});
-		
 	},
 };
 
