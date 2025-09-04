@@ -9,7 +9,7 @@ const MODES = {
   DEVELOPMENT: 'development',
 }
 
-const MODE = MODES.PRODUCTION;
+const MODE = MODES.DEVELOPMENT;
 
 module.exports = {
 plugins: [

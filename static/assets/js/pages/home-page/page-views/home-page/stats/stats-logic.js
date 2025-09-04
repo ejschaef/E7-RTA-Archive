@@ -22,7 +22,7 @@ import { getScrollbarWidth } from "../../../../html-constructor/html-constructor
 const filtersAreRelevant = (stats) => {
 	return (
 		stats.areFiltersApplied &&
-		stats.battlesList.length > Object.values(stats.filteredBattlesObj).length
+		stats.battles.length > Object.values(stats.filteredBattlesObj).length
 	);
 };
 
