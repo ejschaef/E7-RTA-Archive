@@ -136,7 +136,7 @@ class LogManager:
         if len(times) == 0:
             self.min_time = "N/A"
         else:
-            self.min_time = min(times)
+            self.min_time_utc = min(times)
         
 repeat_num = 80
 bar = lambda: print(f"{'='*repeat_num}\n")

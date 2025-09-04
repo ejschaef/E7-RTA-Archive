@@ -29,6 +29,9 @@ export function resizeRankPlot() {
 
 async function resolveShowStatsDispatch(stateDispatcher) {
 	if (!CONTEXT.STATS_PRE_RENDER_COMPLETED) {
+		if (!CONTEXT.IS_FIRST_RENDER) {
+			await HOME_PAGE_FNS.homePageSetView(HOME_PAGE_STATES.LOAD_DATA); // show loading screen while populating content
+		}
 		console.log("Running stats pre render logic");
 		await StatsView.preFirstRenderLogic(stateDispatcher); // if stats page is accessed from outside home page, must populate content, otherwise load data logic will
 		CONTEXT.STATS_PRE_RENDER_COMPLETED = true;
@@ -78,6 +81,7 @@ async function stateDispatcher(state) {
 	setTimeout(() => {
 		PageUtils.setScrollPercent(scrollPercent);
 	}, 0);
+	CONTEXT.IS_FIRST_RENDER = false;
 }
 
 export { stateDispatcher };

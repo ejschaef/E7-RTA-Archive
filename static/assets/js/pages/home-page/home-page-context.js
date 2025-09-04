@@ -33,6 +33,7 @@ const CONTEXT_KEYS = {
 	CODE_MIRROR_EDITOR: "CODE_MIRROR_EDITOR",
 	TRY_SET_USER: "TRY_SET_USER",
 	IGNORE_RELAYOUT: "IGNORE_RELAYOUT",
+	IS_FIRST_RENDER: "IS_FIRST_RENDER",
 };
 function getContext() {
 	const CONTEXT = {
@@ -49,6 +50,7 @@ function getContext() {
 		CODE_MIRROR_EDITOR: null,
 		TRY_SET_USER: null,
 		IGNORE_RELAYOUT: false,
+		IS_FIRST_RENDER: true,
 
 		popKey: function (key) {
 			const value = this[key];
@@ -81,6 +83,8 @@ function getContext() {
 				case CONTEXT_KEYS.TRY_SET_USER:
 					return null;
 				case CONTEXT_KEYS.IGNORE_RELAYOUT:
+					return false;
+				case CONTEXT_KEYS.IS_FIRST_RENDER:
 					return false;
 				default:
 					return null;

@@ -57,6 +57,7 @@ build-and-push.sh
 commits.txt
 prod_steps.txt
 .eslintrc.json
+install-docker.sh
 
 
 #migrations

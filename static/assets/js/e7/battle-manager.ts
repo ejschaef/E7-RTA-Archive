@@ -11,7 +11,7 @@ import { Filters } from "./filter-parsing/filter-parser.ts";
 import { HeroDicts } from "./hero-manager.ts";
 
 
-export async function applyFilters(battleList: BattleType[], filters: Filters) {
+export function applyFilters(battleList: BattleType[], filters: Filters) {
 	const localFilterList = filters.filter((f) => f instanceof StandardFilter);
 	const globalFilterList = filters.filter((f) => f instanceof GlobalFilter);
 
@@ -47,20 +47,6 @@ let BattleManager = {
 	},
 
 	applyFilters: applyFilters,
-
-	/* after battles are set in cache, applies filters to the battles and stores filtered arr in cache under filtered 
-  battle key all battles are stored in their clean format, not numerical format; convert after to compute metrics */
-	applyFiltersToCachedBattles: async function (filters: Filters) {
-		let battles = await this.getBattles() ?? {};
-		const filteredBattles = await this.applyFilters(
-			Object.values(battles),
-			filters
-		)
-		console.log(
-			`Filtered battles from cache; Applied total of <${filters.length}> filters`
-		);
-		return battles;
-	},
 
 	//takes in list of battles then converts to dict and then adds to cached battles
 	extendBattles: async function (cleanBattleMap: BattlesObj) {
@@ -117,9 +103,7 @@ let BattleManager = {
 
 		console.log(`Applying ${numFilters} filters`);
 		const battlesList = Object.values(battles);
-		const filteredBattles = await this.applyFiltersToCachedBattles(filters);
-		const filteredBattlesList = Object.values(filteredBattles);
-
+		const filteredBattlesList = applyFilters(battlesList, filters);
 		const areFiltersApplied = numFilters > 0;
 
 		console.log("Getting preban stats");
@@ -149,7 +133,7 @@ let BattleManager = {
 		console.log("Returning stats");
 		return {
 			battles: battlesList,
-			filteredBattlesObj: filteredBattles,
+			filteredBattlesObj: Object.fromEntries(filteredBattlesList.map((b) => [b[COLUMNS_MAP.SEQ_NUM], b])),
 			prebanStats: prebanStats,
 			generalStats: generalStats,
 			firstPickStats: firstPickStats,
