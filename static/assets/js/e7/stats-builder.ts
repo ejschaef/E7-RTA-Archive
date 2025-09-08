@@ -22,8 +22,8 @@ function toPercent(value: number) {
 	return (value * 100).toFixed(2) + "%";
 }
 
-function divideToPercentString(a: number, b: number) {
-	if (b === 0) return NA;
+function divideToPercentString(a: number, b: number, zeroIfUndefined = false) {
+	if (b === 0) return zeroIfUndefined ? "0.00%" : NA;
 	return toPercent(a / b)
 }
 
@@ -55,12 +55,12 @@ function computeCRStats(battleList: BattleType[], heroName: string) {
 		crTotal += cr;
 		firstTurns += +(cr === 100);
 	}
-	const avgCR = divideToPercentString(crTotal / 100, gamesConsidered);
+	const avgCR = divideToPercentString(crTotal / 100, gamesConsidered, true);
 
 	return {
 		avgCR,
 		firstTurns,
-		firstTurnRate: divideToPercentString(firstTurns, gamesConsidered),
+		firstTurnRate: divideToPercentString(firstTurns, gamesConsidered, true),
 	};
 }
 

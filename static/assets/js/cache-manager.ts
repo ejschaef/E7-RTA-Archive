@@ -55,7 +55,7 @@ const DAY    = 24 * HOUR;
 const WEEK   = 7 * DAY;
 
 const DEFAULT_TIMEOUT = DAY * 2;
-const USER_DATA_TIMEOUT = WEEK;
+const USER_DATA_TIMEOUT = WEEK * 3;
 const REFERENCE_DATA_TIMEOUT = DAY;
 
 // Key list for creating custom timeouts

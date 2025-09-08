@@ -1,6 +1,4 @@
-import { LangBlock, TextRetrieveFns } from "./lang-builder";
-import { LanguageCode, LANGUAGES } from "../e7/references";
-import { HTMLComposeElement, ComposeOption, END_NEST } from "../pages/html-constructor/html-constructor";
+import { LANGUAGES } from "../e7/references";
 import DOC_ELEMENTS from "../pages/page-utilities/doc-element-references";
 
 export const ELEMENT_IDS = DOC_ELEMENTS.INFO_PAGE.IDS
@@ -25,13 +23,13 @@ const FilterOverview = {
     include when calculating stats like win rate and pick rate. They can also be used to 
     automatically adjust the chart to the filtered subset if desired. Almost all columns 
     listed in the full table of battles at the bottom of the stats page can filtered on using 
-    the custom syntax. The rest of this page will detail the exact syntax and rules for writing filters.`,
+    the custom syntax. See other sections of the information page to understand the exact syntax and rules for writing filters.`,
   },
   objectTypesTitle: {
-    [EN]: "Object Types",
+    [EN]: "Syntax Types",
   },
   objectTypesDescription: {
-    [EN]: "There are 5 main syntactic objects:",
+    [EN]: "There are 5 main types of syntax used in filters:",
   },
   objectTypesList: {
     [EN]: [
@@ -78,7 +76,7 @@ const Fields = {
     [EN]: "the date the battle occurred",
   },
   season: {
-    [EN]: "the season the battle occured (resolves to the internal season code, not the name or number)",
+    [EN]: "the season the battle occurred (resolves to the internal season code, not the name or number)",
   },
   isWin: {
     [EN]: "boolean indicator flagging if the player won",
@@ -96,7 +94,7 @@ const Fields = {
     [EN]: "integer indicating the victory points the player ended the battle at",
   },
   prebans: {
-    [EN]: "set of all the prebanned heroes",
+    [EN]: "set of all the pre-banned heroes",
   },
   postbans: {
     [EN]: "set of the two postbanned heroes",
@@ -120,7 +118,7 @@ const Fields = {
     [EN]: "a string value that gives the league the specified player ended the battle in (i.e. emperor, warlord, etc.)",
   },
   prebansAttribute: {
-    [EN]: "accesses the set of the 2 heroes prebanned by the specified player",
+    [EN]: "accesses the set of the 2 heroes pre-banned by the specified player",
   },
   postban: {
     [EN]: "accesses the hero postbanned by the specified player",
@@ -284,7 +282,7 @@ const Syntax = {
     [EN]: "Syntax Elements",
   },
   semiColon: {
-    [EN]: `Must use semicolons to separate filters when multiple are used. Do not use semicolons in functions.`,
+    [EN]: `Semicolons must be used to separate filters when multiple are used. Do not use semicolons to separate commas in functions; use commas instead.`,
   },
   comma: {
     [EN]: `Commas are used to separate arguments to functions or sets.`,
@@ -305,7 +303,7 @@ export const FILTER_EXAMPLES_AND_TEST_BLOCK = {
   EX1_DESCRIPTION: {
     [EN]: `This filter takes only battles in the current season and filters for first pick
               games where the player selected either ML Peira or New Moon Luna as their first pick and
-              harsetti was prebanned.`,
+              harsetti was pre-banned.`,
   },
   EX2_TITLE: {
     [EN]: "Filter Example 2",
@@ -313,7 +311,7 @@ export const FILTER_EXAMPLES_AND_TEST_BLOCK = {
   EX2_DESCRIPTION: {
     [EN]: `This filter first selects the most recent 500 battles, then filters
               those for second pick games that occurred between April 2025 and June 2025
-              in which either the opponent is in Warlord, Emeperor, or Legend and picked Zio on 3, or games
+              in which either the opponent is in Warlord, Emperor, or Legend and picked Zio on 3, or games
               in which the player ended with at or above 3000 victory points. <br><br>
 
               *Note that it does not matter when the last-n filter is placed;
@@ -327,7 +325,7 @@ export const FILTER_EXAMPLES_AND_TEST_BLOCK = {
     [EN]: "Filter Example 3",
   },
   EX3_DESCRIPTION: {
-    [EN]: `This filter selects only games in which ML Arunka and Rinak are prebanned,
+    [EN]: `This filter selects only games in which ML Arunka and Rinak are pre-banned,
               Harsetti was picked by the player and was not postbanned, and the player ended
               with victory points between 2500 and 3000 inclusively.`,
   },
@@ -365,10 +363,10 @@ export const WELCOME_BLOCK = {
     [EN]: `This tool primarily enables E7 players to maintain their RTA history beyond 100 battles.`,
   },
   DESCRIPTION_PART2: {
-    [EN]: `Users can query their most recent 100 battles just like the E7 website, then download the data and upload in the future to maintain a continuous history.`,
+    [EN]: `Users can query their most recent 100 battles just like the E7 website, then export the data using the button in the top right and upload in the future to maintain a continuous history.`,
   },
   DESCRIPTION_PART3: {
-    [EN]: `All uploads are handled exclusively by the client. No data from the upload is sent to the server.`,
+    [EN]: `All uploads are handled exclusively by the client. No data from the upload is sent to the server (except for the user ID if auto-query if selected).`,
   },
   DESCRIPTION_PART4: {
     [EN]: `Some statistics are also available to help users better understand their performance.`,
