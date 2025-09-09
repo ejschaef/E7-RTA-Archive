@@ -72,6 +72,7 @@ let SeasonManager = {
 			preSeasonFilled.push(preSeason);
 		}
 		preSeasonFilled.reverse();
+		console.log("Caching Season Details: ", preSeasonFilled);
 		await ClientCache.cache(ClientCache.Keys.SEASON_DETAILS, preSeasonFilled);
 		return preSeasonFilled;
 	},

@@ -17,6 +17,7 @@ export const FIELD_EXTRACT_FN_MAP: { [key: string]: (battle: BattleType) => any 
     "p2.prebans": (battle) => battle[COLUMNS_MAP.P2_PREBANS],
     "p1.postban": (battle) => battle[COLUMNS_MAP.P1_POSTBAN],
     "p2.postban": (battle) => battle[COLUMNS_MAP.P2_POSTBAN],
+    "postbans" : (battle) => [battle[COLUMNS_MAP.P1_POSTBAN], battle[COLUMNS_MAP.P2_POSTBAN]],
     "prebans": (battle) => [
         ...battle[COLUMNS_MAP.P1_PREBANS],
         ...battle[COLUMNS_MAP.P2_PREBANS],

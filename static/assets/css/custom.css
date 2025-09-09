@@ -581,3 +581,10 @@ button.brace-btn.touch-hover {
   text-decoration: none;
 }
 
+.plotly .hoverlayer .hovertext rect {
+  fill: rgba(0, 0, 0, 0.5) !important;
+  stroke: rgba(0, 0, 0, 0.5) !important;
+  rx: 6;  /* optional: rounded corners */
+  ry: 6;
+  border-radius: 6px;
+}

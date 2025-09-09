@@ -1,4 +1,4 @@
-import { BattleType } from "./references";
+import { BattleType, COLUMNS_MAP } from "./references";
 
 export const PLOT_REFS = {
     markerMaxWidth : 16,
@@ -73,8 +73,9 @@ export function generateRankPlot(container: HTMLElement, battles: BattleType[], 
     };
 
     const customdata = battles.map(b => [
-        b["Date/Time"].slice(0,10), // date
-        b["P1 League"]              // league
+        b[COLUMNS_MAP.DATE_TIME].slice(0,10), // date only
+        b[COLUMNS_MAP.SEASON],
+        b[COLUMNS_MAP.P1_LEAGUE],
     ]);
 
     const sizes = getSizes(battles.length);
@@ -96,7 +97,8 @@ export function generateRankPlot(container: HTMLElement, battles: BattleType[], 
         hovertemplate:
             'Points: %{y}<br>' +
             'Date: %{customdata[0]}<br>' +
-            'League: %{customdata[1]}<extra></extra>'
+            'Season: %{customdata[1]}<br>' +
+            'League: %{customdata[2]}<extra></extra>'
     };
 
     const layout = {
@@ -104,6 +106,12 @@ export function generateRankPlot(container: HTMLElement, battles: BattleType[], 
         font: {
             family: 'Roboto, Open Sans'
         },
+        hoverlabel: {
+            bgcolor: "rgba(0, 0, 0, 0.5)",   // background
+            font: { color: "white" },
+            bordercolor: "rgba(0, 0, 0, 0.5)"
+        },
+        hovermode: 'x unified',
         title: {
             text: `${user.name}'s RTA Point Plot`,
             font: { size: 24, color: '#dddddd' },
