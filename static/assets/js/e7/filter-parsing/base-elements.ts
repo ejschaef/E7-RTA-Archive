@@ -12,6 +12,7 @@ const COLLECTION_FIELDS_SET = new Set([
     "p1.prebans",
     "p2.prebans",
     "prebans",
+    "postbans"
 ])
 
 const BaseEltTypes = {

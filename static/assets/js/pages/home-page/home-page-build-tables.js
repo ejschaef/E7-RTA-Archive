@@ -59,6 +59,24 @@ function buildTable(tableElt, cols) {
 	constructor.addColumns(cols);
 }
 
+const HERO_INFO_TO_BUILD = [
+	{
+		tblID: DOC_ELEMENTS.HOME_PAGE.IDS.HERO_PLAYER_TBL,
+		cols: HERO_TBL_COLS,
+	},
+	{
+		tblID: DOC_ELEMENTS.HOME_PAGE.IDS.HERO_OPPONENT_TBL,
+		cols: HERO_TBL_COLS.filter((col) => !col.toLowerCase().includes("success")),
+	},
+];
+
+export function heroInfoBuildTables() {
+	HERO_INFO_TO_BUILD.forEach((entry) => {
+		const tableElt = DOC_ELEMENTS.HOME_PAGE.getElt(entry.tblID);
+		buildTable(tableElt, entry.cols);
+	});
+}
+
 export function buildTables() {
 	TO_BUILD.forEach((entry) => {
 		buildTable(entry.tbl, entry.cols);

@@ -1,5 +1,74 @@
 import { Safe } from "../../html-safe.ts";
+
+
+
+const HomePageIds = {
+	SELECT_DATA_MSG: "select-data-msg",
+	FILTER_MSG: "filterMSG",
+
+	SELECT_DATA_BODY: "select-data-body",
+
+	SHOW_STATS_BODY: "show-stats-body",
+
+	LOAD_DATA_BODY: "load-data-body",
+
+	HERO_INFO_BODY: "hero-info-body",
+
+	HERO_INFO_CONTENT: "hero-info-content",
+
+	HERO_DEFAULT_CONTENT: "default-content",
+
+	LATEST_BATTLES_BTN: "latest-battles-btn",
+
+	UPLOAD_FORM: "uploadForm",
+
+	CSV_FILE: "csvFile",
+
+	USER_QUERY_FORM_NAME: "user-query-form-name",
+
+	USER_QUERY_FORM_SERVER: "user-query-form-server",
+
+	AUTO_ZOOM_FLAG: "auto-zoom-flag",
+
+	USER_NAME: "user-name",
+
+	USER_ID: "user-id",
+
+	USER_SERVER: "user-server",
+
+	BATTLE_FILTER_TOGGLER: "filter-battle-table",
+
+	ID_SEARCH_FLAG: "id-search-flag",
+
+	SEASON_DETAILS_TBL: "season-details-tbl",
+
+	PERFORMANCE_STATS_TBL: "performance-stats-tbl",
+
+	FIRST_PICK_STATS_TBL: "first-pick-stats-tbl",
+
+	PREBAN_STATS_TBL: "preban-stats-tbl",
+
+	PLAYER_TBL: "player-tbl",
+
+	OPPONENT_TBL: "opponent-tbl",
+
+	BATTLES_TBL: "battles-tbl",
+
+	RANK_PLOT: "rank-plot",
+
+	SEARCH_INPUT: "searchInput",
+
+	HERO_SEARCH_OPTIONS: "hero-option-list",
+
+	HERO_PLAYER_TBL: "hero-player-tbl",
+
+	HERO_OPPONENT_TBL: "hero-opponent-tbl",
+
+} as const;
+
 class HomePageElements {
+
+	IDS = HomePageIds;
 
 	private _SELECT_DATA_MSG: HTMLElement | null = null;
 	private _FILTER_MSG: HTMLElement | null = null;
@@ -7,6 +76,7 @@ class HomePageElements {
 	private _SELECT_DATA_BODY: HTMLElement | null = null;
 	private _SHOW_STATS_BODY: HTMLElement | null = null;
 	private _LOAD_DATA_BODY: HTMLElement | null = null;
+	private _HERO_INFO_BODY: HTMLElement | null = null;
 
 	private _LATEST_BATTLES_BTN: HTMLElement | null = null;
 	private _UPLOAD_FORM: HTMLElement | null = null;
@@ -35,6 +105,16 @@ class HomePageElements {
 	private _BATTLE_TBL: HTMLElement | null = null;
 	private _RANK_PLOT: HTMLElement | null = null;
 
+	private _HERO_PLAYER_TBL: HTMLElement | null = null;
+	private _HERO_OPPONENT_TBL: HTMLElement | null = null;
+
+	private _SEARCH_INPUT: HTMLElement | null = null;
+	private _SEARCH_OPTIONS: HTMLElement | null = null;
+
+	getElt(id: typeof HomePageIds[keyof typeof HomePageIds]) {
+		return Safe.unwrapHtmlElt(id);
+	}
+
 	get SELECT_DATA_MSG() {
 		return this._SELECT_DATA_MSG ||= Safe.unwrapHtmlElt("select-data-msg");
 	}
@@ -52,6 +132,10 @@ class HomePageElements {
 
 	get LOAD_DATA_BODY() {
 		return this._LOAD_DATA_BODY ||= Safe.unwrapHtmlElt("load-data-body");
+	}
+
+	get HERO_INFO_BODY() {
+		return this._HERO_INFO_BODY ||= Safe.unwrapHtmlElt("hero-info-body");
 	}
 
 	get LATEST_BATTLES_BTN() {
@@ -141,6 +225,22 @@ class HomePageElements {
 
 	get MESSAGE_ELEMENTS_LIST() {
 		return [this.SELECT_DATA_MSG, this.FILTER_MSG];
+	}
+
+	get SEARCH_INPUT() {
+		return this._SEARCH_INPUT ||= Safe.unwrapHtmlElt("searchInput");
+	}
+
+	get HERO_SEARCH_OPTIONS() {
+		return this._SEARCH_OPTIONS ||= Safe.unwrapHtmlElt("hero-option-list");
+	}
+
+	get HERO_PLAYER_TBL() {
+		return this._HERO_PLAYER_TBL ||= Safe.unwrapHtmlElt("hero-player-tbl");
+	}
+
+	get HERO_OPPONENT_TBL() {
+		return this._HERO_OPPONENT_TBL ||= Safe.unwrapHtmlElt("hero-opponent-tbl");
 	}
 }
 

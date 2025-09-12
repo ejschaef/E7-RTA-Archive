@@ -64,6 +64,11 @@ const USER_DATA_KEY_LIST = Object.values(USER_DATA_KEYS).filter((key) => key !==
 
 type TimeoutData = readonly [timestamp: number, timeout: number];
 
+function timeoutToStr(timeoutData: TimeoutData): string {
+  const [timestamp, timeout] = timeoutData;
+  return `[${new Date(timestamp)}, ${timeout}]`;
+}
+
 function isTimeoutData(data: any): data is TimeoutData {
   return Array.isArray(data) && data.length === 2 && typeof data[0] === 'number' && typeof data[1] === 'number';
 }
@@ -147,7 +152,10 @@ let ClientCache = {
   },
 
   cache: async function (key: Key, data: any) {
-    console.log(`Caching ${key}`);
+    if (key === Keys.SEASON_DETAILS) {
+      console.log("Caching season details: ", data);
+    }
+    // console.log(`Caching ${key}`);
     const db = await this.openDB();
     await db.put(DATA_STORE_NAME, data, key);
     await this.setTimeoutDataNow(key);
@@ -235,11 +243,11 @@ let ClientCache = {
     const [timestamp, timeout] = timeoutData;
     const timedelta = currentTime - timestamp;
     if (timedelta > timeout) {
-      console.log(`Cache timeout for ${key}; Timeout Record: ${timeoutData}; currentTime: ${currentTime}`);
+      console.log(`Cache timeout for ${key}; Timeout Record: ${timeoutToStr(timeoutData)}; currentTime: ${new Date(currentTime)}`);
       await this.delete(key);
       return false;
     }
-    console.log(`Cache ok for ${key}; Timeout Record: ${timeoutData}; currentTime: ${currentTime}; timeout: ${getCacheTimeout(key)}; diff: ${currentTime - timeoutData[0]}`);
+    console.log(`Cache ok for ${key}; Timeout Record: ${timeoutToStr(timeoutData)}; currentTime: ${new Date(currentTime)}; timeout: ${getCacheTimeout(key)}; diff: ${currentTime - timeoutData[0]}`);
     return true;
   },
 

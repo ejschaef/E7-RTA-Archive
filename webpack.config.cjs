@@ -9,7 +9,7 @@ const MODES = {
   DEVELOPMENT: 'development',
 }
 
-const MODE = MODES.PRODUCTION;
+const MODE = MODES.DEVELOPMENT;
 
 module.exports = {
 plugins: [
@@ -22,7 +22,7 @@ plugins: [
     }),
   ],
   entry: {
-    "home-page"     : './static/assets/js/pages/home-page/home-page.js',
+    "home-page"     : './static/assets/js/pages/home-page/home-page.ts',
     "test"          : './static/assets/js/pages/test.js',
     "search"        : './static/assets/js/pages/search.js',
     "information"   : './static/assets/js/pages/information.ts',

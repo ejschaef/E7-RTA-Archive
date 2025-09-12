@@ -1,12 +1,14 @@
+import { Safe } from "../../html-safe.ts";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.ts";
 
 const STYLES = {
 	RED: "text-danger",
 	GREEN: "text-safe",
+	E_BLUE: "text-e-blue",
 };
 
 class TextPacket {
-	constructor(text, docElement, classList) {
+	constructor(text, docElement, classList=[]) {
 		this.text = text;
 		this.docElement = docElement;
 		this.classList = classList;
@@ -41,6 +43,15 @@ let TextController = {
 		TextPacket.classList.forEach((className) => {
 			TextPacket.docElement.classList.add(className);
 		});
+	},
+
+	writeStr: function (text, docElement, classList=[]) {
+		this.write(new TextPacket(text, docElement, classList));
+	},
+
+	writeStrFromID: function (text, id, classList=[]) {
+		const elt = Safe.unwrapHtmlElt(id);
+		this.writeStr(text, elt, classList);
 	},
 
 	push: function (TextPacket) {

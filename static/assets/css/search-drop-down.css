@@ -1,0 +1,41 @@
+  .searchable-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-content {
+        display: block;
+        position: absolute;
+        /* Add styling for background, border, shadow, etc. */
+    }
+    .dropdown-content.show {
+        display: block; /* Show when active */
+    }
+
+    .dropdown-input {
+        min-width: 230px;
+    }
+
+    .option-list {
+        display: none;
+        max-height: 120px;
+        overflow-y: auto;
+        background-color: #1e1e1e;
+        z-index: 1000 !important
+        /* Add styling for background, border, shadow, etc. */
+    }
+
+    .option-list.show {
+        display: block;
+    }
+
+
+  .option {
+    padding: .25rem !important;
+    color: #ffffff !important;
+  }
+
+  .option:hover,
+  .option:focus {
+    color: #0cdfe3 !important;
+    background-color: #515151;
+  }

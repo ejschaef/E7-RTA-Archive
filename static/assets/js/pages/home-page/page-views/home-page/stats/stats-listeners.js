@@ -1,8 +1,8 @@
 import SavedFilters from "../../../../../e7/saved-filters.js";
 import PageUtils from "../../../../page-utilities/page-utils.js";
 import { Tables } from "../../../../../populate-content.js";
-import { CONTEXT } from "../../../home-page-context.js";
-import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
+import { CONTEXT } from "../../../home-page-context.ts";
+import { HOME_PAGE_STATES } from "../../../../page-utilities/page-state-references.ts";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.ts";
 import { ContentManager } from "../../../../../content-manager.ts";
 import ClientCache from "../../../../../cache-manager.ts";
@@ -130,20 +130,29 @@ function addPlotlyLineAndMarkWidthListener() {
 		const sizes = getSizes(originalXRange);
 
 		if (e["xaxis.range[0]"] !== undefined) {
-			console.log("Refitting marker and line sizes");
 			let newRange = [e["xaxis.range[0]"], e["xaxis.range[1]"]];
 
 			// Zoom ratio: smaller range = more zoom
 			let zoomFactor = originalXRange / (newRange[1] - newRange[0]);
 
 			// Adjust sizes proportionally (with a min/max clamp)
-			let newMarkerSize = Math.min(
-				Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
-				PLOT_REFS.markerMaxWidth
-			);
-			let newLineWidth = Math.min(
-				Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth),
-				PLOT_REFS.lineMaxWidth
+			// let newMarkerSize = Math.min(
+			// 	Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
+			// 	PLOT_REFS.markerMaxWidth
+			// );
+			// let newLineWidth = Math.min(
+			// 	Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth),
+			// 	PLOT_REFS.lineMaxWidth
+			// );
+
+			const newSizes = getSizes(newRange[1] - newRange[0]);
+			const newMarkerSize = newSizes.markerSize;
+			const newLineWidth = newSizes.lineWidth;
+
+			console.log(
+				"Refitting marker and line sizes to",
+				newMarkerSize,
+				newLineWidth
 			);
 
 			Plotly.restyle(plotDiv, {
@@ -151,11 +160,16 @@ function addPlotlyLineAndMarkWidthListener() {
 				"line.width": [newLineWidth],
 			});
 		} else {
-			console.log("Resetting marker and line sizes");
 			Plotly.restyle(plotDiv, {
 				"marker.size": [sizes.markerSize],
 				"line.width": [sizes.lineWidth],
 			});
+
+			console.log(
+				"Reseting marker and line sizes to",
+				sizes.markerSize,
+				sizes.lineWidth
+			);
 		}
 	});
 }

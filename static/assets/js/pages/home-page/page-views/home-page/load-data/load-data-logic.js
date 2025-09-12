@@ -1,5 +1,5 @@
-import { CONTEXT } from "../../../home-page-context.js";
-import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
+import { CONTEXT } from "../../../home-page-context.ts";
+import { HOME_PAGE_STATES } from "../../../../page-utilities/page-state-references.ts";
 import { FilterParser } from "../../../../../e7/filter-parsing/filter-parser.ts";
 import { ContentManager } from "../../../../../content-manager.ts";
 import { StatsView } from "../stats/stats-logic.js";
@@ -8,6 +8,7 @@ import { NavBarUtils } from "../../../../page-utilities/nav-bar-utils.ts";
 import { addLoadDataListeners } from "./load-data-listeners.js";
 import PYAPI from "../../../../../apis/py-API.js";
 import { ExportImportFns } from "../../../../../export-import-data-tools.ts";
+import { HOME_PAGE_FNS } from "../../../../orchestration/page-state-manager.ts";
 
 async function processUpload() {
 	const selectedFile = await ContentManager.ClientCache.get(
@@ -17,7 +18,9 @@ async function processUpload() {
 	console.log("Retrieved Upload: ", selectedFile);
 
 	const uploadedData = await ExportImportFns.parseJSON(selectedFile);
-	const battleArr = ExportImportFns.restructureParsedUploadBattles(uploadedData.battles);
+	const battleArr = ExportImportFns.restructureParsedUploadBattles(
+		uploadedData.battles
+	);
 	const uploadedUser = uploadedData.user;
 
 	const user = await ContentManager.UserManager.findUser(uploadedUser);
@@ -183,13 +186,20 @@ async function runLogic(stateDispatcher) {
 	}
 }
 
-function initialize() {
+async function initialize() {
 	addLoadDataListeners();
+}
+
+async function handleDispatch(stateDispatcher) {
+	await HOME_PAGE_FNS.homePageSetView(HOME_PAGE_STATES.LOAD_DATA);
+	await runLogic(stateDispatcher);
 }
 
 let LoadDataView = {
 	runLogic: runLogic,
 	initialize: initialize,
+	triggerState: HOME_PAGE_STATES.LOAD_DATA,
+	handleDispatch: handleDispatch,
 };
 
 export { LoadDataView };

@@ -129,18 +129,28 @@
                                         id="filter-select" data-bs-toggle="dropdown" aria-expanded="false">
                                         Premade Filters
                                     </button>
-                                    <ul class="dropdown-menu scrollable-300px f-12 filter-dropdown" aria-labelledby="filter-select"
-                                        id="premade-filters">
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Current Season</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Last Season</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">First Pick</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Second Pick</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Wins</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Losses</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Champion+ Opponent</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Warlord+ Opponent</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Emperor+ Opponent</button></li>
-                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Legend Opponent</button></li>
+                                    <ul class="dropdown-menu scrollable-300px f-12 filter-dropdown"
+                                        aria-labelledby="filter-select" id="premade-filters">
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Current
+                                                Season</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Last
+                                                Season</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">First
+                                                Pick</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Second
+                                                Pick</button></li>
+                                        <li><button type="button"
+                                                class="dropdown-item filter-dropdown-item">Wins</button></li>
+                                        <li><button type="button"
+                                                class="dropdown-item filter-dropdown-item">Losses</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Champion+
+                                                Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Warlord+
+                                                Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Emperor+
+                                                Opponent</button></li>
+                                        <li><button type="button" class="dropdown-item filter-dropdown-item">Legend
+                                                Opponent</button></li>
                                     </ul>
                                 </div>
                                 <span class="d-block me-3 rel-width-60 scrollable-40px f-10"
@@ -221,13 +231,15 @@
                                 <p class="f-w-200 f-14 d-inline align-items-center m-b-0">1st Pick Win Rate:</p>
                             </div>
                             <div class="col-4 px-0">
-                                <p class="f-w-200 f-14 d-inline text-align-left m-b-0" id="first-pick-winrate">&nbsp;</p>
+                                <p class="f-w-200 f-14 d-inline text-align-left m-b-0" id="first-pick-winrate">&nbsp;
+                                </p>
                             </div>
                             <div class="col-8">
                                 <p class="f-w-200 f-14 d-inline align-items-center m-b-0">2nd Pick Win Rate:</p>
                             </div>
                             <div class="col-4 px-0">
-                                <p class="f-w-200 f-14 d-inline text-align-left m-b-0" id="second-pick-winrate">&nbsp;</p>
+                                <p class="f-w-200 f-14 d-inline text-align-left m-b-0" id="second-pick-winrate">&nbsp;
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -279,7 +291,7 @@
             <!-- [ performance stats table ] end -->
 
             <!-- [ General stats array section ] start -->
-             <div class="col-sm-4 d-flex">
+            <div class="col-sm-4 d-flex">
                 <div class="card w-100">
                     <div class="card-body w-100">
                         <div class="row d-flex align-items-center">
@@ -420,7 +432,8 @@
                         <br>
                         <h6 style="font-size: 0.7em;">
                             Displays statistics for heroes computed based on when they appear on the enemy team.
-                            Win rate, +/-, postban rate, and point gain are relative to the player while pick rate, Avg CR, and first turn rate are relative to the opponent.
+                            Win rate, +/-, postban rate, and point gain are relative to the player while pick rate, Avg
+                            CR, and first turn rate are relative to the opponent.
                         </h6>
                     </div>
                     <div class="card-body kpi-body">
@@ -437,7 +450,8 @@
                     <div class="card-header text-center kpi-header">
                         <h3>Player Battles</h3>
                         <h5 style="font-size: 0.7em;">
-                            Displays information for each of the player's battles. Export this table to conduct self-service analytics. Two star heroes will show as 'Fodder'.
+                            Displays information for each of the player's battles. Export this table to conduct
+                            self-service analytics. Two star heroes will show as 'Fodder'.
                         </h5>
                     </div>
                     <div class="card-body kpi-body">
@@ -459,6 +473,59 @@
         </div>
     </div>
 </div>
+
+<div class="pc-container d-none" id="hero-info-body">
+    <div class="pc-content">
+        <div class="d-flex justify-content-start">
+            <div id="hero-search-box">
+                <div class="card" style="width: 250px;">
+                    <div class="searchable-dropdown">
+                        <div class="dropdown-content" id="dropdownContent">
+                            <input type="text" class="dropdown-input" id="searchInput"
+                                placeholder="Search Hero Name...">
+                            <div class="option-list form-floating" id="hero-option-list">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="information-box">
+                <div class="d-flex flex-row justify-content-start">
+                    <div class="rel-height-80 p-1">
+                        <div class="rel-height-100">
+                            <div class="align-items-start justify-content-center flex-vertical gap-0 p-0 m-0 ms-1 me-1"
+                                id="battle-stats-box">
+                                <p class="m-0 p-0 f-12 d-flex justify-content-between">
+                                    <span>Number of Filters &nbsp;:&nbsp;&nbsp;</span>
+                                    <span id="filters-applied" class="user-info">n/a</span>
+                                </p>
+                                <p class="m-0 p-0 f-12 d-flex justify-content-between">
+                                    <span>Number of Battles&nbsp;:&nbsp;&nbsp;</span>
+                                    <span id="num-battles" class="user-info">n/a</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row justify-content-start mt-4">
+            <div class="col-md-6" id="default-content">
+                <div class="card">
+                    <div class="card-body kpi-body rel-height-80">
+                        <div class="rel-height-100">
+                            <p id="default-text">&nbsp;</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-none" id="hero-info-content">
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
 
 {% block extra_js %}

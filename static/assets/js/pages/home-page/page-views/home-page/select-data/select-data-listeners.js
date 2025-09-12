@@ -1,5 +1,5 @@
-import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
-import { CONTEXT } from "../../../home-page-context.js";
+import { HOME_PAGE_STATES } from "../../../../page-utilities/page-state-references.ts";
+import { CONTEXT } from "../../../home-page-context.ts";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.ts";
 import {
 	TextController,

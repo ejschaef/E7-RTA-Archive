@@ -9,7 +9,7 @@ const ACTIONS = {
 } as const;
 
 
-type Action = {
+export type Action = {
 	action: typeof ACTIONS[keyof typeof ACTIONS],
 	message?: string
 }

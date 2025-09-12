@@ -72,7 +72,6 @@ let SeasonManager = {
 			preSeasonFilled.push(preSeason);
 		}
 		preSeasonFilled.reverse();
-		console.log("Caching Season Details: ", preSeasonFilled);
 		await ClientCache.cache(ClientCache.Keys.SEASON_DETAILS, preSeasonFilled);
 		return preSeasonFilled;
 	},
@@ -92,7 +91,7 @@ let SeasonManager = {
 	},
 
 	getSeasonNumFromCode: function (seasonCode: string): string {
-		return seasonCode.split("_")[-1];
+		return seasonCode.split("_").at(-1)!;
 	},
 
 	reaquireIfNeeded: async function (battle: BattleType[]) {

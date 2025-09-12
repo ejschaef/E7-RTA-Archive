@@ -29,6 +29,13 @@
             <span class="nav-label">Stats</span>
           </span>
         </button>
+        <button type="button" class="nav-link" data-nav="hero-info">
+          <span class="nav-cell">
+            <img src="{{ url_for('static', filename='assets/images/group-icon.svg') }}" class="img-fluid nav-icon"
+              alt="chart">
+            <span class="nav-label">Hero Focus</span>
+          </span>
+        </button>
         <a href="{{ url_for('home_blueprint.search') }}" data-nav="search" class="nav-link">
           <div class="nav-cell">
             <img src="{{ url_for('static', filename='assets/images/search-icon.svg') }}" class="img-fluid nav-icon"

@@ -64,6 +64,7 @@ class ContentManager:
         self.UserManager       : UserManager  = try_load("UserManager", lambda: UserManager(load_all=True), USER_MANAGER_PICKLE_PATH, self.recompute_dict)
         self.SeasonDetails     : pd.DataFrame = try_load("SeasonDetails", get_rta_seasons_df, SEASON_DETAILS_PICKLE_PATH, self.recompute_dict)
         self.SeasonDetailsJSON : str          = self.get_season_details_json()
+        print("SeasonDetailsJSON: ", self.SeasonDetailsJSON)
         self.ArtifactJson      : str          = try_load("ArtifactJson", lambda: json.dumps(get_artifacts(), default=str), ARTIFACT_JSON_PICKLE_PATH, self.recompute_dict)
 
     @classmethod

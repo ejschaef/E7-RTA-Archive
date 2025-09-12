@@ -1,7 +1,7 @@
 import ClientCache from "../../cache-manager.ts";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.ts";
 import PageUtils from "../page-utilities/page-utils.js";
-import { HOME_PAGE_STATES } from "../page-utilities/page-state-references.js";
+import { HOME_PAGE_STATES } from "../page-utilities/page-state-references.ts";
 import UserManager from "../../e7/user-manager.ts";
 import { WORLD_CODE_TO_CLEAN_STR } from "../../e7/references.ts";
 
@@ -23,6 +23,8 @@ function getContentBody(state) {
 			return DOC_ELEMENTS.HOME_PAGE.SHOW_STATS_BODY;
 		case HOME_PAGE_STATES.LOAD_DATA:
 			return DOC_ELEMENTS.HOME_PAGE.LOAD_DATA_BODY;
+		case HOME_PAGE_STATES.HERO_INFO:
+			return DOC_ELEMENTS.HOME_PAGE.HERO_INFO_BODY;
 		default:
 			console.error(`Invalid page state: ${state}`);
 	}

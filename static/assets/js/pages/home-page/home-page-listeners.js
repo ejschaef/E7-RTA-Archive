@@ -1,28 +1,27 @@
-import {
-	PageStateManager,
-	HOME_PAGE_STATES,
-} from "../orchestration/page-state-manager.js";
+import { HomePageStateManager } from "../orchestration/page-state-manager.ts";
 import { NavBarUtils } from "../page-utilities/nav-bar-utils.ts";
 import { TextUtils } from "../orchestration/text-controller.js";
-import { CONTEXT } from "./home-page-context.js";
+import { CONTEXT } from "./home-page-context.ts";
 import DOC_ELEMENTS from "../page-utilities/doc-element-references.ts";
 import UserManager from "../../e7/user-manager.ts";
-import { stateDispatcher, resizeRankPlot } from "./home-page-dispatch.js";
-import ClientCache from "../../cache-manager.ts";
+import { resizeRankPlot } from "./page-views/home-page/stats/stats-logic.js";
+import { HOME_PAGE_STATES } from "../page-utilities/page-state-references.ts";
 
-function addNavListener() {
+function addNavListener(stateDispatcher) {
 	document.querySelectorAll(".nav-link").forEach((link) => {
 		link.addEventListener("click", async function (event) {
 			const navType = this.dataset.nav;
 			console.log("Clicked nav item:", navType);
-			const currentState = await PageStateManager.getState();
+			const currentState = await HomePageStateManager.getState();
 			if (Object.values(HOME_PAGE_STATES).includes(navType)) {
 				if (currentState === navType) {
 					console.log(`Already in state: ${currentState} ; returning`);
 					return;
 				}
 				if (navType === HOME_PAGE_STATES.SELECT_DATA) {
-					stateDispatcher(HOME_PAGE_STATES.SELECT_DATA, CONTEXT);
+					stateDispatcher(HOME_PAGE_STATES.SELECT_DATA);
+				} else if (navType === HOME_PAGE_STATES.HERO_INFO) {
+					stateDispatcher(HOME_PAGE_STATES.HERO_INFO);
 				} else if (navType === HOME_PAGE_STATES.SHOW_STATS) {
 					const user = await UserManager.getUser();
 
@@ -84,8 +83,8 @@ function addSideBarListener() {
 	);
 }
 
-export function addHomePageListeners() {
-	addNavListener();
+export function addHomePageListeners(dispatch) {
+	addNavListener(dispatch);
 	addClearDataBtnListener();
 	addSideBarHideListener();
 	addSideBarListener();

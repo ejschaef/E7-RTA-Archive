@@ -7,10 +7,16 @@ export const PLOT_REFS = {
     minLineWidth : 1
 }
 
+function logBase(x: number, base: number) {
+    return Math.log(x) / Math.log(base);
+}
+
+const SCALING = 2.4
+
 export function getSizes(numBattles: number): {markerSize: number, lineWidth: number} {
     const length = numBattles;
-    const markerSize = Math.max(PLOT_REFS.minMarkerSize, 6 - Math.log10(length) * 0.5);
-    const lineWidth = Math.max(PLOT_REFS.minLineWidth, 3 - Math.log10(length) * 0.5);
+    const markerSize = Math.max(PLOT_REFS.minMarkerSize, PLOT_REFS.markerMaxWidth - logBase(length, SCALING) * 2);
+    const lineWidth = Math.max(PLOT_REFS.minLineWidth, PLOT_REFS.lineMaxWidth - logBase(length, SCALING));
     return {markerSize, lineWidth};
 }
 

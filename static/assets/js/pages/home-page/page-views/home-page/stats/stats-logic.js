@@ -7,17 +7,25 @@ import {
 	addPlotlyLineAndMarkWidthListener,
 	addStatsListeners,
 } from "./stats-listeners.js";
-import { HOME_PAGE_STATES } from "../../../../orchestration/page-state-manager.js";
 import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references.ts";
-import { CONTEXT } from "../../../home-page-context.js";
+import { CONTEXT } from "../../../home-page-context.ts";
 import { Safe } from "../../../../../html-safe.ts";
 import {
 	getZoom,
 	generateRankPlot,
-	PLOT_REFS,
 	getSizes,
 } from "../../../../../e7/plots.ts";
 import { getScrollbarWidth } from "../../../../html-constructor/html-constructor.ts";
+import { HOME_PAGE_STATES } from "../../../../page-utilities/page-state-references.ts";
+import { HOME_PAGE_FNS } from "../../../../orchestration/page-state-manager.ts";
+
+export function resizeRankPlot() {
+	if (!CONTEXT.STATS_PRE_RENDER_COMPLETED) return;
+	CONTEXT.IGNORE_RELAYOUT = true;
+	setTimeout(() => {
+		Plotly.Plots.resize(document.getElementById("rank-plot"));
+	}, 20);
+}
 
 const filtersAreRelevant = (stats) => {
 	return (
@@ -44,23 +52,7 @@ async function populatePlot(stats) {
 		const zoom = getZoom(stats.battles, stats.filteredBattlesObj);
 		console.log("Zooming to:", zoom);
 
-		// compute the zoom factor to adjust markers and line width
-		const originalXRange = Object.values(stats.battles).length;
-		const filteredXRange = Object.values(stats.filteredBattlesObj).length;
-
-		const sizes = getSizes(originalXRange);
-
-		const zoomFactor = originalXRange / filteredXRange;
-
-		let newMarkerSize = Math.min(
-			Math.max(sizes.markerSize * zoomFactor, sizes.markerSize),
-			PLOT_REFS.markerMaxWidth
-		);
-
-		let newLineWidth = Math.min(
-			Math.max(sizes.lineWidth * zoomFactor, sizes.lineWidth),
-			PLOT_REFS.lineMaxWidth
-		);
+		const newSizes = getSizes(zoom.endX - zoom.startX);
 
 		const relayoutConfig = {
 			"xaxis.range": [zoom.startX, zoom.endX],
@@ -68,8 +60,8 @@ async function populatePlot(stats) {
 		};
 
 		const markerConfig = {
-			"marker.size": [newMarkerSize],
-			"line.width": [newLineWidth],
+			"marker.size": [newSizes.markerSize],
+			"line.width": [newSizes.lineWidth],
 		};
 		CONTEXT.IGNORE_RELAYOUT = true;
 		Plotly.restyle(plotDiv, markerConfig);
@@ -232,12 +224,35 @@ async function initialize(stateDispatcher) {
 	await addStatsListeners(editor, stateDispatcher);
 }
 
+async function handleDispatch(stateDispatcher) {
+	if (!CONTEXT.STATS_PRE_RENDER_COMPLETED) {
+		if (!CONTEXT.IS_FIRST_RENDER) {
+			await HOME_PAGE_FNS.homePageSetView(HOME_PAGE_STATES.LOAD_DATA); // show loading screen while populating content
+		}
+		console.log("Running stats pre render logic");
+		await preFirstRenderLogic(stateDispatcher); // if stats page is accessed from outside home page, must populate content, otherwise load data logic will
+		CONTEXT.STATS_PRE_RENDER_COMPLETED = true;
+		console.log("Completed stats pre render logic");
+	}
+	await runLogic(stateDispatcher);
+	await HOME_PAGE_FNS.homePageSetView(HOME_PAGE_STATES.SHOW_STATS);
+	if (!CONTEXT.STATS_POST_RENDER_COMPLETED) {
+		console.log("Running stats post render logic");
+		await postFirstRenderLogic(); // will resize code mirror appropriately
+		CONTEXT.STATS_POST_RENDER_COMPLETED = true;
+		console.log("Completed stats post render logic");
+	}
+	resizeRankPlot();
+}
+
 let StatsView = {
 	preFirstRenderLogic: preFirstRenderLogic,
 	postFirstRenderLogic: postFirstRenderLogic,
 	runLogic: runLogic,
 	initialize: initialize,
 	populateContent: populateContent,
+	triggerState: HOME_PAGE_STATES.SHOW_STATS,
+	handleDispatch: handleDispatch,
 };
 
 export { StatsView };

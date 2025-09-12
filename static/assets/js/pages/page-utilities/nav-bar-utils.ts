@@ -1,7 +1,6 @@
 import {
-	PageStateManager,
-	HOME_PAGE_STATES,
-} from "../orchestration/page-state-manager.js";
+	HomePageStateManager,
+} from "../orchestration/page-state-manager.ts";
 import {
 	BattleType,
 	CSVHeaders,
@@ -16,6 +15,7 @@ import IPM from "../orchestration/inter-page-manager.ts";
 import { ContentManager } from "../../content-manager.ts";
 import { LangManager } from "../../lang-manager.ts";
 import { ExportImportFns } from "../../export-import-data-tools.ts";
+import { HomePageState, HOME_PAGE_STATES } from "./page-state-references.ts";
 
 function navToHome() {
 	// @ts-ignore
@@ -29,15 +29,22 @@ function addNavListeners() {
 			if (!("dataset" in link) || !(link.dataset && typeof link.dataset === "object" && "nav" in link.dataset)) return;
 			const navType = link.dataset.nav as string;
 			console.log("Clicked nav item:", navType);
-			if (Object.values(HOME_PAGE_STATES).includes(navType)) {
+			if (Object.values(HOME_PAGE_STATES).includes(navType as HomePageState)) {
 				if (navType === HOME_PAGE_STATES.SELECT_DATA) {
-					await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
+					await HomePageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
 					navToHome();
-				} else if (navType === HOME_PAGE_STATES.SHOW_STATS) {
+				} 
+				
+				else if (navType === HOME_PAGE_STATES.HERO_INFO) {
+					await HomePageStateManager.setState(HOME_PAGE_STATES.HERO_INFO);
+					navToHome();
+				}
+				
+				else if (navType === HOME_PAGE_STATES.SHOW_STATS) {
 					const user = await UserManager.getUser();
 					// Stats will not show if there is no active user ; will redirect to select data view with error
 					if (!user) {
-						await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
+						await HomePageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
 						await IPM.pushAction({
 							message: 
 								"Active user not found; you must either query a valid user or upload battles to view hero stats.",
@@ -45,7 +52,7 @@ function addNavListeners() {
 						});
 						navToHome();
 					} else {
-						await PageStateManager.setState(HOME_PAGE_STATES.SHOW_STATS);
+						await HomePageStateManager.setState(HOME_PAGE_STATES.SHOW_STATS);
 						navToHome();
 					}
 				}
@@ -60,10 +67,10 @@ function addClearDataBtnListener() {
 		async function () {
 			const user = await UserManager.getUser();
 			if (user) {
-				await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
+				await HomePageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
 				await IPM.pushAction({ action: IPM.ACTIONS.CLEAR_USER });
 			} else {
-				await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
+				await HomePageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
 				await IPM.pushAction({ action: IPM.ACTIONS.SHOW_DATA_ALREADY_CLEARED_MSG });
 			}
 			navToHome();
@@ -153,7 +160,7 @@ function addExportDataBtnListener() {
 					message: "User not found; cannot export data without an active user",
 					action: IPM.ACTIONS.SHOW_NO_USER_MSG,
 				});
-				await PageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
+				await HomePageStateManager.setState(HOME_PAGE_STATES.SELECT_DATA);
 				navToHome();
 				return;
 			}
