@@ -161,12 +161,12 @@ function computeAvgCR(battles: BattleType[], heroName: string): string {
 		if (cr === null) continue;
 		totalCR += cr;
 	}
-	return StatsBuilder.divideToPercentString(totalCR / 100, battles.length);
+	return StatsBuilder.divideToPercentString(totalCR / 100, battles.length, true);
 }
 
 function computeFirstTurnRate(battles: BattleType[], heroName: string): string {
 	const firstTurns = battles.filter((b) => b[COLUMNS_MAP.FIRST_TURN_HERO] === heroName).length;
-	return StatsBuilder.divideToPercentString(firstTurns, battles.length);
+	return StatsBuilder.divideToPercentString(firstTurns, battles.length, true);
 }
 
 function mergeBattles(battles1: BattleType[], battles2: BattleType[]): BattleType[] {
@@ -637,7 +637,7 @@ export const STATS_TESTS: Test[] = [
 			const filterResult = StatsBuilder.divideToPercentString(filteredBattles.length, champSubsetSecondPick.length);
 			const stats = StatsBuilder.getPerformanceStats(battles)
 			const champStats = stats.find((statsBundle) => statsBundle.label.toLowerCase().includes("champion"));
-			if (!champStats) return [filterResult, "Champ Stats not found"];
+			if (!champStats) return [filterResult, "N/A"];
 			const scriptResult = champStats.sp_wr;
 			return [filterResult, scriptResult];
 		}

@@ -43,7 +43,7 @@ function addNavListener(stateDispatcher) {
 	});
 }
 
-function addClearDataBtnListener() {
+function addClearDataBtnListener(stateDispatcher) {
 	DOC_ELEMENTS.NAV_BAR.CLEAR_DATA_BTN.addEventListener(
 		"click",
 		async function (_event) {
@@ -85,7 +85,7 @@ function addSideBarListener() {
 
 export function addHomePageListeners(dispatch) {
 	addNavListener(dispatch);
-	addClearDataBtnListener();
+	addClearDataBtnListener(dispatch);
 	addSideBarHideListener();
 	addSideBarListener();
 }

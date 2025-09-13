@@ -8,7 +8,8 @@ import DOC_ELEMENTS from "../../../../page-utilities/doc-element-references";
 import PageUtils from "../../../../page-utilities/page-utils";
 
 const searchInput = DOC_ELEMENTS.HOME_PAGE.SEARCH_INPUT as HTMLInputElement;
-const dropdown = DOC_ELEMENTS.HOME_PAGE.HERO_SEARCH_OPTIONS;	
+const dropdown = DOC_ELEMENTS.HOME_PAGE.HERO_SEARCH_OPTIONS;
+const contentBody = DOC_ELEMENTS.HOME_PAGE.HERO_INFO_BODY;
 const defaultContent = DOC_ELEMENTS.HOME_PAGE.getElt(DOC_ELEMENTS.HOME_PAGE.IDS.HERO_DEFAULT_CONTENT);
 
 
@@ -81,9 +82,8 @@ function addHeroSelectListeners() {
     });
 
     // hide dropdown when clicked outside
-    document.addEventListener('click', function (event) {
+    contentBody.addEventListener('click', function (event) {
         const target = event.target as Node;
-        console.log("unclicked");
         if (!searchInput.contains(target) && !dropdown.contains(target)) {
             dropdown.classList.remove('show');
         }

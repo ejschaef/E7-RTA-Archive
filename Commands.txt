@@ -62,8 +62,8 @@ docker rmi -f $(docker images -q)
 #execute permissions for script
 chmod +x script.sh
 
-#install certbot
+# kill wsl
+taskkill /F /im wslservice.exe
 
-sudo snap install core; sudo snap refresh core
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
+# shutdown all
+wsl -d Ubuntu-24.04 -- docker stop $(docker ps -q); wsl --shutdown

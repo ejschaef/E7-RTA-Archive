@@ -61,7 +61,7 @@ function _getDefault(key: ContextKey) {
 		case CONTEXT_KEYS.IGNORE_RELAYOUT:
 			return false;
 		case CONTEXT_KEYS.IS_FIRST_RENDER:
-			return false;
+			return true;
 		default:
 			console.error(`No default value for key: ${key}`);
 			return null;
