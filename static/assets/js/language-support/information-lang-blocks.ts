@@ -366,7 +366,7 @@ export const WELCOME_BLOCK = {
     [EN]: `Users can query their most recent 100 battles just like the E7 website, then export the data using the button in the top right and upload in the future to maintain a continuous history.`,
   },
   DESCRIPTION_PART3: {
-    [EN]: `All uploads are handled exclusively by the client. No data from the upload is sent to the server (except for the user ID if auto-query if selected).`,
+    [EN]: `All uploads are handled exclusively by the client. No data from the upload is sent to the server (except for the User information [id, username, server, etc.] if auto-query is selected).`,
   },
   DESCRIPTION_PART4: {
     [EN]: `Some statistics are also available to help users better understand their performance.`,

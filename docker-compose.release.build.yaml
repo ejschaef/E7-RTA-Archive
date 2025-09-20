@@ -1,3 +1,5 @@
+# this docker file is used to build the images for the production environment and push to docker hub
+
 services:
   
   redis:

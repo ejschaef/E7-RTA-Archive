@@ -156,9 +156,18 @@ function buildFormattedBattleMap(rawBattles: RawBattle[], HeroDicts: HeroDicts, 
 	return Object.fromEntries(entries);
 }
 
+function cleanUploadRow(row: RawUploadBattle): RawUploadBattle {
+	for (const [key, value] of Object.entries(EQUIPMENT_SET_MAP)) {
+		row[COLUMNS_MAP.P1_EQUIPMENT] = row[COLUMNS_MAP.P1_EQUIPMENT].replaceAll(key, value);
+		row[COLUMNS_MAP.P2_EQUIPMENT] = row[COLUMNS_MAP.P2_EQUIPMENT].replaceAll(key, value);
+	}
+	return row;
+}
+
 function castRawUploadBattle(raw: RawUploadBattle): BattleTypeNoPrimes {
+	let cleaned = cleanUploadRow(raw);
 	return Object.fromEntries(
-		Object.entries(raw).map(([column, value]) => [
+		Object.entries(cleaned).map(([column, value]) => [
 			column,
 			JSON.parse(value),
 		])

@@ -1,5 +1,3 @@
-import { toTitleCase } from "../str-functions";
-
 export const LANGUAGES = {
 	CODES: {
 		DE: "de",
@@ -85,6 +83,8 @@ export const EQUIPMENT_SET_MAP: Record<string, string> = {
 	set_torrent: "Torrent",
 	set_counter: "Counter",
 	set_scar: "Injury",
+	set_revenant: "Reversal",
+	set_riposte: "Riposte",
 };
 
 export const ONE_DAY_MILLISECONDS: number = 1000 * 60 * 60 * 24; // milliseconds

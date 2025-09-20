@@ -220,8 +220,10 @@ def handle_view_queried_users(log_manager: LogManager):
     print("Queried User Stats:")
     small_bar()
     stats = log_manager.stats["Queried Users Stats"]
+    stats = list(stats.items())
+    stats.sort(reverse=True, key= lambda t: t[1])
     newline()
-    for (uid, server), n_queries in stats.items():
+    for (uid, server), n_queries in stats:
         print(PREFIX + f"<UID: {uid}, Server: {server}> was queried {n_queries} times")
        
 def handle_delete_logs(log_manager: LogManager):

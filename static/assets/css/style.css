@@ -5532,7 +5532,7 @@ fieldset:disabled .btn {
   --bs-alert-bg: transparent;
   --bs-alert-padding-x: 1.25rem;
   --bs-alert-padding-y: 0.75rem;
-  --bs-alert-margin-bottom: 1rem;
+--bs-alert-margin-bottom: 1rem;
   --bs-alert-color: inherit;
   --bs-alert-border-color: transparent;
   --bs-alert-border: 1px solid var(--bs-alert-border-color);
@@ -19266,6 +19266,7 @@ pre[class*=language-]>code {
   -webkit-backdrop-filter: blur(7px);
   backdrop-filter: blur(7px);
   scrollbar-gutter: stable both-edges;
+  overflow-x: auto;
   position: fixed;
   left: 208px;
   right: 0;

@@ -1,3 +1,4 @@
+# this docker file is used to run the images for the production environment from docker hub built by docker-compose.release.build.yaml
 services:
   redis:
     image: redis:7-alpine
