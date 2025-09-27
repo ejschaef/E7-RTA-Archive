@@ -136,10 +136,6 @@ export const COLUMNS_MAP = {
 	P2_ARTIFACTS: "P2 Artifacts",
 	P1_MVP: "P1 MVP",
 	P2_MVP: "P2 MVP",
-	P1_PICKS_PRIMES: "P1 Picks Primes",
-	P2_PICKS_PRIMES: "P2 Picks Primes",
-	P1_PREBANS_PRIMES: "P1 Prebans Primes",
-	P2_PREBANS_PRIMES: "P2 Prebans Primes",
 } as const;
 
 export type ColumnKey = keyof typeof COLUMNS_MAP;
@@ -180,27 +176,13 @@ export type BattleType = {
 	[COLUMNS_MAP.P2_ARTIFACTS]: string[];
 	[COLUMNS_MAP.P1_MVP]: string;
 	[COLUMNS_MAP.P2_MVP]: string;
-	[COLUMNS_MAP.P1_PICKS_PRIMES]: number[];
-	[COLUMNS_MAP.P2_PICKS_PRIMES]: number[];
-	[COLUMNS_MAP.P1_PREBANS_PRIMES]: number[];
-	[COLUMNS_MAP.P2_PREBANS_PRIMES]: number[];
 };
 
-export type BattleTypeNoPrimes = Omit<
-	BattleType,
-	| typeof COLUMNS_MAP.P1_PICKS_PRIMES
-	| typeof COLUMNS_MAP.P2_PICKS_PRIMES
-	| typeof COLUMNS_MAP.P1_PREBANS_PRIMES
-	| typeof COLUMNS_MAP.P2_PREBANS_PRIMES
->;
-
-export type BattleTypeNoPrimesColums = keyof BattleTypeNoPrimes;
 export type BattlesObj = { [key: number]: BattleType };
-export type BattlesObjNoPrimes = { [key: number]: BattleTypeNoPrimes };
 
 
 export type RawUploadBattle = {
-	[K in keyof BattleTypeNoPrimes]: string;
+	[K in keyof BattleType]: string;
 };
 
 export const ARRAY_COLUMNS = [
@@ -251,29 +233,3 @@ export const HERO_STATS_COLUMN_MAP = {
 
 export const E7_STOVE_HOME_URL: string = "https://epic7.onstove.com"
 export const E7_GG_HOME_URL: string = E7_STOVE_HOME_URL + "/gg"
-
-/**
- * Generates a list of all prime numbers up to and including the given limit.
- *
- * Uses the Sieve of Eratosthenes algorithm to generate the list.
- *
- * Primes are used to represent as prime identifier allowing us to represent a set as a product of primes
- *
- * @param {number} limit - The upper limit of the prime numbers to generate. Must be a positive integer.
- * @returns {number[]} - A list of all prime numbers up to and including the given limit.
- */
-function getPrimes(limit: number): number[] {
-	const sieve = new Uint8Array(limit + 1);
-	const primes = [];
-	for (let i = 2; i <= limit; i++) {
-		if (!sieve[i]) {
-			primes.push(i);
-			for (let j = i * i; j <= limit; j += i) {
-				sieve[j] = 1;
-			}
-		}
-	}
-	return primes;
-}
-
-export const PRIMES: number[] = getPrimes(30000);

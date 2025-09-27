@@ -1,5 +1,5 @@
 import ClientCache from "../cache-manager.ts";
-import { LanguageCode, LANGUAGES, PRIMES } from "./references.ts";
+import { LanguageCode, LANGUAGES } from "./references.ts";
 import PYAPI from "../apis/py-API.js";
 import E7API from "../apis/e7-API.ts";
 
@@ -12,7 +12,6 @@ export type Hero = {
 	grade: string;
 	job_cd: string;
 	name: string;
-	prime: number;
 };
 
 export type HeroDicts = {
@@ -21,8 +20,6 @@ export type HeroDicts = {
 	Fodder: Hero;
 	name_lookup: { [key: string]: Hero };
 	code_lookup: { [key: string]: Hero };
-	prime_lookup: { [key: number]: Hero };
-	prime_pair_lookup: { [key: number]: string };
 }
 
 function getEmptyHero(): Hero {
@@ -32,7 +29,6 @@ function getEmptyHero(): Hero {
 		grade: "N/A",
 		job_cd: "N/A",
 		name: "N/A",
-		prime: 1,
 	};
 }
 
@@ -43,8 +39,6 @@ function getEmptyHeroManager(): HeroDicts {
 		Fodder: getEmptyHero(),
 		name_lookup: {},
 		code_lookup: {},
-		prime_lookup: {},
-		prime_pair_lookup: {},
 	};
 }
 
@@ -57,7 +51,6 @@ function addNonHeroes(HeroDicts: HeroDicts) {
 		grade: "N/A",
 		job_cd: "N/A",
 		name: EMPTY_NAME,
-		prime: 1,
 	};
 	const Fodder = {
 		attribute_cd: "N/A",
@@ -65,7 +58,6 @@ function addNonHeroes(HeroDicts: HeroDicts) {
 		grade: "2/3",
 		job_cd: "N/A",
 		name: FODDER_NAME,
-		prime: PRIMES[next_index],
 	};
 	HeroDicts.heroes.push(Empty);
 	HeroDicts.heroes.push(Fodder);
@@ -83,43 +75,11 @@ function addDicts(HeroDicts: HeroDicts) {
 		return acc;
 	}, {});
 
-	console.log("\tAdding prime lookup");
-	HeroDicts.prime_lookup = HeroDicts.heroes.reduce((acc: { [key: number]: Hero }, hero) => {
-		acc[hero.prime] = hero;
-		return acc;
-	}, {});
-
 	console.log("\tAdding code lookup");
 	HeroDicts.code_lookup = HeroDicts.heroes.reduce((acc: { [key: string]: Hero }, hero) => {
 		acc[hero.code] = hero;
 		return acc;
 	}, {});
-
-	console.log("\tAdding prime pair lookup");
-	let prime_pair_lookup: { [key: number]: string } = HeroDicts.heroes.reduce((acc: { [key: number]: string }, hero) => {
-		acc[hero.prime] = hero.name;
-		return acc;
-	}, {});
-	const numKeys = Object.keys(HeroDicts.prime_lookup).length - 1; // subtract 1 since we don't consider Empty hero
-	console.log("\tAdding prime pair lookup; primes to process", numKeys);
-	for (let i = 0; i < numKeys - 1; i++) {
-		const prime = PRIMES[i];
-		for (let j = i + 1; j < numKeys; j++) {
-			const prime2 = PRIMES[j];
-			const product = prime * prime2;
-			const name1 = HeroDicts.prime_lookup[prime].name;
-			const name2 = HeroDicts.prime_lookup[prime2].name;
-			prime_pair_lookup[product] = [name1, name2].sort().join(", ");
-		}
-	}
-	//capture case where two fodder heroes
-	prime_pair_lookup[HeroDicts.Fodder.prime * HeroDicts.Fodder.prime] = [
-		HeroDicts.Fodder.name,
-		HeroDicts.Fodder.name,
-	].join(", ");
-
-	//set prime pair lookup dict in HeroDicts and return
-	HeroDicts.prime_pair_lookup = prime_pair_lookup;
 	return HeroDicts;
 }
 
@@ -135,11 +95,6 @@ let HeroManager = {
 	},
 
 	createHeroManager: function (rawHeroList: Hero[]) {
-		// add prime identifier to each hero so that we can represent a set as a product of primes
-		for (let [index, heroData] of rawHeroList.entries()) {
-			const prime = PRIMES[index];
-			heroData.prime = prime;
-		}
 		let HeroDicts = getEmptyHeroManager();
 		HeroDicts.heroes = rawHeroList;
 		HeroDicts = addNonHeroes(HeroDicts); //should not be called again
@@ -184,15 +139,6 @@ let HeroManager = {
 		return HeroDicts.name_lookup[normalizedName] ?? null;
 	},
 
-	getHeroByPrime: function (prime: number | string, HeroDicts: HeroDicts): Hero | null {
-		if (!HeroDicts) {
-			throw new Error(
-				"HeroManager instance must be passed to lookup functions"
-			);
-		}
-		return HeroDicts.prime_lookup[prime as number] ?? null;
-	},
-
 	getHeroByCode: function (code: string | undefined, HeroDicts: HeroDicts): Hero | null {
 		if (!HeroDicts) {
 			throw new Error(
@@ -203,16 +149,6 @@ let HeroManager = {
 		}
 		return HeroDicts.code_lookup[code] ?? null;
 	},
-
-	getPairNamesByProduct: function (product: number, HeroDicts: HeroDicts): string | null {
-		if (!HeroDicts) {
-			throw new Error(
-				"HeroManager instance must be passed to lookup functions"
-			);
-		}
-		return HeroDicts.prime_pair_lookup[product];
-	},
-
 	EMPTY_NAME: EMPTY_NAME,
 	FODDER_NAME: FODDER_NAME,
 };

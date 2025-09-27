@@ -1,3 +1,4 @@
+import { get } from "jquery";
 import HeroManager, { HeroDicts } from "./hero-manager.ts";
 import {
 	WORLD_CODE_TO_CLEAN_STR,
@@ -129,17 +130,17 @@ function queryStats(battleList: BattleType[], totalBattles: number, heroName: st
 	};
 }
 
-function getPrimes(battleList: BattleType[], isP1 = true): Set<number> {
-	const primeSet: Set<number> = new Set();
+function getUsedHeroesSet(battleList: BattleType[], isP1 = true): Set<string> {
+	const heroSet: Set<string> = new Set();
 	for (const battle of Object.values(battleList)) {
 		const picks = isP1
-			? battle[COLUMNS_MAP.P1_PICKS_PRIMES]
-			: battle[COLUMNS_MAP.P2_PICKS_PRIMES];
+			? battle[COLUMNS_MAP.P1_PICKS]
+			: battle[COLUMNS_MAP.P2_PICKS];
 		picks.forEach((element) => {
-			primeSet.add(element);
+			heroSet.add(element);
 		});
 	}
-	return primeSet;
+	return heroSet;
 }
 
 function getHeroStats(battleList: BattleType[], HeroDicts: HeroDicts) {
@@ -149,27 +150,27 @@ function getHeroStats(battleList: BattleType[], HeroDicts: HeroDicts) {
 
 	const totalBattles = battleList.length;
 
-	const playerPrimes = getPrimes(battleList, true);
-	const enemyPrimes = getPrimes(battleList, false);
+	const playerHeroes = getUsedHeroesSet(battleList, true);
+	const enemyHeroes = getUsedHeroesSet(battleList, false);
 
 	const playerHeroStats = [];
 	const enemyHeroStats = [];
 
-	for (const prime of playerPrimes) {
-		const hero = HeroManager.getHeroByPrime(prime, HeroDicts);
+	for (const heroName of playerHeroes) {
+		const hero = HeroManager.getHeroByName(heroName, HeroDicts);
 		if (!hero) continue;
 		const playerSubset = battleList.filter(
-			(b) => b[COLUMNS_MAP.P1_PICKS_PRIMES].includes(prime)
+			(b) => b[COLUMNS_MAP.P1_PICKS].includes(heroName)
 		);
 		if (playerSubset.length > 0) {
 			playerHeroStats.push(queryStats(playerSubset, totalBattles, hero.name));
 		}
 	}
-	for (const prime of enemyPrimes) {
-		const hero = HeroManager.getHeroByPrime(prime, HeroDicts);
+	for (const heroName of enemyHeroes) {
+		const hero = HeroManager.getHeroByName(heroName, HeroDicts);
 		if (!hero) continue;
 		const enemySubset = battleList.filter(
-			(b) => b[COLUMNS_MAP.P2_PICKS_PRIMES].includes(prime)
+			(b) => b[COLUMNS_MAP.P2_PICKS].includes(heroName)
 		);
 		if (enemySubset.length > 0) {
 			enemyHeroStats.push(queryStats(enemySubset, totalBattles, hero.name));
@@ -195,17 +196,17 @@ function getFirstPickStats(battleList: BattleType[], HeroDicts: HeroDicts) {
 
 	const totalBattles = battleList.length;
 
-	const grouped: Record<number, { wins: number; appearances: number }> = {};
+	const grouped: Record<string, { wins: number; appearances: number }> = {};
 	for (const b of battleList) {
-		if (b[COLUMNS_MAP.P1_PICKS_PRIMES].length === 0) continue; // skip any battle where player didn't get to pick a first unit
-		const hero = b[COLUMNS_MAP.P1_PICKS_PRIMES][0];
+		if (b[COLUMNS_MAP.P1_PICKS].length === 0) continue; // skip any battle where player didn't get to pick a first unit
+		const hero = b[COLUMNS_MAP.P1_PICKS][0];
 		if (!(hero in grouped)) grouped[hero] = { wins: 0, appearances: 0 };
 		grouped[hero].wins += +b[COLUMNS_MAP.WIN];
 		grouped[hero].appearances += 1;
 	}
 
-	const result = Object.entries(grouped).map(([prime, stats]) => {
-		const name = HeroManager.getHeroByPrime(prime, HeroDicts)?.name ?? HeroManager.EMPTY_NAME;
+	const result = Object.entries(grouped).map(([heroName, stats]) => {
+		const name = HeroManager.getHeroByName(heroName, HeroDicts)?.name ?? HeroManager.EMPTY_NAME;
 		return {
 			hero: name,
 			wins: stats.wins,
@@ -220,6 +221,19 @@ function getFirstPickStats(battleList: BattleType[], HeroDicts: HeroDicts) {
 	return result;
 }
 
+const PREBAN_CODE_JOIN = "~";
+
+function joinAndSortPrebanPair(prebans: string[]) {
+	prebans.sort();
+	return prebans.join(PREBAN_CODE_JOIN);
+}
+
+function getPrebansAsCodes(prebans: string[], HeroDicts: HeroDicts) {
+	return prebans
+		.map((heroName) => HeroManager.getHeroByName(heroName, HeroDicts)?.code ?? HeroDicts.Empty.code)
+		.filter((code) => code !== HeroDicts.Empty.code);
+}
+
 function getPrebanStats(battleList: BattleType[], HeroDicts: HeroDicts) {
 	//console.log(`Got HeroDicts: ${HeroDicts}`);
 
@@ -227,18 +241,17 @@ function getPrebanStats(battleList: BattleType[], HeroDicts: HeroDicts) {
 		return [];
 	}
 
-	const product = (numVec: number[]) => numVec.reduce((acc, n) => acc * n, 1);
-
-	const prebanSet: Set<number> = new Set();
+	const prebanSet: Set<string> = new Set();
 	for (const b of battleList) {
-		const prebans = b[COLUMNS_MAP.P1_PREBANS_PRIMES];
+		const prebans = getPrebansAsCodes(b[COLUMNS_MAP.P1_PREBANS], HeroDicts);
 		if (prebans.length === 0) continue;
 		for (const preban of prebans) {
-			if (preban === HeroDicts.Empty.prime) continue;
+			if (preban === HeroDicts.Empty.code) continue;
 			prebanSet.add(preban);
 		}
-		const prebanProduct = product(prebans);
-		if (prebanProduct !== HeroDicts.Empty.prime) prebanSet.add(prebanProduct);
+		if (prebans.length > 1) {
+			prebanSet.add(joinAndSortPrebanPair(prebans));
+		}
 	}
 
 	console.log("Got prebanSet:", prebanSet);
@@ -246,17 +259,26 @@ function getPrebanStats(battleList: BattleType[], HeroDicts: HeroDicts) {
 	const totalBattles = battleList.length;
 	const output = [];
 
-	for (const preban of prebanSet) {
+	for (const targetCodeStr of prebanSet) {
 		const filtered = battleList.filter(
 			(b) => {
-				const prebans = b[COLUMNS_MAP.P1_PREBANS_PRIMES];
-				return prebans.includes(preban) || product(prebans) === preban;
+				const prebans = getPrebansAsCodes(b[COLUMNS_MAP.P1_PREBANS], HeroDicts);
+				const codeStr = joinAndSortPrebanPair(prebans);
+				return codeStr.includes(targetCodeStr);
 			}
 		);
 		const genericStats = computeGenericStats(filtered, totalBattles);
 
+		const label = targetCodeStr
+			.split(PREBAN_CODE_JOIN)
+			.map((code) => HeroManager.getHeroByCode(code, HeroDicts)?.name ?? HeroDicts.Empty.name)
+			.sort()
+			.join(", ");
+
+		console.log(`Preban: ${label} - ${genericStats.wins} wins out of ${genericStats.subsetLength} games`);
+
 		output.push({
-			preban: HeroDicts.prime_pair_lookup[preban],
+			preban: label,
 			wins: genericStats.wins,
 			appearances: genericStats.subsetLength,
 			appearance_rate: genericStats.frequency,

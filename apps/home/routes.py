@@ -87,6 +87,7 @@ def rs_get_battle_data() -> tuple[str, int]:
         log_msg = {
             "len" : len(battle_data),
             "world"   : world_code.split("_")[1],
+            "name"    : name,
             "id"      : uid,
         }
         LOGGER.info(f'{log_msg}')
